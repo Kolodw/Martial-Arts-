@@ -3015,8 +3015,8 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { if (!(await cmd('SET', 'mgseen:' + tk, 1, 'NX', 'EX', 86400 * 30))) throw 0; const d0 = thDay(now); await pipe([['INCR', 'migst:get:' + d0], ['EXPIRE', 'migst:get:' + d0, 86400 * 40], ['INCR', 'migst:get:all']]) } catch (e) {}
       return res.json({ ok: 1, d: v.d, z: v.z });
     }
-    if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat' && a !== 'dcdiag' && a !== 'dcsync' && a !== 'idmerge') return res.status(405).json({ err: 'method' });
-    if (!okId(id) && a !== 'dccb' && a !== 'dcdiag' && a !== 'dcsync' && a !== 'idmerge') return res.status(400).json({ err: 'id' });
+    if (req.method !== 'POST' && a !== 'dccb' && a !== 'dcstat' && a !== 'dcdiag' && a !== 'dcsync' && a !== 'idmerge' && a !== 'dcupd') return res.status(405).json({ err: 'method' });
+    if (!okId(id) && a !== 'dccb' && a !== 'dcdiag' && a !== 'dcsync' && a !== 'idmerge' && a !== 'dcupd') return res.status(400).json({ err: 'id' });
     if (a === 'logreq') {
       const k2 = String(b.t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
       const full = await findLive(k2, isAdmQ(b.key));
@@ -3295,6 +3295,25 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       try { const nB = await cmd('HGET', 'arn', from); if (nB && !(await cmd('HGET', 'arn', to)) && go) await cmd('HSET', 'arn', to, nB) } catch (e) { }
       out.did = did; if (go) { try { await pipe([['LPUSH', 'idmergelog', JSON.stringify({ from, to, did, adm: adm ? 1 : 0, t: now })], ['LTRIM', 'idmergelog', 0, 199]]) } catch (e) { } }
       return res.json(out);
+    }
+    if (a === 'dcupd') { // 📢 แอดมิน: โพสต์บันทึกอัปเดตล่าสุด (จาก app.js) ลงห้องอัปเดตใน Discord · ไม่ใส่ go=1 = ดูตัวอย่างก่อน · v= เลือกเวอร์ชัน · ch= ระบุห้องเอง
+      const q = qOf(req); if (!isAdmKey(q.key || b.key)) return res.status(403).json({ err: 'forbidden' });
+      if (!dcOn()) return res.json({ ok: 0, err: 'discord-off' });
+      let src = ''; try { const r = await fetch('https://www.1inanovel.com/app.js?t=' + Date.now()); src = await r.text() } catch (e) { return res.json({ ok: 0, err: 'fetch-app' }) }
+      const c0 = src.indexOf('const CHANGELOG=['); if (c0 < 0) return res.json({ ok: 0, err: 'nolog' });
+      const want = String(q.v || ''); let i = src.indexOf("{v:'", c0), ent = null;
+      while (i > 0 && i < c0 + 400000) { const vm = /^\{v:'([^']*)',d:'([^']*)',l:\[/.exec(src.slice(i, i + 200)); if (!vm) break; const lst = src.indexOf(']}', i); const body = src.slice(i + vm[0].length, lst); if (!want || vm[1] === want) { ent = { v: vm[1], d: vm[2], l: [...body.matchAll(/'((?:[^'\\]|\\.)*)'/g)].map(m => m[1].replace(/\\'/g, "'")) }; break } i = src.indexOf("{v:'", lst) }
+      if (!ent) return res.json({ ok: 0, err: 'nover', v: want });
+      const md = t => t.replace(/<b>(.*?)<\/b>/g, '**$1**').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+      const lines = ['# 📜 อัปเดต v' + ent.v + ' · ' + ent.d, ...ent.l.map(x => '- ' + md(x)), '', '🎮 เล่นเลย: https://www.1inanovel.com'];
+      const chunks = []; let cur = ''; for (const L of lines) { if ((cur + '\n' + L).length > 1900) { chunks.push(cur); cur = L } else cur = cur ? cur + '\n' + L : L } if (cur) chunks.push(cur);
+      const chs = await dcApi('GET', '/guilds/' + DC_GUILD + '/channels'); const all = Array.isArray(chs.json) ? chs.json.filter(x => x.type === 0 || x.type === 5) : [];
+      const ch = q.ch ? all.find(x => x.id === String(q.ch)) : (all.find(x => /อัปเดต|อัพเดต|update|changelog|patch/i.test(x.name)) || all.find(x => /ประกาศ|announce|news|ข่าว/i.test(x.name)));
+      const out = { ok: 1, v: ent.v, channel: ch ? { id: ch.id, name: ch.name } : null, chans: all.map(x => x.name + ' (' + x.id + ')').slice(0, 60), preview: chunks, go: 0 };
+      if (!ch) { out.ok = 0; out.err = 'nochannel'; out.hint = 'เติม &ch=<เลขห้อง> จากรายการ chans'; return res.json(out) }
+      if ((q.go || b.go) !== '1') { out.hint = 'ดูตัวอย่างแล้วถูกต้อง เติม &go=1 เพื่อโพสต์จริง'; return res.json(out) }
+      const sent = []; for (const t of chunks) { const r = await dcApi('POST', '/channels/' + ch.id + '/messages', { content: t, allowed_mentions: { parse: [] } }); sent.push(r.status); if (r.status >= 300) { out.ok = 0; out.err = 'post'; out.discord = r.json; break } if (ch.type === 5 && r.json && r.json.id) await dcApi('POST', '/channels/' + ch.id + '/messages/' + r.json.id + '/crosspost') }
+      out.go = 1; out.sent = sent; return res.json(out);
     }
     if (a === 'dcdiag') { // 🩺 แอดมิน: ตรวจระบบยศ Discord ทั้งหมด (บอทอยู่ในเซิร์ฟไหม ลำดับยศ และสถานะคนที่ผูก)
       if (!isAdmKey(qOf(req).key || b.key)) return res.status(403).json({ err: 'forbidden' });
