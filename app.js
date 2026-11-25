@@ -4603,6 +4603,23 @@ function person0(x,y,o,pose){
  else{Q(lxA,ty+1+as,aw,aL,slv);Q(lxA,ty+1+as,1,aL,slvD);Q(lxA+1,ty+1+as+aL,3,3,skin);
  Q(rxA,ty+1-as,aw,aL,slvD);Q(rxA+1,ty+1-as+aL,3,3,sD);if(aw>4){Q(lxA-1,ty+aL-2+as,aw+1,3,slv);Q(rxA,ty+aL-2-as,aw+1,3,slvD)}}
  if(o.arm){Q(cx-Math.floor(tw/2)-4,ty-1,6,4,o.arm);Q(cx+Math.floor(tw/2)-2,ty-1,6,4,shd(o.arm,-.2));Q(cx-Math.floor(tw/2)-4,ty-1,6,1,shd(o.arm,.3))}
+ // 👘 รายละเอียดชุดตู้เสื้อผ้า (o.wx=1-6 ผ้าโบราณ, 11-16 ชุดยุคใหม่) — ปก ขอบแขน ลายปัก เงาพับผ้า
+ if(o.wx&&!child&&!sit&&!o.ar){const v=o.wx%10,mod=o.wx>10,tc=o.trim||rL,tL=shd(tc,.3),tD=shd(tc,-.3),hw2=Math.floor((tw+hem*2)/2),stand=!walk&&!stn,pu=.6+.4*Math.sin(T*2.4);
+  if(!o.coat&&!o.plate&&!mod){Q(cx-4,ty,1,1,'#f4ecd8');for(let r=0;r<5;r++)Q(cx-3+r,ty+r,1,1,'#f4ecd8'); // คอเสื้อชั้นในขาว
+   Q(cx-6,ty+4,1,4,rD);Q(cx+3,ty+5,1,3,rD)} // รอยพับผ้า
+  if(stand&&!o.coat){Q(lxA,ty+aL-1+as,aw,2,tc);Q(lxA,ty+aL-1+as,aw,1,tL);Q(rxA,ty+aL-1-as,aw,2,tD)} // ขอบแขนเสื้อ
+  if(!mod){
+   if(v===1){for(let k2=0;k2<3;k2++){Q(cx-6+k2*2,ty+2+k2,1,1,tL);Q(cx+3+k2,ty+12-k2,1,1,tL)}Q(cx-5,ty+12,2,1,tc);Q(cx-4,ty+11,1,1,tc)} // ลายเมฆปัก
+   else if(v===2){Q(cx-1,ty+12,2,ly-ty-12,tc);Q(cx-1,ty+12,1,ly-ty-12,tL);for(let yy=ty+13;yy<ly-1;yy+=3)Q(cx-1,yy,2,1,tD)} // แถบปักหน้าชุด
+   else if(v===3){for(let xx=-hw2;xx<hw2-1;xx+=3)Q(cx+xx+1,ly-3,1,1,tL);Q(cx-hw2,ly-4,hw2*2,1,tD)} // ขอบชายปักลาย
+   else if(v===4){Q(cx-Math.floor(tw/2)-1,ty-1,tw+2,3,tc);Q(cx-Math.floor(tw/2)-1,ty-1,tw+2,1,tL);for(let xx=0;xx<tw;xx+=3)Q(cx-Math.floor(tw/2)+xx,ty+2,2,1,tc)} // ผ้าคลุมไหล่ระบาย
+   else if(v===5){const fl=[[-5,13],[3,15],[-2,17],[4,11]];for(const[a,b]of fl){Q(cx+a,ty+b,1,1,tL);Q(cx+a-1,ty+b,1,1,tc);Q(cx+a+1,ty+b,1,1,tc);Q(cx+a,ty+b-1,1,1,tc)}} // ดอกไม้ปัก
+   else{g.globalAlpha=pu;Q(cx+3,ty+(child?6:9)+3,1,5,tc);Q(cx+2,ty+(child?6:9)+8,3,1,tL);g.globalAlpha=1;Q(cx+3,ty+(child?6:9)+3,1,1,'#e8c040')} // พู่ห้อยเอว
+  }else{
+   if(v===1||v===4){Q(cx-1,ty+1,2,1,tc);Q(cx,ty+2,1,3,tD)} // เนคไท/คอปก
+   if(v===2||v===5){for(let yy=ty+3;yy<ty+(child?6:9);yy+=2)Q(cx,yy,1,1,tL)} // กระดุม
+   if(v===3){Q(cx+2,ty+3,3,2,tc);Q(cx+2,ty+3,3,1,tL)} // กระเป๋าอก
+  }}
  // 🛡️ ชุดรบพิกเซลละเอียด (ทะลุฟ้าดารา) — o.ar={s:สาย 0-9,t:ระดับ 1-5,c:สีหลัก,gl:สีเรืองแสง}
  if(o.ar&&!child&&!sit){const A=o.ar,c=A.c,gl=A.gl,d=shd(c,-.32),l=shd(c,.28),dd=shd(c,-.55),sS=A.s%4,t=A.t|0,pu=.55+.45*Math.sin(T*3.4),stand=!walk&&!stn;
   const run=(k,n)=>((frame*.6+k*7)|0)%n; // จุดแสงวิ่งตามลายวงจร
@@ -47006,7 +47023,7 @@ try{(function(){if(typeof meLook!=='function')return;
  window._wdGive=(k,i)=>{const d=st();if(k==='w'){d.wown=d.wown||[];if(!d.wown.includes(i)){d.wown.push(i);put(d);return 1}}else if(!d.own.includes(i)&&W[i]&&W[i][5]!=='f'){d.own.push(i);put(d);return 1}return 0};window._wdFields=i=>fields(i);
  const fitsWorld=i=>kind()==='n'?MODN.includes(W[i][1]):!MODN.includes(W[i][1]);
  window.wdCheck=function(quiet){if(!S||!S.alive)return;const d=st();const got=[];W.forEach((w,i)=>{if(w[5]!=='f'&&!d.own.includes(i)&&condOk(w)){d.own.push(i);got.push(i)}});if(got.length){put(d);if(!quiet)try{log(`👘 <b>ปลดล็อกชุดใหม่ในตู้เสื้อผ้า:</b> ${got.map(i=>W[i][0]).join(' · ')} <button class="sysb" onclick="wdOpen()">เปิดตู้</button>`,'good')}catch(e){}}};
- const fields=i=>{const w=W[i],x=w[4];const o=Object.assign({robe:w[2],trim:w[3],belt:x.belt||shd(w[2],-.35),hat:null,stripe:0,fur:0,jade:0,patch:0,sash:null,ribbon:null,cape:null,capeT:null,emblem:null,coat:null,coatL:null,eyeG:null,ar:null,wing:null,core:null},x);if(MODN.includes(w[1])){o.pant=x.pant||'#2a2a34'}return o};
+ const fields=i=>{const w=W[i],x=w[4];const o=Object.assign({robe:w[2],trim:w[3],belt:x.belt||shd(w[2],-.35),hat:null,stripe:0,fur:0,jade:0,patch:0,sash:null,ribbon:null,cape:null,capeT:null,emblem:null,coat:null,coatL:null,eyeG:null,ar:null,wing:null,core:null},x);if(MODN.includes(w[1])){o.pant=x.pant||'#2a2a34'}if(!o.ar&&!('wx' in x))o.wx=1+(i*7)%6+(MODN.includes(w[1])?10:0);return o};
  const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(S){const d=st(),i=S.mw?d.n:d.a;if(i!=null&&W[i]&&fitsWorld(i)&&owned(i)&&!(!S.mw&&d.sect&&S.faction)&&!(S.look&&S.look.kx))Object.assign(o,fields(i))}if(S&&S.mw&&S.mw.sky&&d0().wing!=null){const w=WG[d0().wing];if(w&&wOwned(d0().wing))Object.assign(o,{wing:w.wing,wingC:w.wingC,wingC2:w.wingC2})}}catch(e){}return o};
  if(typeof mwLookMe==='function'){const _mw=mwLookMe;mwLookMe=function(M,pose){const o=_mw.apply(this,arguments);try{const d=st(),i=d.n;if(i!=null&&W[i]&&MODN.includes(W[i][1])&&owned(i)&&pose!=='work')Object.assign(o,fields(i))}catch(e){}return o}}
  const look=i=>{let me;try{me=S&&S.mw&&typeof mwLookMe==='function'?mwLookMe(S.mw,'stand'):meLook()}catch(e){me={age:20,g:'ชาย',skin:'#f1c27d',hair:'#1a1a1a'}}me=Object.assign({},me);delete me.beast;me.aura=null;me.sword=null;me.arm=null;if(me.age<16)me.age=20;
