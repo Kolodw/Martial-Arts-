@@ -4601,6 +4601,34 @@ function person0(x,y,o,pose){
  else{Q(lxA,ty+1+as,aw,aL,slv);Q(lxA,ty+1+as,1,aL,slvD);Q(lxA+1,ty+1+as+aL,3,3,skin);
  Q(rxA,ty+1-as,aw,aL,slvD);Q(rxA+1,ty+1-as+aL,3,3,sD);if(aw>4){Q(lxA-1,ty+aL-2+as,aw+1,3,slv);Q(rxA,ty+aL-2-as,aw+1,3,slvD)}}
  if(o.arm){Q(cx-Math.floor(tw/2)-4,ty-1,6,4,o.arm);Q(cx+Math.floor(tw/2)-2,ty-1,6,4,shd(o.arm,-.2));Q(cx-Math.floor(tw/2)-4,ty-1,6,1,shd(o.arm,.3))}
+ // 🛡️ ชุดรบพิกเซลละเอียด (ทะลุฟ้าดารา) — o.ar={s:สาย 0-9,t:ระดับ 1-5,c:สีหลัก,gl:สีเรืองแสง}
+ if(o.ar&&!child&&!sit){const A=o.ar,c=A.c,gl=A.gl,d=shd(c,-.32),l=shd(c,.28),dd=shd(c,-.55),sS=A.s%4,t=A.t|0,pu=.55+.45*Math.sin(T*3.4),stand=!walk&&!stn;
+  const run=(k,n)=>((frame*.6+k*7)|0)%n; // จุดแสงวิ่งตามลายวงจร
+  // ขา: สนับแข้ง + เข่า
+  if(!walk){Q(cx-6,Y-8,5,6,c);Q(cx+1,Y-8,5,6,d);Q(cx-6,Y-8,5,1,l);Q(cx-6,Y-4,5,1,dd);Q(cx+1,Y-4,5,1,dd);Q(cx-5,Y-7,3,2,l);g.globalAlpha=pu;Q(cx-5,Y-6,1,1,gl);Q(cx+4,Y-6,1,1,gl);g.globalAlpha=1}
+  // อก: เกราะทรง V + ร่องกลาง
+  for(let r=0;r<8;r++){const w=14-Math.floor(r*.9),lx=cx-Math.floor(w/2);Q(lx,ty+r,w,1,r<2?l:c);Q(lx,ty+r,1,1,d);Q(lx+w-1,ty+r,1,1,dd)}
+  Q(cx,ty+1,1,7,d);Q(cx-6,ty+2,4,1,l);if(A.s===4||A.s===5){Q(cx-5,ty+3,2,2,dd);Q(cx+3,ty+3,2,2,dd)}
+  // ท้อง: แผ่นเกราะเป็นปล้อง
+  for(let r=0;r<3;r++){Q(cx-4,ty+9+r*2,8,1,r%2?d:c);Q(cx-4,ty+10+r*2,8,1,dd)}
+  Q(cx-Math.floor(tw/2)-1,ty+9,tw+2,2,dd);Q(cx-2,ty+9,4,2,t>=3?gl:l);
+  // แกนพลังกลางอก
+  {const cs=t>=4?4:3,ox=cx-Math.floor(cs/2);Q(ox-1,ty+3,cs+2,cs+2,dd);g.globalAlpha=pu;Q(ox,ty+4,cs,cs,gl);g.globalAlpha=pu*.35;Q(ox-2,ty+2,cs+4,cs+4,gl);if(t>=3){g.globalAlpha=pu*.18;Q(ox-5,ty,cs+10,cs+9,gl)}g.globalAlpha=1;Q(ox,ty+4,1,1,'#ffffff')}
+  // ลายวงจรเรืองแสง (ไล่แสงวิ่ง)
+  if(t>=2){g.globalAlpha=.55;Q(cx-6,ty+6,4,1,gl);Q(cx+3,ty+6,4,1,gl);g.globalAlpha=1;const k=run(1,8);Q(cx-6+(k<4?k:0),ty+6,1,1,'#ffffff');Q(cx+6-(k<4?k:0),ty+6,1,1,'#ffffff')}
+  // เกราะไหล่ 4 ทรง
+  const sh=(x,mir)=>{const cc=mir?d:c;if(sS===0){Q(x-1,ty-2,7,5,cc);Q(x-1,ty-2,7,1,l);Q(x,ty+3,5,1,dd)}
+   else if(sS===1){Q(x-1,ty-1,7,4,cc);Q(x-1,ty-1,7,1,l);Q(x+(mir?4:0),ty-4,2,3,cc);Q(x+(mir?4:0),ty-5,1,1,gl);Q(x+2,ty-3,2,2,cc)}
+   else if(sS===2){Q(x-2,ty-2,8,3,cc);Q(x-1,ty+1,7,3,shd(cc,-.12));Q(x-2,ty-2,8,1,l);Q(x,ty+4,5,1,dd)}
+   else{Q(x-1,ty-1,7,4,cc);Q(x+(mir?5:-2),ty-6,2,9,cc);Q(x+(mir?5:-2),ty-6,2,1,l);Q(x+(mir?6:-2),ty-5,1,6,gl)}
+   g.globalAlpha=pu;Q(x+2,ty,2,1,gl);g.globalAlpha=1};
+  sh(lxA-1,0);sh(rxA-1,1);
+  // ถุงมือเกราะ
+  if(stand){Q(lxA-1,ty+aL-4+as,aw+2,4,c);Q(lxA-1,ty+aL-4+as,aw+2,1,l);Q(rxA-1,ty+aL-4-as,aw+2,4,d);g.globalAlpha=pu;Q(lxA,ty+aL-2+as,aw,1,gl);Q(rxA,ty+aL-2-as,aw,1,gl);g.globalAlpha=1}
+  // ระดับสูง: ประกายพลังลอยรอบตัว / เส้นขอบเรืองแสง
+  if(t>=4){for(let i=0;i<(t>=5?6:4);i++){const ph=(T*.5+i/6)%1,px=cx-10+((i*9+sd*5)%20);g.globalAlpha=(1-ph)*.9;Q(px,Y-4-ph*(Y-top),1,2,gl);g.globalAlpha=1}}
+  if(t>=5){g.globalAlpha=.25+.2*Math.sin(T*5);Q(cx-Math.floor(tw/2)-2,ty-1,1,th+2,gl);Q(cx+Math.floor(tw/2)+1,ty-1,1,th+2,gl);g.globalAlpha=1}
+ }
  if(o.basket&&!child){Q(cx-14,ty+8,7,6,'#c8a060');Q(cx-14,ty+8,7,1,'#8a6a3a');Q(cx-12,ty+6,3,2,'#6ab04a')}
  // neck + head
  Q(cx-2,ty-2,4,3,sD);
@@ -46884,7 +46912,7 @@ try{(function(){if(typeof choiceShow!=='function')return;
  setTimeout(()=>{try{[1,2,3].forEach(n=>{const im=new Image();im.onload=()=>{if(!EV_SH.includes(n))EV_SH.push(n)};im.src='/evart'+n+'.webp';(window._icKeep=window._icKeep||[]).push(im)})}catch(e){}},2500);
 })()}catch(e){console.error('mod-evart',e)}
 
-// 👘 ตู้เสื้อผ้า — 250 ชุดพิกเซล (วาดด้วยโค้ด ใช้ตัวละครเดิมในฉาก/หน้าจบ/กระดานออนไลน์) ทุกโลก: ยุทธภพ เซียน เทพ จิตวิญญาณยุทธ์ ยุคปัจจุบัน ทะลุฟ้าดารา นครม่านหมอก
+// 👘 ตู้เสื้อผ้า — 250 ชุด + ปีก 40 แบบ พิกเซล (วาดด้วยโค้ด ใช้ตัวละครเดิมในฉาก/หน้าจบ/กระดานออนไลน์) ทุกโลก: ยุทธภพ เซียน เทพ จิตวิญญาณยุทธ์ ยุคปัจจุบัน ทะลุฟ้าดารา นครม่านหมอก
 // ปลดครั้งเดียวใช้ได้ทุกชีวิต (เก็บในเครื่อง) · บางชุดซื้อด้วยเงินในเกม บางชุดปลดจากการเล่น · ใส่แล้วไม่หายตอนเข้าสำนัก (ตั้งให้ใส่ชุดสำนักแทนได้) · แต่งเพื่อความสวย ไม่เพิ่มพลัง
 try{(function(){if(typeof meLook!=='function')return;
  // [ชื่อ, โลก m=ยุทธภพ x=เซียน g=เทพ n=ปัจจุบัน, robe, trim, ส่วนเสริม, เงื่อนไข]
@@ -46930,12 +46958,17 @@ try{(function(){if(typeof meLook!=='function')return;
  ['ชุดสุภาพบุรุษหมวกทรงสูง','f','#f0f0f0','#8a1a1a',{hat:'tophat',coat:'#1a1a1e',coatL:'#2e2e34',pant:'#1a1a1e',noSkirt:1},['$',5000]],['ชุดคุณหนูลูกไม้','f','#f4e8f0','#8a4a6a',{skirt:'#6a3a5a',hat:'flower',sash:'#e8d0e0'},['$',5000]],['ชุดนักเล่นแร่แปรธาตุ','f','#3a5a3a','#c8e080',{coat:'#2a4a2a',coatL:'#4a6a4a',eyeG:'#c8a040',pant:'#2a2a24',noSkirt:1},['$',8000]],['ชุดช่างกลไอน้ำ','f','#6a4a2a','#e8a040',{eyeG:'#e8a040',hat:'band',bandC:'#3a2a1a',patch:1,pant:'#3a2a1a',noSkirt:1},['$',6000]],
  ['ชุดตำรวจนครหมอก','f','#1e2a44','#c8c8d0',{hat:'helm',hatC:'#1e2a44',pant:'#1e2a44',noSkirt:1},['case',5]],['ชุดหมอโรคระบาด','f','#16161a','#6a6a72',{hat:'mask',maskC:'#2a2a30',cape:'#0e0e12',pant:'#16161a',noSkirt:1},['case',10]],['ชุดนักร้องโรงละคร','f','#a81e2a','#ffd040',{skirt:'#a81e2a',hat:'flower',sash:'#ffd040'},['fm',2000]],['ชุดนักบวชลัทธิหมอก','f','#3a2a4a','#a080c8',{hat:'hood',hoodC:'#2a1e3a'},['k',-50]],
  ['ชุดผู้พิพากษาเงา','f','#141418','#c8a040',{hat:'tophat',hatC:'#141418',cape:'#0a0a0e',capeT:'#c8a040',pant:'#141418',noSkirt:1},['k',60]],['ชุดนายพรานกลางคืน','f','#2a2a30','#8a6a4a',{coat:'#3a2e24',coatL:'#5a4a3a',cape:'#1a1612',hat:'scholar',hatC:'#2a2018',pant:'#1e1e22',noSkirt:1},['case',20]],['ชุดเจ้าแห่งหมอก','f','#d8dce4','#6a7a9a',{hat:'tophat',hatC:'#3a3e48',cape:'#8a8e98',capeT:'#d8dce4',coat:'#3a3e48',coatL:'#5a5e68',pant:'#2a2e36',noSkirt:1},['case',30]]];
- // 🌠 ชุดรบทะลุฟ้าดารา 100 แบบ (แนวนักรบยีน/ชุดรบอวกาศ) = 10 สาย × 10 สี · เกราะอก+แกนพลังเรืองแสง · ปีก 8 แบบขยับได้
- {const SR=[['นักรบยีน',null,'visor',0],['ปีกจักรกล','mech','visor',0],['ระดับดาวเคราะห์','energy','helm',0],['ระดับดาวฤกษ์','feather','halo',0],['อสูรเขาทอง','dragon','horn',0],['ปีศาจจักรวาล','bat','horn',1],['ผีเสื้อดารา','butterfly','pin',0],['ผลึกเนบิวลา','crystal','halo',0],['วิหคเพลิงสุริยะ','flame','phoenix',0],['เจ้าจักรวาล','energy','crown',1]];
-  const PL=[['เพลิง','#a8301a','#ffb040'],['น้ำแข็ง','#5a90c0','#d8f6ff'],['มรกต','#1a6a50','#5af0a8'],['อำพัน','#a8702a','#ffd060'],['ราตรี','#1e1e34','#8a7aff'],['ทอง','#b8901a','#fff0a0'],['เงิน','#9aa2b4','#ffffff'],['เนบิวลา','#4a2a7a','#e080ff'],['โลหิต','#5a0a14','#ff3a4a'],['ขาวบริสุทธิ์','#e8e8f0','#ffe680']];
-  SR.forEach(([sn,wg,ht,cp],si)=>PL.forEach(([pn,c,gl],pi)=>{const un=si===0&&pi<2?'f':pi===0?['$',4000*(si+1)]:pi===1?['$',8000*(si+1)]:pi<6?['rk',Math.min(15,pi-1+si)]:pi===6?['fm',800*(si+1)]:pi===7?['rich',150000*(si+1)]:pi===8?['k',-(30+si*10)]:['k',30+si*10];
-   const x={plate:shd(c,.12),arm:shd(c,.05),core:gl,hat:ht,hatC:shd(c,-.15),pant:shd(c,-.35),noSkirt:1,belt:shd(c,-.4)};if(wg){x.wing=wg;x.wingC=wg==='energy'||wg==='flame'?gl:wg==='crystal'?shd(gl,-.1):shd(c,.25);x.wingC2=gl}if(cp){x.cape=shd(c,-.3);x.capeT=gl}if(ht==='halo'||ht==='pin'||ht==='crown'||ht==='phoenix')x.hatC=gl;
-   W.push(['ชุดรบ'+sn+' · '+pn,'k',shd(c,-.2),gl,x,un])}))}
+ // 🌠 ชุดรบทะลุฟ้าดารา 100 แบบ (แนวนักรบยีน/ชุดรบอวกาศ) = 10 สาย × 10 สี · วาดด้วยตัววาดชุดรบละเอียด (o.ar) · ปีกแยกช่อง (WG 40 แบบ)
+ // ได้จากการเล่นในทะลุฟ้าดารา (ดรอปจากนักสู้ ซากในอวกาศ อสูรอวกาศ ตลาดเหนือฟ้า) แล้วหน้าตาเข้าตู้ถาวร
+ const SR=[['นักรบยีน','visor',1],['จักรกล','visor',2],['ดาวเคราะห์','helm',2],['ดาวฤกษ์','halo',3],['อสูรเขาทอง','horn',4],['ปีศาจจักรวาล','horn',4],['ผีเสื้อดารา','pin',3],['ผลึกเนบิวลา','halo',4],['วิหคเพลิงสุริยะ','phoenix',5],['เจ้าจักรวาล','crown',5]];
+ const PL=[['เพลิง','#a8301a','#ffb040'],['น้ำแข็ง','#5a90c0','#d8f6ff'],['มรกต','#1a6a50','#5af0a8'],['อำพัน','#a8702a','#ffd060'],['ราตรี','#2a2a44','#8a7aff'],['ทอง','#b8901a','#fff0a0'],['เงิน','#9aa2b4','#ffffff'],['เนบิวลา','#4a2a7a','#e080ff'],['โลหิต','#6a0a14','#ff3a4a'],['ขาวบริสุทธิ์','#d8d8e4','#ffe680']];
+ const SK0=W.length;
+ SR.forEach(([sn,ht,tr],si)=>PL.forEach(([pn,c,gl],pi)=>{const x={ar:{s:si,t:tr,c,gl},hat:ht,hatC:(ht==='halo'||ht==='pin'||ht==='crown'||ht==='phoenix')?gl:shd(c,-.15),pant:shd(c,-.45),noSkirt:1,belt:shd(c,-.4),core:gl,trim:gl};if(si===5||si===9){x.cape=shd(c,-.35);x.capeT=gl}
+  W.push(['ชุดรบ'+sn+' · '+pn,'k',shd(c,-.25),gl,x,si===0&&pi<2?'f':['got'],{tier:tr,si,pi}])}));
+ const WGT=[['จักรกล','mech',1],['พลังงาน','energy',2],['ผีเสื้อ','butterfly',2],['ขนนก','feather',3],['ค้างคาว','bat',3],['ผลึก','crystal',4],['มังกร','dragon',4],['เพลิง','flame',5]];
+ const WPL=[['เพลิง','#c8401a','#ffd060'],['น้ำแข็ง','#a8d8f0','#ffffff'],['มรกต','#2a9a6a','#8affc8'],['ราตรี','#3a3060','#a090ff'],['ทอง','#d8b030','#fff4c0']];
+ const WG=[];WGT.forEach(([wn,wt,tr],ti)=>WPL.forEach(([pn,c,gl],pi)=>{const c1=wt==='energy'||wt==='flame'?gl:wt==='crystal'?shd(c,.2):c;WG.push({n:'ปีก'+wn+' · '+pn,wing:wt,wingC:wt==='flame'?c:c1,wingC2:wt==='flame'?gl:gl,tier:tr,free:ti===0&&pi<2})}));
+ window._WG=WG;window._SK0=SK0;
  const WN={m:'⚔️ ยุทธภพ',x:'☁️ เซียน',g:'🌟 แดนเทพ',s:'⭕ จิตวิญญาณยุทธ์',n:'🏙️ ยุคปัจจุบัน',k:'🌠 ทะลุฟ้าดารา',f:'🌉 นครม่านหมอก'};const MODN='nkf';
  const LK='murim_wd';const st=()=>{let d=null;try{d=JSON.parse(localStorage.getItem(LK)||'null')}catch(e){}d=d&&typeof d==='object'?d:{};d.own=Array.isArray(d.own)?d.own:[];return d};const put=d=>{try{localStorage.setItem(LK,JSON.stringify(d))}catch(e){}};
  const kind=()=>S&&S.mw?'n':'a';const cur=()=>{const d=st();return kind()==='n'?d.n:d.a};
@@ -46943,13 +46976,14 @@ try{(function(){if(typeof meLook!=='function')return;
  const condOk=w=>{const c=w[5];if(c==='f')return true;if(!S)return false;const t=c[0],v=c[1];
   if(w[1]==='x'&&!(S.xian||S.xt))return false;if(w[1]==='g'&&!S.xt)return false;if(w[1]==='s'&&S.ch!=='soul')return false;if(w[1]==='k'&&!(S.mw&&S.mw.sky))return false;if(w[1]==='f'&&!(S.mw&&S.mw.fog))return false;if(w[1]==='n'&&!S.mw)return false;if(w[1]==='m'&&S.mw)return false;
   try{switch(t){case '$':return false;case 'r':return realmIdx()>=v;case 'fm':return ((S.mw?S.mw.fame:S.fame)|0)>=v;case 'ring':return ((S.sv&&S.sv.rings)||[]).length>=v;case 'rk':return ((S.mw&&S.mw.sky&&S.mw.sky.rk)|0)>=v;case 'case':return ((S.mw&&S.mw.fog&&S.mw.fog.f&&S.mw.fog.f.solved)|0)>=v;case 'k':return v<0?(S.karma||0)<=v:(S.karma||0)>=v;case 'm':return !!S.spouse;case 'kid':return ((S.children&&S.children.length)||S.kids|0)>=v;case 'age':return (S.age|0)>=v;case 'sect':return !!S.faction;case 'lead':return !!(S.heirLead||S.ownSect||(S.mw&&S.mw.boss));case 'rich':return (S.money||0)>=v;case 'off':return S.path==='official'}}catch(e){}return false};
- const condTxt=w=>{const c=w[5];if(c==='f')return'ฟรี';const t=c[0],v=c[1],wn=w[1]==='x'?'ในโลกเซียน · ':w[1]==='g'?'ในแดนเทพ · ':'';
+ const condTxt=w=>{const c=w[5];if(c==='f')return'ฟรี';if(c[0]==='got')return'ได้จากการเล่นในทะลุฟ้าดารา: ดรอปจากนักสู้ · ซากในอวกาศ · ตลาดเหนือฟ้า';const t=c[0],v=c[1],wn=w[1]==='x'?'ในโลกเซียน · ':w[1]==='g'?'ในแดนเทพ · ':'';
   return wn+({'$':'ซื้อ '+(typeof fmtM==='function'?fmtM(price(w)):price(w))+(MODN.includes(w[1])?' บาท':' ตำลึง'),r:'ขั้นพลังระดับ '+(v+1)+' ขึ้นไป',fm:'ชื่อเสียง '+v+'+',k:v<0?'กรรมชั่ว '+(-v)+'+':'กรรมดี '+v+'+',m:'แต่งงาน',kid:'มีลูก '+v+' คน',age:'อายุ '+v+' ปี',sect:'เข้าสำนัก/สังกัด',lead:'เป็นเจ้าสำนัก/หัวหน้า',rich:'มีเงิน '+(typeof fmtM==='function'?fmtM(v):v),off:'รับราชการ',ring:'มีวงแหวนวิญญาณ '+v+' วง',rk:'ยศนักล่าขั้น '+v,case:'ไขคดี '+v+' คดี'}[t]||'')};
- const owned=i=>W[i][5]==='f'||st().own.includes(i);
+ const owned=i=>W[i][5]==='f'||st().own.includes(i);const d0=()=>st();const wOwned=j=>!!(WG[j]&&(WG[j].free||(st().wown||[]).includes(j)));
+ window._wdGive=(k,i)=>{const d=st();if(k==='w'){d.wown=d.wown||[];if(!d.wown.includes(i)){d.wown.push(i);put(d);return 1}}else if(!d.own.includes(i)&&W[i]&&W[i][5]!=='f'){d.own.push(i);put(d);return 1}return 0};window._wdFields=i=>fields(i);
  const fitsWorld=i=>kind()==='n'?MODN.includes(W[i][1]):!MODN.includes(W[i][1]);
  window.wdCheck=function(quiet){if(!S||!S.alive)return;const d=st();const got=[];W.forEach((w,i)=>{if(w[5]!=='f'&&!d.own.includes(i)&&condOk(w)){d.own.push(i);got.push(i)}});if(got.length){put(d);if(!quiet)try{log(`👘 <b>ปลดล็อกชุดใหม่ในตู้เสื้อผ้า:</b> ${got.map(i=>W[i][0]).join(' · ')} <button class="sysb" onclick="wdOpen()">เปิดตู้</button>`,'good')}catch(e){}}};
- const fields=i=>{const w=W[i],x=w[4];const o=Object.assign({robe:w[2],trim:w[3],belt:x.belt||shd(w[2],-.35),hat:null,stripe:0,fur:0,jade:0,patch:0,sash:null,ribbon:null,cape:null,capeT:null,emblem:null,coat:null,coatL:null,eyeG:null},x);if(MODN.includes(w[1])){o.pant=x.pant||'#2a2a34'}return o};
- const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(S){const d=st(),i=S.mw?d.n:d.a;if(i!=null&&W[i]&&fitsWorld(i)&&owned(i)&&!(!S.mw&&d.sect&&S.faction)&&!(S.look&&S.look.kx))Object.assign(o,fields(i))}}catch(e){}return o};
+ const fields=i=>{const w=W[i],x=w[4];const o=Object.assign({robe:w[2],trim:w[3],belt:x.belt||shd(w[2],-.35),hat:null,stripe:0,fur:0,jade:0,patch:0,sash:null,ribbon:null,cape:null,capeT:null,emblem:null,coat:null,coatL:null,eyeG:null,ar:null,wing:null,core:null},x);if(MODN.includes(w[1])){o.pant=x.pant||'#2a2a34'}return o};
+ const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(S){const d=st(),i=S.mw?d.n:d.a;if(i!=null&&W[i]&&fitsWorld(i)&&owned(i)&&!(!S.mw&&d.sect&&S.faction)&&!(S.look&&S.look.kx))Object.assign(o,fields(i))}if(S&&S.mw&&S.mw.sky&&d0().wing!=null){const w=WG[d0().wing];if(w&&wOwned(d0().wing))Object.assign(o,{wing:w.wing,wingC:w.wingC,wingC2:w.wingC2})}}catch(e){}return o};
  if(typeof mwLookMe==='function'){const _mw=mwLookMe;mwLookMe=function(M,pose){const o=_mw.apply(this,arguments);try{const d=st(),i=d.n;if(i!=null&&W[i]&&MODN.includes(W[i][1])&&owned(i)&&pose!=='work')Object.assign(o,fields(i))}catch(e){}return o}}
  const look=i=>{let me;try{me=S&&S.mw&&typeof mwLookMe==='function'?mwLookMe(S.mw,'stand'):meLook()}catch(e){me={age:20,g:'ชาย',skin:'#f1c27d',hair:'#1a1a1a'}}me=Object.assign({},me);delete me.beast;me.aura=null;me.sword=null;me.arm=null;if(me.age<16)me.age=20;
   if(i!=null)Object.assign(me,{hat:null,ck:null},fields(i));return me};
@@ -46960,19 +46994,85 @@ try{(function(){if(typeof meLook!=='function')return;
   const tabs=(k==='n'?['n','k','f']:['m','x','g','s']).map(x=>`<button class="gbtn wdT${x===tab?' on':''}" onclick="wdOpen('${x}')">${WN[x]}</button>`).join('');
   modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👘 ตู้เสื้อผ้า</h3><p class="tag2">ปลดแล้ว ${n}/${tot} ชุด · ปลดครั้งเดียวใส่ได้ทุกชีวิต · แต่งเพื่อความสวย ไม่เพิ่มพลัง</p>
   <div class="wdTop"><canvas id="wdMe" width="96" height="128"></canvas><div><b>${me!=null&&W[me]?W[me][0]:'ชุดตามชาติกำเนิด/สำนัก'}</b><br>${me!=null?`<button class="gbtn" onclick="wdWear(null)">ถอดชุด (กลับไปใส่ตามปกติ)</button>`:''}${k==='a'?`<label class="wdSect"><input type="checkbox" ${d.sect?'checked':''} onchange="wdSect(this.checked)"> ใส่ชุดสำนักเมื่ออยู่ในสำนัก</label>`:''}</div></div>
-  <div class="wdTabs">${tabs}</div><div class="wdGrid">${L.map(i=>{const o=owned(i),ok=o||condOk(W[i]),buy=!o&&W[i][5][0]==='$';return`<button class="wdB${me===i?' on':''}${o?'':' lk'}" onclick="wdTap(${i})"><canvas class="wdC" data-i="${i}" width="72" height="96"></canvas><span>${W[i][0]}</span><small>${me===i?'✅ ใส่อยู่':o?'แตะเพื่อใส่':(buy?'💰 ':'🔒 ')+condTxt(W[i])}</small></button>`}).join('')}</div>`,'wardrobe');
-  setTimeout(()=>{try{draw($('wdMe'),look(me),4);document.querySelectorAll('#modal .wdC').forEach(cv=>draw(cv,look(+cv.dataset.i),3))}catch(e){console.error(e)}},20)};
+  <div class="wdTabs">${tabs}</div>${tab==='k'?`<h4 class="wdH">🪽 ปีก (ใส่แยกจากชุด) · ${WG.filter((w,j)=>wOwned(j)).length}/${WG.length}</h4><div class="wdGrid"><button class="wdB${d.wing==null?' on':''}" onclick="wdWing(null)"><canvas class="wdW" data-j="-1" width="72" height="96"></canvas><span>ไม่ใส่ปีก</span></button>${WG.map((w,j)=>`<button class="wdB${d.wing===j?' on':''}${wOwned(j)?'':' lk'}" onclick="wdWing(${j})"><canvas class="wdW" data-j="${j}" width="72" height="96"></canvas><span>${w.n}</span><small>${d.wing===j?'✅ ใส่อยู่':wOwned(j)?'แตะเพื่อใส่':'🔒 ดรอป/อสูรอวกาศ/ตลาด'}</small></button>`).join('')}</div><h4 class="wdH">🛡️ ชุด</h4>`:''}<div class="wdGrid">${L.map(i=>{const o=owned(i),ok=o||condOk(W[i]),buy=!o&&W[i][5][0]==='$';return`<button class="wdB${me===i?' on':''}${o?'':' lk'}" onclick="wdTap(${i})"><canvas class="wdC" data-i="${i}" width="72" height="96"></canvas><span>${W[i][0]}</span><small>${me===i?'✅ ใส่อยู่':o?'แตะเพื่อใส่':(buy?'💰 ':'🔒 ')+condTxt(W[i])}</small></button>`}).join('')}</div>`,'wardrobe');
+  setTimeout(()=>{try{draw($('wdMe'),look(me),4);document.querySelectorAll('#modal .wdC').forEach(cv=>draw(cv,look(+cv.dataset.i),3));document.querySelectorAll('#modal .wdW').forEach(cv=>{const j=+cv.dataset.j,o2=look(me);if(j>=0)Object.assign(o2,{wing:WG[j].wing,wingC:WG[j].wingC,wingC2:WG[j].wingC2});else o2.wing=null;draw(cv,o2,3)})}catch(e){console.error(e)}},20)};
  window.wdTap=function(i){const w=W[i];if(!w)return;if(!fitsWorld(i)){toast(MODN.includes(w[1])?'ชุดนี้ใส่ได้ในโลกยุคปัจจุบัน/ทะลุฟ้าดารา/นครม่านหมอก':'ชุดนี้ใส่ได้ในโลกยุทธภพ/เซียน/เทพ/จิตวิญญาณยุทธ์');return}
   if(owned(i))return wdWear(i);if(w[5][0]==='$'){const need={x:!(S.xian||S.xt),g:!S.xt,s:S.ch!=='soul',k:!(S.mw&&S.mw.sky),f:!(S.mw&&S.mw.fog)}[w[1]];if(need){toast('🔒 ซื้อได้'+condTxt(w).split(' · ')[0]);return}const p=price(w);if((S.money||0)<p){toast('💰 เงินไม่พอ ต้องใช้ '+fmtM(p));return}S.money-=p;const d=st();d.own.push(i);put(d);try{sfx('good')}catch(e){}toast('👘 ได้'+w[0]+'แล้ว!');return wdWear(i)}
   toast('🔒 ปลดล็อกเมื่อ: '+condTxt(w))};
  window.wdWear=function(i){const d=st();if(kind()==='n')d.n=i;else d.a=i;put(d);if(i!=null&&S&&S.look&&S.look.kx){S.look.kx=0;toast('ถอดชุดกัลป์ออกแล้ว')}try{render();saveGame()}catch(e){}if(i!=null)toast('👘 ใส่'+W[i][0]);wdOpen()};
+ window.wdWing=function(j){if(j!=null&&!wOwned(j)){toast('🔒 ปีกนี้ได้จากการเล่นในทะลุฟ้าดารา');return}const d=st();d.wing=j;put(d);try{render()}catch(e){}wdOpen('k')};
  window.wdSect=function(v){const d=st();d.sect=!!v;put(d);try{render()}catch(e){}};
  {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{if(S&&S.alive&&(S.age%2===0))wdCheck()}catch(e){}return r}}
  {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(S&&m&&!m.querySelector('.wdMB')){const eqb=[...m.querySelectorAll('.mgrid>button.opt')].find(b=>/openEquip/.test(b.getAttribute('onclick')||''));const gr=eqb?eqb.parentElement:m.querySelector('.mgrid');if(gr){const n=W.filter((w,i)=>fitsWorld(i)&&owned(i)).length,tot=W.filter((w,i)=>fitsWorld(i)).length;const b=document.createElement('button');b.className='opt wdMB';b.setAttribute('onclick','wdOpen()');b.innerHTML=`👘 ตู้เสื้อผ้า<small>${n}/${tot} ชุด</small>`;if(eqb)eqb.insertAdjacentElement('afterend',b);else gr.appendChild(b)}}}catch(e){console.error('wd',e)}return r}}
  const css=document.createElement('style');css.textContent=`#modal .wdTop{display:flex;gap:12px;align-items:center;margin:6px 0 10px;padding:8px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(232,184,48,.35)}#modal .wdTop canvas{width:96px;height:128px;image-rendering:pixelated;background:radial-gradient(circle at 50% 70%,rgba(232,184,48,.18),transparent 70%);border-radius:10px}
  #modal .wdTop .gbtn{margin-top:6px;font-size:12px}#modal .wdSect{display:block;margin-top:6px;font-size:12px;opacity:.85}#modal .wdTabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}#modal .wdT.on{border-color:#e8b830;color:#e8b830}
- #modal .wdGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}#modal .wdB{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:12px;line-height:1.25;cursor:pointer}
+ #modal .wdH{margin:10px 2px 6px;font-size:14px;color:#e8b830}#modal .wdGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}#modal .wdB{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:12px;line-height:1.25;cursor:pointer}
  #modal .wdB canvas{width:72px;height:96px;image-rendering:pixelated}#modal .wdB small{font-size:10px;opacity:.75}#modal .wdB.on{border-color:#e8b830;box-shadow:0 0 0 1px #e8b830,0 0 10px rgba(232,184,48,.4)}#modal .wdB.lk canvas{filter:grayscale(.85) brightness(.55)}#modal .wdB.lk span{opacity:.6}`;document.head.appendChild(css);
  try{Object.assign(I18N.d,{'👘 ตู้เสื้อผ้า':'👘 Wardrobe'})}catch(e){}
  window._WD=W;
 })()}catch(e){console.error('mod-wd',e)}
+
+// 🛡️ คลังชุดรบ & ปีก (ทะลุฟ้าดารา) — ของได้จากการเล่น: ดรอปจากนักสู้ที่ล้มได้ · ซากยานลอยในอวกาศ · ล่าอสูรอวกาศ · ตลาดเหนือฟ้า
+// ใส่แล้วเพิ่มพลังเล็กน้อย (เฉพาะโลกนี้ · ผ่าน K.tb) · ได้แล้วหน้าตาเข้าตู้เสื้อผ้าถาวร · บางชิ้นมี "จิตวิญญาณ" ผูกพันแล้วตื่น 3 ขั้น (พลัง/ออร่า/นิสัย)
+try{(function(){const W=window._WD,WG=window._WG,S0=window._SK0;if(!W||!WG||S0==null)return;
+ const K_=()=>S&&S.alive&&S.mw&&S.mw.sky&&!S.mw.sky.beast?S.mw.sky:null;
+ const G=K=>K.sg||(K.sg={inv:[],s:-1,w:-1,shop:null,sy:-99,ow:null});
+ const SUITS=W.map((w,i)=>i).filter(i=>i>=S0&&W[i][1]==='k'&&W[i][6]);
+ const era=K=>Math.max(1,Math.min(5,1+Math.floor(Math.max(0,K.rk|0)/4)));
+ const pick=a=>a[Math.floor(Math.random()*a.length)];
+ const NAT=[['กล้าหาญ','⚔️',0],['เมตตา','🕊️',1],['โหดเหี้ยม','🩸',-1],['ทะนง','👑',0],['ขี้เล่น','✨',0]];
+ const SPN=['หลิง','เหยา','อสูรเงิน','ดาวเหนือ','เทียนหลาง','ซวนอิน','จื่อหยา','เพลิงขาว','หมิงเยว่','เฟิงจื่อ'];
+ const bon=it=>{const t=it.t==='s'?W[it.i][6].tier:WG[it.i].tier,base=it.t==='s'?t*.03+(W[it.i][6].pi||0)*.003:t*.015;return base*(1+(it.sp?(it.sp.aw|0)*.25:0))};
+ const nm=it=>(it.t==='s'?W[it.i][0]:WG[it.i].n)+(it.ow?` ของ${it.ow}`:'');
+ const tierOf=it=>it.t==='s'?W[it.i][6].tier:WG[it.i].tier;
+ const TN=['','ระดับนักรบ','ระดับดาวเคราะห์','ระดับดาวฤกษ์','ระดับจักรวาล','ระดับเจ้าจักรวาล'];
+ const apply=K=>{const g=G(K);let b=0;if(g.inv[g.s])b+=bon(g.inv[g.s]);if(g.inv[g.w])b+=bon(g.inv[g.w]);K.tb=Math.round(b*1000)/1000};
+ const mk=(K,kind,opt)=>{const e=era(K),lo=Math.max(1,e-1);let it;if(kind==='w'){const L=WG.map((w,j)=>j).filter(j=>WG[j].tier>=lo&&WG[j].tier<=e&&(!opt||!opt.wt||WG[j].wing===opt.wt));it={t:'w',i:pick(L.length?L:WG.map((w,j)=>j).filter(j=>WG[j].tier<=e))}}
+  else{const L=SUITS.filter(i=>W[i][6].tier>=lo&&W[i][6].tier<=e);it={t:'s',i:pick(L.length?L:SUITS.filter(i=>W[i][6].tier<=e))}}
+  if(opt&&opt.ow)it.ow=opt.ow;const spc=(opt&&opt.sp!=null)?opt.sp:(tierOf(it)>=3?.15:.08);if(Math.random()<spc){const n=pick(NAT);it.sp={n:pick(SPN),nat:n[0],ic:n[1],al:n[2],b:0,aw:0}}return it};
+ const give=(K,it,src)=>{const g=G(K);if(g.inv.length>=12){const j=g.inv.findIndex((x,k)=>k!==g.s&&k!==g.w&&!x.sp);if(j>=0)g.inv.splice(j,1);else{toast('🛡️ คลังเต็ม ของชิ้นนี้หลุดมือไป');return}}g.inv.push(it);
+  try{window._wdGive(it.t==='w'?'w':'s',it.i)}catch(e){}
+  log(`${it.t==='w'?'🪽':'🛡️'} <b>ได้${nm(it)}</b> (${TN[tierOf(it)]})${it.sp?` · ✨ <b>มีจิตวิญญาณหลับอยู่ข้างใน</b>`:''} — ${src} <button class="sysb" onclick="sgOpen()">เปิดคลังชุดรบ</button>`,'epic');try{sfx('good')}catch(e){}};
+ const epw=(K,m)=>Math.max(10,Math.round((S.power||10)*m));const win=(K,ep)=>Math.random()<Math.max(.08,Math.min(.92,(S.power||1)/((S.power||1)+ep)));
+ const hurt=p=>{S.hp=Math.max(1,Math.round(S.hp-S.maxHp*p))};
+ const EV={
+  duel(K){const nmE=pick(['นักล่าเงาแดง','หลี่ เหลยหมิง','นักรบยีนจากเขตเหนือ','ทหารรับจ้างหน้าแผลเป็น','นักล่าค่าหัวสวมเกราะดำ','อัจฉริยะตระกูลหวัง','ราหูน้อย']),ep=epw(K,.7+Math.random()*.6),tk=K.sg&&K.sg.ow;const who=tk||nmE;
+   choice('⚔️ '+(tk?who+'ตามมาทวงของ':'นักสู้ขวางทาง'),(tk?`${who} เจ้าของเดิมของชุดที่คุณเก็บได้ตามมาถึงแล้ว `:`${who} ในชุดรบเต็มยศขวางทางคุณไว้ `)+`พลังราว <b>${ep}</b> (คุณ ${S.power||0}) ถ้าชนะ ชุดรบหรือปีกของเขาจะตกเป็นของคุณ`,[
+    {t:'⚔️ สู้',f:()=>{if(win(K,ep)){K.sg.ow=null;const it=mk(K,Math.random()<.65?'s':'w',{ow:who});give(K,it,`ชนะ${who}`);S.fame=(S.fame|0)+5}else{hurt(.25);log(`💥 แพ้${who} บาดเจ็บหนัก`,'bad')}}},
+    {t:'🏃 ถอย',f:()=>{log(`🏃 คุณเลี่ยงการปะทะกับ${who}`)}}])},
+  drift(K){choice('🌌 ซากลอยกลางอวกาศ','ระหว่างเดินทาง เรดาร์จับซากยานรบเก่ากับร่างนักรบโบราณลอยอยู่ ชุดรบบนร่างยังมีแสงเรืองจางๆ',[
+    {t:'🧲 เก็บกู้',f:()=>{const r=Math.random();if(r<.2){hurt(.15);log('💥 ระบบป้องกันของซากยานยังทำงาน! คุณโดนยิงกลับมาเต็มๆ','bad')}else{const it=mk(K,Math.random()<.6?'s':'w',{sp:.2});give(K,it,'เก็บจากซากในอวกาศ');if(r>.85){K.sg.ow=pick(['ทายาทของนักรบผู้ล่วงลับ','กองทัพเก็บกู้ดาราจักร']);log(`⚠️ มีสัญญาณติดตามฝังอยู่ — ${K.sg.ow}จะตามมาทวงในไม่ช้า`,'bad')}}}},
+    {t:'🙏 ปล่อยให้ไปสงบ',f:()=>{S.karma=(S.karma||0)+3;log('🙏 คุณทำความเคารพแล้วปล่อยร่างนักรบให้ลอยไปตามดวงดาว กรรมดี +3')}}])},
+  beast(K){const B=pick([['มังกรสุริยะ','dragon'],['ค้างคาวหลุมดำ','bat'],['ผีเสื้อเนบิวลา','butterfly'],['วิหคเพลิงดาวแดง','flame'],['ผลึกมีชีวิต','crystal'],['เหยี่ยวเหล็กดาวตก','mech']]),ep=epw(K,.8+Math.random()*.5);
+   choice('🐉 อสูรอวกาศ: '+B[0],`${B[0]} ขวางเส้นทางเดินเรือ พลังราว <b>${ep}</b> ถ้าล่าได้ ช่างหลอมจะทำปีกจากซากมันให้`,[
+    {t:'🎯 ล่า',f:()=>{if(win(K,ep)){give(K,mk(K,'w',{wt:B[1]}),`หลอมจากซาก${B[0]}`)}else{hurt(.3);log(`💥 ${B[0]}ตีคุณกระเด็น`,'bad')}}},
+    {t:'🛸 อ้อมไป',f:()=>{}}])}};
+ const tick=()=>{const K=K_();if(!K)return;const g=G(K);
+  // จิตวิญญาณ: ผูกพันขึ้นเมื่อสวม · นิสัยขัดกับกรรม = ลด
+  [g.inv[g.s],g.inv[g.w]].forEach(it=>{if(!it||!it.sp)return;const P=it.sp,ka=S.karma||0,clash=(P.al>0&&ka<-50)||(P.al<0&&ka>50);P.b=Math.max(0,Math.min(100,P.b+(clash?-6:3+Math.floor(Math.random()*4))));
+   const st=P.b>=100?3:P.b>=60?2:P.b>=30?1:0;if(st>P.aw){P.aw=st;log(`✨ <b>จิตใน${nm(it)}ตื่นขั้นที่ ${st}</b> — "${P.n}" (${P.ic} ${P.nat}) ${['','ลืมตาขึ้น เรียกชื่อคุณเบาๆ','ยอมรับคุณเป็นนาย พลังของชุดตื่นเต็มที่','หลอมรวมกับคุณ ออร่า'+P.n+'แผ่ออกรอบตัว'][st]}`,'epic')}
+   else if(clash&&P.aw>0&&P.b<=0){log(`💔 จิต "${P.n}" รับนิสัยของคุณไม่ได้ จึงจากไปจาก${nm(it)}`,'bad');it.sp=null}
+   else if(P.aw>0&&Math.random()<.12)log(`✨ ${P.n}: "${pick(P.al<0?['ฆ่าให้หมด ข้าหิว','อย่าใจอ่อน','ศัตรูที่ดีคือศัตรูที่ตายแล้ว']:P.al>0?['ช่วยเขาเถอะ','อย่าลืมว่าเราสู้เพื่ออะไร','ข้าจะปกป้องท่านเอง']:['ไปให้ไกลกว่านี้!','ดาวดวงต่อไปรอเราอยู่','อย่าแพ้ใครอีก'])}"`)});
+  apply(K);
+  if(Math.random()<.12){const e=era(K),L=['duel'];if((K.rk|0)>=3)L.push('beast');if((K.rk|0)>=6)L.push('drift');if(g.ow)L.push('duel','duel');try{EV[pick(L)](K)}catch(e){console.error('sg ev',e)}}};
+ {const _py=passYear;passYear=function(){const r=_py.apply(this,arguments);try{tick()}catch(e){console.error('sg',e)}return r}}
+ // ร้านในตลาดเหนือฟ้า: สุ่มใหม่ทุก 5 ปี ระดับไม่เกินดาวเคราะห์ (หรือยุคปัจจุบันถ้าต่ำกว่า)
+ const BASE=[0,30000,150000,700000,3000000,12000000];const price=(K,it)=>Math.round(BASE[tierOf(it)]*(1+(K.rk|0)*.25));
+ const shop=K=>{const g=G(K);if(!g.shop||(S.age-g.sy)>=5){g.sy=S.age;const e=Math.min(2,era(K));g.shop=[0,1,2,3].map(k=>{let it;do{it=mk(K,k<2?'s':'w',{sp:0})}while(tierOf(it)>e&&Math.random()<.9);return it})}return g.shop};
+ const pv=(it,me)=>{const o=Object.assign({},me);if(it.t==='s')Object.assign(o,window._wdFields(it.i));else Object.assign(o,{wing:WG[it.i].wing,wingC:WG[it.i].wingC,wingC2:WG[it.i].wingC2});if(it.sp&&it.sp.aw)o.aura=it.t==='s'?W[it.i][3]:WG[it.i].wingC2;return o};
+ const card=(it,k,act)=>`<div class="sgC${it.sp?' sp':''}"><canvas class="sgV" data-k="${k}" width="72" height="96"></canvas><div class="sgT"><b>${it.t==='w'?'🪽':'🛡️'} ${nm(it)}</b><br><small>${TN[tierOf(it)]} · ⚡ พลังรบ ×${(1+bon(it)).toFixed(2)}${it.sp?`<br>✨ จิต "${it.sp.n}" ${it.sp.ic}${it.sp.nat} · ${it.sp.aw?'ตื่นขั้น '+it.sp.aw:'หลับอยู่'} · ผูกพัน ${it.sp.b}/100`:''}</small><div class="sgA">${act}</div></div></div>`;
+ window.sgOpen=function(tab){const K=K_();if(!K){toast('คลังชุดรบใช้ได้ในโลกทะลุฟ้าดารา');return}const gq=G(K);apply(K);tab=tab||'inv';
+  const items=[];let body='';
+  if(tab==='inv'){body=gq.inv.length?gq.inv.map((it,k)=>{items.push([it,'i'+k]);const on=k===gq.s||k===gq.w;return card(it,'i'+k,`${on?`<button class="gbtn" onclick="sgEq(${k},0)">ถอด</button> <span class="tag2">✅ สวมอยู่</span>`:`<button class="gbtn" onclick="sgEq(${k},1)">สวม</button> <button class="gbtn" onclick="sgSell(${k})">ขาย</button>`}`)}).join(''):'<p class="tag2">ยังไม่มีชุดรบ — ล้มนักสู้ ล่าอสูรอวกาศ เก็บซากในอวกาศ หรือซื้อจากตลาด</p>'}
+  else{const L=shop(K);body=L.map((it,k)=>{items.push([it,'s'+k]);return card(it,'s'+k,it.sold?'<span class="tag2">ขายแล้ว</span>':`<button class="gbtn" onclick="sgBuy(${k})">ซื้อ ${fmtM(price(K,it))}</button>`)}).join('')+`<p class="tag2">ของใหม่ทุก 5 ปี · ของระดับสูงต้องล่าหรือเจอเองเท่านั้น</p>`}
+  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🛡️ คลังชุดรบ & ปีก</h3><p class="tag2">พลังรบจากชุด+ปีก <b>×${(1+(K.tb||0)).toFixed(2)}</b> · ได้แล้วหน้าตาเข้า 👘 ตู้เสื้อผ้าถาวร</p>
+  <div class="wdTabs"><button class="gbtn wdT${tab==='inv'?' on':''}" onclick="sgOpen('inv')">🎒 ของฉัน (${gq.inv.length}/12)</button><button class="gbtn wdT${tab==='shop'?' on':''}" onclick="sgOpen('shop')">🏪 ตลาดเหนือฟ้า</button><button class="gbtn" onclick="wdOpen('k')">👘 ตู้เสื้อผ้า</button></div><div class="sgL">${body}</div>`,'sgear');
+  setTimeout(()=>{let me;try{me=Object.assign({},meLook())}catch(e){me={age:25,g:S.gender}}delete me.beast;me.aura=null;me.sword=null;items.forEach(([it,k])=>{const cv=document.querySelector(`#modal .sgV[data-k="${k}"]`);if(!cv)return;const c=cv.getContext('2d'),sg=g,sp=PS;g=c;PS=3;c.imageSmoothingEnabled=false;try{c.setTransform(3,0,0,3,0,0);person(8,31,pv(it,Object.assign({},me,{wing:null,ar:null})),'stand')}catch(e){}finally{c.setTransform(1,0,0,1,0,0);g=sg;PS=sp}})},20)};
+ window.sgEq=function(k,on){const K=K_();if(!K)return;const g=G(K),it=g.inv[k];if(!it)return;if(on){if(it.t==='s')g.s=k;else g.w=k}else{if(g.s===k)g.s=-1;if(g.w===k)g.w=-1}apply(K);try{render();saveGame()}catch(e){}sgOpen('inv')};
+ window.sgSell=function(k){const K=K_();if(!K)return;const g=G(K),it=g.inv[k];if(!it||k===g.s||k===g.w)return;const v=Math.round(price(K,it)/4);S.money=(S.money||0)+v;const fix=x=>x>k?x-1:x;g.inv.splice(k,1);g.s=g.s<0?-1:fix(g.s);g.w=g.w<0?-1:fix(g.w);toast('ขายได้ '+fmtM(v));sgOpen('inv')};
+ window.sgBuy=function(k){const K=K_();if(!K)return;const g=G(K),it=(g.shop||[])[k];if(!it||it.sold)return;const p=price(K,it);if((S.money||0)<p){toast('💰 เงินไม่พอ ต้องใช้ '+fmtM(p));return}S.money-=p;it.sold=1;give(K,{t:it.t,i:it.i},'ซื้อจากตลาดเหนือฟ้า');sgOpen('shop')};
+ // แสดงบนตัว: ของที่สวมทับหน้าตาจากตู้ · จิตตื่นแล้ว = ออร่า · ขั้น 3 = ตาเรืองแสง
+ {const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{const K=K_();if(K&&K.sg&&o&&!o.beast){const g=K.sg,s=g.inv[g.s],w=g.inv[g.w];if(s)Object.assign(o,window._wdFields(s.i));if(w)Object.assign(o,{wing:WG[w.i].wing,wingC:WG[w.i].wingC,wingC2:WG[w.i].wingC2});const sp=[s,w].filter(x=>x&&x.sp&&x.sp.aw).sort((a,b)=>b.sp.aw-a.sp.aw)[0];if(sp){o.aura=sp.t==='s'?W[sp.i][3]:WG[sp.i].wingC2;if(sp.sp.aw>=3)o.eyeG=o.aura}}}catch(e){}return o}}
+ {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const K=K_(),m=$('modal');if(K&&m&&!m.querySelector('.sgMB')){const ref=m.querySelector('.wdMB');const gr=ref?ref.parentElement:m.querySelector('.mgrid');if(gr){const g=G(K),b=document.createElement('button');b.className='opt sgMB';b.setAttribute('onclick','sgOpen()');b.innerHTML=`🛡️ คลังชุดรบ<small>${g.inv.length} ชิ้น · ×${(1+(K.tb||0)).toFixed(2)}</small>`;if(ref)ref.insertAdjacentElement('afterend',b);else gr.appendChild(b)}}}catch(e){console.error('sg menu',e)}return r}}
+ const css=document.createElement('style');css.textContent=`#modal .sgL{display:flex;flex-direction:column;gap:6px}#modal .sgC{display:flex;gap:8px;align-items:center;padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}#modal .sgC.sp{border-color:#c080ff;box-shadow:0 0 10px rgba(192,128,255,.35)}#modal .sgC canvas{width:72px;height:96px;image-rendering:pixelated;flex:none;background:radial-gradient(circle at 50% 70%,rgba(120,160,255,.18),transparent 70%);border-radius:8px}#modal .sgT{font-size:13px;line-height:1.35}#modal .sgA{margin-top:4px}#modal .sgA .gbtn{font-size:12px;padding:4px 10px}`;document.head.appendChild(css);
+})()}catch(e){console.error('mod-sg',e)}
