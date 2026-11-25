@@ -5,6 +5,9 @@
 //  2) ระหว่างชีวิต ชื่อผู้เล่นจริงโผล่มาในบทต่างๆ 16 แบบ (อาจารย์ คู่ปรับ พ่อค้าของลึกลับ ขอทาน หมอดู ผู้มาจากอีกโลก …)
 //     แต่ละบทมีหลายฉากเปิด · ผลลัพธ์สุ่มโดยเอนตามนิสัยจริงของเจ้าของชื่อ · หลายบทย้อนกลับมาอีกในอีกหลายปี (ภาคต่อ 10 แบบ)
 //  3) "👤 ไม่ให้ใช้ชื่อฉัน" ที่หน้าตอนจบ (api castoff/caston) · LS murim_castOff
+//  เฟส 2 📬 เสียงสะท้อน: ผลที่เราทำกับนักแสดง → ส่งกลับถึงเจ้าของชื่อ (api castecho/echoes) · เจ้าของเปิดอ่านเป็นการ์ด
+//         แล้วกด 🔥 ตามไปล้างแค้น / 🎁 ตามไปตอบแทน → ชีวิตหน้าเจอคนนั้น และผลส่งกลับไปหาเขาอีกทอด (ปิงปองข้ามจักรวาล)
+//         เสียงสะท้อนใหม่ = แรงศรัทธาตอนเริ่มชีวิต (ชื่อเสียง/ปัญญา) · ฉายาตามจำนวนชีวิตที่ชื่อเราไปโผล่
 //  ข้อมูลในเซฟ: S._cs {n, y, used[], cb[]} · ออฟไลน์ = ไม่มีเหตุการณ์ (ไม่สร้างชื่อปลอม)
 // ============================================================
 try{(()=>{
@@ -39,7 +42,8 @@ function fx(o){const out=[];const n=(k,v,l)=>{if(!v)return;S[k]=Math.max(0,(+S[k
  if(o.mhp){S.maxHp=Math.round((+S.maxHp||100)*(1+o.mhp));S.hp=Math.min(S.maxHp,S.hp);out.push(`พลังชีวิตสูงสุด +${Math.round(o.mhp*100)}%`)}
  if(o.life){if(S.mw){S.mw.wsL=(S.mw.wsL|0)+o.life;S.mw.end=(S.mw.end||80)+o.life}else S.lifespan=(+S.lifespan||70)+o.life;out.push(`อายุขัย ${o.life>0?'+':''}${o.life} ปี`)}
  return out.join(' · ')}
-const say=(t,c,o)=>{const r=o?fx(o):'';try{log(t+(r?`<br><span class="tag2">${r}</span>`:''),c||'',true);render&&render()}catch(e){}};
+let CAP=null;
+const say=(t,c,o)=>{if(CAP)CAP.push([t,c||'']);const r=o?fx(o):'';try{log(t+(r?`<br><span class="tag2">${r}</span>`:''),c||'',true);render&&render()}catch(e){}};
 
 // ---------------------------------------------------------------- คลังนักแสดง (ดึงจากเซิร์ฟเวอร์ 15 นาที/ครั้ง)
 let C=null,Ct=0,Cb=0;
@@ -55,7 +59,7 @@ const TAG=(x,more)=>`<br><span class="csTag">👤 ผู้เล่นจริ
 const lean=(x,good,bad)=>(has(x,'s')?good:0)+(has(x,'d')?-bad:0);/* ใจบุญเอนดี มืดเอนร้าย */
 
 // ---------------------------------------------------------------- บท (16 แบบ) — ret: [หัวข้อ, ข้อความ, ตัวเลือก[[ข้อความ, คำอธิบาย, f]]]
-const later=(k,x,a,b,d)=>{S._cs.cb.push({k,n:x.n,e:x.e,w:x.w,tr:x.tr,y:(S.age|0)+rnd(a,b),d:d||0})};
+const later=(k,x,a,b,d)=>{S._cs.cb.push({k,i:x.i,n:x.n,e:x.e,w:x.w,tr:x.tr,y:(S.age|0)+rnd(a,b),d:d||0})};
 const R={
  mentor:{c:()=>S.age>=8&&S.age<=50,go(x,v){const op=rp([`ชายชราท่าทางสงบนั่งดูคุณฝึกอยู่นาน ก่อนจะลุกขึ้นแนะนำตัวว่าชื่อ ${NM(x)}`,`ระหว่างหลบฝนใน${v.inn} คนแปลกหน้าชื่อ ${NM(x)} ทักว่าท่าเดินของคุณ "ผิดไปครึ่งก้าว"`,`${NM(x)} ซึ่งใครๆ ใน${v.mkt}เรียกว่า${v.big} เดินตรงมาหาคุณกลางฝูงชน`]);
   return['🧓 ผู้ชี้ทางแปลกหน้า',`${op} แล้วบอกว่าเห็นแววบางอย่างในตัวคุณ`,[
@@ -138,6 +142,14 @@ const R={
 
 // ---------------------------------------------------------------- ภาคต่อ (คนเดิมกลับมา)
 const CB={
+ chase_rev:(x,v)=>['🔥 ศัตรูจากอีกจักรวาล',`ในอีกจักรวาลหนึ่ง <b>${E(x.n)}</b> เคยทำกับ <b>${E(x.my||'ตัวคุณในชาติก่อน')}</b> ไว้แบบนี้:<br><i class="csQ">“${E(String(x.t||'').slice(0,160))}”</i><br>วันนี้เขาเดินอยู่ตรงหน้าคุณ ไม่รู้ตัวเลยว่าคุณจำได้`,[
+   ['⚔️ ท้าดวลล้างแค้น','ชนะ ~55%',()=>{const w=P(.55);if(w)say(`🔥 คุณล้มลง<b>${E(x.n)}</b>ได้กลางลาน หนี้แค้นข้ามจักรวาลถูกชำระแล้ว`,'myth',{fame:120,pw:.12});else say(`🩸 <b>${E(x.n)}</b>ยังเหนือกว่าคุณ แม้แต่ในจักรวาลนี้`,'bad',{hp:-.35,int:4});back(x,'rev',w?'bad':'good',w?`🔥 «${S.name}» ตามข้ามจักรวาลมาล้างแค้นแทน «${x.my||'ใครบางคน'}» ท้าดวลคุณกลางลาน และคุณแพ้! ชื่อของคุณถูกเหยียบจมดิน`:`🛡️ «${S.name}» ตามข้ามจักรวาลมาล้างแค้นแทน «${x.my||'ใครบางคน'}» แต่คุณเอาชนะเขาได้อีกครั้ง!`)}],
+   ['🗣️ ปล่อยข่าวลือทำลายชื่อเสียงเขา','ยิ่งปัญญาสูงยิ่งสำเร็จ',()=>{const w=P(Math.min(.8,.35+(+S.int||0)/300));if(w)say(`🗣️ ข่าวลือของคุณแพร่ไปทั่ว<b>${E(x.n)}</b>ต้องหนีออกจากเมือง`,'good',{fame:40,karma:-5});else say(`🗣️ ข่าวลือย้อนกลับมาหาคุณเอง`,'bad',{fame:-40});back(x,'rev',w?'bad':'good',w?`🗣️ «${S.name}» ปล่อยข่าวลือทำลายชื่อคุณจนต้องหนีออกจากเมือง เพื่อแก้แค้นแทน «${x.my||'ใครบางคน'}»`:`😏 «${S.name}» พยายามปล่อยข่าวลือทำลายชื่อคุณ แต่ไม่มีใครเชื่อ`)}],
+   ['🕊️ ให้อภัย','บุญ +12',()=>{say(`🕊️ คุณเดินผ่าน<b>${E(x.n)}</b>ไปเฉยๆ ความแค้นจบที่คุณ`,'myth',{karma:12,int:3});back(x,'rev','myth',`🕊️ «${S.name}» จำได้ว่าคุณเคยทำอะไรกับ «${x.my||'ใครบางคน'}» แต่เลือกให้อภัย แล้วเดินผ่านคุณไปเฉยๆ`)}]]],
+ chase_gift:(x,v)=>['🎁 ผู้มีพระคุณจากอีกจักรวาล',`ในอีกจักรวาลหนึ่ง <b>${E(x.n)}</b> เคยทำกับ <b>${E(x.my||'ตัวคุณในชาติก่อน')}</b> ไว้แบบนี้:<br><i class="csQ">“${E(String(x.t||'').slice(0,160))}”</i><br>วันนี้คุณเจอเขาอีกครั้ง และอยากตอบแทน`,[
+   ['🎁 มอบของมีค่าให้','',()=>{say(`🎁 <b>${E(x.n)}</b>งงว่าทำไมคนแปลกหน้าถึงใจดีขนาดนี้`,'good',{money:-80,karma:10});back(x,'gift','myth',`🎁 «${S.name}» ตามข้ามจักรวาลมาตอบแทนที่คุณเคยดีกับ «${x.my||'ใครบางคน'}» มอบของมีค่าให้โดยไม่บอกเหตุผล`)}],
+   ['🛡️ ปกป้องเขาจากอันตราย','เจ็บตัว · ชื่อเสียงเพิ่ม',()=>{say(`🛡️ คุณรับคมดาบแทน<b>${E(x.n)}</b> เขารอดเพราะคุณ`,'myth',{hp:-.3,fame:60});back(x,'gift','myth',`🛡️ «${S.name}» โผล่มารับคมดาบแทนคุณ ช่วยชีวิตคุณไว้ เพื่อตอบแทนที่คุณเคยดีกับ «${x.my||'ใครบางคน'}»`)}],
+   ['🍶 นั่งดื่มด้วยกันหนึ่งคืน','',()=>{say(`🍶 คุณกับ<b>${E(x.n)}</b>คุยกันทั้งคืนเหมือนเพื่อนเก่า`,'good',{int:4,hp:.3});back(x,'gift','good',`🍶 «${S.name}» ชวนคุณนั่งดื่มทั้งคืนเหมือนเพื่อนเก่า เพราะครั้งหนึ่งคุณเคยดีกับ «${x.my||'ใครบางคน'}»`)}]]],
  mentor_back:(x,v)=>['🕯️ อาจารย์กลับมา',`${NM(x)} อาจารย์ของคุณกลับมาในสภาพแก่ชราลงมาก "ข้ามีของชิ้นสุดท้ายจะให้"`,[['🙇 รับมรดกวิชา','',()=>say(`🕯️ ${NM(x)}ถ่ายทอด${v.art}ท่าสุดท้ายให้ แล้วหลับไปอย่างสงบในอ้อมแขนคุณ`,'myth',{pw:.25,int:5})],['🍵 ขอแค่ได้ดูแลท่านในบั้นปลาย','',()=>say(`🍵 คุณดูแล${NM(x)}จนวันสุดท้าย เขาจากไปพร้อมรอยยิ้ม`,'myth',{karma:12,life:3})]]],
  mentor_betray:(x,v)=>['🗡️ อาจารย์จอมปลอม',`${NM(x)} กลับมาพร้อมพรรคพวก เขาต้องการให้คุณทำงานสกปรกให้อีกครั้ง`,[['⚔️ สู้','ชนะ ~50%',()=>{if(P(.5))say(`⚔️ คุณเอาชนะ${NM(x)}ได้ เขาไม่กล้ากลับมาอีก`,'myth',{fame:60,pw:.08});else say(`🩸 คุณแพ้ และต้องจ่ายค่าไถ่ชีวิต`,'bad',{hp:-.3,money:-100})}],['🏃 หนีไปตั้งตัวใหม่ที่อื่น','',()=>say(`🏃 คุณหนีไปตั้งต้นใหม่ ทิ้งทุกอย่างไว้ข้างหลัง`,'',{money:-60,int:3})]]],
  rival_respect:(x,v)=>['🤝 คู่ปรับที่นับถือกัน',`${NM(x)} คู่ปรับเก่าส่งของมาให้พร้อมจดหมาย "ข้าไม่เคยลืมศึกวันนั้น"`,[['🎁 รับไว้','',()=>say(`🎁 ในกล่องคือ${v.wpn}ที่${NM(x)}ใช้ฝึกมาทั้งชีวิต`,'good',{pw:.12,fame:20})],['✉️ ตอบจดหมายชวนประลองอีกครั้ง','',()=>{say(`✉️ ${NM(x)}ตอบกลับว่า "ข้ารอวันนั้นอยู่"`,'');later('rival_revenge',x,2,6)}]]],
@@ -153,30 +165,79 @@ const CB={
  regret:(x,v)=>['🍂 ทางที่ไม่ได้เลือก',`คุณได้ข่าวว่า${NM(x)} คนที่เคยชวนคุณเป็นศิษย์ เพิ่งรับศิษย์คนใหม่ ศิษย์คนนั้นกลายเป็น${v.big}ไปแล้ว`,[['🍂 ปล่อยวาง','',()=>say(`🍂 คุณยิ้มให้ทางที่ไม่ได้เลือก`,'',{int:4,karma:2})],['🏃 ไปตามหาเขา','',()=>{if(P(.5))say(`🕯️ ${NM(x)}ยังจำคุณได้ และสอนสิ่งที่ค้างไว้ให้`,'myth',{pw:.15});else say(`🚪 ${NM(x)}ไม่อยู่แล้ว เหลือแค่บ้านว่าง`,'',{int:2})}]]]};
 
 // ---------------------------------------------------------------- ตัวจัด (ทุก 1.5 วิ · ปีละไม่เกิน 1 · ชีวิตละบทหลัก ≤5)
-function st(){if(!S._cs)S._cs={n:0,y:-99,used:[],cb:[],ly:-1};return S._cs}
+function st(){if(!S._cs){S._cs={n:0,y:-99,used:[],cb:[],ly:-1,ec:[],rc:[]};try{const L=LS.get('murim_chase',[])||[];if(L.length){LS.set('murim_chase',[]);L.slice(0,3).forEach(c=>S._cs.cb.push({k:c.k==='gift'?'chase_gift':'chase_rev',n:c.n,w:c.w,ct:c.id,my:c.cn,t:c.t,y:(S.age|0)+rnd(2,8)}))}}catch(e){}setTimeout(reward,2500)}return S._cs}
 /* ตัวเลือกที่เปิดอยู่ไม่นับ (choice() เข้าคิวให้เอง) · รอเฉพาะหน้าต่างอื่น ดวล มินิเกม */
 function busy(){try{const m=$('modal'),mk=m&&m.dataset&&m.dataset.k;return !!((modalOpen&&mk!=='choice')||(typeof DU!=='undefined'&&DU)||($('auOv')&&$('auOv').classList.contains('on'))||(window._mgBusy&&_mgBusy()))}catch(e){return true}}
-function ask(t,x,opts,who){try{choice('👤 '+t,x+TAG(who),opts.map(([tt,s,f])=>({t:tt,s:s||'',f(){try{f()}catch(e){console.error('cast',e)}}})))}catch(e){console.error('cast ask',e)}}
-function tick(){try{if(typeof S==='undefined'||!S||!S.alive)return;load();if(!C||busy())return;const s=st(),ag=S.age|0;if(s.ly===ag)return;
- const cb=s.cb.find(c=>ag>=c.y);if(cb){s.cb=s.cb.filter(c=>c!==cb);s.ly=ag;const f=CB[cb.k];if(!f)return;const r=f(cb,V(),cb.d);return ask(r[0],r[1],r[2],cb)}
- if(ag<6||s.n>=5||ag-s.y<3)return;s.ly=ag;if(!P(.16))return;
+/* ผลที่เกิดกับนักแสดง → แปลงเป็นมุมมองของเจ้าของชื่อ ("คุณ" = ผู้เล่นคนนี้) แล้วเก็บไว้ส่งตอนจบ */
+const strip=t=>String(t||'').replace(/<br\s*\/?>/g,' ').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const toOwner=t=>strip(t).replace(/(?<!พระ|บุญ)คุณ(?!ค่า|ภาพ|สมบัติ|ธรรม)/g,'«'+String(S.name||'ใครบางคน')+'»').slice(0,250);
+function rec(L,got){try{const s=st();s.ec=s.ec||[];const t=got.map(g=>g[0]).join(' '),c=(got.find(g=>g[1]==='myth')||got.find(g=>g[1]==='bad')||got.find(g=>g[1]==='good')||got[0])[1];
+ L.forEach(p=>{if(p&&p.i&&s.ec.length<16)s.ec.push({i:p.i,cn:p.n,t:toOwner(t),c})});if(s.ec.length>=8)flush()}catch(e){}}
+function ask(t,x,opts,who,more){try{const L=[who].concat(more||[]);choice('👤 '+t,x+TAG(who),opts.map(([tt,s,f])=>({t:tt,s:s||'',f(){CAP=[];try{f()}catch(e){console.error('cast',e)}const got=CAP;CAP=null;if(got&&got.length)rec(L,got)}})))}catch(e){console.error('cast ask',e)}}
+function tick(){try{if(typeof S==='undefined'||!S||!S.alive)return;load();if(busy())return;const s=st(),ag=S.age|0;if(s.ly===ag)return;
+ const cb=s.cb.find(c=>ag>=c.y&&(C||/^chase/.test(c.k)));if(cb){s.cb=s.cb.filter(c=>c!==cb);s.ly=ag;const f=CB[cb.k];if(!f)return;const r=f(cb,V(),cb.d);return ask(r[0],r[1],r[2],cb)}
+ if(!C||ag<6||s.n>=5||ag-s.y<3)return;s.ly=ag;if(!P(.16))return;
  s.rk=s.rk||[];let ks=Object.keys(R).filter(k=>{try{return R[k].c()}catch(e){return false}});const nu=ks.filter(k=>!s.rk.includes(k));if(nu.length)ks=nu;if(!ks.length)return;const k=rp(ks),r0=R[k];
  const x=who(!!r0.x);if(!x)return;let y=null;if(r0.n===2){s.used.push(x.n);y=who(false);s.used.pop();if(!y)return}
- s.n++;s.y=ag;s.rk.push(k);s.used.push(x.n);if(y)s.used.push(y.n);const r=r0.go(x,V(),y);ask(r[0],r[1],r[2],x)}catch(e){console.error('cast tick',e)}}
+ s.n++;s.y=ag;s.rk.push(k);s.used.push(x.n);if(y)s.used.push(y.n);const r=r0.go(x,V(),y);ask(r[0],r[1],r[2],x,y?[y]:[])}catch(e){console.error('cast tick',e)}}
 setInterval(tick,1500);setTimeout(load,4000);
+
+// ---------------------------------------------------------------- 📬 เสียงสะท้อน
+function back(x,k,c,t){try{const s=st();s.rc=s.rc||[];if(x.ct&&s.rc.length<3)s.rc.push({r:x.ct,k,cn:String(S.name||'').slice(0,20),t:String(t).slice(0,250),c})}catch(e){}}
+function flush(){try{const s=S&&S._cs;if(!s||!on())return;const e=(s.ec||[]).splice(0,8),r=(s.rc||[]).splice(0,3);if(!e.length&&!r.length)return;
+ api('castecho',{e,r,n:String(S.name||'').slice(0,20),w:WK()||'murim'}).then(j=>{if(j&&j.rate){s.ec=e.concat(s.ec||[]).slice(0,16);s.rc=r.concat(s.rc||[]).slice(0,3)}}).catch(()=>{s.ec=e.concat(s.ec||[]).slice(0,16);s.rc=r.concat(s.rc||[]).slice(0,3)})}catch(e){}}
+let EC=null,ECt=0;
+function eLoad(force){if(!on())return Promise.resolve(EC);if(EC&&!force&&Date.now()-ECt<300000)return Promise.resolve(EC);
+ return api('echoes',{}).then(j=>{if(j&&j.ok){EC=j;ECt=Date.now();badge()}return EC}).catch(()=>EC)}
+const seen=()=>{try{return +LS.get('murim_echoSeen',0)||0}catch(e){return 0}};
+const fresh=()=>EC&&EC.L?EC.L.filter(x=>(x.at||0)>seen()):[];
+const RANK=[[300,'👁️ ผู้อยู่ในทุกจักรวาล'],[100,'📜 ตำนานร้อยชีวิต'],[30,'🌟 คนดังข้ามจักรวาล'],[10,'🗣️ ชื่อที่ถูกเอ่ยถึง'],[1,'👣 เงาในชีวิตคนอื่น'],[0,'🌫️ ยังไม่มีใครรู้จัก']];
+const rank=n=>RANK.find(r=>n>=r[0])[1];
+function badge(){try{const n=fresh().length;document.querySelectorAll('.csEcB').forEach(b=>b.innerHTML=`📬 เสียงสะท้อน${n?` <span class="csN">${n} ใหม่</span>`:''}`);if(n&&!(S&&S.alive)&&!badge._t){badge._t=1;try{toast(`📬 ชื่อของคุณไปโผล่ในชีวิตคนอื่น ${n} เรื่อง — เปิดดูที่ ☰ หรือหน้าตอนจบ`)}catch(e){}}}catch(e){}}
+function reward(){try{if(!S||!S.alive)return;eLoad().then(()=>{try{if(!S||!S.alive||S._csRw)return;const last=+LS.get('murim_echoRw',0)||0,L=(EC&&EC.L||[]).filter(x=>(x.at||0)>last);if(!L.length)return;S._csRw=1;
+ LS.set('murim_echoRw',Math.max(...L.map(x=>x.at||0)));const n=L.length,g=L.filter(x=>x.c==='myth'||x.c==='good').length;
+ say(`📬 <b>แรงศรัทธาข้ามจักรวาล</b> — ตั้งแต่ชีวิตก่อน ชื่อของคุณไปโผล่ในชีวิตของผู้เล่นคนอื่น ${n} เรื่อง${g?` (เรื่องดี ${g})`:''} · เปิดอ่านที่ ☰ → 📬 เสียงสะท้อน`,'myth',{fame:Math.min(200,n*12),int:Math.min(8,n)})}catch(e){}})}catch(e){}}
+const WIC={murim:'⚔️',xian:'☁️',god:'🌟',soul:'🔮',loop:'⏳',mw:'🏙️',sky:'🌌',fog:'🌫️',beast:'🐺'};
+function chased(){try{return LS.get('murim_chased',[])||[]}catch(e){return[]}}
+function eOpen(){try{if(typeof closeM==='function'&&modalOpen)closeM()}catch(e){}
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📬 เสียงสะท้อนจากจักรวาล</h3><div class="csIn" id="csIn"><p class="tag2">กำลังฟังเสียงจากจักรวาลอื่น…</p></div>`,'csecho');
+ eLoad(true).then(()=>{const el=$('csIn');if(!el)return;if(!EC){el.innerHTML='<p class="tag2">ต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้งนะ</p>';return}
+  const c=EC.c||{},tot=+c.tot||0,sn=seen(),ch=chased(),pend=(LS.get('murim_chase',[])||[]).length;
+  const card=(x,k)=>{const nw=(x.at||0)>sn,done=ch.includes(x.id);const ic=x.x==='rev'?'🔥':x.x==='gift'?'🎁':x.c==='myth'?'✨':x.c==='bad'?'💀':x.c==='good'?'💚':'💬';
+   return`<div class="csCard${nw?' nw':''} c_${x.c||'mid'}${x.x?' xx':''}" style="animation-delay:${Math.min(k,12)*.09}s"><div class="csH">${ic} ${x.x?'<b>มีคนตามข้ามจักรวาลมาหาคุณ!</b>':`ในชีวิตของ <b>${E(x.n)}</b>`} <span>${WIC[x.w]||''} ${WNM[x.w]||''}${nw?' · <i>ใหม่</i>':''}</span></div>
+    <div class="csT">${E(x.t).replace(/«([^»]{1,24})»/g,'<b class="csP">$1</b>')}</div><div class="csF">ตัวละครของคุณ: <b>${E(x.cn||'?')}</b></div>
+    <div class="csA">${done?'<span class="tag2">✅ ตามไปแล้ว</span>':`<button class="csB2" data-i="${k}" data-k="rev">🔥 ตามไปล้างแค้น</button><button class="csB2" data-i="${k}" data-k="gift">🎁 ตามไปตอบแทน</button>`}</div></div>`};
+  el.innerHTML=`<div class="csSt"><div class="csRk">${rank(tot)}</div><div>ชื่อของคุณไปโผล่ในชีวิตผู้เล่นคนอื่นรวม <b>${tot}</b> ครั้ง · ✨ ฉากตำนาน ${+c.myth||0} · 💚 จบดี ${+c.good||0} · 💀 จบร้าย ${+c.bad||0}</div><div class="tag2">กด 🔥/🎁 แล้วชีวิตหน้าคุณจะได้เจอคนนั้น และเขาจะรู้ว่าคุณตามมา (ค้างได้ 3 คน · ตอนนี้ ${pend}/3)</div></div>
+   ${EC.L.length?EC.L.map(card).join(''):'<p class="tag2">ยังไม่มีใครเจอตัวละครของคุณ เล่นจบชีวิตแล้วกลับมาดูใหม่นะ ชื่อคุณจะเริ่มไปโผล่ในชีวิตคนอื่นเรื่อยๆ</p>'}`;
+  el.querySelectorAll('.csB2').forEach(b=>b.onclick=()=>{const x=EC.L[+b.dataset.i];if(!x)return;const L=LS.get('murim_chase',[])||[];if(L.length>=3){try{toast('ตามได้ค้างสูงสุด 3 คน เล่นชีวิตหน้าก่อนนะ')}catch(e){}return}
+   L.push({id:x.id,n:x.n,w:x.w,cn:x.cn,t:String(x.t||'').replace(/«|»/g,''),k:b.dataset.k});LS.set('murim_chase',L);const C2=chased();C2.push(x.id);LS.set('murim_chased',C2.slice(-200));
+   b.parentNode.innerHTML=`<span class="tag2">${b.dataset.k==='rev'?'🔥 ชีวิตหน้าคุณจะได้เจอ '+E(x.n)+' (ล้างแค้น)':'🎁 ชีวิตหน้าคุณจะได้เจอ '+E(x.n)+' (ตอบแทน)'}</span>`});
+  try{const mx=Math.max(sn,...EC.L.map(x=>x.at||0));LS.set('murim_echoSeen',mx)}catch(e){}badge()})}
+window.echoOpen=eOpen;
+{const _m=openMenu;openMenu=function(){const r=_m.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid,.tmgrid');if(g&&!g.querySelector('.csEcB'))g.insertAdjacentHTML('beforeend','<button class="opt csEcB" onclick="echoOpen()">📬 เสียงสะท้อน</button>');badge()}catch(e){}return r};window.openMenu=openMenu}
+try{if(typeof openTitleMenu==='function'){const _t=openTitleMenu;openTitleMenu=function(){const r=_t.apply(this,arguments);try{const g=$('modal').querySelector('.tmgrid,.mgrid');if(g&&!g.querySelector('.csEcB'))g.insertAdjacentHTML('beforeend','<button class="opt csEcB" onclick="echoOpen()">📬 เสียงสะท้อน</button>');badge()}catch(e){}return r};window.openTitleMenu=openTitleMenu}}catch(e){}
+setTimeout(()=>eLoad(),6000);
 
 // ---------------------------------------------------------------- ส่งตัวละครเข้าคลังตอนจบ + ปุ่มไม่ให้ใช้ชื่อ
 function trOf(){let t='';try{const k=+S.karma||0;if(k>=40)t+='s';if(k<=-25)t+='d';if((+S.fame||0)>=800)t+='f';if((S.age|0)>=80)t+='o';if((S.age|0)<25)t+='y';if(S.spouse)t+='l';if(S.disc)t+='m'}catch(e){}return t}
 function send(){try{if(!S||S._csSent||OFF()||!on()||!S.name||(S.age|0)<8)return;S._csSent=1;let ep='';try{ep=typeof epithet==='function'?String(epithet()||''):''}catch(e){}
  api('castadd',{n:String(S.name).slice(0,20),w:WK()||'murim',tr:trOf(),e:ep.replace(/<[^>]+>/g,'').slice(0,30),a:S.age|0}).catch(()=>{})}catch(e){}}
 function box(){try{const E0=$('end');if(!E0||E0.querySelector('.csEnd'))return;const d=document.createElement('div');d.className='csEnd';
- const draw=()=>{const off=OFF();d.innerHTML=`👤 <b>จักรวาลร่วม</b> · ${off?'ชื่อของคุณจะไม่ไปปรากฏในชีวิตผู้เล่นคนอื่น':'ตัวละครนี้อาจไปรับบทในชีวิตของผู้เล่นคนอื่น เป็นอาจารย์ คู่ปรับ หรือตำนาน ตามนิสัยที่คุณเล่น'} <button type="button" class="csB">${off?'✅ อนุญาตให้ใช้ชื่อ':'🚫 ไม่ให้ใช้ชื่อฉัน'}</button>`;
+ const draw=()=>{const off=OFF();d.innerHTML=`👤 <b>จักรวาลร่วม</b> · ${off?'ชื่อของคุณจะไม่ไปปรากฏในชีวิตผู้เล่นคนอื่น':'ตัวละครนี้อาจไปรับบทในชีวิตของผู้เล่นคนอื่น เป็นอาจารย์ คู่ปรับ หรือตำนาน ตามนิสัยที่คุณเล่น'} <button type="button" class="csB">${off?'✅ อนุญาตให้ใช้ชื่อ':'🚫 ไม่ให้ใช้ชื่อฉัน'}</button> <button type="button" class="csB csEcB" onclick="echoOpen()">📬 เสียงสะท้อน</button>`;badge();
   d.querySelector('.csB').onclick=()=>{const v=!OFF();try{LS.set('murim_castOff',v?1:0)}catch(e){}try{api(v?'castoff':'caston',{}).catch(()=>{})}catch(e){}if(!v){S._csSent=0;send()}draw()}};draw();
  const at=E0.querySelector('.auEnd')||E0.querySelector('.hkEnd')||E0.querySelector('.lfEnd')||E0.querySelector('h2,h3,.big');if(at)at.insertAdjacentElement('afterend',d);else E0.appendChild(d)}catch(e){console.error('cast box',e)}}
-{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);setTimeout(send,1200);setTimeout(box,1300);return r}}
+{const _eg=endGame;endGame=function(){const r=_eg.apply(this,arguments);setTimeout(flush,900);setTimeout(send,1200);setTimeout(box,1300);setTimeout(()=>eLoad(true),2500);return r}}
 
 const css=document.createElement('style');css.textContent=`.csTag{display:inline-block;margin-top:6px;font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(124,207,255,.14);border:1px solid rgba(124,207,255,.55);color:#bfe6ff}
+.csQ{display:block;margin:6px 0;padding:6px 10px;border-left:3px solid #ff9a6b;background:#ffffff0a;border-radius:6px;font-style:normal;font-size:13px}
+.csN{display:inline-block;padding:0 6px;border-radius:8px;background:#ff5a6b;color:#fff;font-size:11px;font-weight:800;animation:auPulse2 1.4s infinite}
+.csSt{padding:10px;border-radius:12px;background:linear-gradient(135deg,#1c2350,#2a1640);border:1px solid #9a7cff88;margin-bottom:10px;font-size:13px;line-height:1.6}.csRk{font-size:18px;font-weight:800;color:#ffe9a8;margin-bottom:2px}
+.csCard{margin:8px 0;padding:10px 12px;border-radius:12px;background:#ffffff0a;border:1px solid #ffffff22;opacity:0;animation:csIn .45s ease forwards}.csCard.nw{border-color:#ffd76a;box-shadow:0 0 12px #ffd76a44}
+.csCard.c_myth{background:linear-gradient(135deg,#3a2f1288,#1a1426aa)}.csCard.c_bad{background:linear-gradient(135deg,#3a121a88,#1a1020aa)}.csCard.c_good{background:linear-gradient(135deg,#123a2288,#101a1aaa)}.csCard.xx{border-color:#ff7a5a;box-shadow:0 0 16px #ff7a5a55}
+@keyframes csIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}@keyframes auPulse2{50%{opacity:.6}}
+.csH{font-size:13px}.csH span{float:right;font-size:11px;opacity:.75}.csH i{color:#ffd76a;font-style:normal}.csT{margin:6px 0;font-size:14px;line-height:1.6}.csP{color:#ffe9a8}.csF{font-size:11px;opacity:.7}
+.csA{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}.csB2{padding:5px 10px;border-radius:9px;border:1px solid #ffffff44;background:#ffffff12;color:#fff;cursor:pointer;font-size:12px}.csB2:hover{background:#ffffff22}
 .csEnd{margin:8px 0;padding:8px 12px;border-radius:12px;border:1px solid #7ccfff55;background:#0e1a2acc;color:#dff1ff;font-size:13px;line-height:1.6}.csB{margin-left:6px;padding:3px 10px;border-radius:9px;border:1px solid #7ccfff88;background:#7ccfff22;color:#dff1ff;cursor:pointer;font-size:12px}`;document.head.appendChild(css);
-window._cast={R,CB,tick,load,send,who,st,_set:c=>{C=c;Ct=Date.now()}};
+window._cast={R,CB,tick,load,send,who,st,flush,eLoad,eOpen,reward,_setE:e=>{EC=e;ECt=Date.now();badge()},_set:c=>{C=c;Ct=Date.now()}};
 try{wReady('cast')}catch(e){}
 })()}catch(e){console.error('cast.js',e)}

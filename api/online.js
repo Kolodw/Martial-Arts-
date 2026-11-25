@@ -4287,7 +4287,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         const w = CW.includes(b.w) ? b.w : 'murim', n = noAdm(clean(b.n, 20));
         if (!n || n === 'นิรนาม') return res.json({ ok: 0 });
         const c = { i: 'c' + now.toString(36) + Math.random().toString(36).slice(2, 5), u: id, n, e: clean(b.e, 30), a: Math.max(0, Math.min(1e7, Math.floor(+b.a || 0))), tr: String(b.tr || '').replace(/[^a-z]/g, '').slice(0, 6), w, t: now };
-        await pipe([['LPUSH', 'cast:' + w, JSON.stringify(c)], ['LTRIM', 'cast:' + w, 0, 199], ['SREM', 'castoff', id]]);
+        await pipe([['LPUSH', 'cast:' + w, JSON.stringify(c)], ['LTRIM', 'cast:' + w, 0, 199], ['SREM', 'castoff', id], ['SET', 'cu:' + c.i, id, 'EX', 86400 * 60]]);
         return res.json({ ok: 1 });
       }
       let raw = null; try { raw = jp(await cmd('GET', 'castc')) } catch {}
@@ -4300,6 +4300,30 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
         out[w] = pick;
       }
       return res.json({ ok: 1, c: out });
+    }
+    // 📬 จักรวาลร่วม เฟส 2: เสียงสะท้อน — ผลที่ผู้เล่นคนอื่นทำกับตัวละครของคุณ ส่งกลับถึงเจ้าของชื่อ
+    //   castecho (POST ตอนจบชีวิต/สะสมครบ · 1 ครั้ง/25 วิ): e[] = เจอนักแสดง {i,cn,t,c} · r[] = ตามไปล้างแค้น/ตอบแทน {r:รหัสเสียงสะท้อน,k,t,c}
+    //   echoes: เสียงสะท้อนของฉัน 40 ล่าสุด + สถิติ · ecr:<รหัส> = คนที่ทำ (ใช้ตามกลับ · ไม่ส่งรหัสผู้เล่นออกไป)
+    if (a === 'castecho' || a === 'echoes') {
+      if (!okId(id)) return res.json({ err: 'id' });
+      if (a === 'echoes') {
+        const [L, c] = await pipe([['LRANGE', 'ech:' + id, 0, 39], ['HGETALL', 'echc:' + id]]);
+        const co = {}; if (Array.isArray(c)) { for (let j = 0; j + 1 < c.length; j += 2) co[c[j]] = +c[j + 1] || 0 } else Object.assign(co, c || {});
+        return res.json({ ok: 1, L: (L || []).map(jp).filter(Boolean), c: co });
+      }
+      if (!(await cmd('SET', 'ecrl:' + id, 1, 'NX', 'EX', 25))) return res.json({ ok: 0, rate: 1 });
+      if (await isBanned()) return res.json({ ok: 1 });
+      const CW = ['murim', 'xian', 'god', 'soul', 'loop', 'mw', 'sky', 'fog', 'beast'];
+      const pn = noAdm(clean(b.n, 20)) || 'นิรนาม', w = CW.includes(b.w) ? b.w : 'murim', cls = x => ['good', 'bad', 'myth'].includes(x) ? x : '';
+      const E1 = (Array.isArray(b.e) ? b.e : []).slice(0, 8).filter(x => x && /^c[a-z0-9]{4,20}$/.test(String(x.i || '')));
+      const R1 = (Array.isArray(b.r) ? b.r : []).slice(0, 3).filter(x => x && /^e[a-z0-9]{4,20}$/.test(String(x.r || '')));
+      const own = E1.length ? await pipe(E1.map(x => ['GET', 'cu:' + x.i])) : [], back = R1.length ? await pipe(R1.map(x => ['GET', 'ecr:' + x.r])) : [];
+      const ops = [], mk = (u, o) => { const eid = 'e' + now.toString(36) + Math.random().toString(36).slice(2, 6); const v = Object.assign({ id: eid, n: pn, w, at: now }, o);
+        ops.push(['LPUSH', 'ech:' + u, JSON.stringify(v)], ['LTRIM', 'ech:' + u, 0, 59], ['EXPIRE', 'ech:' + u, 86400 * 90], ['HINCRBY', 'echc:' + u, 'tot', 1], ['HINCRBY', 'echc:' + u, v.c || 'mid', 1], ['SET', 'ecr:' + eid, id, 'EX', 86400 * 90]) };
+      E1.forEach((x, k) => { const u = own[k]; if (u && u !== id) mk(u, { cn: clean(x.cn, 20), t: clean(x.t, 260), c: cls(x.c) }) });
+      R1.forEach((x, k) => { const u = back[k]; if (u && u !== id) mk(u, { cn: clean(x.cn, 20), t: clean(x.t, 260), c: cls(x.c), x: x.k === 'gift' ? 'gift' : 'rev' }) });
+      if (ops.length) await pipe(ops);
+      return res.json({ ok: 1, n: ops.length / 6 });
     }
     if (a === 'gpray') {
       const gid = String(b.g || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
