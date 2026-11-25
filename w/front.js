@@ -42,7 +42,7 @@ ${B} #wPick{background:var(--card)!important;background-image:none!important;bor
 ${B} #wPick .wc.on{border-color:var(--fG)!important;box-shadow:0 0 0 2px var(--fG)!important}
 ${B} #wPick .wpH b,${B} #wPick .wpH,${B} #wPick h4{font-family:var(--fD)}
 ${B} #wPick .wDots>*.on,${B} #wPick .wDots .on{background:var(--fG)!important}
-${B} #tDock{background:var(--card)!important;background-image:none!important;border-color:var(--line)!important}
+${B} #tDock .nav{border-color:color-mix(in srgb,var(--fG) 45%,transparent)!important}
 ${B} #tDock .tgo,${B} #uxGo .uxBorn{background:var(--fG)!important;background-image:none!important;color:var(--onacc)!important;border-color:var(--fG)!important;box-shadow:0 3px 0 color-mix(in srgb,var(--fG) 55%,#000)!important}
 ${B} #tDock .tgo small,${B} #uxGo .uxBorn small{color:var(--onacc)!important;opacity:.85}
 ${B} #tDock .nav button{color:var(--mut)!important}
@@ -83,8 +83,8 @@ ${M} #tDock #frMode{display:flex;flex:none;flex-direction:column;justify-content
 ${M} #tDock #frMode small{font-size:11px;color:var(--mut)}${M} #tDock #frMode span{display:flex;align-items:center;gap:3px;font-size:14px}
 ${M} #tDock #tGo{flex:1}
 ${M} #tDock .nav button.frHide{display:none!important}
-${M} #tDock .nav #frHome{display:flex}
-#frHome{display:none;flex-direction:column;align-items:center}
+html body[data-front]:not(.desk) #tDock .nav #frHome{display:flex!important}
+#tDock .nav #frHome{display:none!important;flex-direction:column;align-items:center}
 ${M} #mask.on.frSheet{padding:0!important;align-items:stretch!important}
 ${M} #mask.on.frSheet #modal{width:100%!important;max-width:none!important;min-height:100%!important;max-height:none!important;margin:0!important;border-radius:0!important;border-left:0!important;border-right:0!important;padding-top:max(14px,env(safe-area-inset-top))!important}
 ${B} #mask.on #modal h3{font-family:var(--fD)}

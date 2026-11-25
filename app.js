@@ -46862,7 +46862,7 @@ html body.desk #modal[data-k="menu"] .uxRow.faRow>button{flex:0 0 auto!important
 html body.desk #modal[data-k="menu"] .uxRow.faRow>button br{display:none}
 html body.desk #modal[data-k="menu"] .mnTri>button{min-height:0!important;height:52px!important}
 /* หน้าแรก: แถบเกิดอยู่ใต้การ์ดโลก ไม่ลอยทับ */
-html body.desk.dkTD #tDock{position:static!important;display:block!important;background:none!important;padding:10px 0 4px!important;margin:0!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important}
+html body.desk.dkTD #tDock{position:static!important;display:block!important;background:none!important;padding:10px 0 4px!important;margin:0!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;transform:none!important;border:0!important;box-shadow:none!important;border-radius:0!important}body.desk.dkTD #tDock .nav button{font-size:12px!important;white-space:nowrap!important;line-height:1.3!important}
 html body.desk.dkTD #wPick #uxGo .uxBorn{display:none!important}
 html body.desk.dkTD #title{padding-bottom:24px!important}
 `;document.head.appendChild(st);
