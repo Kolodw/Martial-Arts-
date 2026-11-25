@@ -4627,6 +4627,18 @@ function person0(x,y,o,pose){
   sh(lxA-1,0);sh(rxA-1,1);
   // ถุงมือเกราะ
   if(stand){Q(lxA-1,ty+aL-4+as,aw+2,4,c);Q(lxA-1,ty+aL-4+as,aw+2,1,l);Q(rxA-1,ty+aL-4-as,aw+2,4,d);g.globalAlpha=pu;Q(lxA,ty+aL-2+as,aw,1,gl);Q(rxA,ty+aL-2-as,aw,1,gl);g.globalAlpha=1}
+  // ✨ จุดเด่นแต่ละสาย
+  const S9=A.s;
+  if(S9===0&&!walk){g.globalAlpha=.6+.4*pu;Q(cx-5,Y-14,1,6,gl);Q(cx+4,Y-14,1,6,gl);g.globalAlpha=1}
+  else if(S9===1){Q(cx-10,ty+1,3,7,d);Q(cx+7,ty+1,3,7,dd);Q(cx-10,ty+1,3,1,l);const fk=(frame|0)%4<2;g.globalAlpha=.7;Q(cx-10,ty+8,3,fk?3:2,gl);Q(cx+7,ty+8,3,fk?2:3,gl);g.globalAlpha=1}
+  else if(S9===2){Q(cx-3,ty+2,7,6,dd);Q(cx-2,ty+3,5,4,d);g.globalAlpha=pu;Q(cx-1,ty+4,3,2,gl);g.globalAlpha=1}
+  else if(S9===3){g.globalAlpha=.5+.5*pu;Q(cx,ty,1,8,gl);Q(cx-3,ty+4,7,1,gl);Q(cx-1,ty+3,3,3,'#ffffff');g.globalAlpha=1}
+  else if(S9===4){for(let r=0;r<3;r++)for(let k=0;k<3;k++)Q(cx-4+k*3+(r%2),ty+2+r*2,1,1,dd);if(stand){Q(lxA-1,ty+aL+as,1,2,l);Q(lxA+1,ty+aL+1+as,1,2,l);Q(lxA+3,ty+aL+as,1,2,l);Q(rxA,ty+aL-as,1,2,l);Q(rxA+2,ty+aL+1-as,1,2,l);Q(rxA+4,ty+aL-as,1,2,l)}}
+  else if(S9===5){Q(lxA-3,ty-4,2,2,l);Q(lxA-4,ty-6,1,2,l);Q(rxA+5,ty-4,2,2,l);Q(rxA+7,ty-6,1,2,l);if(!walk){Q(cx-7,Y-10,1,2,l);Q(cx+6,Y-10,1,2,l)}g.globalAlpha=pu*.8;Q(cx-2,ty+2,1,1,gl);Q(cx+2,ty+2,1,1,gl);g.globalAlpha=1}
+  else if(S9===6){if(!walk)for(let k=0;k<4;k++){const sw=Math.round(Math.sin(T*2+k)*1);Q(cx-7+k*4+sw,ly-2,3,7-(k%2)*2,k%2?l:c);Q(cx-7+k*4+sw,ly+4-(k%2)*2,3,1,gl)}}
+  else if(S9===7){const tw=(frame|0)%24;Q(lxA-2,ty-5,2,3,gl);Q(lxA,ty-6,1,2,'#ffffff');Q(rxA+5,ty-5,2,3,gl);Q(rxA+5,ty-6,1,2,'#ffffff');if(tw<3)Q(cx-6,ty+1,1,1,'#ffffff');if(tw>12&&tw<15)Q(cx+5,ty+5,1,1,'#ffffff')}
+  else if(S9===8){if(!walk)for(let k=0;k<3;k++){const fk=Math.round(Math.sin(T*6+k*2)*1.2);Q(cx-6+k*4,ly-1,3,5+fk,k===1?gl:c);Q(cx-5+k*4,ly+3+fk,1,2,'#fff0a0')}}
+  else if(S9===9){Q(cx-3,ty+12,6,Math.max(3,Y-ty-15),c);Q(cx-3,ty+12,1,Math.max(3,Y-ty-15),l);Q(cx+2,ty+12,1,Math.max(3,Y-ty-15),dd);g.globalAlpha=.4+.6*pu;Q(cx,ty+13,1,Math.max(2,Y-ty-17),gl);g.globalAlpha=1;Q(lxA-3,ty-3,9,2,l);Q(rxA-2,ty-3,9,2,d)}
   // ระดับสูง: ประกายพลังลอยรอบตัว / เส้นขอบเรืองแสง
   if(t>=4){for(let i=0;i<(t>=5?6:4);i++){const ph=(T*.5+i/6)%1,px=cx-10+((i*9+sd*5)%20);g.globalAlpha=(1-ph)*.9;Q(px,Y-4-ph*(Y-top),1,2,gl);g.globalAlpha=1}}
   if(t>=5){g.globalAlpha=.25+.2*Math.sin(T*5);Q(cx-Math.floor(tw/2)-2,ty-1,1,th+2,gl);Q(cx+Math.floor(tw/2)+1,ty-1,1,th+2,gl);g.globalAlpha=1}
@@ -47080,38 +47092,3 @@ try{(function(){const W=window._WD,WG=window._WG,S0=window._SK0;if(!W||!WG||S0==
  const css=document.createElement('style');css.textContent=`#modal .sgL{display:flex;flex-direction:column;gap:6px}#modal .sgC{display:flex;gap:8px;align-items:center;padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}#modal .sgC.sp{border-color:#c080ff;box-shadow:0 0 10px rgba(192,128,255,.35)}#modal .sgC canvas{width:72px;height:96px;image-rendering:pixelated;flex:none;background:radial-gradient(circle at 50% 70%,rgba(120,160,255,.18),transparent 70%);border-radius:8px}#modal .sgT{font-size:13px;line-height:1.35}#modal .sgA{margin-top:4px}#modal .sgA .gbtn{font-size:12px;padding:4px 10px}`;document.head.appendChild(css);
 })()}catch(e){console.error('mod-sg',e)}
 
-// 🛡️ สไปรต์ชุดรบทะลุฟ้าดารา (skyar.webp: แม่แบบสีเทา-เงิน 10 สาย ช่อง 96×144 · เรืองแสงสีฟ้า cyan) → ลงสีตามชุดด้วยโค้ด (10 สี = 100 ชุด)
-// วาดแทนตัวละครพิกเซลเดิมเมื่อสวมชุดรบ (ฉาก/ตู้เสื้อผ้า/คลังชุดรบ) · แสงเรืองเต้น · ตัวหายใจ · ปีกกระพือด้านหลัง · ออร่าจิตวิญญาณ · ประกายระดับสูง
-try{(function(){if(typeof person0!=='function')return;const SH={k:{u:'/skyar.webp',cw:96,ch:144},w:{u:'/skywg.webp',cw:168,ch:112}},WW=168,WH=112;const C={};let SRC=null,WSRC=null;
- const ld=(u,f)=>{const im=new Image();im.onload=()=>{try{const cv=document.createElement('canvas');cv.width=im.width;cv.height=im.height;const c=cv.getContext('2d');c.drawImage(im,0,0);f(c.getImageData(0,0,im.width,im.height))}catch(e){console.error('skyar',e)}};im.src=u};
- setTimeout(()=>{for(const k in SH)ld(SH[k].u,d=>{SH[k].d=d;if(k==='k')SRC=d;if(k==='w')WSRC=d})},1500);
- const WIX={mech:0,energy:1,butterfly:2,feather:3,bat:4,crystal:5,dragon:6,flame:7};
- const hx=h=>{h=h.replace('#','');if(h.length===3)h=h.split('').map(x=>x+x).join('');const n=parseInt(h.slice(0,6),16);return[n>>16&255,n>>8&255,n&255]};
- const mix=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
- const tint=(s,c,gl,wg)=>{const sh=wg===1?'w':(wg||'k'),k=sh+s+c+gl;if(C[k])return C[k];const Z=SH[sh],SRC_=Z&&Z.d,CW=Z.cw,CH=Z.ch;if(!SRC_)return null;const base=document.createElement('canvas'),glw=document.createElement('canvas');base.width=glw.width=CW;base.height=glw.height=CH;
-  const bc=base.getContext('2d'),gc=glw.getContext('2d'),B=bc.createImageData(CW,CH),Gm=gc.createImageData(CW,CH),M=hx(c),D=hx(shd(c,-.7)),L=hx(shd(c,.62)),G=hx(gl),Wt=[255,255,255],K=[8,6,14];
-  for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){const si=(y*SRC_.width+s*CW+x)*4,di=(y*CW+x)*4;const a=SRC_.data[si+3];if(a<10)continue;const r=SRC_.data[si],g2=SRC_.data[si+1],b=SRC_.data[si+2];let o;
-   if(g2>130&&b>130&&r<g2-45){const w=Math.min(1,Math.max(0,(r-40)/170));o=mix(G,Wt,w*.8);Gm.data[di]=o[0];Gm.data[di+1]=o[1];Gm.data[di+2]=o[2];Gm.data[di+3]=255}
-   else{const l=(r+g2+b)/765;if(l<.2)o=mix(K,D,l/.2*.7);else{const t=(l-.2)/.8;o=t<.5?mix(D,M,t*2):mix(M,L,(t-.5)*2)}}
-   B.data[di]=o[0];B.data[di+1]=o[1];B.data[di+2]=o[2];B.data[di+3]=255}
-  bc.putImageData(B,0,0);gc.putImageData(Gm,0,0);return C[k]={base,glw}};
- // ปีกสไปรต์: ซ้าย/ขวาหมุนรอบจุดยึดกลางหลัง = กระพือ · cx,my หน่วยฉาก · span = ความกว้างปีกทั้งคู่
- window._wgDraw=function(o,cx,my,span,T){const j=WIX[o.wing];if(j==null||!WSRC)return false;const t=tint(j,o.wingC||'#c8d0e0',o.wingC2||'#3af0ff',1);if(!t)return false;
-  const w=span,h=span*WH/WW,fl=Math.sin(T*(o.wing==='mech'?1.6:2.4)),a=fl*.13,sy=1-Math.abs(fl)*.06,pu=.5+.5*Math.sin(T*3.4);const ss=g.imageSmoothingEnabled;g.imageSmoothingEnabled=false;
-  for(const sd of [-1,1]){g.save();g.translate(cx,my);g.rotate(sd*a*-1);g.scale(1,sy);const sx=sd<0?0:WW/2,dx=sd<0?-w/2:0;g.drawImage(t.base,sx,0,WW/2,WH,dx,-h/2,w/2,h);g.globalCompositeOperation='lighter';g.globalAlpha=.2+.5*pu;g.drawImage(t.glw,sx,0,WW/2,WH,dx,-h/2,w/2,h);g.restore()}
-  g.imageSmoothingEnabled=ss;return true};
- const FIGHT=/fight|war|aura|system|portal|trib|boss|duel|arena/;const fightNow=()=>{try{return FIGHT.test(String(sceneType()))}catch(e){return false}};
- const _p=person0;person0=function(x,y,o,pose){try{const A=o&&o.ar;if(A&&!o.beast&&!(o.age<12)&&pose!=='lie'&&pose!=='sit'){const sh=A.sh||'k',Z=SH[sh],pv=g.canvas.width/PS<=40;
-   if(sh!=='k'&&!pv&&!fightNow()){const o2=Object.assign({},o,{ar:null});return _p.call(this,x,y,o2,pose)} // 🎭 ชุดเกราะโลกอื่น: ชีวิตประจำวันใส่ชุดผ้าสีเดียวกัน · ฉากสู้/ทะลวง/ข้ามมิติค่อยโชว์เกราะเต็มยศ
-   const t=Z&&Z.d?tint(A.s|0,A.c,A.gl,sh):null;if(t){const CW=Z.cw,CH=Z.ch;
-   const T=frame*.15,sd=(o.seed||7)%10,h=pv?(sh==='k'?19.5:20.5):(sh==='k'?15:16),w=h*CW/CH,cx=x+4,walk=pose==='walk',bob=walk?(Math.abs(Math.sin(T*3.2))>.7?-.4:0):Math.sin(T*1.6+sd)*.25,top=y-h+bob,sc=h/CH;
-   if(o&&o===curMe){meX=x;meY=y}
-   g.save();g.globalAlpha=.28;g.fillStyle='#000';g.fillRect(cx-w*.32,y-.6,w*.64,1);g.restore();
-   if(o.aura){const pu=.5+.5*Math.sin(T*2.4);g.save();g.globalAlpha=.12+.1*pu;g.fillStyle=o.aura;g.fillRect(cx-w*.45,top-1,w*.9,h+1);g.globalAlpha=.18+.1*pu;g.fillRect(cx-w*.3,top+1,w*.6,h-1);g.restore()}
-   if(o.wing){const my=top+h*.3;if(!window._wgDraw(o,cx,my,pv?15.5:h*1.75,T)){const k=h/16,ty=top+h*.2;g.save();g.translate(cx,ty);g.scale(k,k);g.translate(-cx,-ty);try{wingDraw(o,cx*3,ty*3,T,sd)}catch(e){}g.restore()}}
-   const ss=g.imageSmoothingEnabled;g.imageSmoothingEnabled=false;g.drawImage(t.base,cx-w/2,top,w,h);
-   const pu=.5+.5*Math.sin(T*3.4+sd);g.save();g.globalCompositeOperation='lighter';g.globalAlpha=.15+.55*pu;g.drawImage(t.glw,cx-w/2,top,w,h);g.restore();
-   if((A.t|0)>=4){g.save();for(let i=0;i<((A.t|0)>=5?7:4);i++){const ph=(T*.45+i/7)%1;g.globalAlpha=(1-ph)*.85;g.fillStyle=A.gl;g.fillRect(cx-w*.45+((i*37+sd*13)%100)/100*w*.9,y-1-ph*h,sc*3,sc*5)}g.restore()}
-   if(o.eyeG){g.save();g.globalAlpha=.5+.5*Math.sin(T*5);g.fillStyle=o.eyeG;g.fillRect(cx-w*.08,top+h*.07,w*.16,sc*3);g.restore()}
-   g.imageSmoothingEnabled=ss;return}}}catch(e){console.error('skyar draw',e)}if(o&&o.ar&&o.ar.sh&&o.ar.sh!=='k')return _p.call(this,x,y,Object.assign({},o,{ar:null}),pose);return _p.apply(this,arguments)};
-})()}catch(e){console.error('mod-skyar',e)}
