@@ -46775,3 +46775,86 @@ const tdFix=()=>{try{const d=document.getElementById('tDock'),wp=document.getEle
 setInterval(tdFix,800);addEventListener('resize',tdFix);
 addEventListener('resize',kick);
 })()}catch(e){console.error('dk2',e)}
+
+// 🖼️ ภาพประกอบเหตุการณ์ (evart1-3.webp · ชีตละ 12 ฉาก 3×4 · ช่อง 320×160) — หน้าต่างเหตุการณ์มีภาพพิกเซลหัวเรื่อง จับหมวดจากหัวข้อ/เนื้อเรื่อง
+// ภาพนิ่ง + เอฟเฟกต์เคลื่อนไหวด้วย CSS (แพนช้า ฝน ประกายไฟ สายฟ้า หมอก จอสั่น) · ปิดฉาก (☰ ฉาก) = ไม่แสดง · โหมดประหยัด = ภาพนิ่ง · ชีตที่ยังไม่มีไฟล์จะไม่แสดง
+try{(function(){if(typeof choiceShow!=='function')return;
+ const EV_SH=[]; // ชีตที่โหลดภาพสำเร็จแล้วเท่านั้น (ไฟล์ไหนยังไม่มีจะไม่แสดง)
+ // [รหัส, ชีต, ช่อง(0-11), เอฟเฟกต์, regex หัวข้อ, เงื่อนไขโลก] — เรียงตามความเฉพาะ (ตัวบนชนะ)
+ const C=[
+  ['system',3,0,'glow',/\[ระบบ\]|ระบบ|🟦|👾|สกิลระบบ|ภารกิจระบบ|แพตช์|AI|🤖|เครื่องจักร/],
+  ['gate',3,10,'ember',/เกต|ดันเจี้ยน|ฮันเตอร์|มอนสเตอร์|🔴|🧟|ซอมบี้/],
+  ['portal',3,1,'spark',/มิติ|ข้ามภพ|ข้ามมิติ|สามภพ|อวกาศ|ดวงดาว|ประตูมิติ|🌌|☄|ทะลุฟ้าดารา|💫|ดาวกำลังดับ/],
+  ['trib',1,9,'bolt',/สายฟ้าทัณฑ์|ทัณฑ์สวรรค์|ฟ้าผ่า|⚡|ฝ่าทัณฑ์|🌩/],
+  ['wedding',1,7,'petal',/แต่งงาน|งานแต่ง|วิวาห์|💍|เจ้าสาว|เจ้าบ่าว/],
+  ['funeral',2,9,'fog',/งานศพ|สุสาน|วิญญาณ|ผี|ศพ|🕯|👻|⚰|ความตาย|ตายแล้ว|นรก/],
+  ['police',3,7,'siren',/ตำรวจ|🚔|คดี|จับกุม|ค้นบ้าน|ศาลยุติธรรม|ทนาย/],
+  ['hospital',3,8,'glow',/โรงพยาบาล|🏥|วัคซีน|💉|ผ่าตัด/],
+  ['online',3,9,'glow',/ไลฟ์|โซเชียล|ดราม่า|ไวรัล|เซิร์ฟเวอร์|📱|🌐|สตรีม|แอป/],
+  ['school',3,5,'dust',/โรงเรียน|มหาลัย|มหาวิทยาลัย|🎓|🏫|สอบเข้า|นักเรียน|ห้องเรียน/],
+  ['office',3,4,'dust',/บริษัท|ออฟฟิศ|เจ้านาย|หัวหน้างาน|เงินเดือน|💼|🏢|สตาร์ทอัพ|ประชุม/],
+  ['street',3,11,'shake',/ไฟต์|นักเลง|แก๊ง|🥊|ใต้ดิน|มาเฟีย/],
+  ['city',3,6,'rain',/ซอย|คอนโด|ถนน|กลางเมือง|รถไฟฟ้า|🏙|🌃|ห้าง/],
+  ['god',3,3,'spark',/เก้าชั้นฟ้า|แดนเทพ|เทพนอกรีต|ทวยเทพ|บัลลังก์เทพ|เทพเจ้า/],
+  ['xian',3,2,'fog',/เซียน|สวรรค์|วังเซียน|อมตะ|☁/],
+  ['court',2,0,'dust',/👑|ฮ่องเต้|จักรพรรดิ|องค์ชาย|องค์หญิง|รัชทายาท|ราชสำนัก|ขุนนาง|บัลลังก์|ราชวัง|⚖|ใส่ร้าย|ข้อพิพาท|ตัดสิน|กบฏ/],
+  ['war',2,1,'ember',/สงคราม|กองทัพ|ศึก|ทหาร|แคว้น|ค่ายเกราะ|🏴|บุกปล้น|ป้อม|🌕|🛡|คุ้มครอง/],
+  ['demon',2,3,'ember',/มาร|ปีศาจ|😈|👹|ลัทธิ|นอกรีต|ทรราช/],
+  ['beast',2,2,'shake',/อสูร|สัตว์|🐾|🐺|🐉|มังกร|พยัคฆ์|งูยักษ์/],
+  ['sick',2,4,'fog',/ป่วย|ยาพิษ|พิษ|💊|🩸|บาดเจ็บ|หมอ|โรค|ไข้/],
+  ['disaster',2,5,'rain',/ไฟไหม้|น้ำท่วม|แผ่นดินไหว|ภัยแล้ง|ระบาด|ภัยพิบัติ|พายุ|🌊|ทุพภิกข|ข้าวยากหมากแพง/],
+  ['trib2',1,9,'bolt',/ทะลุฟ้า|ฟ้าดินพิโรธ/],
+  ['cult',1,8,'glow',/ทะลวง|บำเพ็ญ|ลมปราณ|🧘|🌀|ติดขั้น|เลื่อนขั้น|หยั่งรู้|ฝึกท่า|เคล็ดวิชา|🥋|คอขวด|เต๋า|☯|ก้าวข้ามขั้น|🌠|โอสถ|หลอม|⚗|ร่างแยก|ธาตุตื่น|🔮/],
+  ['fest',2,6,'spark',/เทศกาล|🏮|🎆|โคม|งานรื่นเริง|ตรุษ|สงกรานต์|ลอยกระทง|🎪/],
+  ['temple',2,11,'fog',/ศาลเจ้า|ศาลเทพ|วัด|⛩|🛕|🙏|ขอพร|พระ|นักพรต/],
+  ['bandit',1,1,'shake',/โจร|ปล้น|ซุ่ม|ตามล่า|ลอบสังหาร|นักฆ่า|🗡|ค่าหัว|ทรยศ|เหยื่อ|แค้น/],
+  ['fight',1,0,'shake',/ประลอง|ดวล|ท้าสู้|ต่อสู้|⚔|คู่ปรับ|ท้าดวล|ศัตรู|ชุมนุมยุทธ์|🏆|ปล่อยพลัง|💥|เผชิญหน้า|☠|👋/],
+  ['master',1,2,'dust',/อาจารย์|ปรมาจารย์|ศิษย์|ถ่ายทอด|🧓|ผู้อาวุโส|รับเป็นศิษย์/],
+  ['sect',1,3,'dust',/สำนัก|🏯|หอภารกิจ|ทาบทาม|เจ้าสำนัก|สมาคม|กลุ่ม/],
+  ['cave',1,4,'dust',/ถ้ำ|คัมภีร์|ห้องลับ|📜|🕳|โบราณ|จารึก|ซากปรักหักพัง/],
+  ['treasure',1,5,'spark',/สมบัติ|💰|🎁|📦|กล่อง|หีบ|ของวิเศษ|มรดก|ขุมทรัพย์|ถุงเงิน|👛|กรรมดี/],
+  ['love',1,6,'petal',/💞|💘|💔|รัก|หัวใจ|ใต้แสงจันทร์|คนรัก|จีบ|หลงรัก|บังเอิญพบ|คุณชาย|บัณฑิต|💕|🌸|ตำหนักใน|💋|สนใจคุณ|ข้างกาย|สู่ขอ/],
+  ['tea',1,10,'dust',/โรงน้ำชา|🍵|ข่าวลือ|สุรา|🍶|โรงเตี๊ยม|นักเล่าเรื่อง|หมากล้อม|เดิมพัน|♟|พนัน/],
+  ['market',1,11,'dust',/ตลาด|พ่อค้า|ประมูล|ร้าน|ค้าขาย|💸|ผู้อุปถัมภ์|ลงทุน|กิจการ|🏪|ขยาย|อาณาเขต/],
+  ['family',2,7,'dust',/ครอบครัว|🏠|🏡|👪|ลูก|พ่อ|แม่|บ้านเกิด|หมู่บ้าน|ทารก|พี่น้อง|ญาติ|👫|👴|เศร้า|😭|สอบไม่ผ่าน|😞/],
+  ['mystery',2,8,'fog',/ปริศนา|ลึกลับ|เงามืด|🌑|🕵|🔍|สืบ|ความลับ|🎭|หักมุม|👁|ชาติก่อน|ชาติกำเนิด|🧬|🧩|ความฝัน|กาลเวลา|⏳|รอยแยก|รหัสลับ|คนแปลกหน้า/],
+  ['journey',2,10,'dust',/เดินทาง|🚶|ภูเขา|ทะเล|เรือ|ทางแยก|ป่า|🏔|🌄|ระหว่างทาง|ข้ามแม่น้ำ|ปณิธาน|🎯|🗺|พงไพร|กลับไปโลก|🌱/]];
+ const MW_ALT={sick:'hospital',bandit:'street',fight:'street',market:'city',tea:'city',journey:'city',master:'school',sect:'office'};
+ const wld=()=>S?(S.mw?'mw':S.xt?'god':S.xian?'xian':'murim'):'murim';
+ const pick=(title,text)=>{const t=String(title||'').replace(/<[^>]+>/g,''),x=String(text||'').replace(/<[^>]+>/g,'').slice(0,240);
+  let hit=C.find(c=>c[4].test(t))||C.find(c=>c[4].test(x));const w=wld();
+  if(!hit)hit=C.find(c=>c[0]===(w==='mw'?'city':w==='god'?'god':w==='xian'?'xian':'journey'));
+  if(w==='mw'&&MW_ALT[hit[0]])hit=C.find(c=>c[0]===MW_ALT[hit[0]]);
+  if(w==='murim'&&['city','office','school','online','police','hospital','street'].includes(hit[0])&&!(S&&S.mw))hit=C.find(c=>c[0]==='journey');
+  return EV_SH.includes(hit[1])?hit:null};
+ const ok=()=>{try{return(typeof showScene==='undefined'||showScene)&&LS.get('murim_evart',true)!==false}catch(e){return true}};
+ const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);try{const c=choice._cur,m=document.getElementById('modal');if(!c||!m||m.dataset.k!=='choice'||!ok())return r;const old=m.querySelector('.evArt');if(old)old.remove();
+  const h=pick(c.title,c.text);if(!h)return r;const col=h[2]%3,row=(h[2]/3)|0;
+  const d=document.createElement('div');d.className='evArt';d.dataset.fx=h[3];d.dataset.c=h[0];
+  d.innerHTML=`<div class="evArtI" style="background-image:url(/evart${h[1]}.webp);background-position:${col*50}% ${row*100/3}%"></div><i class="evFx"></i>`;
+  const h3=m.querySelector('h3');if(h3)h3.insertAdjacentElement('afterend',d);else m.querySelector('.box,#mbox')?.prepend(d)}catch(e){console.error('evart',e)}return r};
+ const st=document.createElement('style');st.textContent=`
+ #modal .evArt{position:relative;overflow:hidden;border-radius:10px;margin:2px 0 8px;aspect-ratio:2/1;max-height:150px;width:100%;border:1px solid rgba(232,184,48,.45);box-shadow:inset 0 0 18px rgba(0,0,0,.55);background:#120e1a}
+ #modal .evArt .evArtI{position:absolute;inset:-4%;background-size:300% 400%;background-repeat:no-repeat;image-rendering:pixelated;animation:evPan 14s ease-in-out infinite alternate}
+ #modal .evArt::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(10,8,16,.55));z-index:2}
+ #modal .evArt .evFx{position:absolute;inset:0;pointer-events:none;z-index:1}
+ @keyframes evPan{0%{transform:scale(1.04) translate(-1.2%,0)}100%{transform:scale(1.09) translate(1.2%,-1%)}}
+ #modal .evArt[data-fx=rain] .evFx{background:repeating-linear-gradient(105deg,transparent 0 9px,rgba(170,200,255,.28) 9px 10px,transparent 10px 22px);background-size:60px 60px;animation:evRain .5s linear infinite}
+ @keyframes evRain{to{background-position:-18px 60px}}
+ #modal .evArt[data-fx=ember] .evFx,#modal .evArt[data-fx=spark] .evFx,#modal .evArt[data-fx=petal] .evFx,#modal .evArt[data-fx=dust] .evFx{background-image:radial-gradient(circle,var(--pc) 0 1.4px,transparent 2px),radial-gradient(circle,var(--pc) 0 1px,transparent 1.6px);background-size:47px 53px,71px 61px;background-position:0 0,23px 31px;animation:evUp 6s linear infinite;opacity:.8}
+ #modal .evArt[data-fx=ember] .evFx{--pc:#ffa040}#modal .evArt[data-fx=spark] .evFx{--pc:#fff2b0;animation-duration:9s}#modal .evArt[data-fx=dust] .evFx{--pc:rgba(255,240,210,.55);animation-duration:16s;opacity:.6}
+ #modal .evArt[data-fx=petal] .evFx{--pc:#ffb7cf;animation-name:evDown;animation-duration:10s}
+ @keyframes evUp{to{background-position:0 -106px,23px -91px}}@keyframes evDown{to{background-position:-47px 106px,-48px 153px}}
+ #modal .evArt[data-fx=fog] .evFx{background:linear-gradient(90deg,transparent,rgba(210,220,240,.18) 30%,transparent 55%,rgba(210,220,240,.14) 80%,transparent);background-size:200% 100%;animation:evFog 12s linear infinite}
+ @keyframes evFog{to{background-position:-200% 0}}
+ #modal .evArt[data-fx=glow] .evFx{background:radial-gradient(ellipse at 50% 60%,rgba(120,200,255,.28),transparent 65%);animation:evGlow 2.6s ease-in-out infinite}
+ @keyframes evGlow{0%,100%{opacity:.35}50%{opacity:1}}
+ #modal .evArt[data-fx=bolt] .evFx{background:#e8f0ff;animation:evBolt 4.5s steps(1) infinite;opacity:0}
+ @keyframes evBolt{0%,86%,90%,94%,100%{opacity:0}87%,92%{opacity:.55}}
+ #modal .evArt[data-fx=siren] .evFx{background:linear-gradient(90deg,rgba(255,40,40,.22),transparent 40%,transparent 60%,rgba(40,90,255,.22));animation:evGlow 1s ease-in-out infinite}
+ #modal .evArt[data-fx=shake] .evArtI{animation:evPan 14s ease-in-out infinite alternate,evShk 3.2s ease-in-out infinite}
+ @keyframes evShk{0%,88%,100%{translate:0 0}90%{translate:-1.5% .6%}92%{translate:1.4% -.5%}94%{translate:-.8% 0}96%{translate:.5% 0}}
+ body.lite #modal .evArt *,body.lite #modal .evArt .evArtI{animation:none!important}@media (prefers-reduced-motion:reduce){#modal .evArt *{animation:none!important}}
+ @media (max-height:640px){#modal .evArt{max-height:96px}}`;document.head.appendChild(st);
+ setTimeout(()=>{try{[1,2,3].forEach(n=>{const im=new Image();im.onload=()=>{if(!EV_SH.includes(n))EV_SH.push(n)};im.src='/evart'+n+'.webp';(window._icKeep=window._icKeep||[]).push(im)})}catch(e){}},2500);
+})()}catch(e){console.error('mod-evart',e)}
