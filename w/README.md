@@ -82,3 +82,8 @@ LS `murim_thr`: ทุกตอนจบ (ห่อ endGame) = ด้ายช�
 `body[data-hud]` = murim/xian/god/mw/soul/loop/beast/sky/fog หรือ `mw-<โลกย่อย>` (hunter/hunterhi/under/ghost/loop/zombie/tower/game/gatewon/doom) — ตั้งเฉพาะตอน `#game.on` · ข้ามเมื่อ `body.mono` หรือ LS `murim_hudOff=1`
 สกิน = ตัวแปรสีเดิม (--bg/--card/--w/--line/--ink/--mut/--pink/--good…) + `--hA` หลัก `--hG` รอง `--hK` แถบ `--hD` ฟอนต์หัวข้อ `--hR` มุมโค้ง → แผง/แถบพลัง/ฟีด/ปุ่มควบคุม/ชิปโฟกัส/หน้าต่างตัวเลือก ใช้ตามนี้ (ตำแหน่งปุ่มไม่เปลี่ยน) · ม่านหมอก = กรอบเส้นคู่
 `#hudW` วิดเจ็ตโลกย่อย: จอคอมใต้ `#dkChar` · มือถือใต้ `#sceneBox` · ค่าจาก S.mw (H/U/G/LP/Z/TW/GM/GW/DM) · แตะ = `wPanel()` · `window._hud` {key,tick,T,SUB}
+
+## front.js — 🏯 หน้าแรกใหม่ (ธีมตามโลกที่เลือก · โหลด 0.3 วิ)
+`body[data-front]` = โลกของการ์ด `#wPick .wc.on` ขณะ `#title.on` → ตัวแปรสีเดิม + `--fA/--fG/--fK/--fD/--fT` · `#frTint` ม่านสีทับฉาก `#tbg2` · โลโก้/การ์ดโลก/ปุ่มเกิด/แถบล่างใช้สีโลก
+มือถือ: ซ่อนปุ่มลอย tSup/tFb/tEv/tSp/tCos + kEnt/tGrid/tSea → `#frTopR` (ร้านค้า·เมนู) + `#frToday` (อีเวนต์·ภารกิจ·คัมภีร์·ชุมชน — กดแทนปุ่มเดิม) · `#frCont` การ์ดเล่นต่อ (กด `#tCont`) แทรกก่อน `.box.opts` · แถบล่าง `#frMode` + เกิด · nav ซ่อน ลาน/เมนู เพิ่ม `#frHome` · syncSt สำเร็จ = ซ่อน
+หน้าย่อยจากหน้าแรกบนมือถือ (`SHEET` daily2/book/online/guild/tmenu/evshop/krt/sp/profile/aq/cosshop + ร้านค้า) = `#mask.frSheet` เต็มจอ · จอคอม: `#frTopR` แบบมีป้าย (ร้านค้า คัมภีร์ ชุมชน เมนู) แทนปุ่มลอย · ปิด LS `murim_frontOff=1`
