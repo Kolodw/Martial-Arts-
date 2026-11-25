@@ -64,10 +64,13 @@ function key(){
 // ---------- CSS ----------
 let fontsOn=0;
 function fonts(){if(fontsOn)return;fontsOn=1;try{const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Charm:wght@700&family=Trirong:wght@600;700&family=Chakra+Petch:wght@600;700&family=Mitr:wght@500;600&family=IBM+Plex+Sans+Thai:wght@500;600;700&family=Kanit:wght@600;700&display=swap';document.head.appendChild(l)}catch(e){}}
+/* ระบบสีใหม่: ไล่ระดับพื้นผิว 7 ชั้น + ข้อความ 3 ระดับ (ดึงจากพาเลตต์โลก) */
+function ramp(t){const L=!!t[11],up=L?'#000':'#fff',dn=L?'#fff':'#000';
+ return `--hB0:color-mix(in srgb,${t[0]} ${L?92:70}%,${dn});--hP1:color-mix(in srgb,${t[1]} ${L?100:93}%,${up});--hP2:color-mix(in srgb,${t[1]} 82%,${t[0]});--hR1:color-mix(in srgb,${t[2]} ${L?97:90}%,${up});--hR2:color-mix(in srgb,${t[2]} ${L?93:82}%,${up});--hL2:color-mix(in srgb,${t[3]} 72%,${L?'#000':t[7]});--hT2:color-mix(in srgb,${t[4]} 80%,${t[5]});--mut:color-mix(in srgb,${t[5]} 78%,${t[4]});--hHi:color-mix(in srgb,${t[7]} 82%,${L?'#000':'#fff'});`}
 function css(){
  let s='';
  for(const k in T){const t=T[k],sel=`html body[data-hud="${k}"]`;
-  s+=`${sel}{--bg:${t[0]};--card:${t[1]};--w:${t[2]};--line:${t[3]};--ink:${t[4]};--mut:${t[5]};--hA:${t[6]};--hG:${t[7]};--hK:${t[8]};--hD:${t[9]};--hR:${t[10]}px;--grid:transparent;--pink:${t[7]};--pinkd:color-mix(in srgb,${t[7]} 70%,#000);--onacc:${t[11]?'#ffffff':t[0]};--good:color-mix(in srgb,#3fae5a 16%,${t[1]});--bad:color-mix(in srgb,#e0484f 18%,${t[1]});--epic:color-mix(in srgb,${t[7]} 14%,${t[1]});--myth:color-mix(in srgb,${t[6]} 20%,${t[1]});--peerb:${t[1]};--think:color-mix(in srgb,#4a7ad8 14%,${t[1]});--me:color-mix(in srgb,${t[6]} 14%,${t[1]});--c3:${t[7]};--c4:${t[6]};color-scheme:${t[11]?'light':'dark'}}\n`;
+  s+=`${sel}{--bg:${t[0]};--card:${t[1]};--w:${t[2]};--line:${t[3]};--ink:${t[4]};--mut:${t[5]};--hA:${t[6]};--hG:${t[7]};--hK:${t[8]};--hD:${t[9]};--hR:${t[10]}px;--grid:transparent;--pink:${t[7]};--pinkd:color-mix(in srgb,${t[7]} 70%,#000);--onacc:${t[11]?'#ffffff':t[0]};--good:color-mix(in srgb,#3fae5a 16%,${t[1]});--bad:color-mix(in srgb,#e0484f 18%,${t[1]});--epic:color-mix(in srgb,${t[7]} 14%,${t[1]});--myth:color-mix(in srgb,${t[6]} 20%,${t[1]});--peerb:${t[1]};--think:color-mix(in srgb,#4a7ad8 14%,${t[1]});--me:color-mix(in srgb,${t[6]} 14%,${t[1]});--c3:${t[7]};--c4:${t[6]};color-scheme:${t[11]?'light':'dark'};${ramp(t)}}\n`;
  }
  const S='html body[data-hud]';
  s+=`${S}{background:var(--bg)!important;background-image:none!important;color:var(--ink)}
@@ -97,6 +100,34 @@ ${S} #modal[data-k="choice"] .opt{background:var(--w)!important;background-image
 ${S} #modal[data-k="choice"] .opt:hover{border-color:var(--hG)!important}
 ${S}[data-hud="fog"] #game .box,${S}[data-hud="fog"] #dkChar,${S}[data-hud="fog"] #dkFn,${S}[data-hud="fog"] #goalBox,${S}[data-hud="fog"] #deskR .box{border:3px double var(--line)!important}
 ${S}[data-hud="sky"] #modal[data-k="choice"],${S}[data-hud="mw-game"] #modal[data-k="choice"]{box-shadow:0 0 0 1px color-mix(in srgb,var(--hG) 30%,transparent),0 0 28px color-mix(in srgb,var(--hG) 22%,transparent)!important}
+html body[data-hud]{--sHp:#ff6b6b;--sJoy:#ffc145;--sLife:#5cc8ff;--sGold:#ffd36b;--sPow:#b794ff;--sWis:#4fe3c1;--sFame:#ff8cc6;--sGood:#5fd38d;--sBad:#ff6b6b}
+html body[data-hud="mw"],html body[data-hud="mw-tower"]{--sHp:#dc2626;--sJoy:#b7791f;--sLife:#0284c7;--sGold:#a16207;--sPow:#7c3aed;--sWis:#0f766e;--sFame:#be185d;--sGood:#15803d;--sBad:#dc2626}
+html body[data-hud]{background:linear-gradient(180deg,var(--bg),var(--hB0)) fixed!important}
+html body[data-hud] #game .box,html body[data-hud] #game .dk-panel,html body[data-hud] #dkChar,html body[data-hud] #dkFn,html body[data-hud] #goalBox,html body[data-hud] #deskR .box,html body[data-hud] #mwHud,html body[data-hud] #hintBar{background:linear-gradient(180deg,var(--hP1),var(--hP2))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 22px rgba(0,0,0,.28)!important}
+html body[data-hud] .dkb-t{background:var(--hB0)!important;box-shadow:inset 0 1px 2px rgba(0,0,0,.55)!important;height:10px!important}
+html body[data-hud] .dkb-t>*{box-shadow:0 0 8px rgba(255,255,255,.12);border-radius:99px}
+html body[data-hud] .dkb-l{color:var(--hT2)}
+html body[data-hud] .dkt{--sc:var(--hG);background:linear-gradient(135deg,color-mix(in srgb,var(--sc) 16%,var(--hR1)),var(--hP2))!important;border:1px solid color-mix(in srgb,var(--sc) 30%,var(--line))!important}
+html body[data-hud] .dkt .dkt-l{color:var(--mut)!important}
+html body[data-hud] .dkt .dkt-v{color:var(--ink)!important}
+html body[data-hud] .dkt .dkt-i{background:color-mix(in srgb,var(--sc) 20%,transparent);border-radius:8px}
+html body[data-hud] .dkt[data-sc="gold"]{--sc:var(--sGold)}html body[data-hud] .dkt[data-sc="pow"]{--sc:var(--sPow)}html body[data-hud] .dkt[data-sc="wis"]{--sc:var(--sWis)}html body[data-hud] .dkt[data-sc="fame"]{--sc:var(--sFame)}html body[data-hud] .dkt[data-sc="joy"]{--sc:var(--sJoy)}html body[data-hud] .dkt[data-sc="bad"]{--sc:var(--sBad)}html body[data-hud] .dkt[data-sc="life"]{--sc:var(--sLife)}html body[data-hud] .dkt[data-sc="hp"]{--sc:var(--sHp)}
+html body[data-hud] #feed .bub:not(.good):not(.bad):not(.epic):not(.myth):not(.sys):not(.world):not(.think):not(.peer):not(.sum){background:linear-gradient(180deg,var(--hR1),var(--w))!important;border-color:color-mix(in srgb,var(--line) 70%,transparent)!important}
+html body[data-hud] #feed .bub.good{background:color-mix(in srgb,var(--sGood) 15%,var(--card))!important;border-color:color-mix(in srgb,var(--sGood) 45%,transparent)!important}
+html body[data-hud] #feed .bub.bad{background:color-mix(in srgb,var(--sBad) 15%,var(--card))!important;border-color:color-mix(in srgb,var(--sBad) 45%,transparent)!important}
+html body[data-hud] #feed .bub.good::before,html body[data-hud] #feed .bub.bad::before{display:inline-block;margin-right:7px;padding:0 7px;border-radius:99px;font-size:11px;font-weight:700;line-height:18px;vertical-align:1px}
+html body[data-hud] #feed .bub.good::before{content:'ดี';background:color-mix(in srgb,var(--sGood) 22%,transparent);color:var(--sGood)}
+html body[data-hud] #feed .bub.bad::before{content:'ร้าย';background:color-mix(in srgb,var(--sBad) 22%,transparent);color:var(--sBad)}
+html body[data-hud] #feed .bub.epic{background:linear-gradient(135deg,color-mix(in srgb,var(--sGold) 20%,var(--card)),var(--card))!important;border-color:color-mix(in srgb,var(--sGold) 60%,transparent)!important}
+html body[data-hud] #feed .bub.myth{background:linear-gradient(135deg,color-mix(in srgb,var(--hA) 24%,var(--card)),var(--card))!important}
+html body[data-hud] #feed .bub.think{color:var(--mut)!important}
+html body[data-hud] #feed .yr span{background:var(--hR1)!important;color:var(--hT2)!important}
+html body[data-hud] #game .cb,html body[data-hud] #dkFn button,html body[data-hud] #game .dk-btns button{background:linear-gradient(180deg,var(--hR2),var(--hR1))!important}
+html body[data-hud] #focus .fc.on{background:linear-gradient(180deg,var(--hHi),var(--hG))!important;box-shadow:0 2px 10px color-mix(in srgb,var(--hG) 40%,transparent)!important}
+html body[data-hud] #modal[data-k="choice"]{background:linear-gradient(180deg,color-mix(in srgb,var(--hA) 20%,var(--hP1)) 0,var(--hP1) 140px,var(--hP2))!important;box-shadow:0 0 0 1px color-mix(in srgb,var(--hG) 18%,transparent),0 18px 50px rgba(0,0,0,.45)!important}
+html body[data-hud] #modal[data-k="choice"] .opt{background:linear-gradient(180deg,var(--hR2),var(--hR1))!important;border-color:var(--hL2)!important}
+html body[data-hud] #modal[data-k="choice"] .opt:hover{border-color:var(--hHi)!important;box-shadow:0 0 0 1px color-mix(in srgb,var(--hHi) 40%,transparent)!important}
+html body[data-hud] .dk-name{color:var(--ink)}html body[data-hud] .dk-sub,html body[data-hud] .dk-realm{color:var(--hT2)}
 #hudW{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--hA);border-radius:var(--hR);padding:12px 14px;margin:0 0 12px;cursor:pointer}
 #hudW:hover{border-color:var(--hG)}
 #hudW .hwH{display:flex;align-items:center;gap:10px}
@@ -145,6 +176,8 @@ function widget(k){
  if(el.previousElementSibling!==anchor||el.parentNode!==anchor.parentNode)anchor.insertAdjacentElement('afterend',el);
  const h=wHTML(w,M);if(h!==lastH){el.innerHTML=h;lastH=h}
 }
+const SC=[[/เงิน|ตำลึง|เหรียญ|เครดิต|ทอง/,'gold'],[/หนี้|ความเครียด|เครียด|ติดเชื้อ/,'bad'],[/ลมปราณ|พลัง|ร่างกาย|ชนะ|ยีน|สติ/,'pow'],[/ปัญญา|ทักษะ|ความรู้/,'wis'],[/เสน่ห์|ชื่อเสียง|ผู้ติดตาม/,'fame'],[/ความสุข/,'joy'],[/สุขภาพ|ชีวิต/,'hp'],[/กรรม|อายุ/,'life']];
+function tagTiles(){document.querySelectorAll('.dkt').forEach(e=>{const l=e.querySelector('.dkt-l');const t=l?l.textContent:'';if(e._sct===t)return;e._sct=t;const m=SC.find(x=>x[0].test(t));if(m)e.dataset.sc=m[1];else delete e.dataset.sc})}
 // ---------- loop ----------
 let cur=null;
 function tick(){
@@ -154,6 +187,7 @@ function tick(){
   if(b.classList.contains('royal')&&!LSg('murim_hudOff',0))k=key();
   if(k!==cur){cur=k;if(k){fonts();b.dataset.hud=k}else delete b.dataset.hud}
   widget(k);
+  if(k)tagTiles();
  }catch(e){console.error('hud',e)}
 }
 css();tick();setInterval(tick,700);

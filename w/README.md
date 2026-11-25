@@ -81,6 +81,7 @@ LS `murim_thr`: ทุกตอนจบ (ห่อ endGame) = ด้ายช�
 ## hud.js — 🎨 HUD สกินตามโลก (ทุกโลก · โหลด 0.4 วิ)
 `body[data-hud]` = murim/xian/god/mw/soul/loop/beast/sky/fog หรือ `mw-<โลกย่อย>` (hunter/hunterhi/under/ghost/loop/zombie/tower/game/gatewon/doom) — ตั้งเฉพาะตอน `#game.on` · เฉพาะธีมทองราตรี (`body.royal`) หรือ LS `murim_hudOff=1`
 สกิน = ตัวแปรสีเดิม (--bg/--card/--w/--line/--ink/--mut/--pink/--good…) + `--hA` หลัก `--hG` รอง `--hK` แถบ `--hD` ฟอนต์หัวข้อ `--hR` มุมโค้ง → แผง/แถบพลัง/ฟีด/ปุ่มควบคุม/ชิปโฟกัส/หน้าต่างตัวเลือก ใช้ตามนี้ (ตำแหน่งปุ่มไม่เปลี่ยน) · ม่านหมอก = กรอบเส้นคู่
+ระบบสี: พื้นผิว 7 ชั้น `--hB0 --hP1 --hP2 --hR1 --hR2 --hL2 --hHi` + ข้อความ `--ink --hT2 --mut` (ramp() ดึงจากพาเลตต์โลก) · สีความหมายทุกโลก `--sHp --sJoy --sLife --sGold --sPow --sWis --sFame --sGood --sBad` · `.dkt[data-sc]` ติดตามป้ายสถิติ (tagTiles) · ฟีดดี/ร้ายมีป้าย
 `#hudW` วิดเจ็ตโลกย่อย: จอคอมใต้ `#dkChar` · มือถือใต้ `#sceneBox` · ค่าจาก S.mw (H/U/G/LP/Z/TW/GM/GW/DM) · แตะ = `wPanel()` · `window._hud` {key,tick,T,SUB}
 
 ## front.js — 🏯 หน้าแรกใหม่ (ธีมตามโลกที่เลือก · โหลด 0.3 วิ)
