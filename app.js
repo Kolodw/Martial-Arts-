@@ -4542,9 +4542,18 @@ function person0(x,y,o,pose){
  // sword behind
  if(o.sword){if(o.glow){g.globalAlpha=.25+.2*Math.sin(T*3);Q(cx+5,ty-10,7,th+14,o.sword);g.globalAlpha=1}Q(cx+7,ty-6,2,th+8,o.sword);Q(cx+8,ty-6,1,th+8,shd(o.sword,-.3));Q(cx+5,ty-8,6,2,'#6a4a2a');Q(cx+7,ty-13,2,5,'#4a2a1a');Q(cx+6,ty-14,4,2,'#c8a040')}
  if(o.staff&&!child){Q(cx+13,top-6,2,Y-top+6,o.staff);Q(cx+12,top-8,4,3,shd(o.staff,.3))}
+ if(o.wing&&!child){const wt=o.wing,c1=o.wingC||'#e8eef8',c2=o.wingC2||shd(c1,.35),fl=Math.sin(T*(wt==='mech'?1.6:2.4)+sd),fu=Math.round(fl*2),y0=ty+1;const sa=g.globalAlpha;
+  for(const sgn of [-1,1]){const x0=cx+sgn*3,R=(dx,dy,w,h,c)=>Q(sgn>0?x0+dx:x0-dx-w,y0+dy,w,h,c);
+   if(wt==='feather'||wt==='energy'){if(wt==='energy')g.globalAlpha=sa*(.45+.25*Math.sin(T*3));for(let r=0;r<8;r++){const w=Math.max(5,26-r*3),yy=-10+r*3+Math.round(fu*(1-r/8));R(1,yy,w,3,r%2?c1:shd(c1,-.1));R(w-2,yy,3,2,c2);if(r<3)R(1,yy-1,w-3,1,shd(c1,.3))}g.globalAlpha=sa}
+   else if(wt==='mech'){for(let i=0;i<5;i++){const yy=-9+i*2+Math.round(fu*.6*(i+1)/5);R(2+i*4,yy,3,17-i*2,i%2?c1:shd(c1,-.18));R(2+i*4,yy,1,17-i*2,shd(c1,.3));R(3+i*4,yy+14-i*2,2,2,c2)}R(0,-2,4,5,shd(c1,-.3));g.globalAlpha=sa*(.5+.5*Math.sin(T*4));R(4,-1,18,1,c2);g.globalAlpha=sa}
+   else if(wt==='bat'||wt==='dragon'){R(1,-10+fu,23,2,shd(c1,-.35));R(22,-13+fu,2,5,shd(c1,-.35));for(let r=0;r<8;r++){const w=Math.max(3,22-r*2.5|0),yy=-7+r*2+Math.round(fu*(1-r/7));R(1,yy,w,2,c1);if(r>2&&r%2)R(w-1,yy+1,2,1,'#00000000')}for(let k=0;k<4;k++)R(5+k*5,-8+fu,1,12-k*2,shd(c1,-.3));if(wt==='dragon')for(let k=0;k<5;k++)R(3+k*4,-11+fu,2,2,c2);else R(22,-14+fu,1,2,c2)}
+   else if(wt==='butterfly'){const t2=Math.round(fl*1.5);R(1,-12+t2,17,12,c1);R(3,-14+t2,12,2,c1);R(1,0,13,10,shd(c1,-.12));R(5,-9+t2,5,5,c2);R(12,-5+t2,2,2,'#ffffff');R(4,3,4,4,c2);R(1,-10+t2,1,18,shd(c1,-.35))}
+   else if(wt==='crystal'){g.globalAlpha=sa*.88;for(let i=0;i<5;i++){const h=12-i*2,yy=-8+i*2+Math.round(fu*(i+1)/5);R(2+i*4,yy,3,h+2,i%2?c1:c2);R(3+i*4,yy-2,1,2,c2);R(2+i*4,yy,1,h+2,'#ffffff80')}g.globalAlpha=sa;if((frame|0)%30<4)R(6,-6,1,1,'#ffffff')}
+   else if(wt==='flame'){for(let r=0;r<7;r++){const fk=Math.round(Math.sin(T*6+r*1.7)*1.5),w=Math.max(3,23-r*3)+fk,yy=-10+r*3+Math.round(fu*(1-r/7));R(1,yy,w,3,r<2?c2:r<5?c1:shd(c1,-.25));R(w-1,yy-1,2,2,'#fff0a0')}}
+  }g.globalAlpha=sa}
  if(o.cape&&!child&&!sit){const cc=o.cape,cf=Math.round(Math.sin(T*2.2+sd)*1.5+(walk?-2:0)),cw=tw+6;Q(cx-Math.floor(cw/2),ty+1,cw,Y-ty-3,shd(cc,-.2));for(let yy=ty+4;yy<Y-2;yy+=2){const k=(yy-ty)/(Y-ty),off=Math.round(cf*k);Q(cx-Math.floor(cw/2)+off-(k>.6?1:0),yy,cw+(k>.6?2:0),2,k>.85?shd(cc,-.35):cc)}Q(cx-Math.floor(cw/2)-1,ty,cw+2,2,o.capeT||shd(cc,.25))} // 👘 ผ้าคลุมหลัง
  // long hair behind
- if(!bald&&((fem&&o.hs!==4&&o.hs!==1)||o.hs===3)&&!['hood','mask','veil'].includes(o.hat)){Q(hx-1,top+3,hw+2,hh+(child?3:9),hD);Q(hx,top+3,hw,hh+(child?2:8),hair);const hs=Math.round(Math.sin(T*2.2+sd)*1.4+(walk?-1:0));if(hs){const hb=top+3+hh+(child?2:8);Q(hx-1+hs,hb-4,hw+2,5,hD);Q(hx+hs,hb-4,hw,4,hair);Q(hx+(hs>0?hw+1:-2)+hs,hb-2,1,3,hair);Q(hx+hs+2,hb,2,1,hD)}}
+ if(!bald&&((fem&&o.hs!==4&&o.hs!==1)||o.hs===3)&&!['hood','mask','veil','visor'].includes(o.hat)){Q(hx-1,top+3,hw+2,hh+(child?3:9),hD);Q(hx,top+3,hw,hh+(child?2:8),hair);const hs=Math.round(Math.sin(T*2.2+sd)*1.4+(walk?-1:0));if(hs){const hb=top+3+hh+(child?2:8);Q(hx-1+hs,hb-4,hw+2,5,hD);Q(hx+hs,hb-4,hw,4,hair);Q(hx+(hs>0?hw+1:-2)+hs,hb-2,1,3,hair);Q(hx+hs+2,hb,2,1,hD)}}
  // legs / lower body
  const ly=ty+th;
  if(sit){Q(cx-11,Y-6,22,6,rD);Q(cx-11,Y-6,22,2,robe);Q(cx-12,Y-2,24,2,'#00000033')}
@@ -4563,6 +4572,7 @@ function person0(x,y,o,pose){
  const bY=ty+(child?6:9);Q(cx-Math.floor(tw/2)-1,bY,tw+2,3,o.belt||'#00000066');Q(cx-1,bY+3,2,3+((frame|0)%8<4?0:1),o.belt||'#00000066');
  if(o.jade)Q(cx+3,bY+3,2,4,'#6ad0a0');if(o.emblem)Q(cx+2,ty+4,4,4,o.emblem);
  if(o.patch){Q(cx-5,ty+5,3,3,shd(robe,-.4));Q(cx+3,ty+11,3,3,'#6a7a4a')}
+ if(o.plate&&!child){const pc=o.plate,pD=shd(pc,-.3),pL=shd(pc,.3);Q(cx-6,ty+1,12,7,pc);Q(cx-6,ty+1,12,1,pL);Q(cx-6,ty+1,1,7,pL);Q(cx+5,ty+1,1,7,pD);Q(cx-5,ty+8,10,2,pD);Q(cx-4,ty+10,8,2,pc);Q(cx-4,ty+12,8,1,pD);if(o.core){const cp=.55+.45*Math.sin(T*3.2);Q(cx-1,ty+3,3,3,pD);g.globalAlpha=cp;Q(cx-1,ty+3,3,3,o.core);g.globalAlpha=cp*.35;Q(cx-3,ty+1,7,7,o.core);g.globalAlpha=1}}
  // hem flutter
  if(!sit&&!child){const fl=Math.round(Math.sin(T*3+sd)*1.2);Q(cx-Math.floor(tw/2)-2+fl,ly-1,2,2,rD);
   if(walk){const s1=Math.sin(T*3.2),hw2=Math.floor((tw+hem*2)/2),sx=s1>.3?1:s1<-.3?-1:0;Q(cx-hw2+sx,ly-1,tw+hem*2,2,rD);Q(cx-hw2+sx,ly-1,tw+hem*2,1,robe)}}
@@ -4612,7 +4622,7 @@ function person0(x,y,o,pose){
  if(o.old&&!child){Q(hx+1,top+2,3,1,sD);Q(eR+2,ey+2,1,1,sD)}
  if(o.beard&&!child){Q(hx+2,my+1,hw-4,child?2:5,o.beard);Q(hx+3,my+6,hw-6,2,o.beard);Q(hx+1,my-1,2,2,o.beard);Q(hx+hw-3,my-1,2,2,o.beard)}
  // hair front
- if(!bald&&!['hood','mask'].includes(o.hat)){Q(hx-1,top-1,hw+2,3,hair);Q(hx-1,top+1,2,4,hair);Q(hx+hw-1,top+1,2,4,hair);Q(hx+1,top+2,3,1,hair);Q(hx+hw-5,top+2,2,1,hair);Q(hx,top-1,hw,1,shd(hair,.2));
+ if(!bald&&!['hood','mask','visor'].includes(o.hat)){Q(hx-1,top-1,hw+2,3,hair);Q(hx-1,top+1,2,4,hair);Q(hx+hw-1,top+1,2,4,hair);Q(hx+1,top+2,3,1,hair);Q(hx+hw-5,top+2,2,1,hair);Q(hx,top-1,hw,1,shd(hair,.2));
   if(child){Q(hx-2,top-2,3,3,hair);Q(hx+hw-1,top-2,3,3,hair)}
   else if(!o.hat&&o.hs===1){Q(cx+2,top-3,4,3,hair);Q(cx+2,top-1,6,1,'#c8a040');Q(hx+hw,top+1,3,hh+5,hair);Q(hx+hw+2,top+2,1,hh+4,hD);const ps2=Math.round(Math.sin(T*2.6+sd)*1.6+(walk?1:0));if(ps2){Q(hx+hw+ps2,top+hh+2,3,5,hair);Q(hx+hw+2+ps2,top+hh+2,1,5,hD)}}
   else if(!o.hat&&o.hs===2){Q(hx-1,top-3,4,4,hair);Q(hx+hw-3,top-3,4,4,hair);Q(hx,top-3,2,1,shd(hair,.2));Q(hx+hw-2,top-3,2,1,shd(hair,.2))}
@@ -4650,6 +4660,7 @@ function person0(x,y,o,pose){
  else if(hc==='beanie'){const c2=o.hatC||'#c83a3a';Q(hx-1,top-4,hw+2,6,c2);Q(hx-1,top+1,hw+2,1,shd(c2,-.25));Q(cx-1,top-6,2,2,'#f4f4f4')}
  else if(hc==='ears'){const c2=o.hatC||o.hair||'#e88a3a';Q(hx,top-5,3,5,c2);Q(hx+hw-3,top-5,3,5,c2);Q(hx+1,top-3,1,2,'#ffc0c8');Q(hx+hw-2,top-3,1,2,'#ffc0c8');const ew=(frame|0)%40<3?1:0;if(ew)Q(hx+hw-3,top-6,3,1,c2)}
  else if(hc==='headset'){const c2=o.hatC||'#2a2a30';Q(hx-1,top-2,hw+2,2,c2);Q(hx-2,top+2,3,5,c2);Q(hx+hw-1,top+2,3,5,c2);Q(hx+hw,top+3,1,3,(frame|0)%16<8?'#4af0a0':'#2ab0ff')}
+ else if(hc==='visor'){const c2=o.hatC||'#4a5060',gl=o.core||o.trim||'#3af0ff';Q(hx-2,top-4,hw+4,hh+3,c2);Q(hx-2,top-4,hw+4,1,shd(c2,.3));Q(hx-2,top-4,1,hh+3,shd(c2,.2));Q(hx+hw+1,top-4,1,hh+3,shd(c2,-.3));Q(hx-1,top+hh-2,hw+2,2,shd(c2,-.25));const vp=.6+.4*Math.sin(T*3);Q(hx,top+4,hw,3,shd(gl,-.4));g.globalAlpha=vp;Q(hx,top+4,hw,3,gl);Q(hx+1,top+5,hw-2,1,'#ffffff');g.globalAlpha=1;Q(cx-1,top-6,2,2,shd(c2,-.2))}
  else if(hc==='tophat'){const c2=o.hatC||'#1a1a1e';Q(hx-4,top-1,hw+8,2,c2);Q(hx+1,top-9,hw-2,8,c2);Q(hx+1,top-3,hw-2,1,o.trim&&o.trim!==o.robe?o.trim:'#8a2a2a');Q(hx+1,top-9,hw-2,1,shd(c2,.25))}
  else if(hc==='mongkol'){Q(hx-1,top+2,hw+2,2,'#e8e0c8');Q(hx-1,top+2,hw+2,1,'#c8283a');Q(cx-1,top-1,2,3,'#e8e0c8')}
 }
@@ -46873,7 +46884,7 @@ try{(function(){if(typeof choiceShow!=='function')return;
  setTimeout(()=>{try{[1,2,3].forEach(n=>{const im=new Image();im.onload=()=>{if(!EV_SH.includes(n))EV_SH.push(n)};im.src='/evart'+n+'.webp';(window._icKeep=window._icKeep||[]).push(im)})}catch(e){}},2500);
 })()}catch(e){console.error('mod-evart',e)}
 
-// 👘 ตู้เสื้อผ้า — 150 ชุดพิกเซล (วาดด้วยโค้ด ใช้ตัวละครเดิมในฉาก/หน้าจบ/กระดานออนไลน์) ทุกโลก: ยุทธภพ เซียน เทพ จิตวิญญาณยุทธ์ ยุคปัจจุบัน ทะลุฟ้าดารา นครม่านหมอก
+// 👘 ตู้เสื้อผ้า — 250 ชุดพิกเซล (วาดด้วยโค้ด ใช้ตัวละครเดิมในฉาก/หน้าจบ/กระดานออนไลน์) ทุกโลก: ยุทธภพ เซียน เทพ จิตวิญญาณยุทธ์ ยุคปัจจุบัน ทะลุฟ้าดารา นครม่านหมอก
 // ปลดครั้งเดียวใช้ได้ทุกชีวิต (เก็บในเครื่อง) · บางชุดซื้อด้วยเงินในเกม บางชุดปลดจากการเล่น · ใส่แล้วไม่หายตอนเข้าสำนัก (ตั้งให้ใส่ชุดสำนักแทนได้) · แต่งเพื่อความสวย ไม่เพิ่มพลัง
 try{(function(){if(typeof meLook!=='function')return;
  // [ชื่อ, โลก m=ยุทธภพ x=เซียน g=เทพ n=ปัจจุบัน, robe, trim, ส่วนเสริม, เงื่อนไข]
@@ -46919,6 +46930,12 @@ try{(function(){if(typeof meLook!=='function')return;
  ['ชุดสุภาพบุรุษหมวกทรงสูง','f','#f0f0f0','#8a1a1a',{hat:'tophat',coat:'#1a1a1e',coatL:'#2e2e34',pant:'#1a1a1e',noSkirt:1},['$',5000]],['ชุดคุณหนูลูกไม้','f','#f4e8f0','#8a4a6a',{skirt:'#6a3a5a',hat:'flower',sash:'#e8d0e0'},['$',5000]],['ชุดนักเล่นแร่แปรธาตุ','f','#3a5a3a','#c8e080',{coat:'#2a4a2a',coatL:'#4a6a4a',eyeG:'#c8a040',pant:'#2a2a24',noSkirt:1},['$',8000]],['ชุดช่างกลไอน้ำ','f','#6a4a2a','#e8a040',{eyeG:'#e8a040',hat:'band',bandC:'#3a2a1a',patch:1,pant:'#3a2a1a',noSkirt:1},['$',6000]],
  ['ชุดตำรวจนครหมอก','f','#1e2a44','#c8c8d0',{hat:'helm',hatC:'#1e2a44',pant:'#1e2a44',noSkirt:1},['case',5]],['ชุดหมอโรคระบาด','f','#16161a','#6a6a72',{hat:'mask',maskC:'#2a2a30',cape:'#0e0e12',pant:'#16161a',noSkirt:1},['case',10]],['ชุดนักร้องโรงละคร','f','#a81e2a','#ffd040',{skirt:'#a81e2a',hat:'flower',sash:'#ffd040'},['fm',2000]],['ชุดนักบวชลัทธิหมอก','f','#3a2a4a','#a080c8',{hat:'hood',hoodC:'#2a1e3a'},['k',-50]],
  ['ชุดผู้พิพากษาเงา','f','#141418','#c8a040',{hat:'tophat',hatC:'#141418',cape:'#0a0a0e',capeT:'#c8a040',pant:'#141418',noSkirt:1},['k',60]],['ชุดนายพรานกลางคืน','f','#2a2a30','#8a6a4a',{coat:'#3a2e24',coatL:'#5a4a3a',cape:'#1a1612',hat:'scholar',hatC:'#2a2018',pant:'#1e1e22',noSkirt:1},['case',20]],['ชุดเจ้าแห่งหมอก','f','#d8dce4','#6a7a9a',{hat:'tophat',hatC:'#3a3e48',cape:'#8a8e98',capeT:'#d8dce4',coat:'#3a3e48',coatL:'#5a5e68',pant:'#2a2e36',noSkirt:1},['case',30]]];
+ // 🌠 ชุดรบทะลุฟ้าดารา 100 แบบ (แนวนักรบยีน/ชุดรบอวกาศ) = 10 สาย × 10 สี · เกราะอก+แกนพลังเรืองแสง · ปีก 8 แบบขยับได้
+ {const SR=[['นักรบยีน',null,'visor',0],['ปีกจักรกล','mech','visor',0],['ระดับดาวเคราะห์','energy','helm',0],['ระดับดาวฤกษ์','feather','halo',0],['อสูรเขาทอง','dragon','horn',0],['ปีศาจจักรวาล','bat','horn',1],['ผีเสื้อดารา','butterfly','pin',0],['ผลึกเนบิวลา','crystal','halo',0],['วิหคเพลิงสุริยะ','flame','phoenix',0],['เจ้าจักรวาล','energy','crown',1]];
+  const PL=[['เพลิง','#a8301a','#ffb040'],['น้ำแข็ง','#5a90c0','#d8f6ff'],['มรกต','#1a6a50','#5af0a8'],['อำพัน','#a8702a','#ffd060'],['ราตรี','#1e1e34','#8a7aff'],['ทอง','#b8901a','#fff0a0'],['เงิน','#9aa2b4','#ffffff'],['เนบิวลา','#4a2a7a','#e080ff'],['โลหิต','#5a0a14','#ff3a4a'],['ขาวบริสุทธิ์','#e8e8f0','#ffe680']];
+  SR.forEach(([sn,wg,ht,cp],si)=>PL.forEach(([pn,c,gl],pi)=>{const un=si===0&&pi<2?'f':pi===0?['$',4000*(si+1)]:pi===1?['$',8000*(si+1)]:pi<6?['rk',Math.min(15,pi-1+si)]:pi===6?['fm',800*(si+1)]:pi===7?['rich',150000*(si+1)]:pi===8?['k',-(30+si*10)]:['k',30+si*10];
+   const x={plate:shd(c,.12),arm:shd(c,.05),core:gl,hat:ht,hatC:shd(c,-.15),pant:shd(c,-.35),noSkirt:1,belt:shd(c,-.4)};if(wg){x.wing=wg;x.wingC=wg==='energy'||wg==='flame'?gl:wg==='crystal'?shd(gl,-.1):shd(c,.25);x.wingC2=gl}if(cp){x.cape=shd(c,-.3);x.capeT=gl}if(ht==='halo'||ht==='pin'||ht==='crown'||ht==='phoenix')x.hatC=gl;
+   W.push(['ชุดรบ'+sn+' · '+pn,'k',shd(c,-.2),gl,x,un])}))}
  const WN={m:'⚔️ ยุทธภพ',x:'☁️ เซียน',g:'🌟 แดนเทพ',s:'⭕ จิตวิญญาณยุทธ์',n:'🏙️ ยุคปัจจุบัน',k:'🌠 ทะลุฟ้าดารา',f:'🌉 นครม่านหมอก'};const MODN='nkf';
  const LK='murim_wd';const st=()=>{let d=null;try{d=JSON.parse(localStorage.getItem(LK)||'null')}catch(e){}d=d&&typeof d==='object'?d:{};d.own=Array.isArray(d.own)?d.own:[];return d};const put=d=>{try{localStorage.setItem(LK,JSON.stringify(d))}catch(e){}};
  const kind=()=>S&&S.mw?'n':'a';const cur=()=>{const d=st();return kind()==='n'?d.n:d.a};
