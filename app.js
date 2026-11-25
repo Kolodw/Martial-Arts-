@@ -29681,14 +29681,17 @@ function vxBreak(c,a){const p=a.p,T=a.T,C=a.C,t=performance.now()/1000,x=(meX||7
 /* ====================== ดัชนีพลัง ====================== */
 const pIdx=v=>{v=+v||0;if(!isFinite(v))return 999;return v<=0?0:Math.min(999,Math.round(20*Math.log10(1+v)))};
 window.pIdx=pIdx;window.fmtP=v=>'⚡'+pIdx(v);
+// 🔤 ตัวเลขแบบสากล K/M/B/T (ต่ำกว่าหมื่นแสดงเต็ม · เกินพันล้านล้านใช้ ×10ⁿ แบบเดิม)
+const kmb=v=>{v=Math.round(+v||0);const a=Math.abs(v);if(!isFinite(v)||a>=1e15)return fmt(v);if(a<1e4)return v.toLocaleString('en-US');for(const[d,u]of[[1e12,'T'],[1e9,'B'],[1e6,'M'],[1e3,'K']])if(a>=d){const x=v/d,ax=Math.abs(x);return(ax>=100?Math.round(x):ax>=10?+x.toFixed(1):+x.toFixed(2))+u}return String(v)};window.kmb=kmb;
 const SUPN='⁰¹²³⁴⁵⁶⁷⁸⁹',UNI={'ร้อยล้าน':1e8,'พันล้าน':1e9,'หมื่นล้าน':1e10,'แสนล้าน':1e11,'ล้านล้าน':1e12};
 const NUMRE='([\\d.]+×10[⁰¹²³⁴⁵⁶⁷⁸⁹]+|-?[\\d,]+(?:\\.\\d+)?(?:\\s(?:ร้อยล้าน|พันล้าน|หมื่นล้าน|แสนล้าน|ล้านล้าน))?)';
 function pnum(s){s=String(s).trim();const m=s.match(/^([\d.]+)×10([⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/);if(m)return +m[1]*Math.pow(10,+[...m[2]].map(c=>SUPN.indexOf(c)).join(''));const u=s.match(/^(-?[\d,.]+)\s(\S+)$/);if(u&&UNI[u[2]])return parseFloat(u[1].replace(/,/g,''))*UNI[u[2]];return parseFloat(s.replace(/,/g,''))}
 const STOP='(?!\\s*(?:เท่า|%|×|ปี|ครั้ง|คน|ตัว|ชั้น|ขั้น|วัน|เดือน|ข้อ|แต้ม|ดวง|ชิ้น|ระดับ|ใบ))';
 const RE_TOT=new RegExp('(พลัง(?:รวม|ยุทธ์)?)((?:\\s|:|<[^>]{0,60}>|เกิน|ถึง|อย่างน้อย)*)'+NUMRE+STOP+'(?:\\s*\\(\\d+[KMB]\\))?'+'((?:\\s|<[^>]{0,60}>)*/(?:\\s|<[^>]{0,60}>)*'+NUMRE+')?','g');
 const RE_GAIN=new RegExp('(พลัง(?:รวม|ยุทธ์)?\\s*)\\+'+NUMRE+STOP,'g');
-const pMode=()=>{try{const m=LS.get('murim_pmode','idx');return m==='raw'||m==='both'?m:'idx'}catch(e){return'idx'}};window.pMode=pMode;
+const pMode=()=>{try{const m=LS.get('murim_pmode','kmb');return m==='raw'||m==='both'||m==='idx'?m:'kmb'}catch(e){return'kmb'}};window.pMode=pMode;
 function pConv(t){if(typeof t!=='string'||t.indexOf('พลัง')<0)return t;const PM=pMode();if(PM==='raw')return t;let tot=0;try{tot=Math.max(1,total())}catch(e){tot=1}
+ if(PM==='kmb'){t=t.replace(RE_GAIN,(m,a,n)=>{const v=pnum(n);return isFinite(v)?a+'+'+kmb(v):m});return t.replace(RE_TOT,(m,a,sp,n,rest,n2)=>{const v=pnum(n);if(!isFinite(v)||v<0)return m;let s=a+sp+kmb(v);if(rest){const v2=pnum(n2);if(isFinite(v2))s+=rest.replace(n2,kmb(v2))}return s})}
  t=t.replace(RE_GAIN,(m,a,n)=>{const v=pnum(n);if(!isFinite(v))return m;const pc=v/Math.max(1,tot-v)*100,xr=tot/Math.max(1,tot-v);return a.replace(/\s+$/,'')+(pc<.1?' +เล็กน้อย':pc>=200?' ×'+(xr>=10?fmt(Math.round(xr)):xr.toFixed(1)):' +'+(pc>=10?Math.round(pc):pc.toFixed(1))+'%')+(PM==='both'?' (+'+n+')':'')});
  t=t.replace(RE_TOT,(m,a,sp,n,rest,n2)=>{const v=pnum(n);if(!isFinite(v)||v<0)return m;const lab=a==='พลังรวม'?'ดัชนีพลัง':a;let s=lab+sp+'⚡'+pIdx(v)+(PM==='both'?' ('+n+')':'');if(rest){const v2=pnum(n2);if(isFinite(v2))s+=rest.replace(n2,'⚡'+pIdx(v2)+(PM==='both'?' ('+n2+')':''))}return s});return t}
 window.pConv=pConv;
@@ -29696,7 +29699,7 @@ window.pConv=pConv;
 {const _md=modal;modal=function(html){if(typeof html==='string')arguments[0]=pConv(html);return _md.apply(this,arguments)}}
 {const _tt=toast;toast=function(t){if(typeof t==='string')arguments[0]=pConv(t);return _tt.apply(this,arguments)}}
 function realmPct(){try{const ri=realmIdx(),p=total();let lo,hi;if(ri<7){lo=REALMS[ri].p;hi=REALMS[ri+1].p}else{const L=postLv();lo=L<0?REALMS[7].p:postP(L);hi=L>=RS_MAX?null:postP(L+1)}if(!hi)return 100;return Math.max(0,Math.min(99,Math.floor((p-lo)/Math.max(1,hi-lo)*100)))}catch(e){return 0}}
-{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const e=$('gRealm');if(e&&S){const L=realmLabel(),tt=total();const PM=pMode(),pv=PM==='raw'?`💥<span class="px">${fmt(tt)}</span>`:PM==='both'?`⚡<span class="px">${pIdx(tt)}</span> <small>(${fmt(tt)})</small>`:`⚡<span class="px">${pIdx(tt)}</span>`;e.innerHTML=`⚔ <b>${L.base}</b> <small>${L.sub}</small> · ${pv} <small>· ${realmPct()}%</small>`;e.title='แตะเพื่อสลับรูปแบบตัวเลขพลัง · พลังรวมจริง '+fmt(tt)+' · ดัชนี ⚡'+pIdx(tt);e.onclick=()=>pModeNext()}}catch(e){}return r}}
+{const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{const e=$('gRealm');if(e&&S){const L=realmLabel(),tt=total();const PM=pMode(),pv=PM==='kmb'?`💥<span class="px">${kmb(tt)}</span>`:PM==='raw'?`💥<span class="px">${fmt(tt)}</span>`:PM==='both'?`⚡<span class="px">${pIdx(tt)}</span> <small>(${fmt(tt)})</small>`:`⚡<span class="px">${pIdx(tt)}</span>`;e.innerHTML=`⚔ <b>${L.base}</b> <small>${L.sub}</small> · ${pv} <small>· ${realmPct()}%</small>`;e.title='แตะเพื่อสลับรูปแบบตัวเลขพลัง · พลังรวมจริง '+fmt(tt)+' · ดัชนี ⚡'+pIdx(tt);e.onclick=()=>pModeNext()}}catch(e){}return r}}
 
 /* ====================== ตั้งค่า ====================== */
 {const _og=openGfx;openGfx=function(){const r=_og.apply(this,arguments);try{const m=$('modal');if(!m||m.dataset.k!=='gfx')return r;const k=dsTier();
@@ -32367,11 +32370,11 @@ wSlot('mw19',["mwYear"]);
 wSlot('mw20',["mwYear"]);
 
 // 🔢 รูปแบบตัวเลขพลัง: ⚡ ดัชนี · 💥 พลังรวมจริง · ⚡+💥 ทั้งคู่ (แสดงผลอย่างเดียว ไม่กระทบการคำนวณ)
-try{(function(){const N={idx:['⚡ ดัชนีพลัง','ตัวเลขสั้น อ่านง่าย · ทุก +1 แรงขึ้นราว 12% · พลังที่ได้แสดงเป็น %'],raw:['💥 พลังรวมจริง','ตัวเลขเต็มแบบสายพลังเวอร์ · พลังที่ได้แสดงเป็นตัวเลข'],both:['⚡+💥 ทั้งคู่','ดัชนีพร้อมตัวเลขจริงในวงเล็บ']},O=['idx','raw','both'];
+try{(function(){const N={kmb:['🔤 แบบสากล K/M/B','สั้นและบอกขนาดจริง · K = พัน · M = ล้าน · B = พันล้าน · T = ล้านล้าน · พลังที่ได้แสดงเป็นตัวเลข'],idx:['⚡ ดัชนีพลัง','ตัวเลขสั้น อ่านง่าย · ทุก +1 แรงขึ้นราว 12% · พลังที่ได้แสดงเป็น %'],raw:['💥 พลังรวมจริง','ตัวเลขเต็มแบบสายพลังเวอร์ · พลังที่ได้แสดงเป็นตัวเลข'],both:['⚡+💥 ทั้งคู่','ดัชนีพร้อมตัวเลขจริงในวงเล็บ']},O=['kmb','idx','raw','both'];
  const set=m=>{try{LS.set('murim_pmode',m)}catch(e){}try{render()}catch(e){}};
  window.pModeSet=m=>{set(m);toast('รูปแบบตัวเลขพลัง: '+N[m][0]+' · มีผลกับข้อความใหม่');try{const md=$('modal');if(md&&md.dataset.k==='gfx')openGfx()}catch(e){}};
- window.pModeNext=()=>{const m=window.pMode?window.pMode():'idx',n=O[(O.indexOf(m)+1)%O.length];set(n);let tt=0;try{tt=total()}catch(e){}toast(N[n][0]+' · พลังรวมจริง '+fmt(tt)+' · ⚡'+pIdx(tt)+' · แตะอีกครั้งเพื่อสลับ')};
- if(typeof openGfx==='function'){const _og=openGfx;openGfx=function(){const r=_og.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='gfx'&&!m.querySelector('.pmSec')){const cur=window.pMode();m.insertAdjacentHTML('beforeend','<div class="pmSec"><h3 style="margin-top:14px">🔢 รูปแบบตัวเลขพลัง</h3><p class="tag2">เปลี่ยนแค่การแสดงผล การต่อสู้ อันดับ และเซฟไม่เปลี่ยน · แตะ ⚡ บนแถบหัวเพื่อสลับเร็วๆ ได้</p>'+O.map(k=>'<button class="opt '+(cur===k?'on':'')+'" onclick="pModeSet(\''+k+'\')">'+N[k][0]+' '+(cur===k?'✅':'')+'<small>'+N[k][1]+'</small></button>').join('')+'</div>')}}catch(e){}return r}}})()}catch(e){console.error('mod-pm',e)}
+ window.pModeNext=()=>{const m=window.pMode?window.pMode():'kmb',n=O[(O.indexOf(m)+1)%O.length];set(n);let tt=0;try{tt=total()}catch(e){}toast(N[n][0]+' · พลังรวม '+(window.kmb?kmb(tt)+' = ':'')+fmt(tt)+' · ⚡'+pIdx(tt)+' · แตะอีกครั้งเพื่อสลับ')};
+ if(typeof openGfx==='function'){const _og=openGfx;openGfx=function(){const r=_og.apply(this,arguments);try{const m=$('modal');if(m&&m.dataset.k==='gfx'&&!m.querySelector('.pmSec')){const cur=window.pMode();m.insertAdjacentHTML('beforeend','<div class="pmSec"><h3 style="margin-top:14px">🔢 รูปแบบตัวเลขพลัง</h3><p class="tag2">เปลี่ยนแค่การแสดงผล การต่อสู้ อันดับ และเซฟไม่เปลี่ยน · แตะตัวเลขพลังบนแถบหัวเพื่อสลับเร็วๆ ได้</p>'+O.map(k=>'<button class="opt '+(cur===k?'on':'')+'" onclick="pModeSet(\''+k+'\')">'+N[k][0]+' '+(cur===k?'✅':'')+'<small>'+N[k][1]+'</small></button>').join('')+'</div>')}}catch(e){}return r}}})()}catch(e){console.error('mod-pm',e)}
 
 // ============================================================
 // BLOCK 22: 📚 อัปเดตคู่มือ · บทเรียนรายโลก · สารานุกรม (📡/👑 · 10 โลกยุคปัจจุบัน · สายฮันเตอร์ · ประเภทเกม)
@@ -32379,9 +32382,9 @@ try{(function(){const N={idx:['⚡ ดัชนีพลัง','ตัวเล
 // ✂️ ท่อนนี้ย้ายไป /w/mw.js (mw21) — ช่องนี้รักษาลำดับการห่อ: cdxTick, cxCats
 wSlot('mw21',["cdxTick","cxCats"]);
 // 🔢 ปุ่ม "ตัวเลขพลัง" ในเมนูตั้งค่า (เมนูในเกม · เมนูหน้าแรก · เมนูคอม) + หน้าเลือก
-try{(function(){const N={idx:['⚡ ดัชนีพลัง','ตัวเลขสั้น อ่านง่าย · ทุก +1 แรงขึ้นราว 12% · พลังที่ได้แสดงเป็น %'],raw:['💥 พลังรวมจริง','ตัวเลขเต็มแบบสายพลังเวอร์ · พลังที่ได้แสดงเป็นตัวเลข'],both:['⚡+💥 ทั้งคู่','ดัชนีพร้อมตัวเลขจริงในวงเล็บ']};
- const cur=()=>{try{return window.pMode?window.pMode():'idx'}catch(e){return'idx'}};
- window.openPMode=function(){let tt=0;try{tt=S?total():0}catch(e){}const c=cur();modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🔢 รูปแบบตัวเลขพลัง</h3><p class="tag2">เปลี่ยนแค่การแสดงผล การต่อสู้ อันดับ และเซฟไม่เปลี่ยน · ในเกมแตะ ⚡ บนแถบหัวเพื่อสลับเร็วๆ ได้</p>'+(tt?'<div class="item" style="text-align:center">ตอนนี้: ⚡'+pIdx(tt)+' = พลังรวมจริง <b>'+fmt(tt)+'</b></div>':'')+Object.keys(N).map(k=>'<button class="opt '+(c===k?'on':'')+'" style="width:100%;margin-top:6px" onclick="pModeSet(\''+k+'\');openPMode()">'+N[k][0]+' '+(c===k?'✅':'')+'<small>'+N[k][1]+'</small></button>').join(''),'pmode')};
+try{(function(){const N={kmb:['🔤 แบบสากล K/M/B','สั้นและบอกขนาดจริง · K = พัน · M = ล้าน · B = พันล้าน · T = ล้านล้าน · พลังที่ได้แสดงเป็นตัวเลข'],idx:['⚡ ดัชนีพลัง','ตัวเลขสั้น อ่านง่าย · ทุก +1 แรงขึ้นราว 12% · พลังที่ได้แสดงเป็น %'],raw:['💥 พลังรวมจริง','ตัวเลขเต็มแบบสายพลังเวอร์ · พลังที่ได้แสดงเป็นตัวเลข'],both:['⚡+💥 ทั้งคู่','ดัชนีพร้อมตัวเลขจริงในวงเล็บ']};
+ const cur=()=>{try{return window.pMode?window.pMode():'kmb'}catch(e){return'kmb'}};
+ window.openPMode=function(){let tt=0;try{tt=S?total():0}catch(e){}const c=cur();modal('<button class="xbtn" onclick="closeM()">✕</button><h3>🔢 รูปแบบตัวเลขพลัง</h3><p class="tag2">เปลี่ยนแค่การแสดงผล การต่อสู้ อันดับ และเซฟไม่เปลี่ยน · ในเกมแตะตัวเลขพลังบนแถบหัวเพื่อสลับเร็วๆ ได้</p>'+(tt?'<div class="item" style="text-align:center">ตอนนี้: พลังรวม <b>'+kmb(tt)+'</b> = '+fmt(tt)+' · ดัชนี ⚡'+pIdx(tt)+'</div>':'')+Object.keys(N).map(k=>'<button class="opt '+(c===k?'on':'')+'" style="width:100%;margin-top:6px" onclick="pModeSet(\''+k+'\');openPMode()">'+N[k][0]+' '+(c===k?'✅':'')+'<small>'+N[k][1]+'</small></button>').join(''),'pmode')};
  const lab=()=>N[cur()][0];
  const inject=()=>{try{const m=$('modal');if(!m||m.querySelector('.pmBtn'))return;const snd=m.querySelector('button[onclick^="openSound"]');if(!snd)return;const b=document.createElement('button');b.className=snd.className+' pmBtn';b.setAttribute('onclick','openPMode()');
   b.innerHTML=/\bcb\b/.test(snd.className)?'<i>🔢</i>ตัวเลขพลัง':'🔢 ตัวเลขพลัง<small>'+lab()+'</small>';snd.insertAdjacentElement('afterend',b)}catch(e){}};
@@ -32433,7 +32436,7 @@ openEquip=function(){if(!S)return;eqInit();if(typeof mwOn==='function'&&mwOn())r
   const list=inv.filter(id=>EQI[id]&&T[2](EQI[id])).sort((a,b)=>(seen()[a]?1:0)-(seen()[b]?1:0)||sc(EQI[b])-sc(EQI[a]));
   const anyBetter=ks.some(k=>better(k));
   modal('<button class="xbtn" onclick="closeM()">✕</button><h3>⚔️ ชุดสวมใส่</h3>'
-   +'<div class="eqDoll"><div class="eqCol">'+L1.map(tile).join('')+'</div><div class="eqMid"><canvas id="eqCv" width="168" height="186"></canvas><div class="tag2 eqSt">ดัชนีพลัง <b>'+(typeof pIdx==='function'?'⚡'+pIdx(total()):fmt(Math.round(total())))+'</b><br>❤️ '+Math.round(S.hp)+'/'+S.maxHp+(eqM('fight')>1?'<br>⚔️ ต่อสู้ ×'+eqM('fight').toFixed(2):'')+(eqM('train')>1?'<br>📈 ฝึก ×'+eqM('train').toFixed(2):'')+(eqM('qi')>1?'<br>🌀 ปราณ ×'+eqM('qi').toFixed(2):'')+'</div></div><div class="eqCol">'+R1.map(tile).join('')+'</div></div>'
+   +'<div class="eqDoll"><div class="eqCol">'+L1.map(tile).join('')+'</div><div class="eqMid"><canvas id="eqCv" width="168" height="186"></canvas><div class="tag2 eqSt">'+((window.pMode&&pMode()==='kmb'&&window.kmb)?'พลังรวม <b>'+kmb(total()):'ดัชนีพลัง <b>'+(typeof pIdx==='function'?'⚡'+pIdx(total()):fmt(Math.round(total()))))+'</b><br>❤️ '+Math.round(S.hp)+'/'+S.maxHp+(eqM('fight')>1?'<br>⚔️ ต่อสู้ ×'+eqM('fight').toFixed(2):'')+(eqM('train')>1?'<br>📈 ฝึก ×'+eqM('train').toFixed(2):'')+(eqM('qi')>1?'<br>🌀 ปราณ ×'+eqM('qi').toFixed(2):'')+'</div></div><div class="eqCol">'+R1.map(tile).join('')+'</div></div>'
    +'<div class="eqBar"><button class="pbtn" onclick="eqBest()">⚡ สวมของที่ดีที่สุด'+(anyBetter?' <i class="eqDot in"></i>':'')+'</button><label class="tag2"><input type="checkbox" '+(S.eqAuto?'checked':'')+' onchange="S.eqAuto=this.checked?1:0"> สวมของดีกว่าให้อัตโนมัติ</label></div>'
    +panel(window._eqSel)
    +'<h4 style="margin:10px 0 6px">🎒 คลัง</h4><div class="eqTabs">'+cnt.filter(([c,n])=>c[0]==='all'||n>0).map(([c,n])=>'<button class="'+(c[0]===tab?'on':'')+'" onclick="eqTab(\''+c[0]+'\')">'+c[1]+' <small>'+n+'</small></button>').join('')+'</div>'
@@ -43614,7 +43617,7 @@ function decorate(){const m=$$('modal');if(!m||m.dataset.k!=='me'||m.querySelect
  hero.innerHTML=`<div class="meFig"><canvas id="meCv" width="168" height="186" role="img" aria-label="ภาพตัวละคร ${esc(S.name||'')}"></canvas><small>${cap(L)}</small></div>
  <div class="meId"><div class="nm">${esc(S.name||'ไม่มีชื่อ')}</div><div class="ln"><b>อายุ ${S.age} ปี</b> · <span class="meSex">${sex()}</span></div><div class="ln">${world()}</div>${realm()?`<div class="ln">ระดับ: <b>${esc(realm())}</b></div>`:''}</div>`;
  const id=document.createElement('div');id.innerHTML=`<div class="meSec">🪪 ตัวตน</div><div class="meGrid">${row({k:'ชาติกำเนิด',...og})}${row({k:'พรสวรรค์',...tl})}${row({k:'นิสัย',...ps})}${bodyInfo().map(row).join('')}</div>
- <div class="meSec">⚔️ พลังและการฝึก</div><div class="meGrid">${row({k:'พลังรวม',v:T(()=>typeof pIdx==='function'?'⚡'+pIdx(total())+' · '+fmt(Math.round(total())):fmt(Math.round(total())),'—'),s:hp?'พลังชีวิต '+hp:''})}${T(()=>S.talent.m,0)?row({k:'ความเร็วฝึก',v:'×'+S.talent.m,s:'จากพรสวรรค์'}):''}</div>`;
+ <div class="meSec">⚔️ พลังและการฝึก</div><div class="meGrid">${row({k:'พลังรวม',v:T(()=>(window.pMode&&pMode()==='kmb'&&window.kmb)?kmb(total())+' · '+fmt(Math.round(total())):typeof pIdx==='function'?'⚡'+pIdx(total())+' · '+fmt(Math.round(total())):fmt(Math.round(total())),'—'),s:hp?'พลังชีวิต '+hp:''})}${T(()=>S.talent.m,0)?row({k:'ความเร็วฝึก',v:'×'+S.talent.m,s:'จากพรสวรรค์'}):''}</div>`;
  if(h3)h3.remove();if(it)it.remove();
  m.prepend(head);head.after(hero);hero.after(...id.childNodes);
  // ส่วนที่เหลือ (หลอมกาย · แผงเซียน ฯลฯ) อยู่ถัดลงมาตามเดิม · ปุ่มชุดสวมใส่/กระเป๋าไปไว้ท้ายสุด
