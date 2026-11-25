@@ -46972,13 +46972,6 @@ try{(function(){if(typeof meLook!=='function')return;
  const WPL=[['เพลิง','#c8401a','#ffd060'],['น้ำแข็ง','#a8d8f0','#ffffff'],['มรกต','#2a9a6a','#8affc8'],['ราตรี','#3a3060','#a090ff'],['ทอง','#d8b030','#fff4c0']];
  const WG=[];WGT.forEach(([wn,wt,tr],ti)=>WPL.forEach(([pn,c,gl],pi)=>{const c1=wt==='energy'||wt==='flame'?gl:wt==='crystal'?shd(c,.2):c;WG.push({n:'ปีก'+wn+' · '+pn,wing:wt,wingC:wt==='flame'?c:c1,wingC2:wt==='flame'?gl:gl,tier:tr,free:ti===0&&pi<2})}));
  window._WG=WG;window._SK0=SK0;
- // 🛡️ ชุดเกราะเต็มยศ: เซียน / แดนเทพ / จิตวิญญาณยุทธ์ (armx/armg/arms.webp แม่แบบ 10 สาย × 10 สี = โลกละ 100) · โชว์เกราะในฉากสู้ ชีวิตประจำวันเป็นชุดผ้าสีเดียวกัน
- {const AS=[['x','เกราะเซียน',['เดินเมฆ','อัสนีทัณฑ์','เซียนกระบี่','ปราชญ์โอสถ','หงส์น้ำแข็ง','กิเลนเพลิง','จิ้งจอกวิญญาณ','ปรมาจารย์ยันต์','ผู้อาวุโสแห่งความว่าง','จักรพรรดิเซียน'],[1,2,2,2,3,3,3,4,4,5],'r'],
-   ['g','เกราะเทพ',['ทหารสวรรค์','เทพสงคราม','เทพสุริยา','เทพีจันทรา','เทพอัสนี','เทพมังกร','ตุลาการสวรรค์','เทพนอกรีตผู้ร่วงหล่น','เทพบุปผา','จักรพรรดิสวรรค์'],[1,2,3,3,3,4,4,4,4,5],'r'],
-   ['s','ร่างจิตวิญญาณ',['หญ้าเงินคราม','ค้อนฟ้ากระจ่าง','พยัคฆ์ขาว','วิหคเพลิง','เจดีย์เจ็ดมณี','แมงมุมปีศาจ','หนอนไหมน้ำแข็ง','เคียวยมทูต','ตรีศูลเทพสมุทร','เทพเทวทูต'],[1,2,2,3,3,3,4,4,5,5],'ring']];
-  AS.forEach(([sh,pre,SN,TR,uk])=>SN.forEach((sn,si)=>PL.forEach(([pn,c,gl],pi)=>{const lv=Math.min(9,Math.max(1,pi-1+Math.floor(si/2)));
-   const un=si===0&&pi<2?'f':pi===0?['$',3000*(si+1)]:pi===1?['$',6000*(si+1)]:pi<6?[uk,lv]:pi===6?['fm',1500*(si+1)]:pi===7?['rich',(sh==='s'?20000:sh==='x'?400000:3e7)*(si+1)]:pi===8?['k',-(30+si*12)]:['k',30+si*12];
-   W.push([pre+sn+' · '+pn,sh,shd(c,-.1),gl,{ar:{sh,s:si,t:TR[si],c,gl},hat:null,trim:gl,belt:shd(c,-.4),sash:gl,cape:si>=8?shd(c,-.3):null,capeT:gl},un,{tier:TR[si],si,pi,arm:1}])})))}
  const WN={m:'⚔️ ยุทธภพ',x:'☁️ เซียน',g:'🌟 แดนเทพ',s:'⭕ จิตวิญญาณยุทธ์',n:'🏙️ ยุคปัจจุบัน',k:'🌠 ทะลุฟ้าดารา',f:'🌉 นครม่านหมอก'};const MODN='nkf';
  const LK='murim_wd';const st=()=>{let d=null;try{d=JSON.parse(localStorage.getItem(LK)||'null')}catch(e){}d=d&&typeof d==='object'?d:{};d.own=Array.isArray(d.own)?d.own:[];return d};const put=d=>{try{localStorage.setItem(LK,JSON.stringify(d))}catch(e){}};
  const kind=()=>S&&S.mw?'n':'a';const cur=()=>{const d=st();return kind()==='n'?d.n:d.a};
@@ -47089,7 +47082,7 @@ try{(function(){const W=window._WD,WG=window._WG,S0=window._SK0;if(!W||!WG||S0==
 
 // 🛡️ สไปรต์ชุดรบทะลุฟ้าดารา (skyar.webp: แม่แบบสีเทา-เงิน 10 สาย ช่อง 96×144 · เรืองแสงสีฟ้า cyan) → ลงสีตามชุดด้วยโค้ด (10 สี = 100 ชุด)
 // วาดแทนตัวละครพิกเซลเดิมเมื่อสวมชุดรบ (ฉาก/ตู้เสื้อผ้า/คลังชุดรบ) · แสงเรืองเต้น · ตัวหายใจ · ปีกกระพือด้านหลัง · ออร่าจิตวิญญาณ · ประกายระดับสูง
-try{(function(){if(typeof person0!=='function')return;const SH={k:{u:'/skyar.webp',cw:96,ch:144},x:{u:'/armx.webp',cw:120,ch:150},g:{u:'/armg.webp',cw:120,ch:150},s:{u:'/arms.webp',cw:120,ch:150},w:{u:'/skywg.webp',cw:168,ch:112}},WW=168,WH=112;const C={};let SRC=null,WSRC=null;
+try{(function(){if(typeof person0!=='function')return;const SH={k:{u:'/skyar.webp',cw:96,ch:144},w:{u:'/skywg.webp',cw:168,ch:112}},WW=168,WH=112;const C={};let SRC=null,WSRC=null;
  const ld=(u,f)=>{const im=new Image();im.onload=()=>{try{const cv=document.createElement('canvas');cv.width=im.width;cv.height=im.height;const c=cv.getContext('2d');c.drawImage(im,0,0);f(c.getImageData(0,0,im.width,im.height))}catch(e){console.error('skyar',e)}};im.src=u};
  setTimeout(()=>{for(const k in SH)ld(SH[k].u,d=>{SH[k].d=d;if(k==='k')SRC=d;if(k==='w')WSRC=d})},1500);
  const WIX={mech:0,energy:1,butterfly:2,feather:3,bat:4,crystal:5,dragon:6,flame:7};
