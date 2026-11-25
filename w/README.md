@@ -87,6 +87,7 @@ LS `murim_thr`: ทุกตอนจบ (ห่อ endGame) = ด้ายช�
 ## front.js — 🏯 หน้าแรกใหม่ (ธีมตามโลกที่เลือก · โหลด 0.3 วิ)
 `body[data-front]` = โลกของการ์ด `#wPick .wc.on` ขณะ `#title.on` → ตัวแปรสีเดิม + `--fA/--fG/--fK/--fD/--fT` · `#frTint` ม่านสีทับฉาก `#tbg2` · โลโก้/การ์ดโลก/ปุ่มเกิด/แถบล่างใช้สีโลก
 มือถือ: ซ่อนปุ่มลอย tSup/tFb/tEv/tSp/tCos + kEnt/tGrid/tSea → `#frTopR` (ร้านค้า·เมนู) + `#frToday` (อีเวนต์·ภารกิจ·คัมภีร์·ชุมชน — กดแทนปุ่มเดิม) · `#frCont` การ์ดเล่นต่อ (กด `#tCont`) แทรกก่อน `.box.opts` · แถบล่าง `#frMode` + เกิด · nav ซ่อน ลาน/เมนู เพิ่ม `#frHome` · syncSt สำเร็จ = ซ่อน
+จอคอม (แบบ B · ทุกธีม · body.frDesk): `#frRail` แคปซูลแนวตั้งชิดซ้าย (โคลนปุ่ม nav) · `#frReady` แผง "พร้อมเกิด" บนสุดของ `.tsP.r` — ย้าย `#tGo`/`#tCont` จริงเข้ามา (คืนกลับแถบล่างเมื่อไม่ใช่จอคอม) · ซ่อน `#tDock`
 หน้าย่อยจากหน้าแรกบนมือถือ (`SHEET` daily2/book/online/guild/tmenu/evshop/krt/sp/profile/aq/cosshop + ร้านค้า) = `#mask.frSheet` เต็มจอ · จอคอม: `#frTopR` แบบมีป้าย (ร้านค้า คัมภีร์ ชุมชน เมนู) แทนปุ่มลอย · เฉพาะธีมทองราตรี (body.royal) · ปิด LS `murim_frontOff=1`
 
 ## meta.js — 🛡️ แอดมินดูกลุ่มแบบเงียบ

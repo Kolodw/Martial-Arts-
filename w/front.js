@@ -90,6 +90,31 @@ ${M} #mask.on.frSheet{padding:0!important;align-items:stretch!important}
 ${M} #mask.on.frSheet #modal{width:100%!important;max-width:none!important;min-height:100%!important;max-height:none!important;margin:0!important;border-radius:0!important;border-left:0!important;border-right:0!important;padding-top:max(14px,env(safe-area-inset-top))!important}
 ${B} #mask.on #modal h3{font-family:var(--fD)}
 `;
+ s+=`
+/* จอคอมแบบ B */
+#frRail{display:none}
+html body.frDesk #frRail{display:flex;position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:30;flex-direction:column;gap:2px;width:78px;padding:8px 4px;border-radius:24px;background:var(--card);border:1px solid color-mix(in srgb,var(--pink) 50%,transparent);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+html body.frDesk #frRail button{display:flex!important;flex-direction:column;align-items:center;gap:3px;padding:9px 2px;border:0;border-radius:16px;background:transparent;color:var(--ink);font:inherit;font-size:11.5px;line-height:1.2;text-align:center;white-space:normal;cursor:pointer}
+html body.frDesk #frRail button:hover{background:var(--w)}
+html body.frDesk #frRail button .pxi,html body.frDesk #frRail button i{font-size:22px}
+html body.frDesk #tDock{display:none!important}
+html body.frDesk .tsP.l{left:104px!important;width:calc(clamp(250px,19vw,320px) - 70px)!important}
+html body.frDesk #frTopR button[aria-label="เมนู"]{display:none!important}
+#frReady{display:none}
+html body.frDesk #frReady{display:flex;flex-direction:column;gap:10px;padding:14px!important;border:1px solid color-mix(in srgb,var(--pink) 60%,transparent)!important}
+#frReady .frRh{display:flex;flex-direction:column;gap:2px}#frReady .frRh b{color:var(--pink);font-size:16px}#frReady .frRh small{color:var(--mut);font-size:12px}
+#frReady .frRp{pointer-events:none;position:relative;height:150px;border-radius:14px;overflow:hidden;background:var(--bg,#222);border:1px solid var(--bd,var(--line))}
+#frReady .frRp .frPb{position:absolute;right:-14px;bottom:-18px;font-size:120px;opacity:.28;line-height:1}
+#frReady .frRp .frPi{position:absolute;left:12px;top:10px;font-size:30px;line-height:1}
+#frReady .frRp .frPt{position:absolute;left:12px;right:12px;bottom:10px;display:flex;flex-direction:column;gap:2px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+#frReady .frRp .frPt b{font-size:20px}#frReady .frRp .frPt small{font-size:12px;opacity:.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#frReady .frRp .wc{width:100%!important;min-height:0!important;height:150px!important;margin:0!important;transform:none!important}
+#frReady .frRb{display:flex;flex-direction:column;gap:8px}
+#frReady .frRb #tGo{width:100%!important;min-height:60px;margin:0!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0!important;border-radius:14px!important;background:var(--pink)!important;background-image:linear-gradient(180deg,color-mix(in srgb,var(--pink) 80%,#fff),var(--pink))!important;color:var(--bg)!important;font:inherit;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--pink) 55%,#000)!important}
+#frReady .frRb #tGo small{font-size:12px;font-weight:400;color:var(--bg)!important;opacity:.85}
+#frReady .frRb #tCont{width:100%!important;margin:0!important;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:9px 14px;border-radius:12px!important;border:1px solid var(--line)!important;background:var(--w)!important;color:var(--ink)!important;font:inherit;cursor:pointer;text-align:left}
+#frReady .frRb #tCont b{color:var(--pink);font-size:14px}#frReady .frRb #tCont small{color:var(--mut);font-size:12px}
+`;
  const st=document.createElement('style');st.id='frCss';st.textContent=s;document.head.appendChild(st);
 }
 let fontsOn=0;
@@ -136,6 +161,29 @@ function update(){
 }
 const WN={murim:'ยุทธภพ',xian:'โลกเทพเซียน',mw:'ยุคปัจจุบัน',soul:'จิตวิญญาณยุทธ์',loop:'ผู้ย้อนกาล',beast:'เกิดเป็นสัตว์',sky:'ทะลุฟ้าดารา',fog:'นครม่านหมอก'};
 const wName=k=>WN[k]||'';
+// ---------- จอคอมแบบ B: แคปซูลแนวตั้งชิดซ้าย + แผง "พร้อมเกิด" ขวา (ทุกธีม) ----------
+let dkHome=null;
+function deskB(on){
+ const b=document.body,go=$('tGo'),ct=$('tCont'),pr=document.querySelector('.tsP.r'),nv=document.querySelector('#tDock .nav');
+ const ok=on&&b.classList.contains('desk')&&go&&pr&&nv;
+ b.classList.toggle('frDesk',!!ok);
+ if(!ok){ // คืนปุ่มกลับแถบล่าง
+  if(dkHome){const row=dkHome;if(ct&&ct.parentNode!==row)row.insertBefore(ct,row.firstChild);if(go&&go.parentNode!==row)row.appendChild(go);dkHome=null}
+  return}
+ if(!$('frRail')){const r=document.createElement('nav');r.id='frRail';r.setAttribute('aria-label','เมนูหลัก');
+  nv.querySelectorAll('button').forEach(x=>{if(x.id==='frHome')return;const c=x.cloneNode(true);c.removeAttribute('id');c.classList.remove('frHide','frOn');r.appendChild(c)});
+  document.body.appendChild(r)}
+ let rd=$('frReady');
+ if(!rd){rd=document.createElement('div');rd.id='frReady';rd.className='tsC';rd.innerHTML='<div class="frRh"><b>พร้อมเกิด</b><small class="frRm"></small></div><div class="frRp"></div><div class="frRb"></div>';pr.insertBefore(rd,pr.firstChild)}
+ if(!dkHome)dkHome=go.parentNode;
+ const bb=rd.querySelector('.frRb');if(go.parentNode!==bb)bb.appendChild(go);if(ct&&ct.parentNode!==bb)bb.appendChild(ct);
+ // ภาพโลกที่เลือก
+ const wc=document.querySelector('#wPick .wc.on'),pv=rd.querySelector('.frRp');
+ if(wc&&pv.dataset.k!==wc.dataset.k){pv.dataset.k=wc.dataset.k;pv.setAttribute('style',wc.getAttribute('style')||'');const q=x=>wc.querySelector(x);
+  pv.innerHTML='';const bg=q('.bg'),icn=q('.ic');if(bg){const c=bg.cloneNode(true);c.className='frPb';pv.appendChild(c)}if(icn){const c=icn.cloneNode(true);c.className='frPi';pv.appendChild(c)}
+  const tx=document.createElement('div');tx.className='frPt';tx.innerHTML=`<b></b><small></small>`;tx.querySelector('b').textContent=txt(q('b'));tx.querySelector('small').textContent=txt(q('small'));pv.appendChild(tx)}
+ const md=rd.querySelector('.frRm'),s2=txt(go.querySelector('small'));if(md&&md.textContent!==s2)md.textContent=s2;
+}
 let curW=null;
 function tick(){
  try{
@@ -143,6 +191,7 @@ function tick(){
   const on=T0.classList.contains('on')&&b.classList.contains('royal')&&!LSg('murim_frontOff',0);
   if(on){build(T0);const c=document.querySelector('#wPick .wc.on');const k=c&&T[c.dataset.k]?c.dataset.k:'murim';if(k!==curW){curW=k;fonts()}b.dataset.front=k;update()}
   else if(b.dataset.front){delete b.dataset.front;curW=null}
+  try{deskB(T0.classList.contains('on')&&!LSg('murim_frontOff',0))}catch(e){console.error('deskB',e)}
   // หน้าย่อยเต็มจอ (มือถือ · เปิดจากหน้าแรก)
   const mk=$('mask'),md=$('modal');if(mk&&md){const k0=md.dataset.k||'';const sh=on&&mk.classList.contains('on')&&(SHEET.includes(k0)||(!k0&&/^\W*ร้านค้า/.test(txt(md).replace(/^✕\s*/,'').replace(/^\S+\s*/,'')+'')||(!k0&&/ร้านค้า\s*เล่นฟรี/.test(txt(md).slice(0,60)))));mk.classList.toggle('frSheet',sh)}
  }catch(e){console.error('front',e)}
