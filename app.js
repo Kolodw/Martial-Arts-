@@ -47225,3 +47225,25 @@ try{(function(){const MGK=/^(skymg|mhmg|mg|mg2|mgp|mghall|mgd|fogmg|chmg|c2mg)$/
  // ปิดหน้ามินิเกมทะลุฟ้าดาราโดยไม่ได้กดจบ (กดพื้นหลัง/ปุ่มย้อนกลับ) → สรุปผลกลางๆ ให้เกมเดินต่อ
  const _cm=closeM;let inC=false;closeM=function(){const m=$('modal'),k=m&&m.dataset.k;const r=_cm.apply(this,arguments);if(!inC&&k==='skymg'&&typeof window.skyMgDone==='function'){inC=true;try{setTimeout(()=>{try{window.skyMgDone(.35)}catch(e){}inC=false},50)}catch(e){inC=false}}return r};window.closeM=closeM;
 })()}catch(e){console.error('mod-mgguard',e)}
+
+// 🎲 การ์ดกดค้าง "เกิดใหม่" ครบทุกโลก (เดิมมีแค่ยุทธภพ/เซียน/ปัจจุบัน) · โหมดความท้าทาย · ความเร็ว · เกิดแบบเดิม · สุ่มทุกอย่าง
+try{(function(){
+ const WQ=[['murim','⚔️','ยุทธภพ','สำนัก · ฝึกสู่ยอดฝีมือ',1],['xian','☁️','โลกเทพเซียน','ทัณฑ์สวรรค์ · ข้ามกัลป์',1],['mw','🏙️','ยุคปัจจุบัน','ฮันเตอร์ ซอมบี้ หมอผี วันซ้ำ',0],['soul','⭕','จิตวิญญาณยุทธ์','ปลุกวิญญาณ · ล่าวงแหวน',0],['loop','🔁','ผู้ย้อนกาล','ตายแล้วย้อนไปอายุ 15',0],['beast','🐾','เกิดเป็นสัตว์','ลูกสัตว์สู่อสูร',0],['sky','🌠','ทะลุฟ้าดารา','ไทยหลังดาวตก · สู่ดวงดาว',0],['fog','🌉','นครม่านหมอก','เมืองไอน้ำ · สืบคดี',0]];
+ const CH=[['🙂','ปกติ'],['🔥','นรก'],['⏳','ชีวิตสั้น'],['🗑️','รากขยะ']];const LEN=[2500,5000,9000];
+ const mwOk=()=>{try{return mwAllowed()}catch(e){return false}};
+ const list=()=>WQ.filter(w=>w[0]!=='mw'||mwOk());
+ const tried=()=>{try{return LS.get('murim_mtried',{})||{}}catch(e){return{}}};const TK={soul:'soul',loop:'regress',beast:'beast',sky:'sky',fog:'fog'};
+ const curK=()=>{try{const L=LS.get('murim_wlast',null);if(window._fogSel)return'fog';if(window._skySel)return'sky';if(CFG.mw)return'mw';if(CFG.chm===5)return'soul';if(CFG.chm===4)return'loop';if(L&&L.k==='beast')return'beast';return CFG.xian?'xian':'murim'}catch(e){return'murim'}};
+ const wq=k=>WQ.find(w=>w[0]===k)||WQ[0];
+ const chOf=()=>{const c=CFG.chm|0;return c<4?c:0};
+ const startW=k=>{try{if(typeof window.wpGo==='function')return window.wpGo(k)}catch(e){console.error(e)}qmGo()};
+ qmBorn=function(){const ck=curK(),cw=wq(ck),ch=chOf(),last=(()=>{try{return LS.get('murim_wlast',null)}catch(e){return null}})(),T=tried();const rows=[];
+  if(last&&last.k){const lw=wq(last.k);rows.push({ic:'🔁',t:'เกิดแบบเดิมอีกครั้ง',s:`${lw[1]} ${lw[2]}${lw[4]&&last.c&&last.c<4?' · '+CH[last.c].join(' '):''}`,f:()=>{try{if(lw[4]&&last.c!=null&&last.c<4)qmSetCfg('chm',last.c)}catch(e){}startW(last.k)}})}
+  rows.push({ic:'🔥',t:'ความท้าทาย',seg:{o:CH.map(c=>c[0]),cur:ch,f:j=>{qmSetCfg('chm',j);setTimeout(()=>{try{qmRefresh()}catch(e){}},60)}}});
+  rows.push({ic:'⏱️',t:'ความเร็ว',seg:{o:['⚡','🍵','🐢'],cur:Math.max(0,LEN.indexOf(+CFG.len)),f:j=>qmSetCfg('len',LEN[j])}});
+  rows.push({sep:1});
+  list().forEach(w=>{const nw=TK[w[0]]&&!T[TK[w[0]]];rows.push({ic:w[1],t:({soul:'เกิดในทวีปจิตวิญญาณยุทธ์',loop:'เกิดเป็นผู้ย้อนกาล',beast:'เกิดเป็นสัตว์อสูร'})[w[0]]||`เกิดใน${w[2]}`,s:w[3]+(w[4]&&ch?` · ${CH[ch].join(' ')}`:''),r:w[0]===ck?'เลือกอยู่':nw?'🆕':'',f:()=>startW(w[0])})});
+  rows.push({sep:1},{ic:'🎲',t:'สุ่มทุกอย่าง',s:'โลก ความเร็ว และความท้าทาย',f:()=>{const L=list(),w=L[Math.floor(Math.random()*L.length)];try{qmSetCfg('len',LEN[Math.floor(Math.random()*3)]);if(w[4])qmSetCfg('chm',Math.floor(Math.random()*4))}catch(e){}toast(`🎲 ฟ้าเลือกให้: ${w[1]} ${w[2]}`);setTimeout(()=>startW(w[0]),200)}});
+  return{ic:'🎲',t:'เกิดใหม่',sub:`${cw[1]} ${cw[2]}${cw[4]&&ch?' · '+CH[ch][1]:''}`,rows}};
+ const st=document.createElement('style');st.textContent='#qm .qmBody{max-height:min(72vh,640px);overflow-y:auto;overscroll-behavior:contain}';document.head.appendChild(st);
+})()}catch(e){console.error('mod-qmborn2',e)}
