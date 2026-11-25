@@ -47213,3 +47213,15 @@ try{(function(){const _oqB=openQuests;openQuests=function(){const r=_oqB.apply(t
 
 /* คู่ชีวิตต้องเป็นชื่อ (string) — บางเหตุการณ์เก่าเคยเก็บเป็นออบเจกต์ ทำให้ขึ้น [object Object] */
 try{setInterval(()=>{try{if(S&&S.spouse&&typeof S.spouse==='object'){const o=S.spouse;S.spouse=String(o.n||o.name||o.nm||'คู่ชีวิต');if(o.alive===false)S.spouse=null}}catch(e){}},1500)}catch(e){}
+
+// 🎮 กันมินิเกมหาย: ถ้ามีมินิเกมเปิดอยู่ เหตุการณ์ใหม่ (choice) รอจนเล่นจบก่อน ไม่ทับหน้ามินิเกม · ถ้าหน้ามินิเกมถูกปิดกลางคันให้สรุปผลแทนค้าง
+try{(function(){const MGK=/^(skymg|mhmg|mg|mg2|mgp|mghall|mgd|fogmg|chmg|c2mg)$/;
+ const mgOn=()=>{try{const m=$('modal');if(!modalOpen||!m)return false;const k=m.dataset.k||'';if(MGK.test(k))return true;if(k==='loop'&&m.querySelector('.lpDoors,.lpCard,.lpPot,#lpPotB'))return true}catch(e){}return false};
+ window._mgOn=mgOn;
+ const _ch=choice;let waitN=0;
+ choice=function(title,text,opts){if(mgOn()&&S&&S.alive){const a=arguments,self=this;if(waitN<400){waitN++;setTimeout(()=>{waitN=Math.max(0,waitN-1);choice.apply(self,a)},700);return}}return _ch.apply(this,arguments)};
+ try{Object.keys(_ch).forEach(k=>{try{choice[k]=_ch[k]}catch(e){}});Object.defineProperty(choice,'_cur',{get(){return _ch._cur},set(v){_ch._cur=v},configurable:true});['_q','_min'].forEach(k=>Object.defineProperty(choice,k,{get(){return _ch[k]},set(v){_ch[k]=v},configurable:true}))}catch(e){console.error('mgGuard props',e)}
+ window.choice=choice;
+ // ปิดหน้ามินิเกมทะลุฟ้าดาราโดยไม่ได้กดจบ (กดพื้นหลัง/ปุ่มย้อนกลับ) → สรุปผลกลางๆ ให้เกมเดินต่อ
+ const _cm=closeM;let inC=false;closeM=function(){const m=$('modal'),k=m&&m.dataset.k;const r=_cm.apply(this,arguments);if(!inC&&k==='skymg'&&typeof window.skyMgDone==='function'){inC=true;try{setTimeout(()=>{try{window.skyMgDone(.35)}catch(e){}inC=false},50)}catch(e){inC=false}}return r};window.closeM=closeM;
+})()}catch(e){console.error('mod-mgguard',e)}

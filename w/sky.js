@@ -3649,7 +3649,7 @@ def('av_origin',{c:()=>false,w:0,go(K){C('👁️ ร่างที่ไม่
  const v=K.av;const nt=v?avNextTxt(K,v):'';if(v&&v.wt)h=(h?h+'<br>':'')+`⚡ ร่างนี้พร้อมทะลวงด่านร่าง — รอเหตุการณ์ปีหน้า`;
  if(h||nt){const d=document.createElement('div');d.className='avHint tag2';d.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;border:1px dashed rgba(160,128,255,.6)';d.innerHTML=(nt?nt+(h?'<br>':''):'')+h;const sh=m.querySelector('.skShop');(sh||m).appendChild(d)}}}catch(e){console.error('avHint',e)}return r}}
 
-window._sky={SK,RK,EV,queue,skyYear,newK,sync:()=>sync()};window._skyQ=()=>QU.slice();
+window._sky={SK,RK,EV,queue,skyYear,newK,sync:()=>sync()};window._sky.mg=(k,cb)=>skyMG(k,'ทดสอบ','',cb);window._skyQ=()=>QU.slice();
 // 🩹 กันค้างขั้น: คิวเหตุการณ์อยู่ในหน่วยความจำ (ไม่ถูกเซฟ) — ถ้าโหลดเซฟ/รีเฟรชตอนคอขวดค้างคิว ธงคอขวดจะติดค้างตลอดไป ขั้นไม่ขยับ
 function skyUnstick(){try{const K=SK();if(!K||K.rk<0||!S||!S.alive)return;
  if(K.sub===9&&K.f.neck&&!QU.includes('neck')){K.f.neck=0;if(K.xp>=need(K)){K.f.neck=1;queue('neck')}}
