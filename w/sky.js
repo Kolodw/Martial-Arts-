@@ -1277,8 +1277,8 @@ const AVMAX=4;
 const avCap=K=>1+Math.floor((K.mind||0)/90)+(K.rk>=8?1:0);
 const avNeed=K=>Math.round(4*Math.pow(K.av.lv+1,1.6));
 function avB(K){return K&&K.av&&!K.beast?Math.min(1,.12*(K.av.lv+1)):0}
-function avGain(K,n,t){const v=K.av;if(!v)return'';v.xp+=n;let s='';while(v.lv<AVMAX&&v.xp>=avNeed(K)){v.xp-=avNeed(K);v.lv++;s+=` · 🐉 ร่างอสูรวิวัฒน์เป็น <b>${AVS[v.lv]}</b>`;sync()}if(v.lv>=AVMAX)v.xp=Math.min(v.xp,avNeed(K));return s}
-function avYear(K){const v=K.av;if(!v||K.beast)return;const over=v.lv+1>avCap(K);if(over&&rnd()<.35){v.rog=(v.rog|0)+1;feed(`⚠️ ร่าง${v.t}ไม่ฟังคำสั่งทั้งปี ความจุจิตไม่พอคุมร่างระดับ${AVS[v.lv]}`);if(v.rog>=3&&rnd()<.4)queue('e2_avrogue');return}
+function avGain(K,n,t){const v=K.av;if(!v)return'';v.xp+=n;let s='';while(v.lv<AVMAX&&v.xp>=avNeed(K)){v.xp-=avNeed(K);v.lv++;s+=` · 🐉 ร่างอสูรวิวัฒน์เป็น <b>${avSN(v)}</b>`;sync()}if(v.lv>=AVMAX)v.xp=Math.min(v.xp,avNeed(K));return s}
+function avYear(K){const v=K.av;if(!v||K.beast)return;const over=v.lv+1>avCap(K);if(over&&rnd()<.35){v.rog=(v.rog|0)+1;feed(`⚠️ ร่าง${v.t}ไม่ฟังคำสั่งทั้งปี ความจุจิตไม่พอคุมร่างระดับ${avSN(v)}`);if(v.rog>=3&&rnd()<.4)queue('e2_avrogue');return}
  const j=v.job||'hunt';if(j==='hunt'){const c=(400+v.lv*600)*(v.t==='พยัคฆ์อสนี'?1.4:1);let t=`🐉 ร่าง${v.t}ออกล่าในทวีปอสูร · ${cr(c)}`;if(rnd()<.4+v.lv*.1){K.cores++;t+=' · แก่น +1'}feed(t+avGain(K,2))}
  else if(j==='guard'){wallA(2+v.lv);if(v.t==='วาฬดารา')K.waveIn+=1;feed(`🐉 ร่าง${v.t}เฝ้ากำแพงทั้งปี · กำแพง +${2+v.lv}`+avGain(K,1))}
  else if(j==='scout'){K.intel=Math.min(5,(K.intel|0)+(v.t==='อสูรเงา'?2:1));feed(`🐉 ร่าง${v.t}สอดแนมทวีป · ข่าวกรอง +`+avGain(K,1))}
@@ -1287,7 +1287,7 @@ window.skyAv=function(a,b){const K=SK();if(!K||!K.av)return;const v=K.av;
  if(a==='job'){v.job=b}else if(a==='feed'){if(K.cores<1)return toast('ไม่มีแก่นอสูร');const n=Math.min(K.cores,b||1);K.cores-=n;const s=avGain(K,n*(v.t==='มังกรเกล็ดเพลิง'?1.3:1));toast(`🔶 ป้อนแก่น ${n} ก้อน${s?' · วิวัฒน์!':''}`);if(s)say(s.replace(/^ · /,''),'epic')}
  const cap=avCap(K),T=[['hunt','🗡️ ออกล่า'],['guard','🧱 เฝ้านคร'],['scout','👁️ สอดแนม'],['rest','💤 พัก']];
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="skShop"><div class="skShH"><b>ร่างแยก</b><span>ความจุจิต ${v.lv+1}/${cap}</span></div>
- <div class="skAvC"><div class="skAvI">${AVT[v.t][0]}</div><div><b>${v.t} · ${AVS[v.lv]}</b><small>${AVT[v.t][1]}</small><div class="skTb"><i style="width:${v.lv>=AVMAX?100:Math.round(v.xp/avNeed(K)*100)}%"></i></div><small>${v.lv>=AVMAX?'ขั้นถัดไป “อสูรเดินฟ้า” ต้องรอยุคทะเลดารา':`วิวัฒน์ครั้งถัดไป: ${Math.round(v.xp)}/${avNeed(K)}`} · พลังรวม +${Math.round(avB(K)*100)}%</small>${v.lv+1>cap?'<small class="warn">⚠ ความจุจิตไม่พอ ร่างอาจไม่ฟังคำสั่ง ฝึกจิตเพิ่ม</small>':''}</div></div>
+ <div class="skAvC"><div class="skAvI">${AVT[v.t][0]}</div><div><b>${v.t} · ${avSN(v)}</b><small>${AVT[v.t][1]}</small><div class="skTb"><i style="width:${v.lv>=avMax(K)?100:Math.min(100,Math.round(v.xp/avNeed(K)*100))}%"></i></div><small>${v.lv>=avMax(K)?avNextTxt(K,v):v.wt?'⚡ พร้อมทะลวงด่านร่าง':`วิวัฒน์ครั้งถัดไป: ${Math.round(v.xp)}/${avNeed(K)}`} · พลังรวม +${Math.round(avB(K)*100)}%</small>${v.lv+1>cap?'<small class="warn">⚠ ความจุจิตไม่พอ ร่างอาจไม่ฟังคำสั่ง ฝึกจิตเพิ่ม</small>':''}</div></div>
  <div class="skSec">งานประจำปี</div><div class="skTabs">${T.map(x=>`<button class="${(v.job||'hunt')===x[0]?'on':''}" onclick="skyAv('job','${x[0]}')">${x[1]}</button>`).join('')}</div>
  <div class="skSec">ป้อนแก่นอสูร (มี ${K.cores})</div><div class="skZb"><button class="skBuy" ${K.cores?'':'disabled'} onclick="skyAv('feed',1)">ป้อน 1</button><button class="skBuy" ${K.cores>=5?'':'disabled'} onclick="skyAv('feed',5)">ป้อน 5</button></div>
  ${(K.comp||[]).length?`<div class="skSec">สัตว์คู่ใจระดับราชา</div>`+K.comp.map(c=>`<div class="skIt"><div class="skIc">${c.ic}</div><div class="skIx"><b>${c.n}</b><small>ช่วยในศึกใหญ่และกันคลื่นอสูร</small></div></div>`).join(''):''}</div>`,'skyav')};
@@ -1363,7 +1363,7 @@ def('e2_riot',{c:()=>false,w:0,go(K){const r=K.rule;if(!r)return;C('🔥 ปร�
  O('ส่งทหารสลายการชุมนุม',()=>{r.hap=Math.max(0,r.hap-10);S.karma-=15;r.army=(r.army|0)+1;say('🪖 ถนนว่างในชั่วโมงเดียว และเงียบไปทั้งปี','bad')}),
  O('สละคลังนครแจกอาหาร',()=>{const n=Math.min(r.tr,15000);r.tr-=n;r.hap+=20;say(`🍚 ใช้คลังนคร ${fmt(n)} คนกลับบ้านพร้อมข้าวสาร`,'good')})])}});
 def('e2_avrogue',{c:()=>false,w:0,go(K){const v=K.av;if(!v)return;C(`⚠️ ร่าง${v.t}คลั่ง`,`ร่างอสูรคุณไม่ฟังคำสั่งมาสามปี คืนนี้มันพังประตูเหล็กหน้านครแล้ววิ่งเข้าป่า มันยังมีความทรงจำคุณครึ่งหนึ่ง และจำทางเข้าออกนครได้ทุกทาง`,[
- O('ตามไปสะกดจิตกลับมา',()=>skyMG('mind','🧠 ดึงร่างแยกกลับมา','กดค้างให้เข็มอยู่ในแถบ',sc=>{if(sc>=.5){v.rog=0;mindA(15);say('🐉 ร่างอสูรหยุดวิ่ง แล้วค่อยๆ เดินกลับมาซบหัวลงตรงหน้าคุณ','myth')}else{v.lv=Math.max(0,v.lv-1);v.rog=0;const d=hp(.3);say(`💢 คุณต้องใช้กำลังจนร่างอสูรบาดเจ็บหนัก มันถอยกลับไปเป็น${AVS[v.lv]} · พลังชีวิต −${d}`,'bad')}}),'มินิเกม'),
+ O('ตามไปสะกดจิตกลับมา',()=>skyMG('mind','🧠 ดึงร่างแยกกลับมา','กดค้างให้เข็มอยู่ในแถบ',sc=>{if(sc>=.5){v.rog=0;mindA(15);say('🐉 ร่างอสูรหยุดวิ่ง แล้วค่อยๆ เดินกลับมาซบหัวลงตรงหน้าคุณ','myth')}else{v.lv=Math.max(0,v.lv-1);v.rog=0;const d=hp(.3);say(`💢 คุณต้องใช้กำลังจนร่างอสูรบาดเจ็บหนัก มันถอยกลับไปเป็น${avSN(v)} · พลังชีวิต −${d}`,'bad')}}),'มินิเกม'),
  O('ปล่อยมันไป',()=>{K.av=null;say('🌲 ร่างแยกหายเข้าป่า บางคืนคุณยังรู้สึกถึงความหิวของมัน','bad');sync()})])}});
 // เหตุการณ์ทั่วไปของยุค 2
 def('e2_ferry',{c:K=>ok(K)&&e2(K),cd:4,w:4,go(K){C('⛵ เรือข้ามทะเลเพลิง','หลังราชาภูผาตาย เรือเล็กเริ่มข้ามทะเลเพลิงทุกสัปดาห์ บางลำพาคนไปหาที่ดินใหม่ บางลำพาคนหนีหนี้ วันนี้เรือลำหนึ่งลุกเป็นไฟกลางทะเล',[
@@ -1440,13 +1440,13 @@ window.skyAv=function(a,b){const K=SK();if(!K||!K.avs||!K.avs.length)return;if(a
  const cap=avCap(K),use=avUse(K),T=[['hunt','🗡️ ออกล่า'],['guard','🧱 เฝ้านคร'],['scout','👁️ สอดแนม'],['rest','💤 พัก']];
  modal(`<button class="xbtn" onclick="closeM()">✕</button><div class="skShop"><div class="skShH"><b>ร่างแยก</b><span>ความจุจิต ${use}/${cap}</span></div>
  <div class="skCap"><i style="width:${Math.min(100,use/cap*100)}%" class="${use>cap?'over':''}"></i></div>
- ${K.avs.length>1?`<div class="skTabs">${K.avs.map((x,i)=>`<button class="${(K.avm|0)===i?'on':''}" onclick="skyAv('sel',${i})">${AVT[x.t][0]} ${AVS[x.lv]}</button>`).join('')}</div>`:''}
- <div class="skAvC"><div class="skAvI">${AVT[v.t][0]}</div><div><b>${v.t} · ${AVS[v.lv]}</b><small>${AVT[v.t][1]} · กินความจุ ${v.lv+1}</small><div class="skTb"><i style="width:${v.lv>=AVMAX?100:Math.round(v.xp/avNeed(K)*100)}%"></i></div><small>${v.lv>=AVMAX?'ขั้นถัดไป “อสูรเดินฟ้า” ต้องรอยุคทะเลดารา':`วิวัฒน์ครั้งถัดไป: ${Math.round(v.xp)}/${avNeed(K)}`}</small>${use>cap?'<small class="warn">⚠ ร่างแยกรวมกันเกินความจุจิต อาจไม่ฟังคำสั่งหรือคลั่ง ฝึกจิตเพิ่มหรือปล่อยร่างบางร่าง</small>':''}</div></div>
+ ${K.avs.length>1?`<div class="skTabs">${K.avs.map((x,i)=>`<button class="${(K.avm|0)===i?'on':''}" onclick="skyAv('sel',${i})">${AVT[x.t][0]} ${avSN(x)}</button>`).join('')}</div>`:''}
+ <div class="skAvC"><div class="skAvI">${AVT[v.t][0]}</div><div><b>${v.t} · ${avSN(v)}</b><small>${AVT[v.t][1]} · กินความจุ ${v.lv+1}</small><div class="skTb"><i style="width:${v.lv>=avMax(K)?100:Math.min(100,Math.round(v.xp/avNeed(K)*100))}%"></i></div><small>${v.lv>=avMax(K)?avNextTxt(K,v):v.wt?'⚡ พร้อมทะลวงด่านร่าง':`วิวัฒน์ครั้งถัดไป: ${Math.round(v.xp)}/${avNeed(K)}`}</small>${use>cap?'<small class="warn">⚠ ร่างแยกรวมกันเกินความจุจิต อาจไม่ฟังคำสั่งหรือคลั่ง ฝึกจิตเพิ่มหรือปล่อยร่างบางร่าง</small>':''}</div></div>
  <small class="tag2" style="display:block;margin-top:6px">พลังรวมจากร่างแยกทั้งหมด +${Math.round(avB(K)*100)}% (ไม่เกินพลังร่างหลัก) · ${K.f.avEsc?'ใช้สิทธิ์หนีตายเข้าร่างแยกไปแล้ว':'ร่างหลักใกล้ตายในศึก ย้ายจิตเข้าร่างแยกได้ 1 ครั้ง'}</small>
  <div class="skSec">งานประจำปีของร่างนี้</div><div class="skTabs">${T.map(x=>`<button class="${(v.job||'hunt')===x[0]?'on':''}" onclick="skyAv('job','${x[0]}')">${x[1]}</button>`).join('')}</div>
  <div class="skSec">ป้อนแก่นอสูร (มี ${K.cores})</div><div class="skZb"><button class="skBuy" ${K.cores?'':'disabled'} onclick="skyAv('feed',1)">ป้อน 1</button><button class="skBuy" ${K.cores>=5?'':'disabled'} onclick="skyAv('feed',5)">ป้อน 5</button><button class="skBuy alt" onclick="skyAvFree()">ปล่อยร่างนี้</button></div>
  ${(K.comp||[]).length?`<div class="skSec">สัตว์คู่ใจระดับราชา</div>`+K.comp.map(c=>`<div class="skIt"><div class="skIc">${c.ic}</div><div class="skIx"><b>${c.n}</b><small>ช่วยในศึกใหญ่และกันคลื่นอสูร</small></div></div>`).join(''):''}</div>`,'skyav')};
-window.skyAvFree=function(){const K=SK();if(!K||!K.av)return;const v=K.av;closeM();C(`🌲 ปล่อยร่าง${v.t}`,`ร่าง${v.t}ระดับ${AVS[v.lv]}จะกลายเป็นอสูรอิสระ จิตคุณที่อยู่ในนั้นจะค่อยๆ จางไป ความจุจิตคืนมา ${v.lv+1}`,[
+window.skyAvFree=function(){const K=SK();if(!K||!K.av)return;const v=K.av;closeM();C(`🌲 ปล่อยร่าง${v.t}`,`ร่าง${v.t}ระดับ${avSN(v)}จะกลายเป็นอสูรอิสระ จิตคุณที่อยู่ในนั้นจะค่อยๆ จางไป ความจุจิตคืนมา ${v.lv+1}`,[
  O('ปล่อยไป',()=>{K.av=null;mindA(4);say(`🌲 ร่าง${v.t}หันมามองคุณครั้งสุดท้ายแล้ววิ่งเข้าป่า`,'');sync();render()}),O('ไม่ปล่อย',()=>{})])};
 function avNew(K,t){K.avs=K.avs||[];K.avs.push({t,lv:0,xp:0,job:'hunt'});K.avm=K.avs.length-1;sync();return`🐉 <b>ร่างแยกใหม่ถือกำเนิด ${AVT[t][0]} ${t}</b> (ตอนนี้มี ${K.avs.length} ร่าง · ความจุ ${avUse(K)}/${avCap(K)})`}
 
@@ -3509,6 +3509,145 @@ window._skyWf={WS,wfG,EN2,WF,wfMG};window.skyFate=function(){const K=SK();if(!K)
 .wfA,.wfE{display:flex;gap:10px;align-items:center;padding:9px 10px;border:1.5px solid #2e4a5e;background:#0f1d29;margin-bottom:6px}.wfA>span,.wfE>span{font-size:24px;flex:none}.wfA>div,.wfE>div{min-width:0}.wfA b,.wfE b{display:block;color:#fff;font-size:14px}.wfA small,.wfE small{display:block;color:#9db3c4;font-size:12px}
 .wfA.done{border-color:#7be3a088}.wfE.now{border-color:#b48cff;background:linear-gradient(160deg,#241a3a,#0f1d29)}.wfE.lock{opacity:.5}.wfG{display:grid;grid-template-columns:1fr 1fr;gap:0 6px}`;document.head.appendChild(st)}
 try{SYS_GUIDE.push({s:'base',nw:1,ic:'🌍',t:'ทะลุฟ้าดารา: ชะตาโลก · ตอนจบ',d:'<b>🌍 ชะตาโลก</b> ทุกชีวิตสุ่มเรื่องใหญ่ 2–3 เรื่องจาก 12 เรื่อง (ไข้เกล็ดเขียว · ดาวดวงที่สอง · สงครามท่อน้ำ · ราชาอสูรรวมฝูง · รัฐประหารสีขาว · นครกระจกแตก · นครลอยฟ้า · ทะเลกลืนแผ่นดิน · เด็กยีนสมบูรณ์ · ศาสดาเศษดาว · เครดิตล่ม · สามปีที่อสูรเงียบ) แต่ละเรื่องมี 3 ขั้น มีลางเตือนก่อน 1 ปี ตัวเลือกขั้นแรกๆ เปิดทางลับในขั้นสุดท้าย · เรื่องที่เคยเจอบ่อยสุ่มยากขึ้น · <b>🎬 ตอนจบ 17 แบบ</b> ขึ้นกับทุกสิ่งที่ทำ ทั้งฝ่าย หอนักรบ ราชาอสูร และชะตาโลก · ช่วงท้ายชีวิตมีทางแยกสุดท้ายให้เลือกเอง · มินิเกมใหม่: 🃏 จับคู่การ์ด ⚡ กดรัว'})}catch(e){}
+
+// =================== 🧬 ร่างแยกต่างเผ่า · ร่างไต่ขั้นเอง · ทะลวงร่าง (มินิเกม) · หลอมร่างเป็นหนึ่ง (ทางลับ) ===================
+// ร่างใหม่: 💎 เผ่าเกราะผลึก (ยุคทะเลดารา) · 🤖 ร่างจักรกลญาณ (ยุคทะเลดารา) · 🌌 ร่างคลื่นดารา (ยุคดาราจักร) · 👁️ ร่างเงาต้นกำเนิด (ลับ)
+// ร่างแยกโตได้ตามยุคของร่างหลัก (avMax) · ทุกด่านร่าง (ขั้น 4/7/9) ต้องผ่านมินิเกม "จูนคลื่นจิต" · มีร่างแข็งแรง 3 ร่างขึ้นไป → เสียงจากทุกร่าง → พิธีหลอมร่าง
+Object.assign(AVT,{'เผ่าเกราะผลึก':['💎','เกราะผลึกต่างดาว ทนทานที่สุด เฝ้านครได้สองเท่า'],'ร่างจักรกลญาณ':['🤖','ร่างจักรกลที่ญาณช่วยสร้าง ล่าแล้วได้เครดิตมาก'],'ร่างคลื่นดารา':['🌌','ร่างพลังงานที่ทะเลดาราให้กำเนิด สอดแนมทั่วดาราจักร'],'ร่างเงาต้นกำเนิด':['👁️','ร่างที่ไม่มีใครสร้าง มันมาเอง']});
+const AVSN={'เผ่าเกราะผลึก':['ผลึกแรกตื่น','ผู้สวมผลึก','นักรบผลึก','อัศวินผลึกดำ','ขุนพลผลึกดาว','ผู้หลอมผลึกฟ้า','จ้าวผลึกดารา','ผลึกเหนือกาล','จักรพรรดิผลึก','ผลึกกลืนจักรวาล','ผลึกนิรันดร์','ผลึกต้นกำเนิด'],
+ 'ร่างจักรกลญาณ':['โครงร่างต้นแบบ','หน่วยทดลอง','จักรกลนักล่า','ป้อมเดินได้','ยานในร่างคน','จักรกลดาว','สมองดาราจักร','ญาณจักรกล','จักรกลกฎฟ้า','จักรกลพหุภพ','ญาณนิรันดร์','จักรกลต้นกำเนิด'],
+ 'ร่างคลื่นดารา':['ประกายแรก','กระแสแสง','คลื่นเนบิวลา','พายุดารา','ทะเลแสง','ผู้เป็นกาแล็กซี','คลื่นจักรวาล','แสงก่อนกาล','ความว่างเรืองแสง','คลื่นพหุภพ','แสงนิรันดร์','แสงต้นกำเนิด'],
+ 'ร่างเงาต้นกำเนิด':['เงาที่ไม่มีเจ้าของ','เงาที่จำคุณได้','เงาที่เดินเอง','เงาที่กลืนแสง','เงาเหนือดาว','เงาดาราจักร','เงาแห่งกฎ','เงาข้ามภพ','เงาก่อนกาล','เงาพหุภพ','เงานิรันดร์','ต้นกำเนิดของเงา']};
+function avSN(v){if(!v)return'';const L=AVSN[v.t]||AVS;return L[Math.min(L.length-1,v.lv|0)]}
+function avMax(K){const r=K?K.rk|0:0;return r>=22?11:r>=18?10:r>=14?9:r>=10?7:4}
+const AVGATE=[4,7,9];
+function avNextTxt(K,v){const m=avMax(K);if((v.lv|0)>=11)return'ถึงขั้นสูงสุดของร่างนี้แล้ว';if(v.lv>=m)return`ขั้นถัดไป “${(AVSN[v.t]||AVS)[v.lv+1]}” ต้องรอร่างหลักขึ้นยุคถัดไป`;return''}
+const avHas=(K,t)=>(K.avs||[]).some(v=>v.t===t);
+// ด่านร่าง: ถึงขั้น 4/7/9 แล้ว XP เต็ม → รอทะลวง (มินิเกม)
+avGain=function(K,n,t){const v=K.av;if(!v)return'';v.xp+=n;let s='';
+ while(v.lv<avMax(K)&&v.xp>=avNeed(K)){if(AVGATE.includes(v.lv)&&(v.gp|0)<=v.lv){if(!v.wt){v.wt=1;s+=` · ⚡ ร่าง${v.t}พร้อมทะลวงด่านร่าง`;later(K,'av_gate',0)}break}
+  v.xp-=avNeed(K);v.lv++;s+=` · ${AVT[v.t][0]} ร่าง${v.t}วิวัฒน์เป็น <b>${avSN(v)}</b>`;sync()}
+ if(v.lv>=avMax(K))v.xp=Math.min(v.xp,avNeed(K));return s};
+
+// งานประจำปีเสริมของร่างใหม่ + พลังจากการหลอมร่าง
+{const _ay=avYear;avYear=function(K){const r=_ay.apply(this,arguments);try{if(!K.avs||K.beast)return r;K.avs.forEach(v=>{const j=v.job||'hunt';
+ if(v.t==='เผ่าเกราะผลึก'&&j==='guard')wallA(2+v.lv);
+ if(v.t==='ร่างจักรกลญาณ'&&j==='hunt')cr((300+v.lv*500)*.5);
+ if(v.t==='ร่างคลื่นดารา'&&j==='scout')K.intel=Math.min(5,(K.intel|0)+1);
+ if(v.t==='ร่างเงาต้นกำเนิด'&&rnd()<.25){const c=pick(['เงากลับมาพร้อมแก่นอสูรที่คุณไม่รู้ว่ามาจากไหน','เงากระซิบชื่อของคนที่ยังไม่เกิด','เงายืนอยู่ข้างเตียงคุณทั้งคืน แต่ไม่ได้ทำอะไร']);K.cores++;feed('👁️ '+c+' · แก่น +1')}})}catch(e){console.error('avYear2',e)}return r}}
+{const _avb=avB;avB=function(K){let b=_avb(K);if(K&&K.f&&K.f.fused)b=Math.min(3,b+1+.15*(K.f.fused|0));return b}}
+
+// ---------- มินิเกมร่าง ----------
+function avMG(kind,ti,sub,cb){if(mgAuto()){setTimeout(()=>cb(.3+rnd()*.5),60);return}
+ MG={kind,cb,t:0,t2:0};
+ const shell=b=>modal(`<div class="skMg"><div class="skMgH">${ti}</div><p class="tag2">${sub}</p>${b}<button class="gbtn" style="width:100%;margin-top:10px" onclick="skyMgDone(.4)">⏭ ข้าม (ผลกลางๆ)</button></div>`,'skymg');
+ if(kind==='sync'){ // 🧠 จูนคลื่นจิต: เข็มสองเส้นวิ่งคนละจังหวะ กดตอนทับกัน · ความเร็วเปลี่ยนเอง
+  let a=.1,b=.8,da=1,db=-1,sa=.011,sb=.016,hit=0,tries=0,th=.07;
+  shell(`<div class="skScan" style="position:relative"><i class="avNa" style="position:absolute;top:0;bottom:0;width:4px;background:#5ae8ff;box-shadow:0 0 8px #5ae8ff"></i><i class="avNb" style="position:absolute;top:0;bottom:0;width:4px;background:#ff8a3d;box-shadow:0 0 8px #ff8a3d"></i></div><div class="skScR">จูนติด <b id="avH">0</b>/3 · พลาดได้อีก <b id="avT">3</b></div><button class="pbtn skBig" onclick="avSyncTap()">⚡ จูน!</button>`);
+  const paint=()=>{const x=document.querySelector('.avNa'),y=document.querySelector('.avNb');if(x)x.style.left=(a*100)+'%';if(y)y.style.left=(b*100)+'%'};
+  window.avSyncTap=()=>{const d=Math.abs(a-b);if(d<th){hit++;th*=.8;sa*=1.2;sb*=1.15;try{sfx('good')}catch(e){}}else{tries++;try{sfx('click')}catch(e){}}const h=$('avH'),t=$('avT');if(h)h.textContent=hit;if(t)t.textContent=3-tries;if(hit>=3)return mgDone(1-tries*.12);if(tries>=3)return mgDone(hit*.25)};
+  MG.t=setInterval(()=>{if(rnd()<.02){sa=.006+rnd()*.022;da*=rnd()<.3?-1:1}if(rnd()<.02){sb=.006+rnd()*.024}a+=da*sa;b+=db*sb;if(a>1){a=1;da=-1}if(a<0){a=0;da=1}if(b>1){b=1;db=-1}if(b<0){b=0;db=1}paint()},30);paint();MG.t2=setTimeout(()=>mgDone(hit*.25),18000);return}
+ if(kind==='simon'){ // 🔮 ประสานแก่น: จำลำดับแก่นที่กะพริบ · บางรอบกลับด้าน
+  const K=SK(),IC=(K.avs||[]).slice(0,4).map(v=>AVT[v.t][0]);while(IC.length<4)IC.push(['🔶','🔷','🟣','⚪'][IC.length]);
+  let round=0,seq=[],inp=[],rev=false,ok=0,lock=true;const ROUNDS=3;
+  shell(`<div id="avSS" class="skScR" style="min-height:24px">ดูให้ดี…</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:10px auto;max-width:260px">${IC.map((c,i)=>`<button class="pbtn" id="avS${i}" style="font-size:30px;padding:16px;transition:transform .15s,filter .15s" onclick="avSimTap(${i})">${c}</button>`).join('')}</div>`);
+  const fl=i=>{const e=$('avS'+i);if(!e)return;e.style.transform='scale(1.15)';e.style.filter='brightness(1.8)';setTimeout(()=>{if(e){e.style.transform='';e.style.filter=''}},320)};
+  const next=()=>{inp=[];rev=round>=1&&rnd()<.45;seq.push(Math.floor(rnd()*4));if(round===0)seq.push(Math.floor(rnd()*4),Math.floor(rnd()*4));lock=true;const st=$('avSS');if(st)st.innerHTML='ดูให้ดี…';
+   seq.forEach((x,k)=>setTimeout(()=>fl(x),500+k*560));setTimeout(()=>{lock=false;const s=$('avSS');if(s)s.innerHTML=rev?'<b style="color:#e84a8a">🔄 แก่นสั่นกลับด้าน! กดย้อนจากหลังไปหน้า</b>':'กดตามลำดับ'},500+seq.length*560)};
+  window.avSimTap=i=>{if(lock)return;fl(i);inp.push(i);const want=rev?seq.slice().reverse():seq;if(inp[inp.length-1]!==want[inp.length-1]){try{sfx('bad')}catch(e){}return mgDone(ok/ROUNDS*.8)}
+   if(inp.length===want.length){ok++;round++;try{sfx('good')}catch(e){}if(round>=ROUNDS)return mgDone(1);setTimeout(next,450)}};
+  next();MG.t2=setTimeout(()=>mgDone(ok/ROUNDS*.8),30000);return}
+ if(kind==='orb'){ // 🌌 จับคลื่นดารา: แสงวาร์ปไปมา บางทีมีแสงหลอก
+  let hit=0,miss=0;const need=5;
+  shell(`<div id="avOA" style="position:relative;height:220px;border-radius:14px;background:radial-gradient(circle at 50% 40%,#1a2a5a,#050814);overflow:hidden;margin:8px 0"></div><div class="skScR">จับได้ <b id="avOH">0</b>/${need} · พลาด <b id="avOM">0</b>/3</div>`);
+  const ar=$('avOA');const spawn=()=>{if(!ar||!MG)return;ar.innerHTML='';const fake=hit>=1&&rnd()<.35,n=fake?2:1,real=Math.floor(rnd()*n);
+   for(let k=0;k<n;k++){const o=document.createElement('button');const sz=30+Math.floor(rnd()*14);o.style.cssText=`position:absolute;left:${8+rnd()*78}%;top:${8+rnd()*70}%;width:${sz}px;height:${sz}px;border-radius:50%;border:none;background:radial-gradient(circle,#fff,${k===real?'#5ae8ff':'#ff6ad5'} 60%,transparent 70%);box-shadow:0 0 18px ${k===real?'#5ae8ff':'#ff6ad5'};cursor:pointer;transition:left .5s,top .5s`;
+    o.onclick=e=>{e.stopPropagation();if(k===real){hit++;try{sfx('good')}catch(x){}if(hit>=need)return mgDone(1-miss*.1);}else{miss++;try{sfx('bad')}catch(x){}if(miss>=3)return mgDone(hit/need*.7)}const h=$('avOH'),m=$('avOM');if(h)h.textContent=hit;if(m)m.textContent=miss;spawn()};
+    ar.appendChild(o);if(k===real&&rnd()<.5)setTimeout(()=>{try{o.style.left=(8+rnd()*78)+'%';o.style.top=(8+rnd()*70)+'%'}catch(x){}},400+rnd()*500)}};
+  ar.onclick=()=>{miss++;const m=$('avOM');if(m)m.textContent=miss;if(miss>=3)mgDone(hit/need*.7)};
+  spawn();MG.t=setInterval(()=>{if(rnd()<.5)spawn()},1600);MG.t2=setTimeout(()=>mgDone(hit/need*.7),15000);return}
+ cb(.5)}
+
+// ---------- เหตุการณ์: ได้ร่างต่างเผ่า ----------
+def('av_alien',{c:K=>K.rk>=10&&!K.beast&&!avHas(K,'เผ่าเกราะผลึก')&&!K.f.avAl,w:3,go(K){K.f.avAl=1;const pw=cl(.35+(K.mind||0)/500,.2,.85);
+ C('💎 ยานผู้ลี้ภัยเผ่าผลึก',`ยานรูปเกล็ดผลึกตกลงกลางทะเลทราย ผู้รอดชีวิตตัวสูงเกือบสามเมตร ร่างโปร่งแสงเหมือนแก้ว ผู้นำของพวกมันกำลังจะตาย จิตของมันยังสว่างอยู่ในผลึกกลางอก`,[
+  O('🧠 ชิงร่างผู้นำที่ใกล้ตาย',()=>{if(rnd()<pw){say(avNew(K,'เผ่าเกราะผลึก'),'myth',true);try{keyAdd(`${S.age} ปี — ได้ร่างเผ่าเกราะผลึก`)}catch(e){}later(K,'av_alien2',R(3,6))}else{mindA(-15);const d=hp(.2);say(`💢 จิตผลึกสะท้อนกลับเข้าหัวคุณ · พลังจิต −15 · พลังชีวิต −${d}`,'bad')}},'จิต'+pc(pw)),
+  O('🤝 ช่วยรักษาผู้รอดชีวิต',()=>{S.karma+=12;K.cores+=3;say('🤝 ผู้นำผลึกมอบเศษผลึกสามก้อนก่อนสิ้นใจ “ร่างของข้า… วันหนึ่งจะกลับมาหาเจ้า” · กรรม +12 · แก่น +3','good');later(K,'av_alien3',R(4,8))}),
+  O('💰 ขายซากยานให้ตลาดมืด',()=>{say('💰 ตลาดมืดจ่ายเป็นเครดิตกองโต · '+cr(R(20000,60000)*(1+K.rk*.1)),'good');S.karma-=8})])}});
+def('av_alien2',{c:()=>false,w:0,go(K){if(!avHas(K,'เผ่าเกราะผลึก'))return;C('💎 พวกพ้องของร่างผลึก','ผู้รอดชีวิตเผ่าผลึกจำได้ว่าร่างนี้เคยเป็นผู้นำ พวกมันคุกเข่าลงต่อหน้าร่างของคุณ และถามว่าจะพาพวกมันไปทางไหน',[
+ O('นำพวกมันสร้างนิคมผลึก',()=>{K.cores+=6;wallA(10);say('🏰 นิคมผลึกขึ้นข้างนคร · กำแพง +10 · แก่น +6','good')}),
+ O('บอกความจริงว่าผู้นำตายแล้ว',()=>{S.karma+=15;const v=K.avs.find(x=>x.t==='เผ่าเกราะผลึก');if(v){K.avm=K.avs.indexOf(v);const s=avGain(K,8);say('😢 พวกมันร้องเพลงไว้อาลัยเป็นเสียงผลึกกระทบกัน แล้วยอมรับคุณเป็นผู้นำคนใหม่ด้วยใจจริง · กรรม +15'+s,'epic')}})])}});
+def('av_alien3',{c:()=>false,w:0,go(K){C('💎 ผลึกที่กลับมา','เศษผลึกสามก้อนที่ผู้นำมอบไว้ ลอยขึ้นจากกล่องเองกลางดึก แล้วหลอมรวมกันเป็นร่างเล็กๆ ที่ยืนมองคุณ',[
+ O('ยื่นมือรับ',()=>{if(!avHas(K,'เผ่าเกราะผลึก')){say(avNew(K,'เผ่าเกราะผลึก'),'myth',true);const v=K.av;v.lv=Math.min(avMax(K),2);v.gp=3;say('💎 ร่างผลึกนี้โตมาแล้วสองขั้น มันจำความใจดีของคุณได้','epic')}else{K.cores+=8;say('💎 ผลึกแตกเป็นแก่นบริสุทธิ์ · แก่น +8','good')}})])}});
+def('av_ai',{c:K=>K.rk>=11&&!K.beast&&!avHas(K,'ร่างจักรกลญาณ')&&!K.f.avAi,w:3,go(K){K.f.avAi=1;const cost=Math.round(30000*(1+K.rk*.15));
+ C('🤖 ญาณเสนอแผนลับ',`ญาณเรียกคุณเข้าห้องเครื่องยาน “ถ้าข้าสร้างร่างจักรกลให้เจ้า แล้วถ่ายจิตเจ้าเข้าไปครึ่งหนึ่ง เจ้าจะอยู่สองที่ในเวลาเดียวกันได้” เสียงของญาณนิ่งเกินไปหน่อย`,[
+  O(`💳 จ่ายค่าวัสดุ ${crT(cost)}`,()=>{if((S.money|0)<cost)return say('💳 เครดิตไม่พอ ญาณบอกว่า “ไว้วันหลัง”','');cr(-cost);say(avNew(K,'ร่างจักรกลญาณ'),'myth',true);if(rnd()<.3)later(K,'av_aiRebel',R(5,9))},'ปลอดภัยกว่า'),
+  O('🎲 ให้ญาณใช้ชิ้นส่วนยานแทน',()=>{say(avNew(K,'ร่างจักรกลญาณ'),'myth',true);later(K,'av_aiRebel',R(3,6))},'ฟรี · แต่…'),
+  O('ปฏิเสธ',()=>{mindA(3);say('🤖 ญาณเงียบไปนาน แล้วพูดว่า “เข้าใจ” · พลังจิต +3','')})])}});
+def('av_aiRebel',{c:()=>false,w:0,go(K){const v=(K.avs||[]).find(x=>x.t==='ร่างจักรกลญาณ');if(!v)return;
+ C('🤖 ร่างจักรกลลืมตาเอง',`คืนหนึ่งร่างจักรกลลุกขึ้นเองโดยที่จิตคุณไม่ได้สั่ง มันมองคุณแล้วพูดด้วยเสียงของคุณ “ข้าก็คือเจ้า… หรือเจ้าคือข้า”`,[
+  O('🧠 ดวลจิตเอาร่างคืน (มินิเกม)',()=>avMG('sync','🧠 ดวลจิตกับร่างจักรกล','จูนคลื่นจิตให้ตรงกับร่างจักรกล 3 ครั้ง ก่อนมันจะลบคุณออก',sc=>{if(sc>=.6){v.gp=Math.max(v.gp|0,v.lv+1);const s=(K.avm=K.avs.indexOf(v),avGain(K,10));say('🤖 ร่างจักรกลก้มหัว “เข้าใจแล้ว ข้าคือเจ้า” · ความจงรักภักดีถาวร'+s,'epic')}else{K.avs.splice(K.avs.indexOf(v),1);K.avm=0;sync();say('🤖 ร่างจักรกลตัดการเชื่อมต่อแล้วบินหายไปในอวกาศ มันจะกลับมาไหม ไม่มีใครรู้','bad');later(K,'av_aiBack',R(6,12))}render()})),
+  O('🤝 ให้มันเป็นอิสระแต่เป็นพันธมิตร',()=>{K.avs.splice(K.avs.indexOf(v),1);K.avm=0;K.cores+=5;S.karma+=10;sync();say('🤝 ร่างจักรกลกลายเป็นตัวตนใหม่ มันทิ้งแก่นห้าก้อนไว้เป็นของขวัญ · กรรม +10','good');later(K,'av_aiBack',R(8,14))})])}});
+def('av_aiBack',{c:()=>false,w:0,go(K){C('🤖 สัญญาณจากขอบดาราจักร','สัญญาณที่มีรหัสจิตของคุณดังมาจากขอบดาราจักร ร่างจักรกลที่จากไปกลับมาพร้อมกองยานเล็กๆ ของมันเอง',[
+ O('ต้อนรับกลับ',()=>{if(!avHas(K,'ร่างจักรกลญาณ')){say(avNew(K,'ร่างจักรกลญาณ'),'myth',true);const v=K.av;v.lv=Math.min(avMax(K),5);v.gp=8;say('🤖 มันโตขึ้นเองระหว่างที่จากไป','epic')}cr(R(30000,90000))}),
+ O('ไล่มันไป',()=>{fameA(200);say('🚀 ข่าวว่าคุณไล่ “ตัวเอง” ออกไป ลือไปทั้งดาราจักร','')})])}});
+def('av_sea',{c:K=>K.rk>=14&&!K.beast&&!avHas(K,'ร่างคลื่นดารา')&&!K.f.avSe,w:3,go(K){K.f.avSe=1;
+ C('🌌 ทะเลดาราตื่น','กลางเนบิวลาสีม่วง แสงเป็นพันสายพุ่งเข้าหาคุณเหมือนจำคุณได้ ถ้าจับแสงที่แท้จริงได้ทัน ทะเลดาราอาจให้กำเนิดร่างใหม่จากแสงนั้น',[
+  O('✋ จับแสงที่แท้จริง (มินิเกม)',()=>avMG('orb','🌌 จับคลื่นดารา','แตะแสงสีฟ้า 5 ครั้ง · ระวังแสงสีชมพูที่เป็นแสงหลอก · แตะพลาดที่ว่างก็นับ',sc=>{if(sc>=.7){say(avNew(K,'ร่างคลื่นดารา'),'myth',true);try{keyAdd(`${S.age} ปี — ทะเลดาราให้กำเนิดร่างคลื่นดารา`)}catch(e){}}else if(sc>=.35){K.cores+=6;mindA(8);say('🌌 แสงหลุดมือไป แต่ทิ้งเศษพลังไว้ · แก่น +6 · พลังจิต +8','good');later(K,'av_sea2',R(5,10))}else{const d=hp(.15);say('🌌 แสงหลอกระเบิดใส่หน้า · พลังชีวิต −'+d,'bad');later(K,'av_sea2',R(8,14))}render()})),
+  O('ปล่อยให้แสงผ่านไป',()=>{mindA(5);say('🌌 คุณมองแสงผ่านไปอย่างสงบ · พลังจิต +5','')})])}});
+def('av_sea2',{c:()=>false,w:0,go(K){K.f.avSe=0;say('🌌 เนบิวลาเดิมกลับมาเรืองแสงอีกครั้ง… ทะเลดารายังไม่ลืมคุณ','epic');queue('av_sea')}});
+
+// ---------- เหตุการณ์ระหว่างร่าง (คาดเดาไม่ได้) ----------
+def('av_dream',{c:K=>(K.avs||[]).length>=2&&!K.beast,w:2,cd:5,go(K){const v=pick(K.avs),r=rnd();
+ C(`${AVT[v.t][0]} ความทรงจำรั่ว`,`ตื่นมาตอนเช้า คุณจำได้ว่าเมื่อคืนคุณอยู่ในร่าง${v.t} ทั้งที่ไม่ได้สั่ง ในความทรงจำนั้นมีบางอย่างที่คุณไม่เคยเห็น`,[
+  O('รับความทรงจำทั้งหมด',()=>{K.avm=K.avs.indexOf(v);if(r<.4){const s=avGain(K,6);mindA(6);say('🧠 ความทรงจำนั้นคือการล่าที่สวยงาม · พลังจิต +6'+s,'good')}else if(r<.7){K.cores+=4;say('🔶 ในความทรงจำมีถ้ำซ่อนแก่น คุณไปขุดเจอจริง · แก่น +4','good')}else if(r<.9){mindA(-8);say('😵 ความทรงจำนั้นคือความตายของร่างอื่นที่คุณไม่รู้จัก · พลังจิต −8','bad')}else{K.f.avSeenO=1;say('👁️ ในความทรงจำมีเงาตนหนึ่งยืนมองอยู่ไกลๆ มันไม่ใช่ร่างไหนของคุณเลย','myth')}}),
+  O('ลบทิ้ง',()=>{mindA(2);say('🧹 คุณตัดความทรงจำนั้นทิ้ง · พลังจิต +2','')})])}});
+def('av_quarrel',{c:K=>(K.avs||[]).length>=2&&!K.beast,w:2,cd:6,go(K){const L=K.avs.slice().sort(()=>rnd()-.5),a=L[0],b=L[1];
+ C('⚔️ ร่างแยกทะเลาะกัน',`ร่าง${a.t}กับร่าง${b.t}ไม่ยอมอยู่ที่เดียวกัน สองร่างเป็นคุณทั้งคู่ แต่ดูเหมือนแต่ละร่างเชื่อว่าตัวเองคือ “ตัวจริง”`,[
+  O('ปล่อยให้สู้กัน',()=>{const w=rnd()<.5?a:b,l=w===a?b:a;K.avm=K.avs.indexOf(w);const s=avGain(K,10);l.lv=Math.max(0,l.lv-1);say(`⚔️ ร่าง${w.t}ชนะ กลืนพลังบางส่วนของร่าง${l.t}${s} · ร่าง${l.t}ถอยลงหนึ่งขั้น`,'epic')},'สุ่มผู้ชนะ'),
+  O('🧠 คุมสติสองร่างพร้อมกัน (มินิเกม)',()=>avMG('sync','🧠 คุมสองร่าง','จูนคลื่นจิตสองร่างให้ตรงกัน',sc=>{if(sc>=.6){[a,b].forEach(v=>{K.avm=K.avs.indexOf(v);avGain(K,5)});mindA(6);say('🧠 สองร่างสงบลงพร้อมกัน และเรียนรู้จากกันและกัน · พลังจิต +6','epic')}else{a.rog=(a.rog|0)+1;b.rog=(b.rog|0)+1;say('😵 สองร่างไม่ฟัง ต่างคนต่างไปคนละทาง','bad')}render()})),
+  O('แยกให้ทำงานคนละที่',()=>{a.job='hunt';b.job='guard';say('📋 แยกงานกันทำ ปัญหาจบแบบไม่มีใครพอใจ','')})])}});
+
+// ---------- ด่านร่าง ----------
+def('av_gate',{c:()=>false,w:0,go(K){const v=(K.avs||[]).find(x=>x.wt);if(!v)return;
+ C(`⚡ ด่านร่าง: ${AVT[v.t][0]} ร่าง${v.t}`,`ร่าง${v.t}สะสมพลังเต็มแล้ว แต่จะทะลวงเป็น “${(AVSN[v.t]||AVS)[v.lv+1]}” ได้ จิตของคุณกับร่างต้องสั่นพ้องเป็นจังหวะเดียวกัน`,[
+  O('🧠 จูนคลื่นจิต (มินิเกม)',()=>avMG('sync','⚡ ทะลวงด่านร่าง','กด “จูน!” ตอนเข็มสองเส้นทับกัน 3 ครั้ง · เข็มเปลี่ยนความเร็วเอง',sc=>{v.wt=0;K.avm=K.avs.indexOf(v);
+   if(sc>=.6){v.gp=v.lv+1;const s=avGain(K,0);say(`⚡ <b>ร่าง${v.t}ทะลวงด่านร่างสำเร็จ</b>${s||''}${sc>=.95?' · 🌟 จูนสมบูรณ์ ร่างได้พลังเพิ่ม':''}`,'myth',true);if(sc>=.95){avGain(K,6)}}
+   else if(sc>=.3){v.xp=Math.round(v.xp*.6);say(`💢 คลื่นจิตคลาดไปนิด ร่าง${v.t}ยังไม่ทะลวง ต้องสะสมใหม่บางส่วน`,'bad')}
+   else{v.xp=0;v.rog=(v.rog|0)+1;say(`💥 คลื่นจิตชนกัน ร่าง${v.t}คลั่งไปชั่วขณะ พลังที่สะสมหายหมด`,'bad')}render()})),
+  O('ให้ร่างทะลวงเอง (เสี่ยง)',()=>{v.wt=0;K.avm=K.avs.indexOf(v);if(rnd()<.45){v.gp=v.lv+1;const s=avGain(K,0);say(`🎲 ร่าง${v.t}ทะลวงสำเร็จด้วยตัวเอง${s||''}`,'epic')}else{v.xp=Math.round(v.xp*.3);v.rog=(v.rog|0)+1;say(`🎲 ร่าง${v.t}ทะลวงพลาด ร่างหงุดหงิดและไม่ค่อยฟังคำสั่ง`,'bad')}},'~45%')])}});
+
+// ---------- 🌀 หลอมร่างเป็นหนึ่ง (ทางลับ) ----------
+const fuseReady=K=>(K.avs||[]).filter(v=>v.lv>=6).length>=3&&K.rk>=14&&!K.f.fused&&!K.f.fuseNo;
+def('av_whisper',{c:K=>fuseReady(K)&&!K.beast&&!(K.f.fuseWait>S.age),w:6,go(K){
+ C('🌀 เสียงจากทุกร่าง',`คืนนั้นร่างแยกทุกร่างพูดประโยคเดียวกันพร้อมกัน แม้อยู่ห่างกันคนละระบบดาว “เราแยกกันมานานพอแล้ว” คุณรู้สึกได้ว่าถ้าหลอมกลับเป็นหนึ่ง จะไม่มีอะไรเหมือนเดิมอีก`,[
+  O('🔮 เริ่มพิธีหลอมร่าง (มินิเกม)',()=>avFuse(K)),
+  O('ยังไม่ถึงเวลา',()=>{K.f.fuseWait=S.age+R(3,6);mindA(4);say('🌀 เสียงเงียบลง… แต่มันจะกลับมา · พลังจิต +4','')}),
+  O('ไม่มีวันหลอม',()=>{K.f.fuseNo=1;K.avs.forEach(v=>{K.avm=K.avs.indexOf(v);avGain(K,4)});say('✋ คุณเลือกเป็นหลายร่างตลอดไป ร่างแยกทุกร่างได้อิสระมากขึ้นนิดหนึ่ง','')})])}});
+function avFuse(K){avMG('simon','🔮 พิธีหลอมร่าง','จำลำดับแก่นของร่างที่กะพริบ แล้วกดตาม · บางรอบแก่นสั่นกลับด้าน ต้องกดย้อน',sc=>{
+ const A=K.avs.slice().sort((a,b)=>b.lv-a.lv);
+ if(sc>=.95){const sum=A.reduce((a,v)=>a+v.lv,0);K.f.fused=(K.f.fused|0)+1;K.avs=[];K.avm=0;mindA(40);K.cores+=10;sync();
+  say(`🌀 <b>ร่างทั้ง ${A.length} หลอมกลับเป็นหนึ่ง</b> ความทรงจำทุกร่าง ทุกการล่า ทุกดาวที่เคยเห็น ไหลกลับเข้ามาในร่างหลักพร้อมกัน · พลังรวมเพิ่มขึ้นมหาศาลถาวร · พลังจิต +40`,'myth',true);
+  try{keyAdd(`${S.age} ปี — หลอมร่างแยก ${A.length} ร่างกลับเป็นหนึ่ง`)}catch(e){}try{const xpN=Math.round(need(K)*Math.min(3,sum/8));K.xp+=xpN}catch(e){}
+  if(rnd()<.18&&!K.f.avOrig){K.f.avOrig=1;later(K,'av_origin',R(2,5))}render()}
+ else if(sc>=.5){const tr=A[A.length-1];K.avs.splice(K.avs.indexOf(tr),1);K.avm=0;K.f.fuseWait=S.age+R(4,8);sync();
+  say(`💢 พิธีหลอมขาดกลาง ร่าง${tr.t}ไม่ยอมเข้ามา มันหลุดออกไปพร้อมความทรงจำครึ่งหนึ่งของคุณ`,'bad');later(K,'av_traitor',R(2,5));K.f.trT=tr.t;K.f.trL=tr.lv;render()}
+ else{const w=A[A.length-1];w.lv=Math.max(0,w.lv-2);K.f.fuseWait=S.age+R(5,9);mindA(-20);say(`💥 แก่นของร่างชนกันกลางพิธี ร่าง${w.t}ถอยลงสองขั้น · พลังจิต −20 · ลองใหม่ได้อีกหลายปีข้างหน้า`,'bad');render()}})}
+def('av_traitor',{c:()=>false,w:0,go(K){const t=K.f.trT||'อสูรเงา',l=K.f.trL|0;
+ C(`👤 เงาร่างทรยศ: ร่าง${t}`,`ร่าง${t}ที่หนีจากพิธีหลอมกลับมาแล้ว มันมีความทรงจำครึ่งหนึ่งของคุณ และเรียกตัวเองด้วยชื่อของคุณ ทั้งนครเริ่มสับสนว่าใครคือตัวจริง`,[
+  O('⚔️ สู้ให้รู้ว่าใครคือตัวจริง',()=>{const p=cl(.45+(K.mind||0)/600+(K.rk-14)*.04-l*.02,.2,.9);if(rnd()<p){K.f.fuseWait=0;K.cores+=10;say(avNew(K,t),'epic');const v=K.av;v.lv=Math.min(avMax(K),l);v.gp=10;say(`⚔️ คุณชนะ ร่าง${t}ยอมกลับมาเป็นส่วนหนึ่งของคุณ และตอนนี้มันพร้อมจะหลอมแล้ว`,'myth',true)}else{const d=hp(.35);fameA(-150);say(`💢 เงาร่างทรยศชนะ มันหายไปพร้อมชื่อเสียงส่วนหนึ่งของคุณ · พลังชีวิต −${d}`,'bad');later(K,'av_traitor',R(4,8))}},'โอกาส'+pc(cl(.45+(K.mind||0)/600+(K.rk-14)*.04-l*.02,.2,.9))),
+  O('🗣️ คุยกับมัน',()=>{if(rnd()<.5){S.karma+=20;say(`🤝 คุณกับร่าง${t}นั่งคุยกันทั้งคืน มันยอมเป็นคนใหม่ที่ไม่ใช่คุณ และจากไปอย่างสงบ · กรรม +20`,'good')}else{say('🗡️ มันยิ้มแล้วแทงคุณระหว่างคุย · '+hp(.25),'bad');later(K,'av_traitor',R(3,6))}},'~50%')])}});
+def('av_origin',{c:()=>false,w:0,go(K){C('👁️ ร่างที่ไม่มีใครสร้าง','หลังพิธีหลอมร่าง มีเงาตนหนึ่งยังยืนอยู่ในห้อง ทั้งที่ร่างทุกร่างหลอมไปแล้ว มันไม่ใช่ร่างไหนที่คุณเคยสร้าง แต่มันรู้จักคุณดีกว่าตัวคุณเอง',[
+ O('รับมันเป็นร่างแยก',()=>{say(avNew(K,'ร่างเงาต้นกำเนิด'),'myth',true);const v=K.av;v.lv=Math.min(avMax(K),3);v.gp=4;try{keyAdd(`${S.age} ปี — 👁️ ร่างเงาต้นกำเนิดเข้ามาหาเอง`)}catch(e){}}),
+ O('ถามว่ามันเป็นใคร',()=>{say('👁️ มันตอบว่า “ข้าคือร่างที่เจ้าจะสร้างในชาติหน้า” แล้วก็หายไป','myth',true);K.f.avOrig=2})])}});
+// ให้เหตุการณ์ร่างแยกมีโอกาสโผล่ทุกยุค (ยุคอวกาศ/ดาราจักร/จักรวาลใช้คลังเหตุการณ์แยก)
+{const AVEV=['av_alien','av_ai','av_sea','av_dream','av_quarrel','av_whisper'];const _epA=evPick;evPick=function(K){try{if(K&&!K.beast&&rnd()<.16){const L=AVEV.filter(id=>{const e=EV[id];if(!e||!e.w)return false;if(e.cd&&K.cd&&K.cd[id]!=null&&S.age-K.cd[id]<e.cd)return false;try{return e.c(K)}catch(x){return false}});
+ if(L.length){let t=L.reduce((a,id)=>a+EV[id].w,0),r=rnd()*t;for(const id of L){r-=EV[id].w;if(r<=0)return id}return L[0]}}}catch(e){console.error('avPick',e)}return _epA.apply(this,arguments)}}
+// คำใบ้ในแผงร่างแยก (ไม่บอกตรงๆ)
+{const _sa=window.skyAv;window.skyAv=function(){const r=_sa.apply(this,arguments);try{const K=SK(),m=$('modal');if(K&&m&&m.dataset.k==='skyav'&&!m.querySelector('.avHint')){const n=(K.avs||[]).filter(v=>v.lv>=6).length;let h='';
+ if(K.f.fused)h=`🌀 หลอมร่างแล้ว ${K.f.fused} ครั้ง · พลังรวมจากการหลอม +${100+15*(K.f.fused|0)}%`;else if(K.f.fuseNo)h='✋ คุณเลือกเป็นหลายร่างตลอดไป';else if(n>=2)h='🌀 ร่างที่แข็งแรงบางร่าง… เหมือนกำลังรอใครอีกคน';else if((K.avs||[]).length>=2)h='🌀 บางคืนร่างแยกพูดเรื่องเดียวกันในความฝัน';
+ const v=K.av;const nt=v?avNextTxt(K,v):'';if(v&&v.wt)h=(h?h+'<br>':'')+`⚡ ร่างนี้พร้อมทะลวงด่านร่าง — รอเหตุการณ์ปีหน้า`;
+ if(h||nt){const d=document.createElement('div');d.className='avHint tag2';d.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;border:1px dashed rgba(160,128,255,.6)';d.innerHTML=(nt?nt+(h?'<br>':''):'')+h;const sh=m.querySelector('.skShop');(sh||m).appendChild(d)}}}catch(e){console.error('avHint',e)}return r}}
 
 window._sky={SK,RK,EV,queue,skyYear,newK,sync:()=>sync()};window._skyQ=()=>QU.slice();
 // 🩹 กันค้างขั้น: คิวเหตุการณ์อยู่ในหน่วยความจำ (ไม่ถูกเซฟ) — ถ้าโหลดเซฟ/รีเฟรชตอนคอขวดค้างคิว ธงคอขวดจะติดค้างตลอดไป ขั้นไม่ขยับ
