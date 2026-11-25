@@ -24,6 +24,8 @@ const T={
 };
 const SHEET=['daily2','book','online','guild','tmenu','store','evshop','krt','sp','profile','aq','cosshop'];
 const ic=(p,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+// รูปพิกเซลจากปุ่มเดิม (ถ้าไม่มีใช้อีโมจิ ให้ตัวแปลงพิกเซลแปลงเอง)
+const px=(sel,emo)=>{try{const e=document.querySelector(sel);const p=e&&e.querySelector('.pxi');if(p){const c=p.cloneNode(true);c.removeAttribute('id');return c.outerHTML}}catch(e){}return `<span class="frEmo">${emo}</span>`};
 const I={gem:'<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3l3 6 3-6"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',home:'<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/>',play:'<path d="M8 5l11 7-11 7z"/>',chev:'<path d="M9 6l6 6-6 6"/>',down:'<path d="M6 9l6 6 6-6"/>',
  lotus:'<path d="M12 19c-4 0-8-2-8-6 3 0 6 2 8 6zM12 19c4 0 8-2 8-6-3 0-6 2-8 6zM12 19c-2-3-2-8 0-12 2 4 2 9 0 12z"/>',scroll:'<path d="M6 4h11v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M9 9h5M9 13h5"/>',star:'<path d="M12 4l2.5 5 5.5.8-4 3.9.9 5.5L12 16.6 7.1 19.2l.9-5.5-4-3.9 5.5-.8z"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>'};
 // ---------- CSS ----------
@@ -55,6 +57,9 @@ ${B} #tNews{background:var(--card)!important;background-image:none!important;bor
 #frToday{display:none;gap:8px;margin:0 0 10px}
 #frToday button{flex:1;min-width:0;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
 #frToday button i{font-style:normal;color:var(--fG);display:flex}
+.frPx{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;line-height:1}
+.frPx .pxi{width:26px!important;height:26px!important;display:inline-block;font-size:0!important}
+.frPx .frEmo{font-size:21px}
 #frToday button b{font-size:13px;white-space:nowrap}
 #frToday button small{font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 #frToday button.dot:after{content:'';position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--fA)}
@@ -92,7 +97,7 @@ function fonts(){if(fontsOn)return;fontsOn=1;try{if(document.querySelector('link
 const txt=e=>e?(e.innerText||e.textContent||'').replace(/\s+/g,' ').trim():'';
 function build(T0){
  if(!$('frTint')){const cv=$('tbg2');const d=document.createElement('div');d.id='frTint';if(cv&&cv.parentNode)cv.insertAdjacentElement('afterend',d);else T0.prepend(d)}
- if(!$('frTopR')){const d=document.createElement('div');d.id='frTopR';d.innerHTML=`<button type="button" class="g" aria-label="ร้านค้า">${ic(I.gem)}<span class="l">ร้านค้า</span></button><button type="button" class="dk" aria-label="คัมภีร์ฤดูกาล">${ic(I.star)}<span class="l">คัมภีร์</span></button><button type="button" class="dk" aria-label="ชุมชน">${ic(I.chat)}<span class="l">ชุมชน</span></button><button type="button" aria-label="เมนู">${ic(I.menu)}<span class="l">เมนู</span></button>`;
+ if(!$('frTopR')){const d=document.createElement('div');d.id='frTopR';d.innerHTML=`<button type="button" class="g" aria-label="ร้านค้า"><i class="frPx">${px('#tSup','💎')}</i><span class="l">ร้านค้า</span></button><button type="button" class="dk" aria-label="คัมภีร์ฤดูกาล"><i class="frPx">${px('#tSp,#tSea','📖')}</i><span class="l">คัมภีร์</span></button><button type="button" class="dk" aria-label="ชุมชน"><i class="frPx">${px('#tFb','💬')}</i><span class="l">ชุมชน</span></button><button type="button" aria-label="เมนู">${ic(I.menu)}<span class="l">เมนู</span></button>`;
   const bs=d.children;bs[0].onclick=()=>{try{openStore()}catch(e){}};bs[1].onclick=()=>{const x=$('tSp')||$('tSea');x&&x.click()};bs[2].onclick=()=>{const x=$('tFb');if(x)x.click();else try{openFbGroup()}catch(e){}};bs[3].onclick=()=>{try{openTitleMenu()}catch(e){}};T0.appendChild(d)}
  const wp0=$('wPick'),wp=wp0&&(wp0.closest('.box.opts')||wp0);
  if(wp&&!$('frCont')){const b=document.createElement('button');b.type='button';b.id='frCont';b.innerHTML=`<span class="ic">${ic(I.play,20)}</span><span class="tx"><small>เล่นต่อ</small><b></b><small class="s2"></small></span><span class="ch">${ic(I.chev,20)}</span>`;b.onclick=()=>{const c=$('tCont');if(c)c.click()};wp.insertAdjacentElement('beforebegin',b)}
@@ -101,7 +106,7 @@ function build(T0){
  if(dk){const row=dk.querySelector('.row'),go=$('tGo');
   if(row&&go&&!$('frMode')){const m=document.createElement('button');m.type='button';m.id='frMode';m.innerHTML='<small>โหมด</small><span><em style="font-style:normal">ปกติ</em>'+ic(I.down,14)+'</span>';m.onclick=()=>{const c=document.querySelector('#wPick .wpC');if(c){c.scrollIntoView({behavior:'smooth',block:'center'})}};row.insertBefore(m,go)}
   const nv=dk.querySelector('.nav');
-  if(nv&&!$('frHome')){const h=document.createElement('button');h.id='frHome';h.type='button';h.className='frOn';h.innerHTML='<i>'+ic(I.home,22)+'</i>หน้าแรก';h.onclick=()=>{try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}};const first=nv.querySelector('button');if(first)nv.insertBefore(h,first);else nv.appendChild(h)
+  if(nv&&!$('frHome')){const h=document.createElement('button');h.id='frHome';h.type='button';h.className='frOn';h.innerHTML='<i class="frPx"><span class="frEmo">🏠</span></i>หน้าแรก';h.onclick=()=>{try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}};const first=nv.querySelector('button');if(first)nv.insertBefore(h,first);else nv.appendChild(h)
    nv.querySelectorAll('button').forEach(x=>{const o=x.getAttribute('onclick')||'';if(/openOnline\('arena'\)|openTitleMenu\(\)/.test(o))x.classList.add('frHide')})}
  }
 }
@@ -115,12 +120,12 @@ function update(){
  const td=$('frToday');
  if(td){const ev=$('tEv'),aq=document.querySelector('#tGrid .gAq'),sp=$('tSp'),sea=$('tSea'),fb=$('tFb');
   const items=[];
-  if(ev&&txt(ev)){const t0=txt(ev),m=t0.match(/อีก\s*\d+\s*(วัน|ชม\.?|ชั่วโมง)/);const nm=(m?t0.replace(m[0],''):t0).trim()||'อีเวนต์';items.push(['ev',I.lotus,nm.length>12?'อีเวนต์':nm,m?m[0]:'กำลังจัด',true])}
-  if(aq)items.push(['aq',I.scroll,'ภารกิจ',(txt(aq).match(/วันนี้\s*[\d/ ]+/)||[''])[0]||'วันนี้',false]);
-  if(sp||sea)items.push(['sp',I.star,'คัมภีร์',(txt(sea).match(/ขั้น\s*[\d/ ]+/)||[''])[0]||'ฤดูกาล',false]);
-  if(fb)items.push(['fb',I.chat,'ชุมชน','กลุ่มผู้เล่น',false]);
-  const key=items.map(x=>x.join('|')).join(';');
-  if(key!==lastT){lastT=key;td.innerHTML=items.map(x=>`<button type="button" data-k="${x[0]}" class="${x[4]?'dot':''}"><i>${ic(x[1],20)}</i><b>${x[2]}</b><small>${String(x[3]).replace(/[<>&]/g,'')}</small></button>`).join('');
+  if(ev&&txt(ev)){const t0=txt(ev),m=t0.match(/อีก\s*\d+\s*(วัน|ชม\.?|ชั่วโมง)/);const nm=(m?t0.replace(m[0],''):t0).trim()||'อีเวนต์';items.push(['ev',px('#tEv','🏮'),nm.length>12?'อีเวนต์':nm,m?m[0]:'กำลังจัด',true])}
+  if(aq)items.push(['aq',px('#tGrid .gAq','📜'),'ภารกิจ',(txt(aq).match(/วันนี้\s*[\d/ ]+/)||[''])[0]||'วันนี้',false]);
+  if(sp||sea)items.push(['sp',px('#tSp,#tSea','📖'),'คัมภีร์',(txt(sea).match(/ขั้น\s*[\d/ ]+/)||[''])[0]||'ฤดูกาล',false]);
+  if(fb)items.push(['fb',px('#tFb','💬'),'ชุมชน','กลุ่มผู้เล่น',false]);
+  const key=items.map(x=>[x[0],x[2],x[3],x[4],/pxi/.test(x[1])].join('|')).join(';');
+  if(key!==lastT){lastT=key;td.innerHTML=items.map(x=>`<button type="button" data-k="${x[0]}" class="${x[4]?'dot':''}"><i class="frPx">${x[1]}</i><b>${x[2]}</b><small>${String(x[3]).replace(/[<>&]/g,'')}</small></button>`).join('');
    td.querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;try{if(k==='ev')$('tEv').click();else if(k==='aq')openAQ();else if(k==='sp'){const s=$('tSp')||$('tSea');s&&s.click()}else if(k==='fb')$('tFb').click()}catch(e){console.error(e)}})}
  }
  // ซิงค์สำเร็จ → ซ่อน (คำเตือนยังโชว์)
