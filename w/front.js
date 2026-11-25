@@ -84,7 +84,6 @@ ${M} #tDock #frMode{display:flex;flex:none;flex-direction:column;justify-content
 ${M} #tDock #frMode small{font-size:11px;color:var(--mut)}${M} #tDock #frMode span{display:flex;align-items:center;gap:3px;font-size:14px}
 ${M} #tDock #tGo{flex:1}
 ${M} #tDock .nav button.frHide{display:none!important}
-html body[data-front]:not(.desk) #tDock .nav #frHome{display:flex!important}
 #tDock .nav #frHome{display:none!important;flex-direction:column;align-items:center}
 ${M} #mask.on.frSheet{padding:0!important;align-items:stretch!important}
 ${M} #mask.on.frSheet #modal{width:100%!important;max-width:none!important;min-height:100%!important;max-height:none!important;margin:0!important;border-radius:0!important;border-left:0!important;border-right:0!important;padding-top:max(14px,env(safe-area-inset-top))!important}
@@ -132,7 +131,8 @@ function build(T0){
  if(dk){const row=dk.querySelector('.row'),go=$('tGo');
   if(row&&go&&!$('frMode')){const m=document.createElement('button');m.type='button';m.id='frMode';m.innerHTML='<small>โหมด</small><span><em style="font-style:normal">ปกติ</em>'+ic(I.down,14)+'</span>';m.onclick=()=>{const c=document.querySelector('#wPick .wpC');if(c){c.scrollIntoView({behavior:'smooth',block:'center'})}};row.insertBefore(m,go)}
   const nv=dk.querySelector('.nav');
-  if(nv&&!$('frHome')){const h=document.createElement('button');h.id='frHome';h.type='button';h.className='frOn';h.innerHTML='<i class="frPx"><span class="frEmo">🏠</span></i>หน้าแรก';h.onclick=()=>{try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}};const first=nv.querySelector('button');if(first)nv.insertBefore(h,first);else nv.appendChild(h)
+  // ปุ่ม "หน้าแรก" เอาออกแล้ว (ผู้ใช้สั่ง) · ยังซ่อนปุ่มที่ซ้ำกับการ์ดอื่นเหมือนเดิม
+  if(nv&&!nv.dataset.frH){nv.dataset.frH=1;try{const h=$('frHome');h&&h.remove()}catch(e){}
    nv.querySelectorAll('button').forEach(x=>{const o=x.getAttribute('onclick')||'';if(/openOnline\('arena'\)|openTitleMenu\(\)/.test(o))x.classList.add('frHide')})}
  }
 }
