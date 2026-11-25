@@ -618,7 +618,7 @@ function evRecruit(K){const L=FK.filter(k=>(K.rep[k]|0)>-30).sort(()=>rnd()-.5).
 function evFacMission(K){const k=K.fac,F=FAC[k];const M={
  lamp:['ลบความจำพยานที่เห็นสิ่งผิดธรรมชาติ','พยานเป็นเด็กอายุแปดขวบที่เห็นแม่ตัวเองกลายเป็นเงา'],church:['ช่วยนักบวชชำระผู้ถือตรานอกรีต','ผู้ถือตราคนนั้นเป็นหมอที่รักษาคนจนในตรอกฟรี'],
  glass:['ส่งวัตถุลึกลับให้ลูกค้าบนเนินขุนนาง','ลูกค้าคนนั้นซื้อวัตถุไว้ทำพิธีที่ต้องใช้คนสามคน'],steam:['ช่วยกรรมกรบุกโกดังของนายทุน','ในโกดังมียามที่เป็นคนจนแบบเดียวกับพวกคุณ'],
- cult:['ร้องเพลงในพิธีเปิดม่านเล็ก','ทุกคนในพิธีดูมีความสุขจริงๆ แต่เด็กคนหนึ่งร้องไห้'],house:['ส่งจดหมายลับให้คนในศาลากลาง','จดหมายนั้นจะทำให้ชุมชนริมคลองทั้งชุมชนถูกไล่ที่']}[k];
+ cult:['ร้องเพลงในพิธีเปิดม่านเล็ก','ทุกคนในพิธีดูมีความสุขจริงๆ แต่เด็กคนหนึ่งร้องไห้'],house:['ส่งจดหมายลับให้คนในศาลากลาง','จดหมายนั้นจะทำให้ชุมชนริมคลองทั้งชุมชนถูกไล่ที่']}[k];if(!F||!M)return;
  C(`${F.ic} งานจาก${F.n}`,`${M[0]}<br><span class="tag2">แต่คุณรู้มาว่า: ${M[1]}</span>`,[
   O('ทำตามคำสั่ง',()=>{S.money+=F.pay;feed(`${F.ic} งานสำเร็จ${rep(k,8)}${cash(F.pay)}${anc(-4)}`);if(rnd()<.3){K.off=Math.max(K.off,K.tier+1);feed(`⚗️ องค์กรมอบ${esc(offName(K))}เป็นรางวัล`)}},'องค์กรพอใจ · หลักยึดลด',.55),
   O('ทำแบบของตัวเอง',()=>{S.karma+=4;if(rnd()<.5)feed(`🤫 คุณทำงานสำเร็จโดยไม่มีใครเจ็บ${rep(k,3)}${anc(3)}`);else{feed(`⚠️ องค์กรรู้ว่าคุณไม่ทำตามคำสั่ง${rep(k,-15)}`)}},'',.35),
@@ -1697,6 +1697,7 @@ const VWM={};VW.forEach(v=>VWM[v[0]]=v);
 {const _h=hurt;hurt=function(f){const K=FG();if(K&&K.tl){let m=1;if(tH(1))m*=.8;if(tH(9))m*=.3;if(tH(37))m*=.6;if(tH(118))m*=age()<=18?.5:(S.age%2?1.3:1);f*=m}return _h(f)}}
 {const _p=pw;pw=function(g){const K=FG();if(K&&K.tl&&tH(130)&&g>0)g*=1.3;return _p(g)}}
 {const _sy=sync;sync=function(){const r=_sy.apply(this,arguments);try{const K=FG();if(K&&K.tl&&tH(115)&&S.mw)S.mw.end=Math.round(K.endB||72)}catch(e){}return r}}
+{const _syW2=sync;sync=function(){const r=_syW2.apply(this,arguments);try{if(S&&S.mw&&S.mw.wsL&&FG())S.mw.end=(S.mw.end||80)+(S.mw.wsL|0)}catch(e){}return r}} /* อายุขัยที่ซื้อจากร้านแต้มระบบ (wsys) ไม่ให้ถูกคำนวณทับ */
 const tlFt=(ep,v)=>{const K=FG();if(!K||!K.tl)return ep;let m=1;if(!v&&tH(2))m*=.9;if(v){if(tH(29))m*=.85;if(tH(32))m*=.9;if(tH(97))m*=.85;if(tH(110))m*=.75;if(K.path==='bell'&&tP('bell',1))m*=.9}return ep*m};
 {const _f=fight;fight=function(ep,v){return _f(tlFt(ep,v),v)}}
 {const _w=winP;winP=function(ep,v){return _w(tlFt(ep,v),v)}}

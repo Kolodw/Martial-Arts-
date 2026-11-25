@@ -488,7 +488,7 @@ MW_R.push({id:'id1',w:5,cd:0,c:M=>!M.native&&(M.id||0)===0&&!M.idP&&M.y>=1,go(M)
 
 // ---- ท่อน mwx61 (เดิมอยู่ app.js บรรทัด 16312) · ห่อ: mwAs ----
 (function(){const SL=globalThis.__wSlots['mwx61'];let mwAs=SL.base.mwAs;
-{const _asB=mwAs;mwAs=function(k){const M=S.mw,id=M.id||0;if(k==='mort'&&id<2)return toast('กู้ซื้อบ้านต้องมีบัตรประชาชนถูกกฎหมาย');if(['cash','car','ins'].includes(k)&&id<1)return toast('ต้องมีเอกสารตัวตนก่อน');return _asB.apply(this,arguments)}}
+{const _asB=mwAs;mwAs=function(k){const M=S.mw,id=M.id||0;if(k==='mort'&&id<2&&!M.sky&&!M.fog)return toast('กู้ซื้อบ้านต้องมีบัตรประชาชนถูกกฎหมาย');if(['cash','car','ins'].includes(k)&&id<1&&!M.sky&&!M.fog)return toast('ต้องมีเอกสารตัวตนก่อน');return _asB.apply(this,arguments)}}
 SL.impl.mwAs=mwAs;mwAs=function(){return globalThis.mwAs.apply(this,arguments)};})();
 
 // ---- ท่อน mwx62 (เดิมอยู่ app.js บรรทัด 16313) · ห่อ: mwMove ----
@@ -1457,7 +1457,7 @@ const fixId=()=>{try{const M=S&&S.mw;if(M&&!M.sky&&!M.fog&&(M.native||M.par||(S.
 {const _y=mwYear;mwYear=function(){fixId();return _y.apply(this,arguments)}}
 setInterval(fixId,3000);
 const idAsk=()=>{try{const M=S&&S.mw;if(!M||(M.id||0)>0||M.idP||choice._cur)return false;const e=MW_R.find(x=>x.id==='id1');if(e){closeM();setTimeout(()=>e.go(M),120);return true}}catch(e){}return false};
-{const _a=mwAs;mwAs=function(k){fixId();const M=S&&S.mw;if(M&&(M.id||0)<1&&['cash','car','ins','mort'].includes(k)&&!M.idP){if(idAsk())return}if(M&&M.idP&&(M.id||0)<1&&['cash','car','ins','mort'].includes(k))return toast(`🪪 กำลังรอบัตรประชาชน อีกราว ${Math.max(1,M.idP-M.y)} ปี`);return _a.apply(this,arguments)}}
+{const _a=mwAs;mwAs=function(k){fixId();const M=S&&S.mw;if(M&&!M.sky&&!M.fog&&(M.id||0)<1&&['cash','car','ins','mort'].includes(k)&&!M.idP){if(idAsk())return}if(M&&!M.sky&&!M.fog&&M.idP&&(M.id||0)<1&&['cash','car','ins','mort'].includes(k))return toast(`🪪 กำลังรอบัตรประชาชน อีกราว ${Math.max(1,M.idP-M.y)} ปี`);return _a.apply(this,arguments)}}
 {const _j=mwJobReq;mwJobReq=function(J,M){fixId();const w=_j.apply(this,arguments);if(w&&/บัตรประชาชน|เอกสาร/.test(w)&&M&&!M.idP)return w+' · ยื่นเรื่องได้ที่ 💰 ทรัพย์สิน';return w}}
 {const _w=wpWait;wpWait=function(fn){if(S&&(S.mw||S.ch==='soul')){try{if(S.wp)S.wp.busy=0}catch(e){}return}return _w.apply(this,arguments)}}
 })()}catch(e){console.error('block142',e)}

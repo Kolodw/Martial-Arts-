@@ -2408,6 +2408,7 @@ const uPg=K=>K.u&&K.u.pg?Object.keys(K.u.pg).length:0;
 const uPage=(K,p)=>{if(!K.u.pg)K.u.pg={};if(K.u.pg[p])return'';K.u.pg[p]=1;try{island({big:1,ic:'📜',h:'หน้ากระดาษนวนิยาย',t:`${uPg(K)}/7 · ${PAGES[p]}`,kind:'gold',ms:5000})}catch(e){}return ` · 📜 <b>ได้หน้ากระดาษนวนิยาย ${uPg(K)}/7</b> — ${PAGES[p]}`};
 {const _ypU=spYP;spYP=function(K){const e=uEra(K);return e>=5?[2000,10000,100000,1000000][e-5]:_ypU.apply(this,arguments)}}
 {const _syU=sync;sync=function(){_syU.apply(this,arguments);const K=SK();if(K&&!K.beast&&K.rk>=18)S.mw.end=Math.round(S.mw.end*Math.pow(1.2,Math.max(0,idx(K)-180)))}}
+{const _syW=sync;sync=function(){const r=_syW.apply(this,arguments);try{if(S&&S.mw&&S.mw.wsL&&SK())S.mw.end=(S.mw.end||80)+(S.mw.wsL|0)}catch(e){}return r}} /* อายุขัยที่ซื้อจากร้านแต้มระบบ (wsys) ไม่ให้ถูกคำนวณทับ */
 GATEV[17]=K=>K.u&&K.u.out?null:(K.gx&&['ender','emperor'].includes(K.gx.end)?'u_launch':(K.gx&&!K.gx.end?'gx_finale':null)); // ฉากฟ้าสุดท้ายหลุดคิว (ปิดหน้าต่าง/โหลดเซฟ/ล้างคิว) → เดิมไม่มีทางกลับมา ติดขั้นผู้ทะลุฟ้าดาราถาวร
 GATEV[18]=K=>uDis(K).length>=3?null:'u_disq';GATEV[19]=K=>K.u.cw?null:'e5_war';GATEV[20]=K=>K.u.gal?null:'e5_galq';GATEV[21]=K=>K.u.uc?null:'e5_trial';GATEV[22]=K=>uLawN(K,1)?null:'e6_first';
 GATEV[23]=K=>null;GATEV[24]=K=>K.u.lr?null:'e6_rival';GATEV[25]=K=>K.u.fuse?null:'e6_fuse';GATEV[26]=K=>K.u.past?null:'e6_past';GATEV[27]=K=>K.u.rift?null:'e6_rift';
@@ -3509,7 +3510,7 @@ window._skyWf={WS,wfG,EN2,WF,wfMG};window.skyFate=function(){const K=SK();if(!K)
 .wfA.done{border-color:#7be3a088}.wfE.now{border-color:#b48cff;background:linear-gradient(160deg,#241a3a,#0f1d29)}.wfE.lock{opacity:.5}.wfG{display:grid;grid-template-columns:1fr 1fr;gap:0 6px}`;document.head.appendChild(st)}
 try{SYS_GUIDE.push({s:'base',nw:1,ic:'🌍',t:'ทะลุฟ้าดารา: ชะตาโลก · ตอนจบ',d:'<b>🌍 ชะตาโลก</b> ทุกชีวิตสุ่มเรื่องใหญ่ 2–3 เรื่องจาก 12 เรื่อง (ไข้เกล็ดเขียว · ดาวดวงที่สอง · สงครามท่อน้ำ · ราชาอสูรรวมฝูง · รัฐประหารสีขาว · นครกระจกแตก · นครลอยฟ้า · ทะเลกลืนแผ่นดิน · เด็กยีนสมบูรณ์ · ศาสดาเศษดาว · เครดิตล่ม · สามปีที่อสูรเงียบ) แต่ละเรื่องมี 3 ขั้น มีลางเตือนก่อน 1 ปี ตัวเลือกขั้นแรกๆ เปิดทางลับในขั้นสุดท้าย · เรื่องที่เคยเจอบ่อยสุ่มยากขึ้น · <b>🎬 ตอนจบ 17 แบบ</b> ขึ้นกับทุกสิ่งที่ทำ ทั้งฝ่าย หอนักรบ ราชาอสูร และชะตาโลก · ช่วงท้ายชีวิตมีทางแยกสุดท้ายให้เลือกเอง · มินิเกมใหม่: 🃏 จับคู่การ์ด ⚡ กดรัว'})}catch(e){}
 
-window._sky={SK,RK,EV,queue,skyYear,newK};window._skyQ=()=>QU.slice();
+window._sky={SK,RK,EV,queue,skyYear,newK,sync:()=>sync()};window._skyQ=()=>QU.slice();
 // 🩹 กันค้างขั้น: คิวเหตุการณ์อยู่ในหน่วยความจำ (ไม่ถูกเซฟ) — ถ้าโหลดเซฟ/รีเฟรชตอนคอขวดค้างคิว ธงคอขวดจะติดค้างตลอดไป ขั้นไม่ขยับ
 function skyUnstick(){try{const K=SK();if(!K||K.rk<0||!S||!S.alive)return;
  if(K.sub===9&&K.f.neck&&!QU.includes('neck')){K.f.neck=0;if(K.xp>=need(K)){K.f.neck=1;queue('neck')}}
