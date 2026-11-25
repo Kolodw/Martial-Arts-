@@ -4702,7 +4702,12 @@ function person0(x,y,o,pose){
  else if(hc==='beanie'){const c2=o.hatC||'#c83a3a';Q(hx-1,top-4,hw+2,6,c2);Q(hx-1,top+1,hw+2,1,shd(c2,-.25));Q(cx-1,top-6,2,2,'#f4f4f4')}
  else if(hc==='ears'){const c2=o.hatC||o.hair||'#e88a3a';Q(hx,top-5,3,5,c2);Q(hx+hw-3,top-5,3,5,c2);Q(hx+1,top-3,1,2,'#ffc0c8');Q(hx+hw-2,top-3,1,2,'#ffc0c8');const ew=(frame|0)%40<3?1:0;if(ew)Q(hx+hw-3,top-6,3,1,c2)}
  else if(hc==='headset'){const c2=o.hatC||'#2a2a30';Q(hx-1,top-2,hw+2,2,c2);Q(hx-2,top+2,3,5,c2);Q(hx+hw-1,top+2,3,5,c2);Q(hx+hw,top+3,1,3,(frame|0)%16<8?'#4af0a0':'#2ab0ff')}
- else if(hc==='visor'){const c2=o.hatC||'#4a5060',gl=o.core||o.trim||'#3af0ff';Q(hx-2,top-4,hw+4,hh+3,c2);Q(hx-2,top-4,hw+4,1,shd(c2,.3));Q(hx-2,top-4,1,hh+3,shd(c2,.2));Q(hx+hw+1,top-4,1,hh+3,shd(c2,-.3));Q(hx-1,top+hh-2,hw+2,2,shd(c2,-.25));const vp=.6+.4*Math.sin(T*3);Q(hx,top+4,hw,3,shd(gl,-.4));g.globalAlpha=vp;Q(hx,top+4,hw,3,gl);Q(hx+1,top+5,hw-2,1,'#ffffff');g.globalAlpha=1;Q(cx-1,top-6,2,2,shd(c2,-.2))}
+ else if(hc==='visor'){const c2=o.hatC||'#4a5060',gl=o.core||o.trim||'#3af0ff',cl=shd(c2,.32),cd=shd(c2,-.3),cdd=shd(c2,-.55),vp=.6+.4*Math.sin(T*3);
+  Q(hx-2,top-3,hw+4,5,c2);Q(hx-1,top-5,hw+2,2,c2);Q(hx,top-6,hw,1,cl);Q(hx-1,top-5,hw+2,1,cl);Q(hx-2,top-3,1,5,cl);Q(hx+hw+1,top-3,1,5,cd); // กะโหลกหมวก
+  Q(hx-2,top+2,2,hh-1,c2);Q(hx+hw,top+2,2,hh-1,cd);Q(hx-2,top+2,1,hh-1,cl);Q(hx+hw+1,top+2,1,hh-1,cdd); // แก้มเกราะ เปิดปากคาง
+  Q(hx-1,top+3,hw+2,4,cdd);g.globalAlpha=vp*.85;Q(hx,top+4,hw,2,gl);g.globalAlpha=1;Q(hx+1,top+4,2,1,'#ffffff');Q(hx-1,top+3,hw+2,1,cd); // กระจกบังตาเรืองแสง
+  Q(cx-1,top-3,2,3,cd);Q(cx,top-3,1,3,cl); // สันกลางหมวก
+  g.globalAlpha=vp;Q(cx,top-8,1,2,gl);g.globalAlpha=1;Q(hx+hw+1,top-2,1,2,gl);Q(hx-1,top+hh,hw+2,1,cd)}
  else if(hc==='tophat'){const c2=o.hatC||'#1a1a1e';Q(hx-4,top-1,hw+8,2,c2);Q(hx+1,top-9,hw-2,8,c2);Q(hx+1,top-3,hw-2,1,o.trim&&o.trim!==o.robe?o.trim:'#8a2a2a');Q(hx+1,top-9,hw-2,1,shd(c2,.25))}
  else if(hc==='mongkol'){Q(hx-1,top+2,hw+2,2,'#e8e0c8');Q(hx-1,top+2,hw+2,1,'#c8283a');Q(cx-1,top-1,2,3,'#e8e0c8')}
 }
