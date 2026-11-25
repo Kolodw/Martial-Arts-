@@ -36,7 +36,7 @@ function css(){
  }
  const B='html body[data-front]',M='html body[data-front]:not(.desk)';
  s+=`
-#frTint{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,var(--fT) 0%,var(--fT) 40%,color-mix(in srgb,var(--bg) 70%,transparent) 100%);transition:background .5s}
+#frTint{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,var(--fT) 0%,var(--fT) 40%,color-mix(in srgb,var(--bg) 70%,transparent) 100%);transition:background .5s}
 ${B} #title .big .gold{font-family:var(--fD)!important;background:none!important;-webkit-text-fill-color:var(--fG)!important;color:var(--fG)!important;text-shadow:0 3px 0 rgba(0,0,0,.45)!important}
 ${B} #wPick{background:var(--card)!important;background-image:none!important;border:1px solid var(--line)!important;box-shadow:0 2px 10px rgba(0,0,0,.25)!important;border-radius:20px!important}
 ${B} #wPick .wc.on{border-color:var(--fG)!important;box-shadow:0 0 0 2px var(--fG)!important}
@@ -71,6 +71,7 @@ ${B} #tNews{background:var(--card)!important;background-image:none!important;bor
 #frTopR button .l{display:none}#frTopR button.dk{display:none}
 html body.desk[data-front] #title #tSup,html body.desk[data-front] #title #tFb,html body.desk[data-front] #title #tEv,html body.desk[data-front] #title #tSp,html body.desk[data-front] #title #tCos{display:none!important}
 html body.desk[data-front] #frTopR{display:flex;top:16px;right:28px}
+html body.desk[data-front] .tsP.l{top:76px!important;max-height:calc(100vh - 92px)!important}
 html body.desk[data-front] #frTopR button{width:auto;padding:0 16px;gap:8px;font:inherit;font-size:15px}
 html body.desk[data-front] #frTopR button .l,html body.desk[data-front] #frTopR button.dk{display:flex}
 ${M} #frCont{display:flex}${M} #frToday{display:flex}${M} #frTopR{display:flex}
