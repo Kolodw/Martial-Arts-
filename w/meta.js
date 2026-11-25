@@ -160,10 +160,36 @@ window.gdTheme=()=>{const b=$('gdBody');if(!b||!GD)return;b.innerHTML=`<div clas
 window.gdThSet=async th=>{const j=await gdW('theme',{th});if(j&&j.ok){toast('🎨 เปลี่ยนแนวเป็น'+GTH[th].g+'แล้ว');redraw()}};
 function lstH(l,join){if(!l||!l.length)return'<p class="tag2">ยังไม่มีกลุ่ม เป็นคนแรกเลย</p>';
  return l.map((x,i)=>`<div class="gdL"><span class="r">${x.sc?i+1:'·'}</span><span class="i">${E(x.ic)}</span><span class="t"><b>${E(x.n)}</b><small>${(GTH[x.th]||GTH.murim).g} · Lv.${x.lv||1} · ${x.mc}/${x.cap||20} คน${x.ter?' · 🚩'+x.ter:''}${x.ds?' · '+E(x.ds):''}</small><small>${(JMN[x.jm]||JMN.open).join(' ')}${x.pn?` · 🌱 ทดลอง ${x.pn} ชีวิต`:''}${rqTxt(x.rq).length?' · 📋 '+rqTxt(x.rq).join(' · '):''}</small></span><b>${N(x.sc)}</b>${join&&x.mc<(x.cap||20)&&x.jm!=='closed'&&!GREQ?`<button class="gbtn" style="padding:4px 10px" onclick="window._apN='${E((GTH[x.th]||GTH.murim).g+' '+x.n).replace(/'/g,'')}';window._apL='${(GTH[x.th]||GTH.murim).ld+'หรือ'+(GTH[x.th]||GTH.murim).el}';gdJoin('${E(x.id)}','${x.jm||'open'}')">${x.jm==='apply'?'ขอเข้า':'เข้าร่วม'}</button>`:''}</div>`).join('')}
-window.openGuild=async function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🛡️ กลุ่มผู้เล่น</h3><div id="gdBody"><p class="tag2">กำลังโหลด…</p></div>`,'guild');
+window.openGuild=async function(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🛡️ กลุ่มผู้เล่น</h3>${gAdmK()?'<button class="gbtn" style="width:100%;margin:0 0 8px" onclick="gdAdm()">🛡️ แอดมิน · ดูทุกกลุ่ม (เงียบ ไม่มีใครรู้)</button>':''}<div id="gdBody"><p class="tag2">กำลังโหลด…</p></div>`,'guild');
  let j=null;try{j=await api('gd&o=me')}catch(e){}const b=$('gdBody');if(!b)return;
  if(!j){b.innerHTML='<p class="tag2">เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง</p>';return}
  GD=j.g||null;GREQ=j.req||null;GGL=j.gl==null?null:j.gl;window.__gdTag(GD);if(GD){b.innerHTML=gdView(GD);gdLive()}else{b.innerHTML=gdNew();try{const l=await api('gd&o=list');const d=$('gdLst');if(d)d.innerHTML=lstH(l&&l.l,1)}catch(e){}}};
+// 🛡️ แอดมิน: ดูทุกกลุ่มแบบเงียบ (อ่านอย่างเดียว · เซิร์ฟเวอร์ไม่บันทึก/ไม่แจ้งใคร) — ต้องมีคีย์แอดมินในเครื่อง (LS murim_admk)
+function gAdmK(){try{return LS.get('murim_admk','')||''}catch(e){return''}}
+let gdAL=null;
+window.gdAdm=async function(){const b=$('gdBody'),k=gAdmK();if(!b||!k)return;clearInterval(gdPoll);b.innerHTML='<p class="tag2">กำลังโหลดทุกกลุ่ม…</p>';
+ let j=null;try{j=await api('gd&o=alist&key='+encodeURIComponent(k))}catch(e){}
+ if(!j||j.err){b.innerHTML=`<p class="tag2">${j&&j.err==='adm'?'คีย์แอดมินไม่ถูกต้อง':'โหลดไม่ได้ ลองใหม่อีกครั้ง'}</p><button class="gbtn" style="width:100%" onclick="openGuild()">← กลับ</button>`;return}
+ gdAL=j.l||[];b.innerHTML=`<div class="gdB"><p class="tag2">🛡️ โหมดแอดมิน · ${gdAL.length} กลุ่ม · ดูได้ทุกกลุ่มรวมที่ต้องอนุมัติ/ปิดรับ · ไม่มีใครเห็นว่าคุณเข้าไปดู</p><input id="gdAQ" placeholder="ค้นหาชื่อหรือรหัสกลุ่ม" oninput="gdAdmF()" style="width:100%;margin:4px 0 8px"><div id="gdAL"></div><button class="gbtn" style="width:100%;margin-top:8px" onclick="openGuild()">← กลับหน้ากลุ่มของฉัน</button></div>`;gdAdmF()};
+window.gdAdmF=function(){const d=$('gdAL');if(!d||!gdAL)return;const q=(($('gdAQ')||{}).value||'').trim().toLowerCase();const JM={open:'เปิดรับ',apply:'ต้องอนุมัติ',closed:'ปิดรับ'};
+ const L=gdAL.filter(g=>!q||String(g.n||'').toLowerCase().includes(q)||String(g.id).includes(q)).slice(0,120);
+ d.innerHTML=L.length?L.map(g=>`<button class="item" style="display:flex;width:100%;text-align:left;gap:8px;align-items:center" onclick="gdAdmSee('${E(g.id)}')"><span style="font-size:20px">${E(g.ic||'🏯')}</span><span style="flex:1;min-width:0"><b>${E(g.n)}</b><br><small class="tag2">${E(g.id)} · Lv.${g.lv} · ${g.mc} คน · ${JM[g.jm]||E(g.jm)}${g.rq?' · คำขอค้าง '+g.rq:''}</small></span><span>›</span></button>`).join(''):'<p class="tag2">ไม่พบกลุ่ม</p>'};
+window.gdAdmSee=async function(id){const b=$('gdBody'),k=gAdmK();if(!b||!k)return;b.innerHTML='<p class="tag2">กำลังโหลด…</p>';
+ let j=null;try{j=await api('gd&o=asee&g='+encodeURIComponent(id)+'&key='+encodeURIComponent(k))}catch(e){}
+ const g=j&&j.g;if(!g){b.innerHTML=`<p class="tag2">${j&&j.err==='adm'?'คีย์แอดมินไม่ถูกต้อง':'ไม่พบกลุ่มนี้'}</p><button class="gbtn" style="width:100%" onclick="gdAdm()">← กลับรายการ</button>`;return}
+ const Z0=(typeof GTH!=='undefined'&&GTH[g.th])||{g:'กลุ่ม',ld:'หัวหน้า',el:'ผู้อาวุโส',pb:'ฝึกหัด'},JM={open:'เปิดรับ',apply:'ต้องอนุมัติ',closed:'ปิดรับ'};
+ const mem=(g.m||[]).map(m=>`<div class="item" style="display:flex;justify-content:space-between;gap:8px"><span><b>${E(m.n)}</b> ${m.ld?'👑 '+E(Z0.ld):m.el?'⭐ '+E(Z0.el):m.pb?'🌱 '+E(Z0.pb):''}<br><small class="tag2">${E(m.u)} · เข้า ${ago(m.j)} · ออนไลน์ล่าสุด ${ago(m.la)}</small></span><span class="tag2">${m.p||0} แต้ม</span></div>`).join('')||'<p class="tag2">ไม่มีสมาชิก</p>';
+ const rq=(g.rqs||[]).map(r=>`<div class="item"><b>${E(r.n)}</b> <small class="tag2">${E(r.u)} · ${ago(r.t)}</small>${r.x?`<br><small>${E(r.x)}</small>`:''}</div>`).join('')||'<p class="tag2">ไม่มีคำขอค้าง</p>';
+ const lg=(g.lg||[]).slice(0,30).map(x=>`<div class="tag2" style="margin:2px 0">${E(x.x)} · ${ago(x.t)}</div>`).join('')||'<p class="tag2">ยังไม่มีบันทึก</p>';
+ let ch='';try{ch=chatH(g)}catch(e){ch='<p class="tag2">แสดงแชทไม่ได้</p>'}
+ b.innerHTML=`<div class="gdB"><div class="item" style="border-style:dashed">🛡️ <b>โหมดแอดมิน · ดูอย่างเดียว</b><br><small class="tag2">ไม่มีการบันทึกหรือแจ้งเตือนในกลุ่มนี้ · สมาชิกไม่เห็นว่าคุณเข้ามา</small></div>
+ <div class="gdHd" style="display:flex;gap:10px;align-items:center;margin:8px 0"><span style="font-size:30px">${E(g.ic||'🏯')}</span><span><b style="font-size:17px">${E(g.n)}</b><br><small class="tag2">${E(g.id)} · ${E(Z0.g)} · ${JM[g.jm]||E(g.jm||'')} · ${(g.m||[]).length} คน${g.lv?' · Lv.'+g.lv:''}${g.rk>0?' · อันดับ '+g.rk:''}</small></span></div>
+ ${g.ds?`<p class="tag2">${E(g.ds)}</p>`:''}${g.inv?`<p class="tag2">รหัสเชิญ: <b>${E(g.inv)}</b></p>`:''}
+ <h4 style="margin:10px 0 4px">👥 สมาชิก</h4>${mem}
+ <h4 style="margin:10px 0 4px">📝 คำขอเข้าร่วม</h4>${rq}
+ <h4 style="margin:10px 0 4px">💬 แชทล่าสุด</h4><div class="gdCh" style="max-height:260px;overflow:auto">${ch}</div>
+ <h4 style="margin:10px 0 4px">📜 บันทึกกลุ่ม</h4>${lg}
+ <div style="display:flex;gap:6px;margin-top:10px"><button class="gbtn" style="flex:1" onclick="gdAdmSee('${E(g.id)}')">🔄 รีเฟรช</button><button class="gbtn" style="flex:1" onclick="gdAdm()">← รายการกลุ่ม</button></div></div>`};
 function gdLive(){clearInterval(gdPoll);gdPoll=setInterval(async()=>{const c=$('gdCh');if(!c||!GD){clearInterval(gdPoll);return}if(document.hidden)return;try{const j=await api('gd&o=me');if(j&&j.g&&$('gdCh')){GD=j.g;window.__gdTag(GD);$('gdCh').innerHTML=chatH(GD)}}catch(e){}},9000)}
 const redraw=()=>{const b=$('gdBody');if(!b)return openGuild();if(GD){b.innerHTML=gdView(GD);gdLive()}else openGuild()};
 window.gdPick=(i,el)=>{gdIc=i;try{(el.closest('.gdB')||el.parentNode).querySelectorAll('.gdIcs button').forEach(x=>x.classList.toggle('on',x===el))}catch(e){}};

@@ -87,3 +87,6 @@ LS `murim_thr`: ทุกตอนจบ (ห่อ endGame) = ด้ายช�
 `body[data-front]` = โลกของการ์ด `#wPick .wc.on` ขณะ `#title.on` → ตัวแปรสีเดิม + `--fA/--fG/--fK/--fD/--fT` · `#frTint` ม่านสีทับฉาก `#tbg2` · โลโก้/การ์ดโลก/ปุ่มเกิด/แถบล่างใช้สีโลก
 มือถือ: ซ่อนปุ่มลอย tSup/tFb/tEv/tSp/tCos + kEnt/tGrid/tSea → `#frTopR` (ร้านค้า·เมนู) + `#frToday` (อีเวนต์·ภารกิจ·คัมภีร์·ชุมชน — กดแทนปุ่มเดิม) · `#frCont` การ์ดเล่นต่อ (กด `#tCont`) แทรกก่อน `.box.opts` · แถบล่าง `#frMode` + เกิด · nav ซ่อน ลาน/เมนู เพิ่ม `#frHome` · syncSt สำเร็จ = ซ่อน
 หน้าย่อยจากหน้าแรกบนมือถือ (`SHEET` daily2/book/online/guild/tmenu/evshop/krt/sp/profile/aq/cosshop + ร้านค้า) = `#mask.frSheet` เต็มจอ · จอคอม: `#frTopR` แบบมีป้าย (ร้านค้า คัมภีร์ ชุมชน เมนู) แทนปุ่มลอย · เฉพาะธีมทองราตรี (body.royal) · ปิด LS `murim_frontOff=1`
+
+## meta.js — 🛡️ แอดมินดูกลุ่มแบบเงียบ
+มีคีย์แอดมินในเครื่อง (LS `murim_admk`) → หน้ากลุ่มผู้เล่นมีปุ่ม "แอดมิน · ดูทุกกลุ่ม" → `gdAdm()` รายการทุกกลุ่ม (api `gd&o=alist`) → `gdAdmSee(id)` (api `gd&o=asee`) ดูสมาชิก คำขอค้าง รหัสเชิญ แชท บันทึก · เซิร์ฟเวอร์ตรวจ `isAdmKey(q.key)` และอ่านอย่างเดียว (ไม่อัปเดต gdla ไม่ลง gdlog ไม่แจ้งใคร · ไม่เป็นสมาชิก)
