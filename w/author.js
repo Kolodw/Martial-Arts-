@@ -152,7 +152,8 @@ function apply(){try{if(typeof S==='undefined'||!S||S===S0||S._au)return;const g
 setInterval(apply,1500);
 
 // ---------------------------------------------------------------- 5) หมุดชะตา + คนจากชีวิตก่อน (ตรวจทุก 1.5 วิ · รอให้ไม่มีตัวเลือก/หน้าต่างค้าง)
-function busy(){try{return !!(choice._cur||modalOpen||(typeof DU!=='undefined'&&DU)||$('auOv')&&$('auOv').classList.contains('on'))}catch(e){return true}}
+/* ตัวเลือกที่เปิดอยู่ไม่นับ (choice() เข้าคิวให้เอง) · รอเฉพาะหน้าต่างอื่น ดวล มินิเกม */
+function busy(){try{const m=$('modal'),mk=m&&m.dataset&&m.dataset.k;return !!((modalOpen&&mk!=='choice')||(typeof DU!=='undefined'&&DU)||($('auOv')&&$('auOv').classList.contains('on'))||(window._mgBusy&&_mgBusy()))}catch(e){return true}}
 function tick(){try{if(typeof S==='undefined'||!S||!S.alive||!S._au||busy())return;const U=S._au,ag=S.age|0;
  const p=(U.pins||[]).find(x=>!x.done&&ag>=x.age);if(p){p.done=1;return pinGo(p)}
  const r=U.re;if(r&&!r.done&&ag>=r.age){r.done=1;return reGo(r)}

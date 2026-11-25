@@ -4271,6 +4271,36 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const pr = pick.length ? await cmd('HMGET', 'gvpr', ...pick.map(x => x.i)) : [];
       return res.json({ g: pick.map((x, k) => Object.assign(x, { p: +(pr && pr[k]) || 0 })), n: L.length });
     }
+    // 👤 จักรวาลร่วม: คลังนักแสดง — ตัวละครที่จบชีวิตแล้วไปรับบทในชีวิตของผู้เล่นคนอื่น (แยกตามโลก · โลกละ 200 ล่าสุด)
+    //   castadd (POST ตอนจบชีวิต · 1 ครั้ง/90 วิ) · cast (GET สุ่มโลกละ ≤12 · ไม่ส่งตัวเอง · แคชดิบ 120 วิ) · castoff/caston (ไม่ให้ใช้ชื่อฉัน)
+    if (a === 'castadd' || a === 'cast' || a === 'castoff' || a === 'caston') {
+      const CW = ['murim', 'xian', 'god', 'soul', 'loop', 'mw', 'sky', 'fog', 'beast'];
+      if (a === 'castoff' || a === 'caston') {
+        if (!okId(id)) return res.json({ err: 'id' });
+        await cmd(a === 'castoff' ? 'SADD' : 'SREM', 'castoff', id);
+        return res.json({ ok: 1 });
+      }
+      if (a === 'castadd') {
+        if (!okId(id)) return res.json({ err: 'id' });
+        if (!(await cmd('SET', 'castrl:' + id, 1, 'NX', 'EX', 90))) return res.json({ ok: 0, rate: 1 });
+        if (await isBanned()) return res.json({ ok: 1 });
+        const w = CW.includes(b.w) ? b.w : 'murim', n = noAdm(clean(b.n, 20));
+        if (!n || n === 'นิรนาม') return res.json({ ok: 0 });
+        const c = { i: 'c' + now.toString(36) + Math.random().toString(36).slice(2, 5), u: id, n, e: clean(b.e, 30), a: Math.max(0, Math.min(1e7, Math.floor(+b.a || 0))), tr: String(b.tr || '').replace(/[^a-z]/g, '').slice(0, 6), w, t: now };
+        await pipe([['LPUSH', 'cast:' + w, JSON.stringify(c)], ['LTRIM', 'cast:' + w, 0, 199], ['SREM', 'castoff', id]]);
+        return res.json({ ok: 1 });
+      }
+      let raw = null; try { raw = jp(await cmd('GET', 'castc')) } catch {}
+      if (!raw) { const R = await pipe(CW.map(w => ['LRANGE', 'cast:' + w, 0, 199])); raw = {}; CW.forEach((w, k) => raw[w] = (R[k] || []).map(jp).filter(Boolean)); await cmd('SET', 'castc', JSON.stringify(raw), 'EX', 120) }
+      const [off, hidden] = await pipe([['SMEMBERS', 'castoff'], ['SMEMBERS', 'chat:hidden']]);
+      const os = new Set(off || []), hs = new Set(hidden || []), me = okId(id) ? id : '', out = {};
+      for (const w of CW) {
+        const L = (raw[w] || []).filter(x => x && x.u !== me && !os.has(x.u) && !hs.has(x.i)), seen = new Set(), pick = [];
+        while (L.length && pick.length < 12) { const x = L.splice(Math.floor(Math.random() * L.length), 1)[0]; if (seen.has(x.n)) continue; seen.add(x.n); pick.push({ i: x.i, n: x.n, e: x.e, a: x.a, tr: x.tr, w: x.w }) }
+        out[w] = pick;
+      }
+      return res.json({ ok: 1, c: out });
+    }
     if (a === 'gpray') {
       const gid = String(b.g || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
       if (!okId(id) || !gid) return res.json({ err: 'id' });

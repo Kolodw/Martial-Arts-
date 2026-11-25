@@ -46417,6 +46417,7 @@ try{window.mgHall=window.mgHall||function(){return wNeed('mg3',()=>window._mgHal
 // 🔮 อยากเล่นต่ออีกชาติ (w/hook.js): เส้นทางชะตา · ภารกิจชาติ · หน้าจบชวนเกิดใหม่ · แชร์ผล/ลิงก์ท้าชะตาประจำวัน · ชาติก่อนของตัวเอง · ช่องทางผู้เล่น
 try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpen&&window.hkOpen())};setTimeout(()=>{try{wLoad('hook').catch(()=>{})}catch(e){}},2000)}catch(e){console.error('hkStub',e)}
 try{setTimeout(()=>{try{wLoad('author').catch(()=>{})}catch(e){}},2600)}catch(e){console.error('auStub',e)} /* 🧵 ผู้ประพันธ์ชะตา (/w/author.js) */
+try{setTimeout(()=>{try{wLoad('cast').catch(()=>{})}catch(e){}},3200)}catch(e){console.error('csStub',e)} /* 👤 จักรวาลร่วม (/w/cast.js) */
 
 // 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
 try{(function(){
