@@ -46560,6 +46560,7 @@ try{window.secretBook=window.secretBook||function(){return wNeed('secret',()=>wi
 try{window.mgHall=window.mgHall||function(){return wNeed('mg3',()=>window._mgHall&&window._mgHall())};setTimeout(()=>{try{wLoad('mg3').catch(()=>{})}catch(e){}},1800)}catch(e){console.error('mg3Stub',e)}
 // 🔮 อยากเล่นต่ออีกชาติ (w/hook.js): เส้นทางชะตา · ภารกิจชาติ · หน้าจบชวนเกิดใหม่ · แชร์ผล/ลิงก์ท้าชะตาประจำวัน · ชาติก่อนของตัวเอง · ช่องทางผู้เล่น
 try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpen&&window.hkOpen())};setTimeout(()=>{try{wLoad('hook').catch(()=>{})}catch(e){}},2000)}catch(e){console.error('hkStub',e)}
+try{window.lpOpen=window.lpOpen||function(t){return wNeed('hall',()=>window.lpOpen&&window.lpOpen(t))};setTimeout(()=>{try{wLoad('hall').catch(()=>setTimeout(()=>wLoad('hall').catch(()=>{}),6000))}catch(e){}},2400)}catch(e){console.error('lpStub',e)} /* 🏯 หอชะตา (/w/hall.js) */
 try{setTimeout(()=>{try{wLoad('author').catch(()=>{})}catch(e){}},2600)}catch(e){console.error('auStub',e)} /* 🧵 ผู้ประพันธ์ชะตา (/w/author.js) */
 try{setTimeout(()=>{try{wLoad('cast').catch(()=>{})}catch(e){}},3200)}catch(e){console.error('csStub',e)} /* 👤 จักรวาลร่วม (/w/cast.js) */
 try{setTimeout(()=>{try{wLoad('annal').catch(()=>{})}catch(e){}},3800)}catch(e){console.error('anStub',e)} /* 📜 ปูมจักรวาล (/w/annal.js) */
