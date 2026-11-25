@@ -97,7 +97,7 @@ html body.frDesk #frRail{display:flex;position:fixed;left:14px;top:50%;transform
 html body.frDesk #frRail button{display:flex!important;flex-direction:column;align-items:center;gap:3px;padding:9px 2px;border:0;border-radius:16px;background:transparent;color:var(--ink);font:inherit;font-size:11.5px;line-height:1.2;text-align:center;white-space:normal;cursor:pointer}
 html body.frDesk #frRail button:hover{background:var(--w)}
 html body.frDesk #frRail button .pxi,html body.frDesk #frRail button i{font-size:22px}
-html body.frDesk #tDock{display:none!important}
+html body.frDesk #tDock,html body.desk.dkTD.frDesk #tDock,html body.desk.dkTD.frDesk #wPick #tDock{display:none!important}
 html body.frDesk .tsP.l{left:104px!important;width:calc(clamp(250px,19vw,320px) - 70px)!important}
 html body.frDesk #frTopR button[aria-label="เมนู"]{display:none!important}
 #frReady{display:none}
