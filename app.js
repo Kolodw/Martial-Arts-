@@ -4526,14 +4526,34 @@ const shd=(c,a)=>{if(!c||c[0]!=='#'||c.length<7)return c;const n=parseInt(c.slic
 const Q=(x,y,w,h,c)=>P(x/3,y/3,w/3,h/3,c);
 function person(x,y,o,pose='stand'){if(o&&o===curMe){meX=x;meY=y}if(o&&o.beast){try{drawBeast(g,o.beast,Math.round(x)-16,Math.round(y)-26,1,frame)}catch(e){}return}x=Math.round(x);y=Math.round(y);const ps0=PS,k=1.5,q=(k-1)*ps0,ax=Math.round(x*q)/q,ay=Math.round(y*q)/q;g.save();g.translate(ax,ay);g.scale(k,k);g.translate(-ax,-ay);PS=ps0*k;try{person0(x,y,o,pose)}finally{PS=ps0;g.restore()}}
 // 🪽 ปีก (ใช้ทั้งตัววาดพิกเซลเดิมและสไปรต์ชุดรบ)
-function wingDraw(o,cx,ty,T,sd){try{if(window._wgDraw&&window._wgDraw(o,cx/3,ty/3+3,(g.canvas.width/PS<=40?15.5:19),T))return}catch(e){}const wt=o.wing,c1=o.wingC||'#e8eef8',c2=o.wingC2||shd(c1,.35),fl=Math.sin(T*(wt==='mech'?1.6:2.4)+sd),fu=Math.round(fl*2),y0=ty+1;const sa=g.globalAlpha;
-  for(const sgn of [-1,1]){const x0=cx+sgn*3,R=(dx,dy,w,h,c)=>Q(sgn>0?x0+dx:x0-dx-w,y0+dy,w,h,c);
-   if(wt==='feather'||wt==='energy'){if(wt==='energy')g.globalAlpha=sa*(.45+.25*Math.sin(T*3));for(let r=0;r<8;r++){const w=Math.max(5,26-r*3),yy=-10+r*3+Math.round(fu*(1-r/8));R(1,yy,w,3,r%2?c1:shd(c1,-.1));R(w-2,yy,3,2,c2);if(r<3)R(1,yy-1,w-3,1,shd(c1,.3))}g.globalAlpha=sa}
-   else if(wt==='mech'){for(let i=0;i<5;i++){const yy=-9+i*2+Math.round(fu*.6*(i+1)/5);R(2+i*4,yy,3,17-i*2,i%2?c1:shd(c1,-.18));R(2+i*4,yy,1,17-i*2,shd(c1,.3));R(3+i*4,yy+14-i*2,2,2,c2)}R(0,-2,4,5,shd(c1,-.3));g.globalAlpha=sa*(.5+.5*Math.sin(T*4));R(4,-1,18,1,c2);g.globalAlpha=sa}
-   else if(wt==='bat'||wt==='dragon'){R(1,-10+fu,23,2,shd(c1,-.35));R(22,-13+fu,2,5,shd(c1,-.35));for(let r=0;r<8;r++){const w=Math.max(3,22-r*2.5|0),yy=-7+r*2+Math.round(fu*(1-r/7));R(1,yy,w,2,c1);if(r>2&&r%2)R(w-1,yy+1,2,1,'#00000000')}for(let k=0;k<4;k++)R(5+k*5,-8+fu,1,12-k*2,shd(c1,-.3));if(wt==='dragon')for(let k=0;k<5;k++)R(3+k*4,-11+fu,2,2,c2);else R(22,-14+fu,1,2,c2)}
-   else if(wt==='butterfly'){const t2=Math.round(fl*1.5);R(1,-12+t2,17,12,c1);R(3,-14+t2,12,2,c1);R(1,0,13,10,shd(c1,-.12));R(5,-9+t2,5,5,c2);R(12,-5+t2,2,2,'#ffffff');R(4,3,4,4,c2);R(1,-10+t2,1,18,shd(c1,-.35))}
-   else if(wt==='crystal'){g.globalAlpha=sa*.88;for(let i=0;i<5;i++){const h=12-i*2,yy=-8+i*2+Math.round(fu*(i+1)/5);R(2+i*4,yy,3,h+2,i%2?c1:c2);R(3+i*4,yy-2,1,2,c2);R(2+i*4,yy,1,h+2,'#ffffff80')}g.globalAlpha=sa;if((frame|0)%30<4)R(6,-6,1,1,'#ffffff')}
-   else if(wt==='flame'){for(let r=0;r<7;r++){const fk=Math.round(Math.sin(T*6+r*1.7)*1.5),w=Math.max(3,23-r*3)+fk,yy=-10+r*3+Math.round(fu*(1-r/7));R(1,yy,w,3,r<2?c2:r<5?c1:shd(c1,-.25));R(w-1,yy-1,2,2,'#fff0a0')}}
+function wingDraw(o,cx,ty,T,sd){try{if(window._wgDraw&&window._wgDraw(o,cx/3,ty/3+3,(g.canvas.width/PS<=40?15.5:19),T))return}catch(e){}const wt=o.wing,c1=o.wingC||'#e8eef8',c2=o.wingC2||shd(c1,.35),fl=Math.sin(T*(wt==='mech'?1.6:2.4)+sd),y0=ty+2;const sa=g.globalAlpha,D=Math.PI/180;
+  const c1D=shd(c1,-.3),c1DD=shd(c1,-.5),c1L=shd(c1,.3);
+  for(const sgn of [-1,1]){const x0=cx+sgn*4;
+   // เส้นรัศมีจากโคนปีก: มุม a (เรเดียน, ลบ=ขึ้น) ยาว len หนา h · col(t) ให้สีตามตำแหน่ง 0..1
+   const ray=(a,len,h,col,st=0)=>{const ca=Math.cos(a),sa2=Math.sin(a);for(let s2=st;s2<len;s2++){const t=s2/len,px=Math.round(s2*ca),py=Math.round(s2*sa2),hh=Math.max(1,Math.round(h*(t>.75?(1-t)*4:1)));const cc=col(t,s2);if(cc)Q(sgn>0?x0+px-(hh>>1):x0-px-1-((hh-1)>>1),y0+py-(hh>>1),hh,hh,cc)}};
+   const flap=fl*9*D;
+   if(wt==='feather'||wt==='energy'){const en=wt==='energy',K=9;if(en)g.globalAlpha=sa*(.55+.2*Math.sin(T*3));
+    for(let k=K-1;k>=0;k--){const a=(-48+k*10)*D+flap*(1-k/K*.5),L=Math.round(30-Math.abs(k-2.5)*2-(k>5?(k-5)*1.5:0));
+     ray(a,L,4,(t)=>t>.86?(en?'#ffffff':c2):k%2?c1:shd(c1,-.1));ray(a,L-1,1,(t)=>t>.15&&t<.8?(k%2?c1D:c1DD):null)}
+    for(let k=0;k<6;k++){const a=(-46+k*11)*D+flap,L=15-Math.abs(k-2)*1.2|0;ray(a,L,4,(t)=>t<.25?c1D:k%2?c1L:c1)} // ขนคลุมชั้นบน
+    ray(-50*D+flap,24,2,(t)=>t<.9?c1L:'#ffffff'); // กระดูกขอบปีก
+    if(en){g.globalAlpha=sa*(.5+.5*Math.sin(T*4));for(let i=0;i<3;i++){const ph=(T*.4+i/3)%1,a=(-50+i*30)*D;Q(sgn>0?x0+Math.round(Math.cos(a)*24*ph):x0-Math.round(Math.cos(a)*24*ph)-1,y0+Math.round(Math.sin(a)*24*ph),1,1,'#ffffff')}}
+    g.globalAlpha=sa}
+   else if(wt==='mech'){for(let k=0;k<6;k++){const a=(-58+k*15)*D+flap*.6*(k+1)/6,L=28-k*2;ray(a,L,3,(t)=>t<.12?c1DD:t>.9?c2:k%2?c1:c1D);ray(a,L-2,1,(t)=>t>.2?c1L:null,3)}
+    Q(sgn>0?x0-1:x0-4,y0-3,5,6,c1DD);Q(sgn>0?x0:x0-3,y0-2,3,4,c1D);g.globalAlpha=sa*(.5+.5*Math.sin(T*4));for(let k=0;k<6;k++){const a=(-58+k*15)*D+flap*.6*(k+1)/6,L=26-k*2;Q(sgn>0?x0+Math.round(Math.cos(a)*L):x0-Math.round(Math.cos(a)*L)-1,y0+Math.round(Math.sin(a)*L),1,1,'#ffffff')}g.globalAlpha=sa}
+   else if(wt==='bat'||wt==='dragon'){const B=[-52,-28,-6,16,36];
+    for(let i=0;i<B.length-1;i++)for(let a2=B[i];a2<B[i+1];a2+=2.5){const u=(a2-B[i])/(B[i+1]-B[i]),L0=29-i*3,L1=29-(i+1)*3,L=Math.round((L0+(L1-L0)*u)*(.72+.28*Math.abs(Math.cos(u*Math.PI))));ray(a2*D+flap,L,3,(t)=>t>.9?c1D:u<.5?c1:shd(c1,-.08))}
+    for(let i=0;i<B.length;i++)ray(B[i]*D+flap,30-i*3,1,(t)=>t>.94?(wt==='dragon'?c2:c1L):c1DD);
+    const ta=-52*D+flap;Q(sgn>0?x0+Math.round(Math.cos(ta)*29):x0-Math.round(Math.cos(ta)*29)-1,y0+Math.round(Math.sin(ta)*29)-2,1,2,c2);
+    if(wt==='dragon')for(let k=1;k<7;k++){const a=-52*D+flap;Q(sgn>0?x0+Math.round(Math.cos(a)*k*4):x0-Math.round(Math.cos(a)*k*4)-1,y0+Math.round(Math.sin(a)*k*4)-2,1,1,c2)}}
+   else if(wt==='butterfly'){const t2=fl*7*D;
+    for(let a2=-80;a2<-5;a2+=3){const u=(a2+80)/75,L=Math.round(18*Math.sin(u*Math.PI)+4);ray(a2*D+t2,L,2,(t)=>t>.82?c1DD:t>.55&&t<.7?c2:c1)}
+    for(let a2=5;a2<60;a2+=3){const u=(a2-5)/55,L=Math.round(12*Math.sin(u*Math.PI)+3);ray(a2*D+t2*.7,L,2,(t)=>t>.8?c1DD:shd(c1,-.12))}
+    const ex=(a,r,c)=>Q(sgn>0?x0+Math.round(Math.cos(a+t2)*r):x0-Math.round(Math.cos(a+t2)*r)-2,y0+Math.round(Math.sin(a+t2)*r)-1,2,2,c);ex(-45*D,12,'#ffffff');ex(-45*D,11,c2);ex(30*D,7,c2)}
+   else if(wt==='crystal'){g.globalAlpha=sa*.85;const A=[-50,-34,-18,-2,14,30];A.forEach((a2,k)=>{const L=(k===1||k===2?29:23)-k,a=a2*D+flap*.5;ray(a,L,k%2?4:3,(t)=>t>.85?'#ffffff':t<.15?c1D:k%2?c1:c2);ray(a,L-3,1,(t)=>t>.25&&t<.6?'#ffffffaa':null,2)});g.globalAlpha=sa;
+    const tw=(frame|0)%40;if(tw<4){const a=-42*D+flap*.5;Q(sgn>0?x0+Math.round(Math.cos(a)*20):x0-Math.round(Math.cos(a)*20)-1,y0+Math.round(Math.sin(a)*20),1,1,'#ffffff')}}
+   else if(wt==='flame'){for(let k=7;k>=0;k--){const fk=Math.sin(T*6+k*1.7),a=(-50+k*11)*D+flap*.7,L=Math.round(27-Math.abs(k-2)*2+fk*2.5);ray(a,L,4,(t)=>t>.82?'#fff0a0':t>.55?c2:k>4?shd(c1,-.25):c1)}
+    g.globalAlpha=sa*.7;for(let i=0;i<3;i++){const ph=(T*.7+i/3+sd*.1)%1;Q(sgn>0?x0+6+i*6:x0-7-i*6,y0-Math.round(ph*16),1,1,'#fff0a0')}g.globalAlpha=sa}
   }g.globalAlpha=sa}
 function person0(x,y,o,pose){
  const X=Math.round(x*3),Y=Math.round(y*3),child=o.age<12,T=frame*.15;
