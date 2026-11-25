@@ -4614,6 +4614,10 @@ function person0(x,y,o,pose){
   // ท้อง: แผ่นเกราะเป็นปล้อง
   for(let r=0;r<3;r++){Q(cx-4,ty+9+r*2,8,1,r%2?d:c);Q(cx-4,ty+10+r*2,8,1,dd)}
   Q(cx-Math.floor(tw/2)-1,ty+9,tw+2,2,dd);Q(cx-2,ty+9,4,2,t>=3?gl:l);
+  // เข็มขัด+หัวเข็มขัดเรืองแสง + แผ่นเกราะห้อยสะโพก (tasset) + เงาใต้อก
+  Q(cx-6,ty+8,12,1,dd);g.globalAlpha=pu;Q(cx-1,ty+8,2,1,gl);g.globalAlpha=1;
+  if(!walk){Q(cx-7,ty+11,3,4,c);Q(cx-7,ty+11,3,1,l);Q(cx-7,ty+14,3,1,dd);Q(cx+4,ty+11,3,4,d);Q(cx+4,ty+11,3,1,l);Q(cx+4,ty+14,3,1,dd);Q(cx-7,ty+12,1,2,gl);Q(cx+6,ty+12,1,2,gl)}
+  Q(cx-5,ty+7,10,1,d);Q(cx-6,ty+1,1,6,l);Q(cx+5,ty+1,1,6,dd);
   // แกนพลังกลางอก
   {const cs=t>=4?4:3,ox=cx-Math.floor(cs/2);Q(ox-1,ty+3,cs+2,cs+2,dd);g.globalAlpha=pu;Q(ox,ty+4,cs,cs,gl);g.globalAlpha=pu*.35;Q(ox-2,ty+2,cs+4,cs+4,gl);if(t>=3){g.globalAlpha=pu*.18;Q(ox-5,ty,cs+10,cs+9,gl)}g.globalAlpha=1;Q(ox,ty+4,1,1,'#ffffff')}
   // ลายวงจรเรืองแสง (ไล่แสงวิ่ง)
