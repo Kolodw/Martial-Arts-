@@ -5,6 +5,7 @@
 //  3) ฉากด้ายเส้นเวลาของทุกชีวิตที่เคยเล่น → 🪑 บัลลังก์ด้ายกาล: ใช้หมึกเขียนบทนำชีวิตถัดไป
 //     (โลก · พรกำเนิด สูงสุด 2 · เส้นเรื่องหลัก story.js · กฎโลกพลิก twist.js)
 //  4) เริ่มชีวิตใหม่ในโลกที่เลือก → บทนำทำงาน · ชีวิตที่เขียนเองไม่ขึ้นทำเนียบ (S.custom)
+//  เฟส 2: 📌 ปักหมุดชะตา (≤3 หมุด · เหตุการณ์ที่เขียนไว้เกิดตามช่วงวัย) · 💞 แก้ชะตาคนจากชีวิตก่อน (เจอกันอีกครั้งในชีวิตใหม่)
 //  ข้อมูล: LS murim_thr {w:{โลก:จำนวน}, ink, log[], miss, seen, pend} · ในเซฟ: S._au
 // ============================================================
 try{(()=>{
@@ -15,7 +16,27 @@ const CAN=['murim','xian','soul','mw','sky','fog'];/* โลกที่เข�
 const STW={murim:'murim',xian:'xian',soul:'soul',mw:'mw',sky:'sky'};/* ชื่อโลกใน story.js */
 const TWW={murim:1,xian:1,soul:1};/* โลกที่มีกฎโลกพลิก */
 const BOON={int:['🧠','ปัญญาเหนือวัย','ปัญญา +15'],body:['💪','กายาฟ้าประทาน','พลังชีวิตสูงสุด +30%'],life:['⏳','ด้ายยาว','อายุขัย +10 ปี'],rich:['💰','เกิดบนกองทรัพย์','เงินก้อนแรกเกิด']};
-const COST={boon:2,arc:3,tw:2};
+const COST={boon:2,arc:3,tw:2,pin:2,re:3};
+const AGE=[['เด็ก',8,15],['หนุ่มสาว',16,30],['กลางคน',31,50],['บั้นปลาย',51,75]];
+const cashV=v=>Math.round(v*(S&&S.mw?400:1));
+const pwr=p=>{const g=Math.max(1,Math.round((+S.power||0)*p));S.power=(+S.power||0)+g;try{const K=S.mw&&S.mw.sky&&window._sky&&_sky.SK();if(K){K.tb=(K.tb||0)+p;_sky.sync&&_sky.sync()}}catch(e){}return g};
+const add=(k,v)=>{S[k]=Math.max(0,(+S[k]||0)+v)};
+const lifeAdd=v=>{if(S.mw){S.mw.wsL=(S.mw.wsL|0)+v;S.mw.end=(S.mw.end||80)+v}else S.lifespan=(+S.lifespan||70)+v};
+/* หมุดชะตา: [ไอคอน, ชื่อ, คำอธิบายสั้น, ข้อความเหตุการณ์, ตัวเลือก [ข้อความ, คำอธิบาย, ผล→ข้อความ]] */
+const PIN={
+ mentor:['🧙','ผู้ชี้ทาง','เจอคนที่จะสอนสิ่งสำคัญ','คนแปลกหน้าคนหนึ่งเรียกชื่อคุณถูกทั้งที่ไม่เคยพบกัน เขาบอกว่า "มีคนฝากให้ข้ามาสอนเจ้า คนที่นั่งอยู่บนบัลลังก์ด้าย"',
+  [['📖 ขอเรียนวิชา','พลังพื้นฐาน +15% · ปัญญา +5',()=>{const g=pwr(.15);add('int',5);return`พลัง +${fmtN(g)} · ปัญญา +5`}],['🧠 ขอคำแนะนำเรื่องชีวิต','ปัญญา +12 · อายุขัย +2 ปี',()=>{add('int',12);lifeAdd(2);return'ปัญญา +12 · อายุขัย +2 ปี'}]]],
+ luck:['💰','โชคที่ถูกเขียนไว้','ได้ทรัพย์ก้อนใหญ่','ระหว่างทาง คุณเหยียบแผ่นไม้ผุแผ่นหนึ่ง ข้างใต้มีห่อผ้าเก่าซ่อนอยู่ ปมเชือกที่มัดไว้เป็นปมเดียวกับที่คุณผูกเป็นประจำ',
+  [['🎒 เก็บไว้เอง','เงินก้อนใหญ่',()=>{const v=cashV(600);add('money',v);return'ได้เงิน '+fmtN(v)}],['🤲 แบ่งให้คนที่ลำบาก','เงินครึ่งหนึ่ง · บุญ +8 · ชื่อเสียงเพิ่ม',()=>{const v=cashV(300);add('money',v);add('karma',8);add('fame',30);return`ได้เงิน ${fmtN(v)} · บุญ +8 · ชื่อเสียง +30`}]]],
+ wake:['🌟','ตื่นรู้','ทะลุขีดจำกัดของตัวเอง','คืนหนึ่งคุณตื่นขึ้นกลางดึกพร้อมความเข้าใจบางอย่างที่ไม่เคยมีใครสอน เหมือนมีคนเขียนประโยคนี้ไว้ในหัวคุณนานแล้ว',
+  [['⚡ ทุ่มให้พลัง','พลังพื้นฐาน +25%',()=>'พลัง +'+fmtN(pwr(.25))],['❤️ ทุ่มให้ร่างกาย','พลังชีวิตสูงสุด +25% · ฟื้นเต็ม',()=>{S.maxHp=Math.round((+S.maxHp||100)*1.25);S.hp=S.maxHp;return'พลังชีวิตสูงสุด +25%'}]]],
+ omen:['🕳️','หายนะที่รู้ล่วงหน้า','รอดจากภัยใหญ่และช่วยคนได้','คุณเคยฝันเห็นวันนี้ซ้ำแล้วซ้ำอีก ไฟ เสียงกรีดร้อง และทางหนีที่มีแค่ทางเดียว วันนี้ความฝันกำลังจะเกิดขึ้นจริง',
+  [['🛡️ เตือนทุกคนก่อนเกิดเหตุ','บุญ +12 · ชื่อเสียงเพิ่มมาก',()=>{add('karma',12);add('fame',80);return'คนรอดเพราะคุณนับร้อย · บุญ +12 · ชื่อเสียง +80'}],['🏃 พาคนที่รักหนีออกมา','อายุขัย +5 ปี · พลังชีวิตฟื้นเต็ม',()=>{lifeAdd(5);S.hp=S.maxHp;return'อายุขัย +5 ปี'}]]],
+ echo:['🪞','เงาของชีวิตก่อน','เจอเศษเสี้ยวของตัวเองในอดีต','คุณสวนทางกับคนที่หน้าตาเหมือนคุณในอีกชีวิตหนึ่ง เขาหยุด หันมา แล้วยิ้มเหมือนรู้ว่าคุณจะมาถึงวันนี้',
+  [['🫴 รับความทรงจำ','ปัญญา +8 · พลังพื้นฐาน +10%',()=>{add('int',8);return'ปัญญา +8 · พลัง +'+fmtN(pwr(.1))}],['🕊️ ปล่อยให้อดีตจากไป','บุญ +10 · พลังชีวิตฟื้นเต็ม',()=>{add('karma',10);S.hp=S.maxHp;return'บุญ +10'}]]],
+ duel:['🔥','ศึกที่ถูกลิขิต','ดวลครั้งใหญ่ ชนะได้ชื่อเสียง','คู่ต่อสู้ที่แข็งแกร่งที่สุดในย่านนี้ประกาศท้าคุณต่อหน้าทุกคน ราวกับบทนี้ถูกเขียนรอไว้แล้ว',
+  [['⚔️ รับคำท้า','ชนะ ~65% · ชนะได้ชื่อเสียง +120 และพลังพื้นฐาน +12%',()=>{if(Math.random()<.65){add('fame',120);return'🏆 ชนะ! ชื่อเสียง +120 · พลัง +'+fmtN(pwr(.12))}S.hp=Math.max(1,Math.round(S.hp-S.maxHp*.3));add('int',6);return'แพ้ เจ็บหนัก แต่ได้บทเรียน · ปัญญา +6'}],['🙇 ปฏิเสธอย่างสุภาพ','ปัญญา +4 · บุญ +4',()=>{add('int',4);add('karma',4);return'ปัญญา +4 · บุญ +4'}]]]};
+const fmtN=v=>{try{return fmt(v)}catch(e){return String(v)}};
 const $=id=>document.getElementById(id);
 const E=t=>{try{return esc(String(t))}catch(e){return String(t).replace(/[<>&"]/g,'')}};
 const rp=a=>a[Math.floor(Math.random()*a.length)];
@@ -30,10 +51,14 @@ function rec(){try{if(!S||S._auE)return;const E0=$('end');if(!E0)return;S._auE=1
  const big=/ระดับ\s*S|ฉากจบลับ|ฉากจบแท้|ฉากจบสูงสุด/.test(txt);
  const gain=1+((S.age|0)>=60?1:0)+(first?1:0)+(big?2:0);
  d.w[w]=(d.w[w]|0)+1;d.ink+=gain;
- d.log.push({w,n:String(S.name||'ไร้นาม').slice(0,24),a:S.age|0,au:S._au?1:0});if(d.log.length>40)d.log=d.log.slice(-40);
+ d.log.push({w,n:String(S.name||'ไร้นาม').slice(0,24),a:S.age|0,au:S._au?1:0,p:ppl()});if(d.log.length>40)d.log=d.log.slice(-40);
  const n=nW(d);let hit=false;
  if(n>=NEED){const p=d.miss>=4?1:(d.seen?.25:.5);hit=Math.random()<p;if(hit)d.miss=0;else d.miss++}
  SV(d);box(E0,d,gain,first,big,hit)}catch(e){console.error('au rec',e)}}
+function ppl(){const o=[],add=(n,r,pet)=>{n=typeof n==='string'?n:(n&&n.n);n=String(n||'').replace(/<[^>]+>/g,'').trim().slice(0,24);if(n&&n!==S.name&&!o.some(x=>x.n===n)&&o.length<4)o.push(pet?{n,r,pet:1}:{n,r})};
+ try{add(S.spouse,'คู่ชีวิต')}catch(e){}try{add(S.disc,'ศิษย์')}catch(e){}try{add(S.nem,'คู่ปรับ')}catch(e){}
+ try{const K=S.mw&&S.mw.sky&&window._sky&&_sky.SK();if(K&&K.np){add(K.np.bud,'เพื่อนรัก');add(K.np.mt,'ครูฝึก')}}catch(e){}
+ try{add(S.pet,'สัตว์คู่ใจ',1)}catch(e){}return o}
 function box(E0,d,gain,first,big,hit){try{E0.querySelector('.auEnd')?.remove();const n=nW(d),el=document.createElement('div');el.className='auEnd'+(hit?' hit':'');
  const why=[first?'โลกใหม่':'',big?'ตอนจบหายาก':'',(S&&S.age|0)>=60?'อายุยืน':''].filter(Boolean).join(' · ');
  const dots=Object.keys(WN).map(k=>`<span class="auDot${d.w[k]?' on':''}" style="--c:${WN[k][2]}" title="${WN[k][1]}">${WN[k][0]}</span>`).join('');
@@ -57,10 +82,11 @@ function scene(){const d=G(),o=ov(),L=d.log.slice(-14),W0=360,H0=420,cx=W0/2,cy=
  $('auGo').onclick=throne;$('auNo').onclick=shut}
 
 // ---------------------------------------------------------------- 3) บัลลังก์ด้ายกาล
-const F={w:'',b:[],arc:'',tw:''};
+const F={w:'',b:[],arc:'',tw:'',pins:[],re:-1};
 function arcsOf(w){try{const st=window._story;if(!st||!STW[w])return[];const k=STW[w];return st.ARCS.filter(a=>!a.need&&(a.w==='*'||(Array.isArray(a.w)?a.w.includes(k):String(a.w).split(/[,\s]/).includes(k))))}catch(e){return[]}}
 function rulesOf(w){try{return TWW[w]&&window._tw?Object.entries(window._tw.RULE):[]}catch(e){return[]}}
-function cost(){return F.b.length*COST.boon+(F.arc?COST.arc:0)+(F.tw?COST.tw:0)}
+function cost(){return F.b.length*COST.boon+(F.arc?COST.arc:0)+(F.tw?COST.tw:0)+F.pins.length*COST.pin+(F.re>=0?COST.re:0)}
+function people(){const d=G(),o=[];d.log.slice(-15).reverse().forEach(x=>(x.p||[]).forEach(q=>{if(!o.some(y=>y.n===q.n))o.push({n:q.n,r:q.r,pet:q.pet,w:x.w,of:x.n})}));return o.slice(0,12)}
 function throne(){const d=G(),o=ov();
  Promise.all([wLoad('story').catch(()=>{}),wLoad('twist').catch(()=>{})]).then(()=>{if($('auOv')&&$('auOv').classList.contains('on')&&$('auTh'))draw()});
  const ws=CAN.filter(k=>d.w[k]>0);if(!ws.includes(F.w))F.w=ws[0]||'murim';
@@ -76,19 +102,22 @@ function draw(){const d=G(),el=$('auTh');if(!el)return;const ws=CAN.filter(k=>d.
  <h5>2 · พรกำเนิด <span>${COST.boon} หมึก · เลือกได้ 2</span></h5><div class="auCs">${Object.entries(BOON).map(([k,b])=>chip(F.b.includes(k),`${b[0]} ${b[1]}<small>${b[2]}</small>`,'b:'+k,!F.b.includes(k)&&F.b.length>=2)).join('')}</div>
  <h5>3 · เส้นเรื่องหลัก <span>${COST.arc} หมึก</span></h5><div class="auCs auScr">${A.length?chip(!F.arc,'🎲 ให้ฟ้าสุ่ม','arc:')+A.map(a=>chip(F.arc===a.id,'🧵 '+E(a.n),'arc:'+a.id)).join(''):`<span class="auSm">${window._story?'โลกนี้ยังไม่มีเส้นเรื่องให้เลือก':'กำลังเปิดม้วนเส้นเรื่อง…'}</span>`}</div>
  ${TWW[F.w]?`<h5>4 · กฎโลกพลิก <span>${COST.tw} หมึก · เกิดช่วงกลางชีวิต</span></h5><div class="auCs">${R.length?chip(!F.tw,'🎲 ให้ฟ้าสุ่ม','tw:')+R.map(([k,r])=>chip(F.tw===k,`${r.ic} ${E(r.n)}`,'tw:'+k,false,r.d)).join(''):'<span class="auSm">กำลังเปิดม้วนกฎโลก…</span>'}</div>`:''}
+ <h5>5 · 📌 ปักหมุดชะตา <span>${COST.pin} หมึก/หมุด · สูงสุด 3 · เกิดแน่นอนในช่วงวัยที่เลือก</span></h5><div class="auCs">${Object.entries(PIN).map(([k,v])=>{const on=F.pins.findIndex(x=>x.k===k);return chip(on>=0,`${v[0]} ${v[1]}<small>${v[2]}</small>`,'p:'+k,on<0&&F.pins.length>=3)}).join('')}</div>
+ ${F.pins.map((x,i)=>`<div class="auPin">${PIN[x.k][0]} ${PIN[x.k][1]} · ${AGE.map((a,j)=>chip(x.a===j,`${a[0]} <small>${a[1]}–${a[2]} ปี</small>`,'pa:'+i+'.'+j)).join('')}</div>`).join('')}
+ <h5>6 · 💞 แก้ชะตาคนจากชีวิตก่อน <span>${COST.re} หมึก · จะได้เจอกันอีกครั้ง</span></h5><div class="auCs auScr">${(()=>{const P=people();return P.length?chip(F.re<0,'— ไม่แก้','re:-1')+P.map((q,i)=>chip(F.re===i,`${q.pet?'🐾':'🕯️'} ${E(q.n)}<small>${E(q.r)} ของ${E(q.of)} · ${(WN[q.w]||WN.murim)[1]}</small>`,'re:'+i)).join(''):'<span class="auSm">ยังไม่มีคนจากชีวิตก่อนที่บันทึกไว้ (จะเริ่มเก็บตั้งแต่ตอนจบครั้งถัดไป เช่น คู่ชีวิต ศิษย์ คู่ปรับ)</span>'})()}</div>
  <div class="auFt"><span>รวม <b>${c}</b> หมึก${c>d.ink?' · <i>หมึกไม่พอ</i>':''}</span><button type="button" class="auBtn" id="auW" ${ok?'':'disabled'}>✍️ จารึกบทนำ</button></div>
  <button type="button" class="auX" id="auBack">กลับไปที่ตอนจบ</button>`;
- el.querySelectorAll('.auC').forEach(b=>b.onclick=()=>{const [t,v]=b.dataset.a.split(':');if(t==='w'){F.w=v;F.arc='';F.tw=''}else if(t==='b'){F.b=F.b.includes(v)?F.b.filter(x=>x!==v):F.b.concat(v).slice(0,2)}else if(t==='arc')F.arc=v;else if(t==='tw')F.tw=v;draw()});
+ el.querySelectorAll('.auC').forEach(b=>b.onclick=()=>{const [t,v]=b.dataset.a.split(':');if(t==='w'){F.w=v;F.arc='';F.tw=''}else if(t==='b'){F.b=F.b.includes(v)?F.b.filter(x=>x!==v):F.b.concat(v).slice(0,2)}else if(t==='arc')F.arc=v;else if(t==='tw')F.tw=v;else if(t==='p'){const i=F.pins.findIndex(x=>x.k===v);if(i>=0)F.pins.splice(i,1);else if(F.pins.length<3)F.pins.push({k:v,a:1})}else if(t==='pa'){const [i,j]=v.split('.').map(Number);if(F.pins[i])F.pins[i].a=j}else if(t==='re')F.re=+v;draw()});
  $('auBack').onclick=shut;$('auW').onclick=write}
 function write(){const d=G();if(d.pend&&d.pend.c)d.ink+=d.pend.c;const c=cost();if(!F.w||c>d.ink){SV(d);return draw()}
- d.ink-=c;d.pend={w:F.w,b:F.b.slice(),arc:F.arc,tw:F.tw,c,t:Date.now()};SV(d);
+ const RE=F.re>=0?people()[F.re]:null;d.ink-=c;d.pend={w:F.w,b:F.b.slice(),arc:F.arc,tw:F.tw,pins:F.pins.map(x=>({k:x.k,a:x.a})),re:RE?{n:RE.n,r:RE.r,pet:RE.pet?1:0,of:RE.of}:null,c,t:Date.now()};SV(d);
  const A=arcsOf(F.w).find(a=>a.id===F.arc),R=F.tw&&window._tw&&window._tw.RULE[F.tw];
- const L=[`${WN[F.w][0]} เกิดใน<b>${WN[F.w][1]}</b>`].concat(F.b.map(k=>`${BOON[k][0]} ${BOON[k][1]}`),A?[`🧵 ${E(A.n)}`]:[],R?[`${R.ic} ${E(R.n)}`]:[]);
+ const L=[`${WN[F.w][0]} เกิดใน<b>${WN[F.w][1]}</b>`].concat(F.b.map(k=>`${BOON[k][0]} ${BOON[k][1]}`),A?[`🧵 ${E(A.n)}`]:[],R?[`${R.ic} ${E(R.n)}`]:[],F.pins.map(x=>`📌 ${PIN[x.k][0]} ${PIN[x.k][1]} · วัย${AGE[x.a][0]}`),RE?[`💞 พบ <b>${E(RE.n)}</b> อีกครั้ง`]:[]);
  const el=$('auTh');if(el)el.innerHTML=`<div class="auHd">📜 บทนำถูกจารึกแล้ว</div><ul class="auL">${L.map(x=>`<li>${x}</li>`).join('')}</ul>
   <div class="auSub">ด้ายถูกถักรอไว้ เริ่มชีวิตใหม่ใน${WN[F.w][1]}เมื่อไหร่ บทนำนี้จะเริ่มทำงานทันที · หมึกคงเหลือ ${d.ink}</div>
   <button type="button" class="auBtn" id="auOk">🏯 ไปเริ่มชีวิตใหม่</button>`;
  const b=$('auOk');if(b)b.onclick=()=>{shut();try{if(typeof toTitle==='function'&&!(S&&S.alive))toTitle()}catch(e){}};
- F.b=[];F.arc='';F.tw=''}
+ F.b=[];F.arc='';F.tw='';F.pins=[];F.re=-1}
 
 // ---------------------------------------------------------------- 4) บทนำทำงานตอนเริ่มชีวิตใหม่
 /* เซฟเก่าที่เปิดตอนโหลดหน้าไม่นับ · ชีวิตใหม่ได้เวลา 25 วินาทีให้ตั้งโลกเสร็จ (ทะลุฟ้า/หมอกตั้ง S.mw ทีหลัง) */
@@ -96,7 +125,8 @@ let S0=null;try{S0=S}catch(e){}const T0=new WeakMap();
 function apply(){try{if(typeof S==='undefined'||!S||S===S0||S._au)return;const g=$('game');if(!S.alive||!g||!g.classList.contains('on'))return;
  if(!T0.has(S))T0.set(S,Date.now());if(Date.now()-T0.get(S)>25000)return;
  const d=G(),P=d.pend;if(!P||WK()!==P.w||(S.age|0)>30)return;
- d.pend=null;d.done=(d.done|0)+1;SV(d);S._au={w:P.w,b:P.b,arc:P.arc,tw:P.tw};S.custom=true;
+ d.pend=null;d.done=(d.done|0)+1;SV(d);const ag=S.age|0,rA=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+ S._au={w:P.w,b:P.b,arc:P.arc,tw:P.tw,pins:(P.pins||[]).map(x=>{const A=AGE[x.a]||AGE[1];return{k:x.k,age:Math.max(ag+1,rA(A[1],A[2])),done:0}}),re:P.re?Object.assign({},P.re,{age:Math.max(ag+1,rA(16,26)),done:0}):null};S.custom=true;
  const out=[];
  if(P.b.includes('int')){S.int=(+S.int||0)+15;out.push('🧠 ปัญญา +15')}
  if(P.b.includes('body')){S.maxHp=Math.round((+S.maxHp||100)*1.3);S.hp=S.maxHp;out.push('💪 พลังชีวิตสูงสุด +30%')}
@@ -106,9 +136,25 @@ function apply(){try{if(typeof S==='undefined'||!S||S===S0||S._au)return;const g
    const x=S._arcs[0]||{p:[],pt:[],ag:[],npc:'คนแปลกหน้า'};Object.assign(x,{id:a.id,i:0,nx:Math.max((S.age|0)+1,a.min|0),p:[],pt:[],ag:[],f:{hid:rp(a.hid||['x'])}});if(!S._arcs.length)S._arcs.push(x)}catch(e){console.error('au arc',e)}}).catch(()=>{});
  if(P.tw)wLoad('twist').then(()=>{try{window._tw.T().fid=P.tw}catch(e){}}).catch(()=>{});
  const A=P.arc&&window._story&&window._story.ARCS.find(x=>x.id===P.arc),R=P.tw&&window._tw&&window._tw.RULE[P.tw];
- if(A)out.push('🧵 '+E(A.n));if(R)out.push(R.ic+' '+E(R.n));
+ if(A)out.push('🧵 '+E(A.n));if(R)out.push(R.ic+' '+E(R.n));if(S._au.pins.length)out.push(`📌 หมุดชะตา ${S._au.pins.length} หมุด`);if(S._au.re)out.push(`💞 ด้ายของ ${E(S._au.re.n)}`);
  setTimeout(()=>{try{log(`📜 <b>บทนำที่คุณจารึกไว้บนบัลลังก์ด้ายกาลเริ่มทำงาน</b>${out.length?'<br>'+out.join(' · '):''}<br><span class="tag2">✍️ ชีวิตที่เขียนเอง · ไม่ขึ้นทำเนียบ</span>`,'myth',true);render&&render()}catch(e){}},600)}catch(e){console.error('au apply',e)}}
 setInterval(apply,1500);
+
+// ---------------------------------------------------------------- 5) หมุดชะตา + คนจากชีวิตก่อน (ตรวจทุก 1.5 วิ · รอให้ไม่มีตัวเลือก/หน้าต่างค้าง)
+function busy(){try{return !!(choice._cur||modalOpen||(typeof DU!=='undefined'&&DU)||$('auOv')&&$('auOv').classList.contains('on'))}catch(e){return true}}
+function tick(){try{if(typeof S==='undefined'||!S||!S.alive||!S._au||busy())return;const U=S._au,ag=S.age|0;
+ const p=(U.pins||[]).find(x=>!x.done&&ag>=x.age);if(p){p.done=1;return pinGo(p)}
+ const r=U.re;if(r&&!r.done&&ag>=r.age){r.done=1;return reGo(r)}
+ if(U.ally&&U.allyY!==ag){U.allyY=ag;S.hp=Math.min(S.maxHp,Math.round(S.hp+S.maxHp*.05))}}catch(e){console.error('au tick',e)}}
+function pinGo(p){const v=PIN[p.k];if(!v)return;
+ choice(`📌 หมุดชะตา: ${v[0]} ${v[1]}`,`${v[3]}<br><span class="tag2">หมุดชะตาที่คุณปักไว้บนบัลลังก์ด้ายกาล</span>`,v[4].map(([t,sub,f])=>({t,s:sub,f(){let r='';try{r=f()}catch(e){console.error('au pin',e)}try{log(`📌 <b>${v[1]}</b> — ${t.replace(/^\S+\s/,'')}${r?' · '+r:''}`,'myth');render&&render()}catch(e){}}})))}
+function reGo(r){const n=E(r.n),R0=E(r.r),can=!r.pet&&!S.spouse&&!S.mw&&!S.beastMode&&(S.age|0)>=16;
+ const o=[];
+ if(can)o.push({t:'💞 ใช้ชีวิตร่วมกันอีกครั้ง',s:`${n}จะเป็นคู่ชีวิตของคุณในชาตินี้`,f(){S.spouse=String(r.n);try{keyAdd&&keyAdd(`ได้พบ${r.n}อีกครั้ง`)}catch(e){}log(`💞 คุณกับ<b>${n}</b>ใช้ชีวิตร่วมกันอีกครั้ง ด้ายสองเส้นที่เคยขาด ถูกถักกลับมาเป็นเส้นเดียว`,'myth',true)}});
+ o.push({t:r.pet?'🐾 พามันกลับบ้าน':'🤝 เดินทางร่วมกัน',s:'อยู่ข้างกาย · พลังชีวิตฟื้นเพิ่มทุกปี',f(){S._au.ally=String(r.n);add('int',3);try{keyAdd&&keyAdd(`ได้พบ${r.n}อีกครั้ง`)}catch(e){}log(`🤝 <b>${n}</b>อยู่ข้างคุณอีกครั้ง ไม่มีใครจำชีวิตก่อนได้นอกจากคุณ แต่บางคืน${n}ก็เผลอเรียกชื่อเก่าของคุณออกมา`,'myth',true)}});
+ o.push({t:'🕊️ แค่ยิ้มให้ แล้วปล่อยไป',s:'บุญ +10 · ปัญญา +5',f(){add('karma',10);add('int',5);log(`🕊️ คุณยิ้มให้<b>${n}</b> แล้วเดินจากมา ชาตินี้${n}จะมีชีวิตที่ยาวนาน เพราะคุณเป็นคนแก้ด้ายเส้นนั้นเอง`,'myth',true)}});
+ choice(`💞 ด้ายที่ถูกแก้: คนที่คุณเคยเสียไป`,`ท่ามกลางผู้คน คุณสบตากับ<b>${n}</b> ชาตินี้${r.pet?'มัน':'เขา'}ไม่ได้เป็น${R0}ของคุณ แต่คุณจำได้ทันที<br><span class="tag2">ด้ายเส้นนี้คุณเป็นคนแก้เองบนบัลลังก์ด้ายกาล</span>`,o)}
+setInterval(tick,1500);
 
 const st=document.createElement('style');st.textContent=`
 .auEnd{margin:10px 0;padding:10px 14px;border-radius:14px;border:1.5px solid #6b8cff66;background:linear-gradient(160deg,#141a38cc,#0c0f22cc);color:#e6ebff}
@@ -133,7 +179,8 @@ const st=document.createElement('style');st.textContent=`
 .auC{padding:6px 10px;border-radius:10px;border:1px solid #8a96d888;background:#ffffff0d;color:#e6ebff;font-size:13px;cursor:pointer;text-align:left}
 .auC small{display:block;font-size:11px;opacity:.7}.auC.on{border-color:#ffd76a;background:#ffd76a26;color:#fff3c4;box-shadow:0 0 8px #ffd76a55}.auC:disabled{opacity:.35;cursor:not-allowed}
 .auFt{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;border-top:1px solid #ffffff1f;padding-top:8px}.auFt i{color:#ff9a9a;font-style:normal}
+.auPin{margin:6px 0 2px;padding:6px 8px;border-radius:10px;background:#ffffff08;font-size:13px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}.auPin .auC{padding:3px 8px;font-size:12px}
 .auPend{font-size:12px;margin:6px 0;padding:6px 8px;border-radius:8px;background:#ffd76a1a;border:1px dashed #ffd76a77}`;document.head.appendChild(st);
-window._au={G,SV,rec,scene,throne,apply,NEED};
+window._au={G,SV,rec,scene,throne,apply,tick,PIN,NEED};
 try{wReady('author')}catch(e){}
 })()}catch(e){console.error('author.js',e)}
