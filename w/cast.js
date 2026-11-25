@@ -238,6 +238,6 @@ const css=document.createElement('style');css.textContent=`.csTag{display:inline
 .csH{font-size:13px}.csH span{float:right;font-size:11px;opacity:.75}.csH i{color:#ffd76a;font-style:normal}.csT{margin:6px 0;font-size:14px;line-height:1.6}.csP{color:#ffe9a8}.csF{font-size:11px;opacity:.7}
 .csA{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}.csB2{padding:5px 10px;border-radius:9px;border:1px solid #ffffff44;background:#ffffff12;color:#fff;cursor:pointer;font-size:12px}.csB2:hover{background:#ffffff22}
 .csEnd{margin:8px 0;padding:8px 12px;border-radius:12px;border:1px solid #7ccfff55;background:#0e1a2acc;color:#dff1ff;font-size:13px;line-height:1.6}.csB{margin-left:6px;padding:3px 10px;border-radius:9px;border:1px solid #7ccfff88;background:#7ccfff22;color:#dff1ff;cursor:pointer;font-size:12px}`;document.head.appendChild(css);
-window._cast={R,CB,tick,load,send,who,st,flush,eLoad,eOpen,reward,_setE:e=>{EC=e;ECt=Date.now();badge()},_set:c=>{C=c;Ct=Date.now()}};
+window._cast={R,CB,tick,load,send,who,st,flush,eLoad,eOpen,reward,ecTot:()=>EC&&EC.c?+EC.c.tot||0:0,_setE:e=>{EC=e;ECt=Date.now();badge()},_set:c=>{C=c;Ct=Date.now()}};
 try{wReady('cast')}catch(e){}
 })()}catch(e){console.error('cast.js',e)}

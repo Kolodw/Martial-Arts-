@@ -4325,6 +4325,45 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (ops.length) await pipe(ops);
       return res.json({ ok: 1, n: ops.length / 6 });
     }
+    // 📜 จักรวาลร่วม เฟส 3: ปูมจักรวาล — วีรกรรมใหญ่ของผู้เล่นกลายเป็นประวัติศาสตร์ที่ชีวิตคนอื่นอ้างถึง
+    //   chronadd (POST ตอนจบ · ≤3 วีรกรรม · 1 ครั้ง/90 วิ) · chron (สุ่ม 24 + ล่าสุด 6 · แคช 120 วิ · ไม่ส่งตัวเอง/castoff/ซ่อน)
+    //   chronref (POST ids ที่ถูกอ้างถึงในชีวิตนี้ ≤10) · chronmine (วีรกรรมของฉัน + จำนวนชีวิตที่เล่าถึง)
+    if (a === 'chronadd' || a === 'chron' || a === 'chronref' || a === 'chronmine') {
+      const DK = ['old', 'fame', 'saint', 'tyrant', 'clan', 'master', 'grand', 'stay', 'free', 'cut', 'legend', 'young', 'rich'];
+      const CW = ['murim', 'xian', 'god', 'soul', 'loop', 'mw', 'sky', 'fog', 'beast'];
+      if (a === 'chronadd') {
+        if (!okId(id)) return res.json({ err: 'id' });
+        if (!(await cmd('SET', 'chrl:' + id, 1, 'NX', 'EX', 90))) return res.json({ ok: 0, rate: 1 });
+        if (await isBanned()) return res.json({ ok: 1 });
+        const n = noAdm(clean(b.n, 20)); if (!n || n === 'นิรนาม') return res.json({ ok: 0 });
+        const ks = (Array.isArray(b.d) ? b.d : []).filter(k => DK.includes(k)).slice(0, 3); if (!ks.length) return res.json({ ok: 0 });
+        const w = CW.includes(b.w) ? b.w : 'murim', ops = [];
+        for (const k of ks) { const c = { i: 'h' + now.toString(36) + Math.random().toString(36).slice(2, 5), u: id, k, n, w, e: clean(b.e, 30), a: Math.max(0, Math.min(1e7, Math.floor(+b.a || 0))), c: clean(b.c, 60), t: now };
+          ops.push(['LPUSH', 'chron', JSON.stringify(c)], ['LPUSH', 'chm:' + id, JSON.stringify(c)], ['HINCRBY', 'chk', k, 1]) }
+        ops.push(['LTRIM', 'chron', 0, 399], ['LTRIM', 'chm:' + id, 0, 29], ['EXPIRE', 'chm:' + id, 86400 * 180]);
+        await pipe(ops); return res.json({ ok: 1, n: ks.length });
+      }
+      if (a === 'chronref') {
+        if (!okId(id)) return res.json({ err: 'id' });
+        if (!(await cmd('SET', 'chrr:' + id, 1, 'NX', 'EX', 30))) return res.json({ ok: 0, rate: 1 });
+        const ids = (Array.isArray(b.i) ? b.i : []).map(String).filter(x => /^h[a-z0-9]{4,20}$/.test(x)).slice(0, 10);
+        if (ids.length) await pipe(ids.map(x => ['HINCRBY', 'chref', x, 1]));
+        return res.json({ ok: 1 });
+      }
+      if (a === 'chronmine') {
+        if (!okId(id)) return res.json({ err: 'id' });
+        const L = ((await cmd('LRANGE', 'chm:' + id, 0, 29)) || []).map(jp).filter(Boolean);
+        const r = L.length ? await cmd('HMGET', 'chref', ...L.map(x => x.i)) : [];
+        return res.json({ ok: 1, L: L.map((x, k) => ({ i: x.i, k: x.k, n: x.n, w: x.w, a: x.a, t: x.t, r: +(r && r[k]) || 0 })) });
+      }
+      let raw = null; try { raw = jp(await cmd('GET', 'chronc')) } catch {}
+      if (!raw) { raw = { L: ((await cmd('LRANGE', 'chron', 0, 399)) || []).map(jp).filter(Boolean) }; await cmd('SET', 'chronc', JSON.stringify(raw), 'EX', 120) }
+      const [off, hidden] = await pipe([['SMEMBERS', 'castoff'], ['SMEMBERS', 'chat:hidden']]);
+      const os = new Set(off || []), hs = new Set(hidden || []), me = okId(id) ? id : '';
+      const L = (raw.L || []).filter(x => x && x.u !== me && !os.has(x.u) && !hs.has(x.i)), out = L.slice(0, 6), rest = L.slice(6);
+      while (rest.length && out.length < 30) out.push(rest.splice(Math.floor(Math.random() * rest.length), 1)[0]);
+      return res.json({ ok: 1, L: out.map(x => ({ i: x.i, k: x.k, n: x.n, w: x.w, e: x.e, a: x.a, c: x.c, t: x.t })) });
+    }
     if (a === 'gpray') {
       const gid = String(b.g || '').replace(/[^a-z0-9]/g, '').slice(0, 20);
       if (!okId(id) || !gid) return res.json({ err: 'id' });
