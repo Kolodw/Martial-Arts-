@@ -3672,11 +3672,13 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       // รางวัลจบซีซั่นตามลีก (ทุกคนที่ลงแข่ง)
       const all = (await cmd('ZRANGE', 'ars:' + pw, 0, 1999, 'WITHSCORES')) || []; const t10 = new Set(((await cmd('ZREVRANGE', 'ars:' + pw, 0, 9)) || [])), sn = +(await cmd('INCR', 'arseason')) || 1; let Q = []; for (let i = 0; i < all.length; i += 2) { const own = all[i], sc = +all[i + 1], lg = t10.has(own) && sc >= 1600 ? 8 : arLg(sc), tt = lg === 8 ? 'ตำนานลานซีซั่น ' + sn : AR_LT[lg]; Q.push(['LPUSH', 'bdrw:' + own, JSON.stringify({ p: 'w', c: 'al', lg, d: pw, s: sc, tt: tt || '', sn })], ['EXPIRE', 'bdrw:' + own, 86400 * 60]); { Q.push(['HINCRBY', 'arpend', own, AR_LGC[lg]]); if (lg >= 1) Q.push(['SADD', 'arpfr:' + own, 'f_lg' + lg], ['EXPIRE', 'arpfr:' + own, 86400 * 60]); if (tt) Q.push(['SADD', 'arptt:' + own, tt], ['EXPIRE', 'arptt:' + own, 86400 * 60]) } if (Q.length >= 200) { await pipe(Q); Q = [] } } if (Q.length) await pipe(Q) } catch {} };
     const arSnapIn = b0 => { let look = null; try { const L = typeof b0.look === 'string' ? JSON.parse(b0.look) : b0.look; if (L && typeof L === 'object' && JSON.stringify(L).length < 1600) look = L } catch {}
-      return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), qo: clean(b0.qo, 50), qw: clean(b0.qw, 50), al: ['d', 'r'].includes(b0.al) ? b0.al : '', au: ['fire', 'thunder', 'dark', 'ice'].includes(b0.au) ? b0.au : '', pl: Math.max(-1, Math.min(44, Math.floor(+b0.pl)))||(+b0.pl===0?0:-1), ag: Math.max(0, Math.min(1e12, Math.floor(+b0.ag || 0))), look, t: now } };
+      return { n: clean(b0.n, 20) || 'นิรนาม', p: Math.max(0, +b0.p || 0), hp: Math.max(1, Math.min(1e9, +b0.hp || 100)), r: clean(b0.r, 30), ri: Math.max(0, Math.min(12, +b0.ri || 0)), x: b0.x ? 1 : 0, bm: b0.bm ? 1 : 0, st: ['atk', 'def', 'trick', 'all'].includes(b0.st) ? b0.st : 'atk', arts: (Array.isArray(b0.arts) ? b0.arts : []).slice(0, 3).map(a => clean(a, 24)).filter(Boolean), el: clean(b0.el, 10), sr: clean(b0.sr, 3), qo: clean(b0.qo, 50), qw: clean(b0.qw, 50), al: ['d', 'r'].includes(b0.al) ? b0.al : '', au: ['fire', 'thunder', 'dark', 'ice'].includes(b0.au) ? b0.au : '', en: ['mist', 'fall', 'shade', 'lotus'].includes(b0.en) ? b0.en : '', fn: ['plum', 'ink', 'crack', 'bolt'].includes(b0.fn) ? b0.fn : '', dy: ['blood', 'gold', 'ghost', 'inv'].includes(b0.dy) ? b0.dy : '', pl: Math.max(-1, Math.min(44, Math.floor(+b0.pl)))||(+b0.pl===0?0:-1), ag: Math.max(0, Math.min(1e12, Math.floor(+b0.ag || 0))), look, t: now } };
     const arLg = r => r >= 2250 ? 7 : r >= 2000 ? 6 : r >= 1800 ? 5 : r >= 1600 ? 4 : r >= 1400 ? 3 : r >= 1250 ? 2 : r >= 1100 ? 1 : 0;
     const AR_LT = ['', '', 'ผู้ไต่ลานทองคำ', 'เพชรแห่งลานเงา', 'จ้าวลานประลอง', 'ปรมาจารย์ผู้ไร้เงา', 'ราชันหมื่นเงา', 'เทพยุทธ์แห่งยุค'], AR_LGC = [5, 15, 30, 60, 100, 150, 220, 300, 400];
     // ---- กระเป๋าเหรียญลาน (เก็บที่เซิร์ฟเวอร์) ----
-    const AR_P = { tt: { 'นักล่าเงา': 80, 'ผู้ไม่เคยถอย': 200, 'ตำนานแห่งลาน': 500, 'ราชันเงาอสูร': 1000, 'เทพสงครามแห่งลาน': 2000, 'ผู้ยืนหนึ่งเหนือพันศึก': 3500, 'จักรพรรดิแห่งเงา': 6000 }, fr: { f_arc1: 40, f_arc2: 120, f_arc3: 250, f_arc4: 400, f_arc5: 1000 }, qt: { qt: 50 }, au: { fire: 120, ice: 120, thunder: 200, dark: 300 }, use: { heal: 8, qi: 12, joy: 6 } };
+    const AR_P = { tt: { 'นักล่าเงา': 80, 'ผู้ไม่เคยถอย': 200, 'ตำนานแห่งลาน': 500, 'ราชันเงาอสูร': 1000, 'เทพสงครามแห่งลาน': 2000, 'ผู้ยืนหนึ่งเหนือพันศึก': 3500, 'จักรพรรดิแห่งเงา': 6000 }, fr: { f_arc1: 40, f_arc2: 120, f_arc3: 250, f_arc4: 400, f_arc5: 1000 }, qt: { qt: 50 }, au: { fire: 120, ice: 120, thunder: 200, dark: 300 }, use: { heal: 8, qi: 12, joy: 6, ins: 25 }, en: { mist: 150, fall: 260, shade: 200, lotus: 300 }, fn: { plum: 150, ink: 220, crack: 320, bolt: 380 }, dy: { blood: 120, gold: 200, ghost: 220, inv: 250 } };
+    const AR_WX = ['bolt', 'ghost', 'lotus', 'crack'], arWkX = () => AR_WX[Math.floor(now / (7 * 864e5)) % AR_WX.length]; // ของประจำสัปดาห์ (ซื้อได้เฉพาะสัปดาห์ของมัน)
+    const AR_RULES = [['blind', 'ทุกคนตาบอด', 'ไม่เห็นพลังศัตรูก่อนสู้'], ['soft', 'ลานใจดี', 'แพ้เสียแต้มครึ่งเดียว'], ['rich', 'ฝนเหรียญ', 'เหรียญลานจากการสู้ ×2'], ['under', 'มวยรอง', 'ชนะคนที่แรงกว่า แต้ม +50%'], ['fury', 'ไฟลาน', 'โบนัสชนะติดกัน ×2'], ['calm', 'ลานสงบ', 'กติกาปกติ']], arRule = () => AR_RULES[Math.floor((now + 7 * 3600e3) / 864e5) % AR_RULES.length];
     const AR_FRX = /^f_(arc[1-5]|box[1-3]|lg[1-8])$/, AR_QN = { w3: 3, man2: 2, adv: 1, rv: 1, cb3: 1, any5: 5 };
     const arDayK = () => new Date(now + 7 * 3600e3).toISOString().slice(0, 10);
     const arQDay = v => { const k = arDayK(); if (!v.q || v.q.k !== k) { const ids = Object.keys(AR_QN).sort(() => Math.random() - .5).slice(0, 3); v.q = { k, q: ids.map(i => ({ id: i, p: 0, done: 0 })), all: 0 } } return v };
@@ -3687,7 +3689,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const [pc, pf, pt] = await pipe([['HGET', 'arpend', id], ['SMEMBERS', 'arpfr:' + id], ['SMEMBERS', 'arptt:' + id]]); if (+pc || (pf || []).length || (pt || []).length) { v.c += +pc || 0; (pf || []).forEach(f => { if (!v.own.fr.includes(f)) v.own.fr.push(f) }); v.own.tt = v.own.tt || []; (pt || []).forEach(t => { if (!v.own.tt.includes(t)) v.own.tt.push(t) }); await pipe([['HDEL', 'arpend', id], ['DEL', 'arpfr:' + id], ['DEL', 'arptt:' + id]]) }
       return arQDay(v) };
     const arWalSet = v => cmd('HSET', 'arwal', id, JSON.stringify(v));
-    const arWalPub = v => ({ c: v.c, own: v.own, pity: v.pity | 0, stk: v.stk | 0, q: v.q });
+    const arWalPub = v => ({ c: v.c, own: v.own, pity: v.pity | 0, stk: v.stk | 0, q: v.q, pot: v.pot | 0, ins: v.ins ? 1 : 0 });
     const arLock = async () => !!(await cmd('SET', 'arwl:' + id, 1, 'NX', 'PX', 2500));
     const arUnlock = () => cmd('DEL', 'arwl:' + id);
     if (a === 'ar2n') { // แจ้งเตือนเบา ๆ: มีคนท้าเงากี่ครั้ง (อ่านอย่างเดียว ไม่ล้างตัวนับ)
@@ -3701,14 +3703,17 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const wids = []; for (let i = 0; i < (wt || []).length; i += 2) wids.push(wt[i]); const wn = wids.length ? await cmd('HMGET', 'arn', ...wids) : []; const WT = wids.map((x, i) => ({ n: wn[i] || 'นิรนาม', w: +wt[i * 2 + 1], me: x === id ? 1 : 0 }));
       const D = (dl || []).map(jp).filter(Boolean).map((e, i) => ({ i, n: e.n, w: e.w, d: e.d, t: e.t, rv: e.rv ? 1 : 0 }));
       if (+dn) await cmd('HDEL', 'ardefn', id);
-      return res.json({ tk, rt, lg: arLg(rt), pk: Math.max(+pk0 || 0, arLg(rt)), top: T, wins: WT, def: D, nw: +dn || 0, wk: W });
+      let nem = null, bty = []; try { const [nz, bz] = await pipe([['ZREVRANGE', 'arnem:' + W + ':' + id, 0, 0, 'WITHSCORES'], ['ZREVRANGE', 'arbty:' + W, 0, 4, 'WITHSCORES']]);
+        if (nz && nz.length && +nz[1] >= 2) { const nn = await cmd('HGET', 'arn', nz[0]); const di = (dl || []).map(jp).findIndex(e => e && e.a === nz[0] && !e.w && !e.rv); nem = { n: nn || 'นิรนาม', c: +nz[1], i: di } }
+        const bi = []; for (let i = 0; i < (bz || []).length; i += 2) bi.push(bz[i]); const bn = bi.length ? await cmd('HMGET', 'arn', ...bi) : []; bty = bi.map((x, i) => ({ n: bn[i] || 'นิรนาม', s: +bz[i * 2 + 1], v: 10 * Math.min(10, +bz[i * 2 + 1]), me: x === id ? 1 : 0 })) } catch {}
+      return res.json({ tk, rt, lg: arLg(rt), pk: Math.max(+pk0 || 0, arLg(rt)), top: T, wins: WT, def: D, nw: +dn || 0, wk: W, rule: arRule(), nem, bty, wx: arWkX() });
     }
     if (a === 'ar2snap') { // อัปเดตพลังเงาระหว่างเล่น (เฉพาะคนที่มีเงาอยู่แล้ว)
       if (!okId(id)) return res.status(403).json({ err: 'id' });
       const old = jp(await cmd('GET', 'arsnap:' + id)); if (!old) return res.json({ ok: 0 });
       const me = arSnapIn(b); if (b.tp || !powOk(me.p, Math.min(7, me.ri), me.x, null) || await isBanned()) return res.status(403).json({ err: 'integrity' });
       if (!(await cmd('SET', 'arl3:' + id, 1, 'NX', 'EX', 120))) return res.json({ ok: 0, rate: 1 });
-      me.au = old.au || ''; me.qo = old.qo || ''; me.qw = old.qw || '';
+      me.au = old.au || ''; me.qo = old.qo || ''; me.qw = old.qw || ''; me.en = old.en || ''; me.fn = old.fn || ''; me.dy = old.dy || '';
       const ob = arBr(old), nb = arBr(me), ops = [['SET', 'arsnap:' + id, JSON.stringify(me), 'EX', 86400 * 14]];
       if (ob !== nb) ops.push(['SREM', 'ar2:' + ob, id], ['SADD', 'ar2:' + nb, id], ['EXPIRE', 'ar2:' + nb, 86400 * 14]);
       await pipe(ops); return res.json({ ok: 1 });
@@ -3716,7 +3721,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
     if (a === 'ar2go' || a === 'ar2rv') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
       const me = arSnapIn(b); if (b.tp || !powOk(me.p, Math.min(7, me.ri), me.x, null) || await isBanned()) return res.status(403).json({ err: 'integrity' });
-      { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own) { if (me.au && !(wv.own.au || []).includes(me.au)) me.au = ''; if (!wv.own.qt) { me.qo = ''; me.qw = '' } } }
+      { const wv = jp(await cmd('HGET', 'arwal', id)); if (wv && wv.own) { if (me.au && !(wv.own.au || []).includes(me.au)) me.au = ''; for (const k2 of ['en', 'fn', 'dy']) if (me[k2] && !(wv.own[k2] || []).includes(me[k2])) me[k2] = ''; if (!wv.own.qt) { me.qo = ''; me.qw = '' } } }
       if (!(await cmd('SET', 'arl2:' + id, 1, 'NX', 'PX', 2500))) return res.status(429).json({ err: 'rate' });
       const br = arBr(me); await pipe([['SET', 'arsnap:' + id, JSON.stringify(me), 'EX', 86400 * 14], ['SADD', 'ar2:' + br, id], ['EXPIRE', 'ar2:' + br, 86400 * 14], ['HSET', 'arn', id, me.n]]);
       const myR = await arRt(id); let oid = null, o = null, rv = 0;
@@ -3737,7 +3742,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!o) return res.json({ o: null, tk: await arTk(0), rt: myR });
       const tk = await arTk(1); if (!tk.ok) return res.json({ o: null, notk: 1, tk, rt: myR });
       await cmd('SET', 'arm:' + id, JSON.stringify({ o: oid, rv, t: now, bot, ch: ['hell', 'short', 'junk'].includes(b.ch) ? b.ch : '', mp: me.p, op: +o.p || 0, ms: me.st, os: o.st || 'atk' }), 'EX', 900);
-      const or = bot ? Math.max(900, myR - 30) : await arRt(oid); delete o.t; return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or) }), rt: myR, tk });
+      const or = bot ? Math.max(900, myR - 30) : await arRt(oid); delete o.t; let ob = 0; if (!bot) { try { const ow2 = jp(await cmd('HGET', 'arwal', oid)); if (ow2 && (ow2.stk | 0) >= 3) ob = 10 * Math.min(10, ow2.stk | 0) } catch {} } return res.json({ o: Object.assign(o, { rt: or, lg: arLg(or), bty: ob }), rt: myR, tk, rule: arRule() });
     }
     // ---- ยุคปัจจุบัน: ฝังสมบัติ / จักรวาลซ้อน ----
     if (a === 'tbury' || a === 'tbmine' || a === 'tbdig' || a === 'mwreg' || a === 'mwfind') {
@@ -3805,14 +3810,27 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (!(await arLock())) { const v0 = jp(await cmd('HGET', 'arwal', id)); return res.json({ wal: v0 ? arWalPub(arQDay(v0)) : null }) }
       try { const v = await arWal(b.mig); await arWalSet(v); return res.json({ wal: arWalPub(v) }) } finally { await arUnlock() }
     }
+    if (a === 'arcash') { // เก็บกองรางวัลไต่ลาน
+      if (!okId(id)) return res.status(403).json({ err: 'id' });
+      if (!(await arLock())) return res.status(429).json({ err: 'rate' });
+      try { const v = await arWal(), p0 = v.pot | 0; v.c += p0; v.pot = 0; await arWalSet(v); return res.json({ ok: 1, got: p0, wal: arWalPub(v) }) } finally { await arUnlock() }
+    }
+    if (a === 'arcol') { // สมุดสะสมเงา
+      if (!okId(id)) return res.json({ err: 'id' });
+      const h = await cmd('HGETALL', 'arcol:' + id), L = []; if (Array.isArray(h)) { for (let i = 0; i + 1 < h.length; i += 2) { const e = jp(h[i + 1]); if (e) L.push(e) } } else if (h) for (const k in h) { const e = jp(h[k]); if (e) L.push(e) }
+      L.sort((x, y) => (y.t || 0) - (x.t || 0)); return res.json({ ok: 1, l: L.slice(0, 500) });
+    }
     if (a === 'arbuy') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
       const k = String(b.k || ''), it = String(b.it || ''), P = AR_P[k]; if (!P || !(it in P)) return res.json({ err: 'item' });
       if (!(await arLock())) return res.status(429).json({ err: 'rate' });
       try { const v = await arWal(), cost = P[it];
+        if (AR_WX.includes(it) && ['en', 'fn', 'dy'].includes(k) && it !== arWkX() && !(v.own[k] || []).includes(it)) return res.json({ err: 'week', wal: arWalPub(v) });
+        if (k !== 'use' && k !== 'qt') v.own[k] = v.own[k] || [];
+        if (k === 'use' && it === 'ins' && v.ins) return res.json({ err: 'own', wal: arWalPub(v) });
         if (k !== 'use') { const L = k === 'qt' ? null : v.own[k]; if (k === 'qt' ? v.own.qt : L.includes(it)) return res.json({ err: 'own', wal: arWalPub(v) }) }
         if (v.c < cost) return res.json({ err: 'coin', wal: arWalPub(v) });
-        v.c -= cost; if (k === 'qt') v.own.qt = 1; else if (k !== 'use') v.own[k].push(it); await arWalSet(v); return res.json({ ok: 1, wal: arWalPub(v) }) } finally { await arUnlock() }
+        v.c -= cost; if (k === 'qt') v.own.qt = 1; else if (k === 'use' && it === 'ins') v.ins = 1; else if (k !== 'use') v.own[k].push(it); await arWalSet(v); return res.json({ ok: 1, wal: arWalPub(v) }) } finally { await arUnlock() }
     }
     if (a === 'archest') {
       if (!okId(id)) return res.status(403).json({ err: 'id' });
@@ -3835,22 +3853,28 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       if (pm.mp > 0 && pm.op > 0) { const ad = Math.max(-1, Math.min(1, +b.ad || 0)), my = pm.mp * (1 + .12 * ad), sb = AR_SB0[pm.ms] === pm.os ? 1 : AR_SB0[pm.os] === pm.ms ? -1 : 0;
         if (au) { const pr = Math.max(.02, Math.min(.98, my / (my + pm.op) + sb * .08 * Math.min(1, 2 * Math.min(my, pm.op) / Math.max(my, pm.op)))); if (!(w && pr >= .2)) { w = w ? (Math.random() < pr * 2 ? 1 : 0) : 0 } sw = w } // ผลที่เห็นบนจอคือผลจริง: เชื่อผลชนะเมื่อมีโอกาสชนะสมเหตุสมผล (≥20%) — ทอยใหม่เฉพาะชนะแบบเหลือเชื่อ
         else if (w && my / pm.op < .3) { w = 0; sw = 0; pm._void = 1; try { await pipe([['LPUSH', 'acsus', JSON.stringify({ fid: id, age: 0, why: 'srv-ar', st: { pow: Math.round(pm.mp), opp: Math.round(pm.op) }, t: now, info: 1 })], ['LTRIM', 'acsus', 0, 199]]) } catch {} } }
+      const RU = arRule()[0], pv0 = jp(await cmd('HGET', 'arwal', id)), ins = !w && pv0 && pv0.ins ? 1 : 0; let nemHit = 0; try { const nz = await cmd('ZREVRANGE', 'arnem:' + W + ':' + id, 0, 0); if (w && nz && nz[0] && nz[0] === pm.o) nemHit = 1 } catch {}
       const bot = !!pm.bot || pm.o === '~bot', ra = await arRt(id), rb = bot ? Math.max(900, ra - 30) : await arRt(pm.o), ea = 1 / (1 + Math.pow(10, (rb - ra) / 400)), K = 32 * (au ? .5 : 1) * (bot ? .7 : 1);
-      const da0 = pm._void ? 0 : Math.round(K * (w - ea)), da = bot && da0 > 0 ? Math.max(0, Math.min(da0, 1600 - ra)) : da0, db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
+      let da0 = pm._void ? 0 : Math.round(K * (w - ea)); if (ins && da0 < 0) da0 = 0; if (RU === 'soft' && da0 < 0) da0 = Math.round(da0 / 2); if (RU === 'under' && w && pm.op > pm.mp && da0 > 0) da0 = Math.round(da0 * 1.5); if (nemHit && da0 > 0) da0 *= 2; const da = bot && da0 > 0 ? Math.max(0, Math.min(da0, 1600 - ra)) : da0, db = -Math.round(da * .5), na = Math.max(0, ra + da), nb = Math.max(0, rb + db), nm = (await cmd('HGET', 'arn', id)) || 'นิรนาม';
       const L = bot ? [['HSET', 'arr:' + W, id, na], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id], ['EXPIRE', 'ars:' + W, 86400 * 40]] : [['HSET', 'arr:' + W, id, na, pm.o, nb], ['EXPIRE', 'arr:' + W, 86400 * 40], ['ZADD', 'ars:' + W, na, id, nb, pm.o], ['EXPIRE', 'ars:' + W, 86400 * 40],
         ['LPUSH', 'ardef:' + pm.o, JSON.stringify({ n: nm, w: w ? 0 : 1, d: db, t: now, a: id })], ['LTRIM', 'ardef:' + pm.o, 0, 19], ['EXPIRE', 'ardef:' + pm.o, 86400 * 14], ['HINCRBY', 'ardefn', pm.o, 1]];
+      if (!bot) { const nk = w ? 'arnem:' + W + ':' + pm.o : 'arnem:' + W + ':' + id; L.push(['ZINCRBY', nk, 1, w ? id : pm.o], ['EXPIRE', nk, 86400 * 10]) }
+      let bty = 0; if (w && !bot && !au) { try { const ow2 = jp(await cmd('HGET', 'arwal', pm.o)); if (ow2 && (ow2.stk | 0) >= 3) bty = 10 * Math.min(10, ow2.stk | 0) } catch {} }
+      if (w && !bot) { try { if ((+(await cmd('HLEN', 'arcol:' + id)) || 0) < 500) { const on = (await cmd('HGET', 'arn', pm.o)) || 'นิรนาม'; L.push(['HSET', 'arcol:' + id, pm.o, JSON.stringify({ n: on, lg: arLg(rb), t: now, el: '' })]) } } catch {} }
       if (w) L.push(['ZINCRBY', 'arenaW:' + W, 1, nm], ['EXPIRE', 'arenaW:' + W, 86400 * 40], ['ZINCRBY', 'arwin:' + W, 1, id], ['EXPIRE', 'arwin:' + W, 86400 * 40]);
       await pipe(L);
       let pkNew = 0; try { const pk0 = +(await cmd('HGET', 'arpk', id)) || 0, lgN = arLg(na); if (lgN > pk0) { await cmd('HSET', 'arpk', id, lgN); pkNew = pk0 > 0 ? lgN : 0 } } catch {}
-      let g = 0, bonus = 0, qg = 0, fw = 0, v = null; try { for (let t = 0; t < 4 && !(await arLock()); t++) await new Promise(r0 => setTimeout(r0, 300)); v = await arWal(); g = au ? (w ? 1 : 0) : (w ? 3 : 1); const chM = { hell: 1.5, junk: 1.5, short: 1.3 }[pm.ch] || 1; if (g && chM > 1) g = Math.max(g + 1, Math.round(g * chM));
-        if (w) { v.stk = (v.stk | 0) + 1; if (v.stk >= 3) bonus = Math.min(5, v.stk - 2) } else v.stk = 0;
+      let g = 0, bonus = 0, qg = 0, fw = 0, v = null, potAdd = 0, potLost = 0; try { for (let t = 0; t < 4 && !(await arLock()); t++) await new Promise(r0 => setTimeout(r0, 300)); v = await arWal(); g = au ? (w ? 1 : 0) : (w ? 3 : 1); const chM = { hell: 1.5, junk: 1.5, short: 1.3 }[pm.ch] || 1; if (g && chM > 1) g = Math.max(g + 1, Math.round(g * chM)); if (g && RU === 'rich') g *= 2; if (ins) v.ins = 0;
+        if (w) { v.stk = (v.stk | 0) + 1; if (v.stk >= 3) bonus = Math.min(5, v.stk - 2) } else v.stk = 0; if (RU === 'fury') bonus *= 2;
+        if (w && !au && bonus) { potAdd = bonus * 2; v.pot = (v.pot | 0) + potAdd; bonus = 0 } if (!w) { potLost = v.pot | 0; v.pot = 0 } v.c += bty;
+        try { if (v.stk >= 3) await cmd('ZADD', 'arbty:' + W, v.stk, id); else await cmd('ZREM', 'arbty:' + W, id); await cmd('EXPIRE', 'arbty:' + W, 86400 * 10) } catch {}
         if (w && !au && !pm.bot && v.fw !== thDay(now)) { v.fw = thDay(now); fw = 5 } else if (w && v.fw !== thDay(now)) { v.fw = thDay(now); fw = 3 } // ชนะครั้งแรกของวัน: โบนัสเหรียญ
         const ev = { w, au, ad: +b.ad > 0, rv: !!pm.rv, best: Math.max(0, Math.min(99, +b.cb || 0)) };
         v.q.q.forEach(q => { if (q.done) return; const need = AR_QN[q.id] || 1; let inc = 0; if (q.id === 'w3' && ev.w) inc = 1; if (q.id === 'man2' && !ev.au) inc = 1; if (q.id === 'adv' && ev.w && ev.ad) inc = 1; if (q.id === 'rv' && ev.w && ev.rv) inc = 1; if (q.id === 'cb3' && ev.best >= 3 && !ev.au) inc = 1; if (q.id === 'any5') inc = 1;
           if (inc) { q.p = Math.min(need, q.p + inc); if (q.p >= need) { q.done = 1; qg += 8 } } });
         if (!v.q.all && v.q.q.every(q => q.done)) { v.q.all = 1; qg += 15 }
         v.c += g + bonus + qg + fw; await arWalSet(v) } catch (e) {} finally { await arUnlock() }
-      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, fw, pkNew, chm: pm.ch || '', wal: v ? arWalPub(v) : null, ...(sw != null ? { sw } : {}) });
+      return res.json({ ok: 1, rt: na, d: da, lg: arLg(na), ort: nb, g, bonus, qg, fw, pkNew, chm: pm.ch || '', wal: v ? arWalPub(v) : null, ...(sw != null ? { sw } : {}), rule: RU, ins, nem: nemHit, bty, potAdd, potLost });
     }
     if (a === 'arena') {
       const me = { n: clean(b.n, 20) || 'นิรนาม', p: Math.max(0, +b.p || 0), hp: +b.hp || 100, r: clean(b.r, 30), ri: Math.max(0, Math.min(12, +b.ri || 0)), x: b.x ? 1 : 0, t: now };

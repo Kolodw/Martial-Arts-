@@ -46567,6 +46567,7 @@ try{setTimeout(()=>{try{wLoad('annal').catch(()=>{})}catch(e){}},3800)}catch(e){
 try{setTimeout(()=>{try{wLoad('hud').catch(()=>{})}catch(e){}},400)}catch(e){console.error('hudStub',e)} /* 🎨 HUD สกินตามโลก (/w/hud.js) */
 try{setTimeout(()=>{try{wLoad('front').catch(()=>{})}catch(e){}},300)}catch(e){console.error('frStub',e)} /* 🏯 หน้าแรกใหม่ ธีมตามโลก (/w/front.js) */
 try{setTimeout(()=>{try{wLoad('hall').catch(()=>{})}catch(e){}},1500)}catch(e){console.error('hallStub',e)} /* 🏯 หอผู้ก่อตั้งใหม่ (/w/hall.js) */
+try{setTimeout(()=>{try{wLoad('arena2').catch(()=>{})}catch(e){}},1700)}catch(e){console.error('ar2Stub',e)} /* ⚔️ ลานหมื่นเงา ภาค 2 (/w/arena2.js) */
 
 // 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
 try{(function(){
