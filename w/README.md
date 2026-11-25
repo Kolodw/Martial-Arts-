@@ -79,11 +79,11 @@ LS `murim_thr`: ทุกตอนจบ (ห่อ endGame) = ด้ายช�
 จบชีวิต → `deeds()` ≤3 จาก 13 ชนิด (ลำดับ: stay/free/cut ของผู้ประพันธ์ส่งครั้งเดียวต่อการเลือก · grand ตอนจบใหญ่ · legend เสียงสะท้อน ≥100 ส่งครั้งเดียว · tyrant บุญ≤−150 · saint ≥250 · old ≥95 ปี (เซียน/เทพ ≥1500) · fame ตามเกณฑ์โลก `FAME` · clan ลูก≥5 · master มีศิษย์ · young <25 ปีแต่ดัง/จบใหญ่ · rich ตาม `RICH`) → `api chronadd` (เซิร์ฟเวอร์ `chron` 400 รายการ + `chm:<id>` ของฉัน 30) · ระหว่างชีวิต: เกร็ดในฟีด `BIT` 9 แบบ (≤4/ชีวิต · 10%/ปี) + เหตุการณ์ `EV` 12 แบบ (≤3/ชีวิต · 9%/ปี · ห่าง ≥4 ปี) ผลตามชนิด `BLESS` · ชื่อที่ถูกเล่าส่ง `chronref` ตอนจบ → หน้า ✍️ วีรกรรมของฉัน แสดง "ถูกเล่าใน N ชีวิต" · ☰/เมนูหน้าแรก → `annalOpen()` เส้นเวลา + กรองตามโลก · คนที่ castoff ไม่ถูกส่ง/ไม่แสดง
 
 ## hud.js — 🎨 HUD สกินตามโลก (ทุกโลก · โหลด 0.4 วิ)
-`body[data-hud]` = murim/xian/god/mw/soul/loop/beast/sky/fog หรือ `mw-<โลกย่อย>` (hunter/hunterhi/under/ghost/loop/zombie/tower/game/gatewon/doom) — ตั้งเฉพาะตอน `#game.on` · ข้ามเมื่อ `body.mono` หรือ LS `murim_hudOff=1`
+`body[data-hud]` = murim/xian/god/mw/soul/loop/beast/sky/fog หรือ `mw-<โลกย่อย>` (hunter/hunterhi/under/ghost/loop/zombie/tower/game/gatewon/doom) — ตั้งเฉพาะตอน `#game.on` · เฉพาะธีมทองราตรี (`body.royal`) หรือ LS `murim_hudOff=1`
 สกิน = ตัวแปรสีเดิม (--bg/--card/--w/--line/--ink/--mut/--pink/--good…) + `--hA` หลัก `--hG` รอง `--hK` แถบ `--hD` ฟอนต์หัวข้อ `--hR` มุมโค้ง → แผง/แถบพลัง/ฟีด/ปุ่มควบคุม/ชิปโฟกัส/หน้าต่างตัวเลือก ใช้ตามนี้ (ตำแหน่งปุ่มไม่เปลี่ยน) · ม่านหมอก = กรอบเส้นคู่
 `#hudW` วิดเจ็ตโลกย่อย: จอคอมใต้ `#dkChar` · มือถือใต้ `#sceneBox` · ค่าจาก S.mw (H/U/G/LP/Z/TW/GM/GW/DM) · แตะ = `wPanel()` · `window._hud` {key,tick,T,SUB}
 
 ## front.js — 🏯 หน้าแรกใหม่ (ธีมตามโลกที่เลือก · โหลด 0.3 วิ)
 `body[data-front]` = โลกของการ์ด `#wPick .wc.on` ขณะ `#title.on` → ตัวแปรสีเดิม + `--fA/--fG/--fK/--fD/--fT` · `#frTint` ม่านสีทับฉาก `#tbg2` · โลโก้/การ์ดโลก/ปุ่มเกิด/แถบล่างใช้สีโลก
 มือถือ: ซ่อนปุ่มลอย tSup/tFb/tEv/tSp/tCos + kEnt/tGrid/tSea → `#frTopR` (ร้านค้า·เมนู) + `#frToday` (อีเวนต์·ภารกิจ·คัมภีร์·ชุมชน — กดแทนปุ่มเดิม) · `#frCont` การ์ดเล่นต่อ (กด `#tCont`) แทรกก่อน `.box.opts` · แถบล่าง `#frMode` + เกิด · nav ซ่อน ลาน/เมนู เพิ่ม `#frHome` · syncSt สำเร็จ = ซ่อน
-หน้าย่อยจากหน้าแรกบนมือถือ (`SHEET` daily2/book/online/guild/tmenu/evshop/krt/sp/profile/aq/cosshop + ร้านค้า) = `#mask.frSheet` เต็มจอ · จอคอม: `#frTopR` แบบมีป้าย (ร้านค้า คัมภีร์ ชุมชน เมนู) แทนปุ่มลอย · ปิด LS `murim_frontOff=1`
+หน้าย่อยจากหน้าแรกบนมือถือ (`SHEET` daily2/book/online/guild/tmenu/evshop/krt/sp/profile/aq/cosshop + ร้านค้า) = `#mask.frSheet` เต็มจอ · จอคอม: `#frTopR` แบบมีป้าย (ร้านค้า คัมภีร์ ชุมชน เมนู) แทนปุ่มลอย · เฉพาะธีมทองราตรี (body.royal) · ปิด LS `murim_frontOff=1`

@@ -3,7 +3,7 @@
 //  - ตั้ง body[data-hud] ตามโลกที่กำลังเล่น (ยุทธภพ/เทพเซียน/ยุคปัจจุบัน+โลกย่อย/จิตวิญญาณยุทธ์/ผู้ย้อนกาล/สัตว์/ทะลุฟ้า/ม่านหมอก)
 //  - แต่ละสกินเปลี่ยนแค่ตัวแปรสี ฟอนต์หัวข้อ ทรงกรอบ — ตำแหน่งปุ่มเหมือนเดิมทุกโลก
 //  - โลกย่อยยุคปัจจุบัน: วิดเจ็ตประจำโลก 1 ชิ้น (แผงซ้ายบนจอคอม / แถบใต้ฉากบนมือถือ) แตะแล้วเปิดสถานะโลก (wPanel)
-//  - ไม่ทำงานในโหมด mono · ปิดได้ด้วย LS murim_hudOff=1
+//  - ทำงานเฉพาะธีมทองราตรี (body.royal) — ธีมอื่นที่ผู้เล่นเลือกไม่ถูกแตะ · ปิดได้ด้วย LS murim_hudOff=1
 // ============================================================
 (function(){
 if(window._hud)return;
@@ -151,7 +151,7 @@ function tick(){
  try{
   const b=document.body;if(!b)return;
   let k=null;
-  if(!b.classList.contains('mono')&&!LSg('murim_hudOff',0))k=key();
+  if(b.classList.contains('royal')&&!LSg('murim_hudOff',0))k=key();
   if(k!==cur){cur=k;if(k){fonts();b.dataset.hud=k}else delete b.dataset.hud}
   widget(k);
  }catch(e){console.error('hud',e)}

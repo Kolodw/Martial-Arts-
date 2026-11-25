@@ -4,7 +4,7 @@
 //  - มือถือ: ปุ่มลอยขวา (ร้านค้า/ชุมชน/ลอยกระทง/คัมภีร์) → ปุ่มร้านค้า+เมนูมุมขวาบน + แถว "วันนี้" (อีเวนต์ ภารกิจ คัมภีร์ ชุมชน)
 //            การ์ด "เล่นต่อ" เหนือรายการโลก · แถบล่างเหลือ โหมด + เกิด · เมนูนำทาง 5 ปุ่ม (ลาน → แท็บในออนไลน์ · เมนู → มุมขวาบน)
 //            หน้าย่อยจากหน้าแรก (ชะตาวันนี้ สมุด ออนไลน์ กลุ่ม เมนู ร้าน อีเวนต์ คัมภีร์ โปรไฟล์ ภารกิจ) เปิดเต็มจอ
-//  - ข้ามเมื่อ body.mono · ปิดได้ LS murim_frontOff=1
+//  - ทำงานเฉพาะธีมทองราตรี (body.royal) · ปิดได้ LS murim_frontOff=1
 // ============================================================
 (function(){
 if(window._front)return;
@@ -139,7 +139,7 @@ let curW=null;
 function tick(){
  try{
   const b=document.body,T0=$('title');if(!b||!T0)return;
-  const on=T0.classList.contains('on')&&!b.classList.contains('mono')&&!LSg('murim_frontOff',0);
+  const on=T0.classList.contains('on')&&b.classList.contains('royal')&&!LSg('murim_frontOff',0);
   if(on){build(T0);const c=document.querySelector('#wPick .wc.on');const k=c&&T[c.dataset.k]?c.dataset.k:'murim';if(k!==curW){curW=k;fonts()}b.dataset.front=k;update()}
   else if(b.dataset.front){delete b.dataset.front;curW=null}
   // หน้าย่อยเต็มจอ (มือถือ · เปิดจากหน้าแรก)
