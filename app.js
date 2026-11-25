@@ -4589,7 +4589,7 @@ function person0(x,y,o,pose){
  Q(cx-Math.floor(tw/2)+1,ty,tw-2,1,rL);
  if(o.stripe)for(let r=1;r<th;r+=3)Q(cx-Math.floor(tw/2),ty+r,tw,1,'#ffffff40');
  if(o.fur){Q(cx-Math.floor(tw/2)-1,ty,tw+2,4,'#e0a030');for(let i=0;i<tw;i+=4)Q(cx-Math.floor(tw/2)+i,ty+1,2,2,'#1a1a1a')}
- const trim=o.trim||rD;for(let r=0;r<Math.min(8,th-3);r++){Q(cx-5+r,ty+r,2,1,trim)}Q(cx+3,ty,2,4,trim);
+ const trim=o.trim||rD;if(o.wx>10&&!child){const sh=o.shirt||'#ecebe6';for(let r=0;r<6;r++){Q(cx-3+(r>>1),ty+r,6-(r>>1)*2,1,sh)}for(let r=0;r<7;r++){Q(cx-4+(r>>1),ty+r,1,1,rD);Q(cx+3-(r>>1),ty+r,1,1,rD)}Q(cx-5,ty,2,5,rL);Q(cx+3,ty,2,5,rD)}else{for(let r=0;r<Math.min(8,th-3);r++){Q(cx-5+r,ty+r,2,1,trim)}Q(cx+3,ty,2,4,trim)}
  if(o.trim)Q(cx-Math.floor((tw+hem*2)/2),ly-2,tw+hem*2,2,o.trim);
  const bY=ty+(child?6:9);Q(cx-Math.floor(tw/2)-1,bY,tw+2,3,o.belt||'#00000066');Q(cx-1,bY+3,2,3+((frame|0)%8<4?0:1),o.belt||'#00000066');
  if(o.jade)Q(cx+3,bY+3,2,4,'#6ad0a0');if(o.emblem)Q(cx+2,ty+4,4,4,o.emblem);
@@ -47044,7 +47044,7 @@ try{(function(){if(typeof meLook!=='function')return;
  window._wdGive=(k,i)=>{const d=st();if(k==='w'){d.wown=d.wown||[];if(!d.wown.includes(i)){d.wown.push(i);put(d);return 1}}else if(!d.own.includes(i)&&W[i]&&W[i][5]!=='f'){d.own.push(i);put(d);return 1}return 0};window._wdFields=i=>fields(i);
  const fitsWorld=i=>kind()==='n'?MODN.includes(W[i][1]):!MODN.includes(W[i][1]);
  window.wdCheck=function(quiet){if(!S||!S.alive)return;const d=st();const got=[];W.forEach((w,i)=>{if(w[5]!=='f'&&!d.own.includes(i)&&condOk(w)){d.own.push(i);got.push(i)}});if(got.length){put(d);if(!quiet)try{log(`👘 <b>ปลดล็อกชุดใหม่ในตู้เสื้อผ้า:</b> ${got.map(i=>W[i][0]).join(' · ')} <button class="sysb" onclick="wdOpen()">เปิดตู้</button>`,'good')}catch(e){}}};
- const fields=i=>{const w=W[i],x=w[4];const o=Object.assign({robe:w[2],trim:w[3],belt:x.belt||shd(w[2],-.35),hat:null,stripe:0,fur:0,jade:0,patch:0,sash:null,ribbon:null,cape:null,capeT:null,emblem:null,coat:null,coatL:null,eyeG:null,ar:null,wing:null,core:null},x);if(MODN.includes(w[1])){o.pant=x.pant||'#2a2a34'}if(!o.ar&&!('wx' in x))o.wx=1+(i*7)%6+(MODN.includes(w[1])?10:0);return o};
+ const fields=i=>{const w=W[i],x=w[4];const o=Object.assign({robe:w[2],trim:w[3],belt:x.belt||shd(w[2],-.35),hat:null,stripe:0,fur:0,jade:0,patch:0,sash:null,ribbon:null,cape:null,capeT:null,emblem:null,coat:null,coatL:null,eyeG:null,ar:null,wing:null,core:null},x);if(MODN.includes(w[1])){o.pant=x.pant||'#2a2a34'}if(!x.sash)o.sash=w[3];if(!o.ar&&!('wx' in x))o.wx=1+(i*7)%6+(MODN.includes(w[1])?10:0);return o};
  const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(S){const d=st(),i=S.mw?d.n:d.a;if(i!=null&&W[i]&&fitsWorld(i)&&owned(i)&&!(!S.mw&&d.sect&&S.faction)&&!(S.look&&S.look.kx))Object.assign(o,fields(i))}if(S&&S.mw&&S.mw.sky&&d0().wing!=null){const w=WG[d0().wing];if(w&&wOwned(d0().wing))Object.assign(o,{wing:w.wing,wingC:w.wingC,wingC2:w.wingC2})}}catch(e){}return o};
  if(typeof mwLookMe==='function'){const _mw=mwLookMe;mwLookMe=function(M,pose){const o=_mw.apply(this,arguments);try{const d=st(),i=d.n;if(i!=null&&W[i]&&MODN.includes(W[i][1])&&owned(i)&&pose!=='work')Object.assign(o,fields(i))}catch(e){}return o}}
  const look=i=>{let me;try{me=S&&S.mw&&typeof mwLookMe==='function'?mwLookMe(S.mw,'stand'):meLook()}catch(e){me={age:20,g:'ชาย',skin:'#f1c27d',hair:'#1a1a1a'}}me=Object.assign({},me);delete me.beast;me.aura=null;me.sword=null;me.arm=null;if(me.age<16)me.age=20;
