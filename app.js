@@ -46474,6 +46474,7 @@ try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpe
 try{setTimeout(()=>{try{wLoad('author').catch(()=>{})}catch(e){}},2600)}catch(e){console.error('auStub',e)} /* 🧵 ผู้ประพันธ์ชะตา (/w/author.js) */
 try{setTimeout(()=>{try{wLoad('cast').catch(()=>{})}catch(e){}},3200)}catch(e){console.error('csStub',e)} /* 👤 จักรวาลร่วม (/w/cast.js) */
 try{setTimeout(()=>{try{wLoad('annal').catch(()=>{})}catch(e){}},3800)}catch(e){console.error('anStub',e)} /* 📜 ปูมจักรวาล (/w/annal.js) */
+try{setTimeout(()=>{try{wLoad('hud').catch(()=>{})}catch(e){}},400)}catch(e){console.error('hudStub',e)} /* 🎨 HUD สกินตามโลก (/w/hud.js) */
 
 // 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
 try{(function(){
