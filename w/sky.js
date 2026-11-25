@@ -3768,8 +3768,8 @@ window.skyOrgLock=async k=>{const c=CATS.find(x=>x.k===k);if(!c||c.hid)return;if
 // จำผลสุ่มไว้ 6 ชม. (ปิดเกม/ออกไปแล้วกลับมาก็ผลเดิม) · ใช้จำนวนสุ่มเท่าโลกอื่น
 const SKH='murim_skhold',SKT=6*3600e3;
 const idxOf=()=>{const o={};for(const c of CATS)o[c.k]=c.L.indexOf(ST.cards[c.k]);return o};
-function skHold(){try{LS.set(SKH,{t:Date.now(),i:idxOf(),lock:ST.lock,left:ST.left,g:ST.g,look:ST.look||null,name:ST.name||'',C:ST.C||null,pg:ST.pg||null,seed:ST.seed||0})}catch(e){}}
-function skLoad(){try{const h=LS.get(SKH,null);if(!h||Date.now()-(h.t||0)>SKT||!h.i)return false;for(const c of CATS){const x=c.L[h.i[c.k]];if(!x)return false;ST.cards[c.k]=x}ST.lock=h.lock||{};ST.left=Math.max(0,h.left|0);ST.g=h.g||null;ST.look=h.look||null;ST.name=h.name||'';ST.C=h.C||null;ST.pg=h.pg||null;ST.seed=h.seed||0;return true}catch(e){return false}}
+function skHold(){try{if(window._skyBornAt&&Date.now()-window._skyBornAt<60000)return; /* หลังกดเกิด หน้าสุ่มยังวาดซ้ำแล้วบันทึกผลเก่า+ล็อกกลับไป → สร้างตัวใหม่เจอข้อมูลเดิมค้างตลอด (ผู้เล่นแจ้ง) */LS.set(SKH,{t:Date.now(),i:idxOf(),lock:ST.lock,left:ST.left,g:ST.g,look:ST.look||null,name:ST.name||'',C:ST.C||null,pg:ST.pg||null,seed:ST.seed||0})}catch(e){}}
+function skLoad(){try{const h=LS.get(SKH,null);if(!h||Date.now()-(h.t||0)>SKT||!h.i)return false;try{const bt=+LS.get('murim_skborn',0)||0;if(bt&&(h.t||0)<=bt){LS.del(SKH);return false}}catch(e){}for(const c of CATS){const x=c.L[h.i[c.k]];if(!x)return false;ST.cards[c.k]=x}ST.lock=h.lock||{};ST.left=Math.max(0,h.left|0);ST.g=h.g||null;ST.look=h.look||null;ST.name=h.name||'';ST.C=h.C||null;ST.pg=h.pg||null;ST.seed=h.seed||0;return true}catch(e){return false}}
 const skTot=()=>{try{return Math.max(3,(window.vipTot&&window.vipTot())|0)}catch(e){return 5}};
 window.skyRRMore=function(){skHold();window._skT=Date.now();try{rrMenu()}catch(e){console.error(e);toast('เปิดเมนูสุ่มเพิ่มไม่ได้ ลองใหม่')}};
 {const _dr=doRoll;doRoll=function(first){try{if(!first&&window._skT&&Date.now()-window._skT<600000&&!$('birth').classList.contains('on')&&LS.get(SKH,null)){window._skT=0;rerolls=Math.max(0,rerolls-1);try{$('rr').textContent=rerolls}catch(e){}if(!ST.cards.bg)skLoad();ST.left=(ST.left|0)+1;setTimeout(()=>{try{window.skyOrgRe()}catch(e){console.error(e)}},200);return}}catch(e){console.error('skrr',e)}return _dr.apply(this,arguments)}}
@@ -3782,7 +3782,7 @@ try{if(window.rrx)window.rrx.reg({id:'sky',
  left(){return ST.left|0},spend(){ST.left=Math.max(0,(ST.left|0)-1)},reroll(){rollAll(false)},
  N(){let pr=1;for(const c of CATS){const x=ST.cards[c.k];if(!x)continue;const t=rOf({k:c.k,x});pr*=t?RW[t]/100:1}return Math.max(1,1/Math.max(pr,1e-15))},
  snap(){const o={};for(const k in ST.cards)o[k]=ST.cards[k];return o},restore(s){for(const k in s)ST.cards[k]=s[k]},draw(){window._frS=(window._frS||1)+1;ST.ask=null;ui()}})}catch(e){console.error('rrx sky',e)}
-window.skyOrgGo=()=>{if(window._skyBornAt&&Date.now()-window._skyBornAt<3000)return;window._skyBornAt=Date.now();window._skySel=0;const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH)}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
+window.skyOrgGo=()=>{if(window._skyBornAt&&Date.now()-window._skyBornAt<3000)return;window._skyBornAt=Date.now();window._skySel=0;const pickd=Object.assign({},ST.cards),g=ST.g||pick(['ชาย','หญิง']);try{LS.del(SKH);LS.set('murim_skborn',Date.now())}catch(e){}window._skOk=1;try{closeM()}catch(e){}window._skOk=0;
  const base=pickd.bg[4];window._skyOrgRun=1;try{_ss(base)}finally{window._skyOrgRun=0}
  const cLook=ST.look?Object.assign({},ST.look):null,cName=ST.name||'';setTimeout(()=>{try{applyOrg(pickd,g)}catch(e){console.error('skyorg apply',e)}try{if(cLook){S.look=Object.assign({},S.look||{},cLook);const K=SKY()&&SKY().SK();if(K&&K.og)K.og.lk=null}if(cName)S.name=cName;render()}catch(e){}},900)};
 // ---------- นำผลไปใช้ ----------

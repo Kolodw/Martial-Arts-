@@ -21540,10 +21540,12 @@ function jMkCop(){const dims=[0,1,2,3,4,5].sort(()=>Math.random()-.5).slice(0,3)
  const A=cul.map((v,i)=>i<2?v:1-v);let B;do{B=dims.map(()=>R(0,1))}while(B.every((v,i)=>v===cul[i]));
  const nm=[...JC_NM].sort(()=>Math.random()-.5).slice(0,3),sus=[{n:nm[0],a:cul,g:1},{n:nm[1],a:A},{n:nm[2],a:B}].sort(()=>Math.random()-.5);
  return{k:'cop',y:S.age,cr:R(0,JC_CR.length-1),dims,cul,sus,show:2,elim:[]}}
-function jNewCase(){const J=jInit();if(!J)return;const D=JOB[J.t],c=D.mk?D.mk(J):J.t==='doc'?jMkDoc():jMkCop();if(c)J.q.push(c);return c}
+/* งานหมดอายุนับเป็น "รอบปี" ไม่ใช่อายุ: แดนเทพ/โลกที่รอบหนึ่งข้ามหลายปี งานเกิดแล้วหมดอายุทันที · ข้ามมิติแล้วอายุถอยหลัง งานเก่าค้างคิวเต็ม 3 ช่องตลอดไป งานใหม่เลยไม่มา (ผู้เล่นแจ้ง) */
+function jExp(J){J.tk=(J.tk|0)+1;J.q=J.q.filter(c=>{if(c.tk==null)c.tk=J.tk-Math.max(0,Math.min(2,(S.age-(c.y||S.age))|0));return J.tk-c.tk<=2&&!((c.y||0)>S.age+1)})}
+function jNewCase(){const J=jInit();if(!J)return;const D=JOB[J.t],c=D.mk?D.mk(J):J.t==='doc'?jMkDoc():jMkCop();if(c){c.tk=J.tk|0;J.q.push(c)}return c}
 // ---------- รายปี ----------
 {const _pyJ=passYear;passYear=function(){const a0=S?S.age:0;const r=_pyJ.apply(this,arguments);try{const J=S&&S.alive&&!(S.beastMode&&!S.beastMode.human)?jInit():null;if(!J)return r;const st=Math.max(0,Math.min(S.age-a0,5));if(!st)return r;
- const old=J.q.length;J.q=J.q.filter(c=>S.age-c.y<=2);if(J.q.length<old){J.rep=Math.max(0,(J.rep==null?50:J.rep)-3);log(`${JOB[J.t].ic} ${JOB[J.t].ex} (ความน่าเชื่อถือ −3)`,'bad')}
+ const old=J.q.length;jExp(J);if(J.q.length<old){J.rep=Math.max(0,(J.rep==null?50:J.rep)-3);log(`${JOB[J.t].ic} ${JOB[J.t].ex} (ความน่าเชื่อถือ −3)`,'bad')}
  let n=0;for(let i=0;i<st;i++){const k=JOB[J.t].one?1:1+(J.lv>=2&&Math.random()<.5?1:0);for(let j=0;j<k&&J.q.length<3;j++){if(jNewCase())n++}}
  if(JOB[J.t].sal){const s=Math.round(JOB[J.t].sal[J.lv]*W15()*st);if(s){S.money+=s;J.st.earn+=s}}if(JOB[J.t].tick)try{JOB[J.t].tick(J,st)}catch(e){console.error(e)}
  if(n)log(`${JOB[J.t].ic} ${JOB[J.t].nt(n)} เปิด ☰ เมนู → 📜 อาชีพ`,'good');
@@ -24666,7 +24668,7 @@ function jFat(id,k){const J=jInit(),c=jcGet(id);if(!c)return;const o=FT_T[c.tp][
 function jPick2(){const J=jInit();if(!J||J.lv<3||S.job2)return;modal(`${jBk}<h3>➕ เลือกอาชีพที่สอง</h3><p class="tag2">อาชีพหลักยังอยู่ครบ งานของทั้งสองอาชีพเข้ามาทุกปี · สลับดูได้จากหน้าอาชีพ</p>`+Object.keys(JOB).filter(k=>k!==J.t&&(!JOB[k].w||JOB[k].w===ECO_W())).map(k=>{const D=JOB[k],ok=D.ok();return`<div class="item"><div class="h"><b>${D.ic} ${D.n[jW()]}</b><button class="sysb" onclick="jTake2('${k}')" ${ok?'':'disabled style="opacity:.45"'}>เลือก</button></div><p class="tag2">${D.req} ${ok?'✅':'❌'}</p></div>`}).join(''),'job')}
 function jTake2(k){if(!JOB[k]||!JOB[k].ok()||S.job2)return;S.job2=S.job;S.job={t:k,lv:0,xp:0,rep:50,q:[],kn:{},st:{ok:0,bad:0,earn:0}};jNewCase();log(`${JOB[k].ic} เริ่มอาชีพที่สอง: <b>${jRk(S.job)}</b>`,'epic');sfx('good');render();openJob()}
 function jSwap2(){if(!S.job2)return;const a=S.job;S.job=S.job2;S.job2=a;sfx('click');openJob()}
-function jYear2(st){const J=jInit();if(!J)return;const D=JOB[J.t],old=J.q.length;J.q=J.q.filter(c=>S.age-c.y<=2);if(J.q.length<old)jRp(J,-3);let n=0;for(let i=0;i<st;i++){const k=D.one?1:1+(J.lv>=2&&Math.random()<.5?1:0);for(let j=0;j<k&&J.q.length<3;j++){if(jNewCase())n++}}
+function jYear2(st){const J=jInit();if(!J)return;const D=JOB[J.t],old=J.q.length;jExp(J);if(J.q.length<old)jRp(J,-3);let n=0;for(let i=0;i<st;i++){const k=D.one?1:1+(J.lv>=2&&Math.random()<.5?1:0);for(let j=0;j<k&&J.q.length<3;j++){if(jNewCase())n++}}
  if(D.sal){const s=Math.round(D.sal[J.lv]*W15()*st);if(s){S.money+=s;J.st.earn+=s}}if(D.tick)try{D.tick(J,st)}catch(e){console.error(e)}if(n)log(`${D.ic} (อาชีพที่สอง) ${D.nt(n)}`,'good')}
 {const _py2=passYear;passYear=function(){const a0=S?S.age:0;const r=_py2.apply(this,arguments);try{if(S&&S.alive&&S.job2&&JOB[S.job2.t]&&!(S.beastMode&&!S.beastMode.human)){const st=Math.max(0,Math.min(S.age-a0,5));if(st){const a=S.job;S.job=S.job2;try{jYear2(st)}finally{S.job2=S.job;S.job=a}}}}catch(e){console.error(e)}return r}}
 // ---------- ตระกูลอาชีพ (สืบทอดหลายรุ่น) + ศิษย์เอกดูแลโรงฝึก ----------

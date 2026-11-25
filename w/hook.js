@@ -15,7 +15,7 @@ const $$=id=>document.getElementById(id),E=s=>{try{return esc(String(s))}catch(e
 const LSG=(k,d)=>{try{const v=LS.get(k,d);return v==null?d:v}catch(e){return d}},LSS=(k,v)=>{try{LS.set(k,v)}catch(e){}};
 const rp=a=>a[Math.floor(Math.random()*a.length)],N=n=>{try{return fmt(n)}catch(e){return String(n)}};
 const PK='murim_path';
-const P=()=>{const p=LSG(PK,null)||{};p.p=p.p|0;p.n=p.n|0;p.got=p.got||{};p.dn=p.dn||{};return p};
+const P=()=>{const p=LSG(PK,null)||{};p.p=Math.floor(+p.p||0);p.n=Math.floor(+p.n||0);if(p.p<0||p.p>100000)p.p=Math.min(160,p.n*3); /* เดิม |0 → แต้มเกิน 2,147 ล้านกลายเป็นติดลบ (ดาวเหนือนิรันดร์ให้แต้มตามจำนวนดาวที่เกินสถิติ) */p.got=p.got||{};p.dn=p.dn||{};return p};
 const SV=p=>LSS(PK,p);
 const alive=()=>!!(S&&S.alive);
 const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
