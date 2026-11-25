@@ -193,7 +193,7 @@ const seen=()=>{try{return +LS.get('murim_echoSeen',0)||0}catch(e){return 0}};
 const fresh=()=>EC&&EC.L?EC.L.filter(x=>(x.at||0)>seen()):[];
 const RANK=[[300,'👁️ ผู้อยู่ในทุกจักรวาล'],[100,'📜 ตำนานร้อยชีวิต'],[30,'🌟 คนดังข้ามจักรวาล'],[10,'🗣️ ชื่อที่ถูกเอ่ยถึง'],[1,'👣 เงาในชีวิตคนอื่น'],[0,'🌫️ ยังไม่มีใครรู้จัก']];
 const rank=n=>RANK.find(r=>n>=r[0])[1];
-function badge(){try{const n=fresh().length;document.querySelectorAll('.csEcB').forEach(b=>b.innerHTML=`📬 เสียงสะท้อน${n?` <span class="csN">${n} ใหม่</span>`:''}`);if(n&&!(S&&S.alive)&&!badge._t){badge._t=1;try{toast(`📬 ชื่อของคุณไปโผล่ในชีวิตคนอื่น ${n} เรื่อง — เปิดดูที่ ☰ หรือหน้าตอนจบ`)}catch(e){}}}catch(e){}}
+function badge(){try{const n=fresh().length;document.querySelectorAll('.csEcB').forEach(b=>b.innerHTML=(b.classList.contains('cb')?'<i>📬</i>เสียงสะท้อน':'📬 เสียงสะท้อน')+(n?` <span class="csN">${n} ใหม่</span>`:''));if(n&&!(S&&S.alive)&&!badge._t){badge._t=1;try{toast(`📬 ชื่อของคุณไปโผล่ในชีวิตคนอื่น ${n} เรื่อง — เปิดดูที่ ☰ หรือหน้าตอนจบ`)}catch(e){}}}catch(e){}}
 function reward(){try{if(!S||!S.alive)return;eLoad().then(()=>{try{if(!S||!S.alive||S._csRw)return;const last=+LS.get('murim_echoRw',0)||0,L=(EC&&EC.L||[]).filter(x=>(x.at||0)>last);if(!L.length)return;S._csRw=1;
  LS.set('murim_echoRw',Math.max(...L.map(x=>x.at||0)));const n=L.length,g=L.filter(x=>x.c==='myth'||x.c==='good').length;
  say(`📬 <b>แรงศรัทธาข้ามจักรวาล</b> — ตั้งแต่ชีวิตก่อน ชื่อของคุณไปโผล่ในชีวิตของผู้เล่นคนอื่น ${n} เรื่อง${g?` (เรื่องดี ${g})`:''} · เปิดอ่านที่ ☰ → 📬 เสียงสะท้อน`,'myth',{fame:Math.min(200,n*12),int:Math.min(8,n)})}catch(e){}})}catch(e){}}
@@ -214,8 +214,8 @@ function eOpen(){try{if(typeof closeM==='function'&&modalOpen)closeM()}catch(e){
    b.parentNode.innerHTML=`<span class="tag2">${b.dataset.k==='rev'?'🔥 ชีวิตหน้าคุณจะได้เจอ '+E(x.n)+' (ล้างแค้น)':'🎁 ชีวิตหน้าคุณจะได้เจอ '+E(x.n)+' (ตอบแทน)'}</span>`});
   try{const mx=Math.max(sn,...EC.L.map(x=>x.at||0));LS.set('murim_echoSeen',mx)}catch(e){}badge()})}
 window.echoOpen=eOpen;
-{const _m=openMenu;openMenu=function(){const r=_m.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid,.tmgrid');if(g&&!g.querySelector('.csEcB'))g.insertAdjacentHTML('beforeend','<button class="opt csEcB" onclick="echoOpen()">📬 เสียงสะท้อน</button>');badge()}catch(e){}return r};window.openMenu=openMenu}
-try{if(typeof openTitleMenu==='function'){const _t=openTitleMenu;openTitleMenu=function(){const r=_t.apply(this,arguments);try{const g=$('modal').querySelector('.tmgrid,.mgrid');if(g&&!g.querySelector('.csEcB'))g.insertAdjacentHTML('beforeend','<button class="opt csEcB" onclick="echoOpen()">📬 เสียงสะท้อน</button>');badge()}catch(e){}return r};window.openTitleMenu=openTitleMenu}}catch(e){}
+{const _m=openMenu;openMenu=function(){const r=_m.apply(this,arguments);try{const g=$('modal').querySelector('.mgrid,.tmgrid');if(g&&!g.querySelector('.csEcB'))g.insertAdjacentHTML('beforeend',(g.classList.contains('tmgrid')?'<button class="cb csEcB" onclick="echoOpen()"><i>📬</i>เสียงสะท้อน</button>':'<button class="opt csEcB" onclick="echoOpen()">📬 เสียงสะท้อน</button>'));badge()}catch(e){}return r};window.openMenu=openMenu}
+try{if(typeof openTitleMenu==='function'){const _t=openTitleMenu;openTitleMenu=function(){const r=_t.apply(this,arguments);try{const g=$('modal').querySelector('.tmgrid,.mgrid');if(g&&!g.querySelector('.csEcB'))g.insertAdjacentHTML('beforeend',(g.classList.contains('tmgrid')?'<button class="cb csEcB" onclick="echoOpen()"><i>📬</i>เสียงสะท้อน</button>':'<button class="opt csEcB" onclick="echoOpen()">📬 เสียงสะท้อน</button>'));badge()}catch(e){}return r};window.openTitleMenu=openTitleMenu}}catch(e){}
 setTimeout(()=>eLoad(),6000);
 
 // ---------------------------------------------------------------- ส่งตัวละครเข้าคลังตอนจบ + ปุ่มไม่ให้ใช้ชื่อ
