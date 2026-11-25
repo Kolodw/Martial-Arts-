@@ -46668,3 +46668,110 @@ try{(function(){if(typeof openMenu!=='function')return;const KEY='murim_mnord';l
  body.lite #modal .mgrid>button.opt.mHot{animation:none}@media (prefers-reduced-motion:reduce){#modal .mgrid>button.opt.mHot{animation:none}}`;document.head.appendChild(st);
  try{Object.assign(I18N.d,{'เปิดอยู่':'Live'})}catch(e){}
 })()}catch(e){console.error('mod-mnord',e)}
+
+// ============================================================
+// BLOCK 300: 🖥️ UI จอคอม v2 (≥1100px · html body.desk) — ตามร่างที่ผู้ใช้อนุมัติ (แคนวาส "ร่าง UI หน้าจอคอม")
+//  กติกา: หน้าต่าง 3 ขนาด เล็ก 560 / กลาง 880 / ใหญ่ 1120 · ปุ่มหลักไม่ยืดเต็มแถว · กล่อง "ระบบนี้คืออะไร" พับเป็นบรรทัดเดียว
+//  หน้าเล่น: คุมกว้าง 1392 · 3 คอลัมน์ 300/กลาง/300 · บันทึกชีวิตกว้างเท่ากัน · แถบปุ่ม/โฟกัสเป็นชิป · ตัวเลือกเหตุการณ์อยู่กลางจอ 2 คอลัมน์
+//  แจ้งเตือนมุมขวาบน · ภาพพิกเซลไม่ถูกย่อ/ขยายผิดสัดส่วน · จอแคบกว่า 1100 ใช้แบบเดิมทั้งหมด
+// ============================================================
+try{(()=>{
+const L=new Set(['bag','mwbag','shop2','market','evshop','cosshop','frames','online','book','guide','menu','annal','csecho','graves','vipw','codex','wcodex','svcodex','lessons','rlmbook','obworlds','equip','craft','auction','pauc','wshop','skyshop','mwshop','hellshop','nsshop','gacha','fogbook','skybook','chbook','arcbook','lfbook','glog','nsbook','ghrbook','movebook','town','map','mwmap','skymap','rgmap','world','atlas','spec','profile','secrets','codex','dungeon','house','assets','vault','sectbiz','fxhub','sghub']);
+const S_=new Set(['fb','sound','push','pushask','savecode','slotfull','delslot','naming','pfwarn','gwarn','endask','keask','specask','guideask','mwask','pvask','faask']);
+const st=document.createElement('style');st.textContent=`
+@media (min-width:1100px){
+/* ---------- หน้าเล่น ---------- */
+html body.desk #game.on{max-width:1392px;margin:0 auto;grid-template-columns:300px minmax(0,1fr) 300px!important;gap:16px!important;padding-left:16px;padding-right:16px;box-sizing:border-box}
+html body.desk #feed>.bub{display:block;box-sizing:border-box;width:auto!important;max-width:none!important;margin-right:0!important}
+html body.desk #feed>.bub.sum.rt{margin-left:0!important}
+html body.desk #deskC .crow.rvq{display:flex!important;flex-wrap:wrap;align-items:center;gap:8px;position:relative;padding-top:20px}
+html body.desk #deskC .crow.rvq>.ybar{position:absolute;left:0;right:0;top:0}
+html body.desk #deskC .crow.rvq>.cb{flex:0 0 auto!important;width:auto!important;min-width:64px;padding:0 14px!important;height:46px}
+html body.desk #deskC .crow.rvq>#pauseBtn{min-width:120px;font-size:1.05em}
+html body.desk #focus{display:flex!important;flex-wrap:wrap;gap:6px;align-items:center}
+html body.desk #focus>.fc{flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important;min-height:40px!important;height:auto!important;padding:6px 14px!important;border-radius:999px!important;flex-direction:row!important;gap:6px;white-space:nowrap!important}
+html body.desk #focus>.fc small{display:none}
+html body.desk #islCards,html body.desk.dkG #islCards,html body.desk.tsOn #islCards{left:auto!important;bottom:auto!important;right:24px!important;top:72px!important;transform:none!important;align-items:flex-end;max-width:320px}
+html body.desk #islCards>.islCard:nth-child(n+4){display:none}
+/* ---------- ตัวเลือกเหตุการณ์: กลางจอ · ตัวเลือก 2 คอลัมน์ ---------- */
+html body.desk #mask.on:has(#modal[data-k="choice"]),html body.desk.evDock #mask.on:has(#modal[data-k="choice"]){display:flex!important;align-items:center!important;justify-content:center!important;padding:24px!important;background:rgba(7,6,13,.55)!important}
+html body.desk.evDock #mask.on:has(#modal[data-k="choice"]){pointer-events:none}
+html body.desk #modal[data-k="choice"],html body.desk.evDock #modal[data-k="choice"]{position:relative!important;left:auto!important;top:auto!important;width:min(760px,calc(100vw - 80px))!important;max-width:none!important;max-height:86vh!important;margin:0!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px;align-content:start;animation:pop .2s!important}
+html body.desk #modal[data-k="choice"]>*:not(.opt){grid-column:1/-1}
+html body.desk #modal[data-k="choice"]>.opt{margin:5px 0!important;min-height:64px;text-align:left}
+html body.desk #modal[data-k="choice"]>.opt:last-of-type:nth-of-type(odd){grid-column:1/-1}
+/* ---------- หน้าต่างทุกหน้า: 3 ขนาด ---------- */
+html body.desk #mask #modal.dkM:not([data-k="choice"]){width:min(880px,calc(100vw - 80px))!important;max-width:min(880px,calc(100vw - 80px))!important}
+html body.desk #mask #modal.dkL{width:min(1120px,calc(100vw - 80px))!important;max-width:min(1120px,calc(100vw - 80px))!important;max-height:88vh!important;max-height:88dvh!important}
+html body.desk #mask #modal.dkS{width:min(560px,calc(100vw - 80px))!important;max-width:min(560px,calc(100vw - 80px))!important}
+/* ปุ่มหลักที่เคยยืดเต็มแถว → กว้างตามข้อความ อยู่กลาง */
+html body.desk #modal .pbtn[style*="width:100%"],html body.desk #modal .gbtn[style*="width:100%"],html body.desk #modal button.big,html body.desk #modal .dlGo,html body.desk #modal .arles-b,html body.desk #modal>button.pbtn:only-of-type{width:auto!important;min-width:240px;max-width:420px;display:block;margin-left:auto!important;margin-right:auto!important;padding-left:28px!important;padding-right:28px!important}
+html body.desk #modal button.dkBC{width:auto!important;min-width:240px;max-width:440px;display:block;margin-left:auto!important;margin-right:auto!important;padding-left:28px!important;padding-right:28px!important;flex:0 0 auto!important}
+/* กล่อง "ระบบนี้คืออะไร" พับเป็นบรรทัดเดียว */
+html body.desk #modal details.gdTip:not([open]){padding:6px 12px!important;border-style:dashed!important}
+html body.desk #modal details.gdTip>summary{font-size:13px;cursor:pointer}
+html body.desk #modal details.gdTip.dkPv:not([open])>summary::after{content:attr(data-pv);opacity:.75;font-weight:normal;margin-left:6px}
+/* การ์ดในตารางเมนู กว้างเท่ากัน */
+html body.desk #modal[data-k="menu"] .mgrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}
+html body.desk #modal[data-k="menu"] .mgrid .opt{min-height:84px!important}
+}
+/* เมนู: ปุ่มด่วนกว้างตามข้อความ */
+html body.desk #modal[data-k="menu"] .uxRow.faRow{flex-wrap:wrap!important;gap:8px!important;height:auto!important}
+html body.desk #modal[data-k="menu"] .uxRow.faRow>button{flex:0 0 auto!important;width:auto!important;height:44px!important;min-height:0!important;padding:0 16px!important;display:inline-flex!important;align-items:center;gap:6px;white-space:nowrap}
+html body.desk #modal[data-k="menu"] .uxRow.faRow>button br{display:none}
+html body.desk #modal[data-k="menu"] .mnTri>button{min-height:0!important;height:52px!important}
+/* หน้าแรก: แถบเกิดอยู่ใต้การ์ดโลก ไม่ลอยทับ */
+html body.desk.dkTD #tDock{position:static!important;display:block!important;background:none!important;padding:10px 0 4px!important;margin:0!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important}
+html body.desk.dkTD #wPick #uxGo .uxBorn{display:none!important}
+html body.desk.dkTD #title{padding-bottom:24px!important}
+`;document.head.appendChild(st);
+/* หน้าเฉพาะ (ตามร่าง) */
+const st2=document.createElement('style');st2.textContent=`
+@media (min-width:1100px){
+html body.desk #modal[data-k="online"]{display:grid!important;grid-template-columns:180px minmax(0,1fr);column-gap:18px;align-content:start}
+html body.desk #modal[data-k="online"]>*{grid-column:2;min-width:0}
+html body.desk #modal[data-k="online"]>h3{grid-column:1/-1}
+html body.desk #modal[data-k="online"]>.tabs.onNav{grid-column:1;grid-row:2/span 40;flex-direction:column!important;align-self:start;height:auto!important;gap:4px;padding:6px!important;margin:0!important}
+html body.desk #modal[data-k="online"]>.tabs.onNav>.tuPill{display:none!important}
+html body.desk #modal[data-k="online"]>.tabs.onNav>.tabb{flex:0 0 auto!important;width:100%!important;height:44px!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center!important;gap:10px;padding:0 12px!important}
+html body.desk #modal[data-k="online"]>.tabs.onNav>.tabb.on{background:linear-gradient(160deg,#ffe48a,#e0a020)!important;color:#2a1a04!important;border-radius:10px}
+html body.desk #modal[data-k="online"]>.tabs.onNav>.tabb span{font-size:14px!important}
+html body.desk #modal[data-k="online"] .chatbox{min-height:420px}
+html body.desk #modal[data-k="profile"]{display:grid!important;grid-template-columns:320px minmax(0,1fr);column-gap:20px;align-content:start}
+html body.desk #modal[data-k="profile"]>*{grid-column:2;min-width:0}
+html body.desk #modal[data-k="profile"]>h3,html body.desk #modal[data-k="profile"]>details.gdTip{grid-column:1/-1}
+html body.desk #modal[data-k="profile"]{grid-auto-rows:min-content}
+html body.desk #modal[data-k="profile"]>.pftabs,html body.desk #modal[data-k="profile"]>.pfpane{align-self:start}
+html body.desk #modal[data-k="profile"]>.pfhero{grid-column:1;grid-row:3/span 2;flex-direction:column!important;height:auto!important;min-height:250px;margin:0!important}
+html body.desk #modal[data-k="profile"]>.pfq{grid-column:1;grid-row:5/span 30;grid-template-columns:1fr!important;align-self:start;margin-top:10px!important}
+html body.desk #modal[data-k="profile"]>.pfq>button{min-height:50px!important;height:50px;flex-direction:row!important;justify-content:flex-start!important;gap:10px;padding:0 14px!important}
+html body.desk #modal[data-k="cosshop"] .cxs{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+html body.desk #modal[data-k="cosshop"] .cxs>*:not(.card){grid-column:1/-1}
+html body.desk #modal[data-k="cosshop"] .cxs>.card,html body.desk #modal[data-k="cosshop"] .cxs>.card.wide{grid-column:auto!important;margin:0!important;min-width:0;width:auto!important}
+html body.desk #modal[data-k="cosshop"] .cxs .card .acts{justify-content:flex-end!important;flex-wrap:wrap;gap:8px}
+html body.desk #modal[data-k="cosshop"] .cxs .card .acts>button{flex:0 0 auto!important;width:auto!important;padding:0 16px!important}
+html body.desk #modal[data-k="support"]{display:grid!important;grid-template-columns:minmax(0,1fr) 392px;column-gap:20px;align-content:start}
+html body.desk #modal[data-k="support"]>*{grid-column:1;min-width:0}
+html body.desk #modal[data-k="support"]>h3{grid-column:1/-1}
+html body.desk #modal[data-k="support"]>div:not([class]){grid-column:2;grid-row:2/span 20;align-self:start;text-align:center}
+html body.desk #gvList,html body.desk #vipWallL{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
+html body.desk #gvList>p,html body.desk #vipWallL>p{grid-column:1/-1}
+html body.desk #modal[data-k="book"] .bkjs{flex-wrap:wrap!important;overflow:visible!important}
+}`;document.head.appendChild(st2);
+/* จัดขนาดหน้าต่าง + พับกล่องคำอธิบาย ทุกครั้งที่หน้าต่างเปลี่ยน */
+const fit=()=>{try{const m=document.getElementById('modal');if(!m)return;const on=document.body.classList.contains('desk')&&innerWidth>=1100;const k=m.dataset.k||'';
+ m.classList.toggle('dkL',on&&L.has(k));m.classList.toggle('dkS',on&&S_.has(k));m.classList.toggle('dkM',on&&!L.has(k)&&!S_.has(k)&&k!=='choice');
+ if(!on)return;
+ /* ปุ่มเดี่ยวที่ยืดเกือบเต็มหน้าต่าง → กว้างตามข้อความ (ไม่แตะปุ่มในตาราง/แถวที่มีหลายปุ่ม) */
+ if(k!=='choice'){const mw=m.clientWidth;m.querySelectorAll('button:not(.opt):not(.xbtn):not(.dkBC)').forEach(b=>{const p=b.parentElement;if(!p||b.closest('.mgrid,.item,.grid,details,summary,.tabs,nav,.uxRow,.mnTri,.dk-btns,.wpS'))return;const ds=getComputedStyle(p).display;
+  if(ds.includes('grid'))return;if(ds.includes('flex')&&[...p.children].filter(x=>x.tagName==='BUTTON').length>1)return;if(b.offsetWidth<mw*.72||b.offsetHeight>140)return;b.classList.add('dkBC')})}
+ m.querySelectorAll('details.gdTip[open]:not([data-dk])').forEach(d=>{d.dataset.dk=1;d.open=false;const t=(d.querySelector('div')||{}).textContent||'';d.classList.add('dkPv');const s=d.querySelector('summary');if(s)s.dataset.pv='· '+t.replace(/\s+/g,' ').trim().slice(0,70)+'… อ่านต่อ ▾'})}catch(e){}};
+let q=0;const kick=()=>{if(q)return;q=1;requestAnimationFrame(()=>{q=0;fit()})};
+try{const m=document.getElementById('modal');if(m)new MutationObserver(kick).observe(m,{childList:true,subtree:true,attributes:true,attributeFilter:['data-k']})}catch(e){}
+/* หน้าแรก: ย้ายแถบเกิด (#tDock) มาไว้ใต้ "เลือกโหมด" บนจอคอม · กลับที่เดิมเมื่อจอแคบ */
+const tdFix=()=>{try{const d=document.getElementById('tDock'),wp=document.getElementById('wPick'),c=wp&&wp.querySelector('.wpC');const on=document.body.classList.contains('desk')&&innerWidth>=1100;
+ if(on&&d&&c){if(d.previousElementSibling!==c){if(!d._dkHome)d._dkHome=[d.parentElement,d.nextSibling];c.after(d)}document.body.classList.add('dkTD')}
+ else if(d&&d._dkHome){const [p0,n0]=d._dkHome;try{p0.insertBefore(d,n0&&n0.parentElement===p0?n0:null)}catch(e){p0.appendChild(d)}d._dkHome=null;document.body.classList.remove('dkTD')}}catch(e){}};
+setInterval(tdFix,800);addEventListener('resize',tdFix);
+addEventListener('resize',kick);
+})()}catch(e){console.error('dk2',e)}
