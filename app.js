@@ -47191,3 +47191,14 @@ try{(function(){const W=window._WD,WG=window._WG,S0=window._SK0;if(!W||!WG||S0==
  const css=document.createElement('style');css.textContent=`#modal .sgL{display:flex;flex-direction:column;gap:6px}#modal .sgC{display:flex;gap:8px;align-items:center;padding:6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}#modal .sgC.sp{border-color:#c080ff;box-shadow:0 0 10px rgba(192,128,255,.35)}#modal .sgC canvas{width:72px;height:96px;image-rendering:pixelated;flex:none;background:radial-gradient(circle at 50% 70%,rgba(120,160,255,.18),transparent 70%);border-radius:8px}#modal .sgT{font-size:13px;line-height:1.35}#modal .sgA{margin-top:4px}#modal .sgA .gbtn{font-size:12px;padding:4px 10px}`;document.head.appendChild(css);
 })()}catch(e){console.error('mod-sg',e)}
 
+// 📋 ปุ่มลัดไปกระดานภารกิจในเมือง จากแท็บเควส (ผู้เล่นหาที่รับเควสไม่เจอ)
+try{(function(){const _oqB=openQuests;openQuests=function(){const r=_oqB.apply(this,arguments);try{
+ if(!S||!S.alive||typeof openTown!=='function')return r;if(S.mw||S.beastMode&&!S.beastMode.human)return r;
+ const m=$('modal');if(!m||m.dataset.k!=='quests'||m.querySelector('.qBoardGo'))return r;
+ const kid=(S.age|0)<14,nOpen=(S.tq||[]).filter(q=>q&&!q.acc).length;
+ const b=document.createElement('button');b.type='button';b.className='qBoardGo';
+ b.innerHTML=kid?`<span>📋 กระดานภารกิจในเมือง</span><small>รับเควสได้ตอนอายุ 14 (อีก ${14-(S.age|0)} ปี)</small>`:`<span>📋 รับเควสใหม่ที่กระดานเมือง</span><small>${nOpen?`มีงานรอให้รับ ${nOpen} งาน · `:''}งานใหม่มาทุกปีตามระดับพลัง</small>`;
+ b.style.cssText='display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;margin:6px 0 10px;padding:10px 12px;border-radius:12px;border:1px solid var(--gold,#c8a040);background:linear-gradient(135deg,rgba(200,160,64,.18),rgba(200,160,64,.06));color:inherit;font:inherit;font-weight:700;text-align:left;cursor:pointer'+(kid?';opacity:.65':'');
+ const sm=b.querySelector('small');if(sm)sm.style.cssText='font-weight:400;font-size:12px;opacity:.8';
+ b.onclick=()=>{try{closeM();openTown(kid?'main':'board')}catch(e){console.error(e)}};
+ const h=m.querySelector('h3');if(h)h.insertAdjacentElement('afterend',b);else m.prepend(b)}catch(e){console.error('qBoardGo',e)}return r}})()}catch(e){console.error('mod-qboard',e)}
