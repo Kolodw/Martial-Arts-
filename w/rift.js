@@ -47,6 +47,7 @@ function clearQ(){try{if(choice._cur){choice._cur=null;choice._min=false;try{pen
 // ---------- ข้ามโลก ----------
 function cross(key,how,o){o=o||{};if(!S||!S.alive||S.rift)return;kidStash(where());S.kids=0;const P=PAIR[key],C=CONV[key]||{pow:.6,note:'',int:0},home=snap(),a=anchorsNow(),gen=S.gender||'ชาย';clearQ();const T=o.t||P.t;
  const R=S.rift={k:key,how,f:o.f||P.f,t:T,y0:S.age,ys:0,shock:how==='soul'?55:80,a,b:0,ev:{},home,ly:S.age};
+ if(S.beastMode){try{home.bm=JSON.parse(JSON.stringify(S.beastMode))}catch(e){home.bm=S.beastMode}delete S.beastMode} /* สัตว์อสูร (แม้แปลงเป็นคน) ข้ามโลก = ไปเป็นคนเต็มตัว · กลับบ้านแล้วคืนสถานะ */
  S.mw=null;S.xian=false;S.xt=0;try{CFG.xian=0}catch(e){}try{setWorld(false)}catch(e){}S.faction=null;S.ownSect=null;S.spouse=null;
  if(T==='soul'){S.ch='soul';S.sv={aw:2,sp:[],lv:0,rings:[],seen:{},hy:-9};R.hs=1}else S.ch='';
  if(T==='xian'){S.xian=true;try{CFG.xian=1}catch(e){}try{setWorld(true)}catch(e){}}
@@ -82,7 +83,7 @@ function offer(key){const P=PAIR[key],C=CONV[key];const T={mn_mu:'คืนท�
 function goHome(comp){const R=RF();if(!R||R.done)return;
  if(R.k==='mu_mn'){R.ret=1;R.done=1;R.comp=comp||'';try{mwBack()}catch(e){console.error(e)}return}
  const H=R.home;clearQ();const dt=Math.max(0,Math.round(R.ys*((PAIR[R.k]&&PAIR[R.k].tr)||1)));R.dt=dt;
- const fin=()=>{S.mw=H.mw;S.ch=H.ch||'';if(H.mw)S.mw.y=(S.mw.y||0)+dt;S.xian=!!H.xian;S.xt=H.xt||0;try{CFG.xian=H.xian?1:0}catch(e){}try{setWorld(!!H.xian)}catch(e){}const ch0=famBack(H,dt,R);
+ const fin=()=>{if(H.bm&&!S.beastMode)S.beastMode=H.bm;S.mw=H.mw;S.ch=H.ch||'';if(H.mw)S.mw.y=(S.mw.y||0)+dt;S.xian=!!H.xian;S.xt=H.xt||0;try{CFG.xian=H.xian?1:0}catch(e){}try{setWorld(!!H.xian)}catch(e){}const ch0=famBack(H,dt,R);
   if(R.how==='soul'&&R.orig)S.name=R.orig;S.money=Math.max(S.money||0,H.money||0);S.power=Math.max(H.power||0,Math.round(S.power||0));if(H.sv)S.sv=H.sv;else if(R.t==='soul')delete S.sv;S.focus=H.mw?'mwjob':'train';
   R.ret=1;R.done=1;R.comp=comp||'';bookS(b=>{b.e.home=1});kAdd(`กลับจาก${PAIR[R.k].n.split('→')[1].trim()}สู่โลกเดิม${comp?' พร้อม '+comp:''}`);
   log(`🏠 <b>ประตูพาคุณกลับบ้าน</b> ${R.ys} ปีในอีกโลกผ่านไปเหมือนฝันยาว ${dt===R.ys?`ที่นี่ก็ผ่านไป ${R.ys} ปีเท่ากัน`:`แต่ที่นี่ผ่านไปแล้ว <b>${dt} ปี</b>`}${ch0?'<br>'+ch0:''} ${comp?`<b>${esc(comp)}</b> ยืนจับมือคุณอยู่ข้างๆ มองโลกนี้ด้วยตาเบิกกว้าง`:'ทุกอย่างคุ้นตาแต่ไม่เหมือนเดิม'}`,'myth',true);
@@ -95,7 +96,7 @@ function famBack(H,dt,R){const F=H.fam;if(!F||H.mw)return'';const out=[];try{
  S.kids=S.children.length;if(S.trvKids){const ks=new Set(S.children.map(kKey));S.trvKids=S.trvKids.filter(x=>!ks.has(kKey(x)))}
  S.sibs=(F.sibs||[]).map(x=>{x=Object.assign({},x);if(x.alive!==false)x.age=(x.age||0)+dt;return x});
  if(F.family)S.family=F.family;
- if(F.spouse&&!S.spouse){const sp=Object.assign({},F.spouse);if(sp.age!=null)sp.age+=dt;if(dt>=15&&Math.random()<.6){out.push(`${esc(sp.n||'คู่ชีวิต')}รอคุณไม่ไหว แต่งงานใหม่ไปแล้ว`)}else{S.spouse=sp;if(dt>=3)out.push(`${esc(sp.n||'คู่ชีวิต')}ยังรออยู่ ผมขาวขึ้นกว่าที่คุณจำได้`)}}
+ if(F.spouse&&!S.spouse){const sp=typeof F.spouse==='string'?{n:F.spouse}:Object.assign({},F.spouse);if(dt>=15&&Math.random()<.6){out.push(`${esc(sp.n||'คู่ชีวิต')}รอคุณไม่ไหว แต่งงานใหม่ไปแล้ว`)}else{S.spouse=sp.n||'คู่ชีวิต';if(dt>=3)out.push(`${esc(sp.n||'คู่ชีวิต')}ยังรออยู่ ผมขาวขึ้นกว่าที่คุณจำได้`)}}
  if(F.faction){if(dt>=30){S.faction=null;out.push(`สำนัก${esc(F.faction.n||'')}ล่มสลายไปแล้ว เหลือแต่ป้ายชื่อผุๆ`)}else{S.faction=F.faction;if(dt>=8)out.push(`สำนัก${esc(F.faction.n||'')}เปลี่ยนเจ้าสำนักไปแล้ว คนรุ่นใหม่ไม่มีใครรู้จักคุณ`)}}
  if(F.ownSect&&dt<30)S.ownSect=F.ownSect;
  }catch(e){console.error('famBack',e)}return out.length?'<span class="tag2">⏳ '+out.join(' · ')+'</span>':''}
@@ -284,6 +285,7 @@ window.trvHeirGo=function(i,mode){try{const P=S,c0=P&&P.trvKids&&P.trvKids[i];if
  else if(dn&&S!==P)setTimeout(()=>{try{log(`🏠 <b>${EK(S.name)}ถูกพาข้ามประตูมา${KN[w]||wn(w)}</b> — ร่างที่เกิดใน${KN[c._w]}ไม่ชินกฎโลกนี้ พรสวรรค์ ${EK(KW[c._w]==='xian'?xA(dn):dn)} อ่อนลงเหลือ <b>${EK(S.talent&&S.talent.n||'')}</b>`,'epic',true);render();saveGame()}catch(e){}},200)}catch(e){console.error('trvHeirGo',e)}};
 {const _m=window.modal;if(typeof _m==='function')window.modal=function(h,tag){const r=_m.apply(this,arguments);try{if(tag==='heir'){const x=heirHtml(),M=$('modal');if(x&&M)M.insertAdjacentHTML('beforeend',x)}}catch(e){}return r}}
 window._riftKids={stash:kidStash,list:kidsX,tDown};
+setInterval(()=>{try{const R=S&&S.alive&&S.rift;if(R&&!R.done&&S.beastMode&&R.home&&!R.home.bm){R.home.bm=JSON.parse(JSON.stringify(S.beastMode));R.home.bm.human=1;delete S.beastMode;try{render()}catch(e){}}}catch(e){}},2000);
 window._rift={cross,offer,goHome,door,tick,visit,visTick,yearly,EV,PAIR,VIS,where,add,ask,O,CONV,WN,HOW,bookS,shockD,mg,snap,clearQ,anchorsNow,RF,pk,RN,cl,langEv,free,kAdd,RATE,trTxt,wn,LANG};
 })();
 try{wReady('rift')}catch(e){}

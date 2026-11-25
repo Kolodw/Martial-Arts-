@@ -31835,9 +31835,9 @@ function emThief(){const E=S.em,Th=E.thief;Th.met=(Th.met||0)+1;const pw=Math.ro
   {t:'🌫️ ปล่อยไปก่อน',s:'เขาจะแกร่งขึ้นเรื่อยๆ',skip:true,f(){log(`🌫️ คุณมองตาม${esc(Th.n)}ไป ท่าคุณในมือคนอื่นดูแปลกตาเหลือเกิน`)}}])}
 function emLove(){const E=S.em,L=E.love;L.met=1;
  choice('💞 คนที่คุณพาชื่อมาด้วย',`ในงานเทศกาลคุณได้ยินเสียงหัวเราะที่จำได้ทันที <b>${esc(L.n)}</b> เกิดใหม่เช่นกัน หน้าตาไม่เหมือนเดิม และจำคุณไม่ได้เลย`,[
-  {t:'💬 เริ่มรู้จักใหม่ตั้งแต่ต้น',s:'ใช้เวลา · อาจได้คู่ชีวิตอีกครั้ง',f(){if(roll01(.45+(S.cha||0)/300)){S.spouse=S.spouse||{n:L.n,age:S.age,g:S.gender==='ชาย'?'หญิง':'ชาย',alive:true};joy(25);S.karma+=4;keyAdd('ได้พบคนรักจากชาติก่อนอีกครั้ง');log(`💞 หลายเดือนต่อมา ${esc(L.n)}เอ่ยว่า "แปลกนะ อยู่กับท่านแล้วรู้สึกเหมือนกลับบ้าน"`,'myth')}else{joy(-10);log(`💞 ${esc(L.n)}มีคนที่รักอยู่แล้วในชาตินี้ คุณยิ้มให้และเดินจากมา`)}}},
+  {t:'💬 เริ่มรู้จักใหม่ตั้งแต่ต้น',s:'ใช้เวลา · อาจได้คู่ชีวิตอีกครั้ง',f(){if(roll01(.45+(S.cha||0)/300)){S.spouse=S.spouse||L.n;joy(25);S.karma+=4;keyAdd('ได้พบคนรักจากชาติก่อนอีกครั้ง');log(`💞 หลายเดือนต่อมา ${esc(L.n)}เอ่ยว่า "แปลกนะ อยู่กับท่านแล้วรู้สึกเหมือนกลับบ้าน"`,'myth')}else{joy(-10);log(`💞 ${esc(L.n)}มีคนที่รักอยู่แล้วในชาตินี้ คุณยิ้มให้และเดินจากมา`)}}},
   {t:'🤫 เฝ้ามองอยู่ห่างๆ',s:'ใจสงบ · กรรมบวก',f(){S.karma+=6;joy(5);log(`🤫 คุณคอยปกป้อง${esc(L.n)}โดยไม่ให้รู้ตัว ปีละครั้งที่ศาลเจ้า คุณจะวางดอกไม้ไว้ให้`)}},
-  {t:'📜 เล่าความจริงทั้งหมด',s:'เสี่ยง · เขาอาจจำได้ หรือกลัวคุณ',f(){if(Math.random()<.35){S.spouse=S.spouse||{n:L.n,age:S.age,g:S.gender==='ชาย'?'หญิง':'ชาย',alive:true};joy(30);S.flags.emLove=1;keyAdd('คนรักจากชาติก่อนจำคุณได้');log(`📜 น้ำตาไหลก่อนคุณจะเล่าจบ "ข้าฝันถึงท่านมาทั้งชีวิต"`,'myth')}else{joy(-12);log(`📜 ${esc(L.n)}ถอยหนี มองคุณเหมือนคนบ้า แล้วไม่กลับมาอีก`)}}}])}
+  {t:'📜 เล่าความจริงทั้งหมด',s:'เสี่ยง · เขาอาจจำได้ หรือกลัวคุณ',f(){if(Math.random()<.35){S.spouse=S.spouse||L.n;joy(30);S.flags.emLove=1;keyAdd('คนรักจากชาติก่อนจำคุณได้');log(`📜 น้ำตาไหลก่อนคุณจะเล่าจบ "ข้าฝันถึงท่านมาทั้งชีวิต"`,'myth')}else{joy(-12);log(`📜 ${esc(L.n)}ถอยหนี มองคุณเหมือนคนบ้า แล้วไม่กลับมาอีก`)}}}])}
 function emGold(){const E=S.em,g=E.gold;E.gold=0;S.money+=g;log(`💰 คุณกลับไปที่ซ่อนสมบัติตามความทรงจำ ใต้แผ่นหินหลังศาลร้าง เงิน ${fmt(g)} ยังอยู่ครบ`,'epic')}
 function ftLegend(){const T=S.ft;T.lg=S.age;const k=S.karma||0,fm=S.fame||0;
  const ttl=T.hum>=55&&k>=0?'ผู้ที่ทำให้มนุษย์รอด':k<=-30?'ต้นเหตุแห่งการล่มสลาย':fm>3000?'ตำนานที่ถูกเล่าผิดจากความจริง':'ชื่อที่ไม่มีใครจำได้';
@@ -47208,3 +47208,6 @@ try{(function(){const _oqB=openQuests;openQuests=function(){const r=_oqB.apply(t
  const sm=b.querySelector('small');if(sm)sm.style.cssText='font-weight:400;font-size:12px;opacity:.8';
  b.onclick=()=>{try{closeM();openTown(kid?'main':'board')}catch(e){console.error(e)}};
  const h=m.querySelector('h3');if(h)h.insertAdjacentElement('afterend',b);else m.prepend(b)}catch(e){console.error('qBoardGo',e)}return r}})()}catch(e){console.error('mod-qboard',e)}
+
+/* คู่ชีวิตต้องเป็นชื่อ (string) — บางเหตุการณ์เก่าเคยเก็บเป็นออบเจกต์ ทำให้ขึ้น [object Object] */
+try{setInterval(()=>{try{if(S&&S.spouse&&typeof S.spouse==='object'){const o=S.spouse;S.spouse=String(o.n||o.name||o.nm||'คู่ชีวิต');if(o.alive===false)S.spouse=null}}catch(e){}},1500)}catch(e){}
