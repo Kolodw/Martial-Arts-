@@ -148,3 +148,6 @@ LS `murim_loop` · 🗓️ กระดานวันนี้ 3 งานข�
 
 ## bond.js — 👥 ผูกชะตาเพื่อน · 🔮 ทายชะตา · 🌍 ยุคประจำสัปดาห์ · 🎧 ฟังนิยาย · 📸 ภาพประกอบนิยาย (โหลดเบื้องหลัง 4 วิ)
 api `fl` (code/link/unlink/st/send/inbox/list · เพื่อนอ้างด้วย h=sha256 ไม่เปิด id จริง · ≤8 คน · พร 1 ครั้ง/20 ชม./คู่) · `pr` mk (q 60/wd/90 · เฉลยใน `fl st` ตอน al 1→0 ของชีวิตชื่อเดิม → `prs` แต้มหมอดู + inbox) · `era` (สัปดาห์ W เวลาไทย · ตัวเลือก 3 จาก 6 กำหนดตาม W · ยุคปัจจุบัน = โหวตสูงสุดของ W−1 · deed ≤3 ต่อ 20 วิ · เป้า 250 → รับรางวัล LS murim_eraC) · ห่อ passYear: เพื่อนโผล่ (oath/gift/save ≤3/ชีวิต ส่ง echo กลับ) + เหตุการณ์ยุค (≤2/สัปดาห์/ชีวิต) · 🎧 speechSynthesis th-TH ห่อ log/choiceShow LS murim_tts · 📸 MutationObserver ใส่ pxThumb ใต้หัวบทใน modal 'nv'
+
+## pet.js — 🐾 สัตว์คู่ใจข้ามชาติ (โหลดเบื้องหลัง 4.2 วิ)
+LS `murim_cpn` {nm lv xp mem bond tr lives[] dead} · ในชีวิต `S._cp` {met at bond age dead f rem} · ห่อ passYear: เจอกันที่อายุสุ่ม (ครั้งแรก = รับเลี้ยง/ไล่) · ร่างตามโลก `FORM` · จำได้ตามโอกาส mem (ผู้ย้อนกาลจำได้เสมอ) · ไม่จำ = ตีสนิท/เรียกชื่อ · เหตุการณ์ find fight lost sick show gift + ตามนิสัย steal/wise/help · ช่วยตอน HP<25% · แก่ตายตามอายุขัยร่าง → ชาติหน้ากลับมา · จบชีวิต (#end) บันทึก lives + ปรับ mem/bond · ผูกพัน≥50 = โชคตอนเริ่ม · ☰ ปุ่มชื่อสัตว์ → cpnOpen
