@@ -40987,3 +40987,4 @@ const _fc=fateChoice;fateChoice=function(){try{const c=choice._cur;if(c&&auto&&i
 if(typeof aiPick==='function'){const _ap=aiPick;aiPick=function(c){const i=_ap.apply(this,arguments);try{if(auto&&c&&c.opts&&XO(c.opts[i])){const j=c.opts.findIndex(o=>o&&!XO(o)&&!o.skip);if(j>=0)return j}}catch(e){}return i}}
 })()}catch(e){console.error('block301',e)}
 try{setTimeout(()=>{try{wLoad('legend').catch(()=>{})}catch(e){}},3600)}catch(e){} /* 🌌 ตำนานข้ามชาติ + 🎭 สไตล์ชีวิต + 🖼️ การ์ดตำนาน (/w/legend.js) */
+try{setTimeout(()=>{try{wLoad('bond').catch(()=>{})}catch(e){}},4000)}catch(e){} /* 👥 ผูกชะตาเพื่อน · 🔮 ทายชะตา · 🌍 ยุคประจำสัปดาห์ · 🎧 ฟังนิยาย · 📸 ภาพประกอบนิยาย (/w/bond.js) */

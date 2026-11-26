@@ -145,3 +145,6 @@ LS `murim_loop` · 🗓️ กระดานวันนี้ 3 งานข�
 
 ## legend.js — 🌌 ตำนานข้ามชาติ + 🎭 สไตล์ชีวิต + 🖼️ การ์ดตำนาน (โหลดเบื้องหลัง 3.6 วิ)
 จบชีวิต (เห็น #end) → `record()` LS `murim_lgd` ≤15 {n,w,a,ep,sc(แลนด์มาร์ก S.scars),art,fac,c,kids,fm,t} · ห่อ passYear → `tick()` เว้นช่วงสุ่ม 2–16 ปี โอกาส 55% ≤3/ชีวิต ไม่ซ้ำแบบ: land book grave heir death cross fake known (+ภาคต่อ tail จาก heir) · ชื่อ/สาเหตุเพี้ยนตามเวลา (`blur`) · ผลแตกแขนงสุ่ม · 🎭 LS `murim_afs` (fight rich love calm xian) ห่อ fateChoice เลือกตามคำในตัวเลือก หักมุม 20% · ล็อกคำตอบ/เรื่องสำคัญมาก่อน · ☰ ปุ่ม afsOpen/lgdOpen · `lgdCard()` 1080×1350 ปุ่มที่หน้าจบ (ของเดิม shareCard ยังอยู่)
+
+## bond.js — 👥 ผูกชะตาเพื่อน · 🔮 ทายชะตา · 🌍 ยุคประจำสัปดาห์ · 🎧 ฟังนิยาย · 📸 ภาพประกอบนิยาย (โหลดเบื้องหลัง 4 วิ)
+api `fl` (code/link/unlink/st/send/inbox/list · เพื่อนอ้างด้วย h=sha256 ไม่เปิด id จริง · ≤8 คน · พร 1 ครั้ง/20 ชม./คู่) · `pr` mk (q 60/wd/90 · เฉลยใน `fl st` ตอน al 1→0 ของชีวิตชื่อเดิม → `prs` แต้มหมอดู + inbox) · `era` (สัปดาห์ W เวลาไทย · ตัวเลือก 3 จาก 6 กำหนดตาม W · ยุคปัจจุบัน = โหวตสูงสุดของ W−1 · deed ≤3 ต่อ 20 วิ · เป้า 250 → รับรางวัล LS murim_eraC) · ห่อ passYear: เพื่อนโผล่ (oath/gift/save ≤3/ชีวิต ส่ง echo กลับ) + เหตุการณ์ยุค (≤2/สัปดาห์/ชีวิต) · 🎧 speechSynthesis th-TH ห่อ log/choiceShow LS murim_tts · 📸 MutationObserver ใส่ pxThumb ใต้หัวบทใน modal 'nv'

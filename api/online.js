@@ -1255,6 +1255,54 @@ module.exports = async (req, res) => {
       if (!to) return res.json({ err: 'none' });
       await cmd('SADD', 'vinc:' + to, id); return res.json({ ok: 1, c: +(await cmd('SCARD', 'vinc:' + to)) || 0 });
     }
+    // 👥 ผูกชะตาเพื่อน + 🔮 ทายชะตาเพื่อน + 🌍 ยุคประจำสัปดาห์ (w/bond.js)
+    if (a === 'fl' || a === 'pr' || a === 'era') {
+      if (!okId(id)) return res.json({ err: 'id' });
+      const o = String(b.o || qOf(req).o || '');
+      const H = x => crypto.createHash('sha256').update('fl:' + x).digest('hex').slice(0, 12);
+      const ofH = async h => { h = String(h || '').replace(/[^a-f0-9]/g, '').slice(0, 12); return h ? await cmd('GET', 'flh:' + h) : null };
+      const C = (s, n) => String(s == null ? '' : s).replace(/[<>]/g, '').slice(0, n);
+      const push = (to, m) => pipe([['LPUSH', 'flin:' + to, JSON.stringify(Object.assign({ t: now }, m))], ['LTRIM', 'flin:' + to, 0, 39], ['EXPIRE', 'flin:' + to, 86400 * 30]]);
+      if (a === 'fl') {
+        await cmd('SET', 'flh:' + H(id), id);
+        if (o === 'code') { let c = await cmd('GET', 'flc:' + id); if (!c) { for (let i = 0; i < 6 && !c; i++) { const t = Math.random().toString(36).slice(2, 8).toUpperCase(); if (/^[A-Z0-9]{6}$/.test(t) && await cmd('SET', 'flcode:' + t, id, 'NX')) { c = t; await cmd('SET', 'flc:' + id, c) } } } return res.json({ ok: 1, c }) }
+        if (o === 'link') { if (!(await cmd('SET', 'fllr:' + id, 1, 'NX', 'EX', 5))) return res.json({ err: 'rate' }); const c = String(b.c || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8), oid = await cmd('GET', 'flcode:' + c);
+          if (!oid || oid === id) return res.json({ err: 'code' }); const [n1, n2, has] = await pipe([['SCARD', 'fl:' + id], ['SCARD', 'fl:' + oid], ['SISMEMBER', 'fl:' + id, oid]]); if (+has) return res.json({ ok: 1, dup: 1 }); if (+n1 >= 8 || +n2 >= 8) return res.json({ err: 'full' });
+          await pipe([['SADD', 'fl:' + id, oid], ['SADD', 'fl:' + oid, id], ['SET', 'flh:' + H(oid), oid]]); await push(oid, { k: 'link', pn: C(b.pn, 20) }); return res.json({ ok: 1 }) }
+        if (o === 'unlink') { const f = await ofH(b.h); if (f) await pipe([['SREM', 'fl:' + id, f], ['SREM', 'fl:' + f, id]]); return res.json({ ok: 1 }) }
+        if (o === 'st') { if (!(await cmd('SET', 'flsr:' + id, 1, 'NX', 'EX', 20))) return res.json({ ok: 0, rate: 1 });
+          const prev = jp(await cmd('HGET', 'flst', id)) || {}, s = { n: C(b.n, 24), w: C(b.w, 10), a: Math.max(0, Math.min(1e7, Math.floor(+b.a || 0))), al: b.al ? 1 : 0, wd: b.wd ? 1 : 0, ep: C(b.ep, 30), pn: C(b.pn, 20), t: now };
+          await cmd('HSET', 'flst', id, JSON.stringify(s));
+          // 🔮 ปิดผลทายเมื่อชีวิตนี้จบ
+          if (prev.al && !s.al && prev.n === s.n) { const P = (await cmd('HGETALL', 'prd:' + id)) || []; const L = [];
+            for (let i = 0; i < P.length; i += 2) { const who = P[i], q = jp(P[i + 1]); if (!q || q.cn !== s.n) continue; const truth = q.q === '60' ? s.a >= 60 : q.q === 'wd' ? !!s.wd : q.q === '90' ? s.a >= 90 : false, ok = (!!q.y) === truth;
+              if (ok) L.push(['HINCRBY', 'prs', who, q.q === '90' ? 3 : 2]); else L.push(['HINCRBY', 'prs', who, 0]); await push(who, { k: 'pred', ok: ok ? 1 : 0, cn: s.n, pn: s.pn, a: s.a, q: q.q, y: q.y ? 1 : 0 }) }
+            L.push(['DEL', 'prd:' + id]); if (L.length) await pipe(L) }
+          return res.json({ ok: 1 }) }
+        if (o === 'send') { const f = await ofH(b.h); if (!f || !(+(await cmd('SISMEMBER', 'fl:' + id, f)))) return res.json({ err: 'nolink' }); const k = b.k === 'bless' ? 'bless' : 'echo';
+          if (k === 'bless' && !(await cmd('SET', 'flbl:' + id + ':' + f, 1, 'NX', 'EX', 20 * 3600))) return res.json({ err: 'day' });
+          if (k === 'echo' && !(await cmd('SET', 'fler:' + id, 1, 'NX', 'EX', 15))) return res.json({ err: 'rate' });
+          await push(f, { k, pn: C(b.pn, 20), cn: C(b.cn, 24), tx: C(b.tx, 160) }); return res.json({ ok: 1 }) }
+        if (o === 'inbox') { const L = (await cmd('LRANGE', 'flin:' + id, 0, 39)) || []; if (L.length) await cmd('DEL', 'flin:' + id); return res.json({ ok: 1, l: L.map(jp).filter(Boolean) }) }
+        const ids = ((await cmd('SMEMBERS', 'fl:' + id)) || []).slice(0, 8), st = ids.length ? await cmd('HMGET', 'flst', ...ids) : [], sc = ids.length ? await cmd('HMGET', 'prs', ...ids, id) : [await cmd('HGET', 'prs', id)];
+        const mine = ids.length ? await pipe(ids.map(x => ['HGET', 'prd:' + x, id])) : [];
+        return res.json({ ok: 1, c: await cmd('GET', 'flc:' + id), me: +(sc[ids.length]) || 0, f: ids.map((x, i) => Object.assign({ h: H(x), sc: +(sc[i]) || 0, my: jp(mine[i]) || null }, jp(st[i]) || {})) })
+      }
+      if (a === 'pr') { if (o !== 'mk') return res.json({ err: 'o' }); const f = await ofH(b.h); if (!f || !(+(await cmd('SISMEMBER', 'fl:' + id, f)))) return res.json({ err: 'nolink' });
+        const s = jp(await cmd('HGET', 'flst', f)); if (!s || !s.al) return res.json({ err: 'dead' }); const q = ['60', 'wd', '90'].includes(String(b.q)) ? String(b.q) : null; if (!q) return res.json({ err: 'q' });
+        if ((q === '60' && s.a >= 55) || (q === '90' && s.a >= 85)) return res.json({ err: 'late' });
+        await cmd('HSET', 'prd:' + f, id, JSON.stringify({ q, y: b.y ? 1 : 0, cn: s.n, t: now })); return res.json({ ok: 1 }) }
+      if (a === 'era') {
+        const ERA = ['plague', 'gold', 'demon', 'love', 'meteor', 'flood'], W = Math.floor((now + 7 * 3600e3 + 3 * 864e5) / (7 * 864e5)), GOAL = 250;
+        const optsOf = w => { const s = ERA.slice(), r = []; let x = (w * 2654435761) >>> 0; while (r.length < 3) { x = (x * 1103515245 + 12345) >>> 0; const k = s.splice(x % s.length, 1)[0]; r.push(k) } return r };
+        const curOf = async () => { let c = await cmd('GET', 'erac:' + W); if (c) return c; const v = (await cmd('HGETALL', 'erav:' + (W - 1))) || [], op = optsOf(W - 1); let best = null, bn = -1; for (let i = 0; i < v.length; i += 2) if (op.includes(v[i]) && +v[i + 1] > bn) { bn = +v[i + 1]; best = v[i] } c = best || op[W % 3]; await cmd('SET', 'erac:' + W, c, 'EX', 86400 * 21); return c };
+        const cur = await curOf();
+        if (o === 'vote') { const e = String(b.e || ''); if (!optsOf(W).includes(e)) return res.json({ err: 'e' }); if (+(await cmd('SADD', 'eravm:' + W, id))) await pipe([['HINCRBY', 'erav:' + W, e, 1], ['HSET', 'eramy:' + W, id, e], ['EXPIRE', 'erav:' + W, 86400 * 21], ['EXPIRE', 'eravm:' + W, 86400 * 21], ['EXPIRE', 'eramy:' + W, 86400 * 21]]); }
+        if (o === 'deed') { if (await cmd('SET', 'erdl:' + id, 1, 'NX', 'EX', 20)) { await pipe([['INCRBY', 'erap:' + W, Math.max(1, Math.min(3, b.n | 0 || 1))], ['EXPIRE', 'erap:' + W, 86400 * 21], ['SADD', 'erau:' + W, id], ['EXPIRE', 'erau:' + W, 86400 * 21]]) } }
+        const [v, my, pg, us] = await pipe([['HGETALL', 'erav:' + W], ['HGET', 'eramy:' + W, id], ['GET', 'erap:' + W], ['SCARD', 'erau:' + W]]); const tally = {}; for (let i = 0; i < (v || []).length; i += 2) tally[v[i]] = +v[i + 1];
+        return res.json({ ok: 1, w: W, cur, opts: optsOf(W), tally, my: my || '', p: +pg || 0, goal: GOAL, us: +us || 0, end: (W + 1) * 7 * 864e5 - 3 * 864e5 - 7 * 3600e3 })
+      }
+    }
     if (a === 'akget' || a === 'akput') { // 🔒 ล็อกคำตอบ: จำนวนช่องคำนวณฝั่งเซิร์ฟเวอร์ · รายการเก็บไว้กับบัญชี
       if (!okId(id)) return res.json({ n: 0, l: [] });
       const lim = await akLim(id, isAdmKey(b.key) || !!(+(await cmd('SISMEMBER', 'admids', id))));
