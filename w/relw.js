@@ -15,8 +15,12 @@ const F=n=>{n=+n||0;return n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(
 const T_=f=>{try{return f()}catch(e){return null}};
 const wk=()=>{if(typeof S==='undefined'||!S)return null;const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';return null};
 // ยุคปัจจุบัน: คนธรรมดาไม่มีพลังให้ปล่อย — ต้องตื่นพลัง (ฮันเตอร์) / ข้ามมิติมาพร้อมลมปราณ / มีวิชาติดตัว
-const mwPow=()=>{try{const M=S.mw;if(!M||M.sky||M.fog)return{ok:1};const H=M.H,aw=H&&H.aw&&H.aw!=='none'?H.aw:'',qi=+M.qi||0,arts=(S.arts||[]).filter(a=>a&&a.n).length;
- return{ok:!!(aw||qi>=1||arts||M.native===false),aw,qi,arts,trav:M.native===false}}catch(e){return{ok:1}}};
+// ระดับพลัง: human = มนุษย์ที่ฝึกมา (นักสู้ใต้ดิน/นักมวย/ร่างกายแกร่ง) · super = เหนือมนุษย์ (ต่อยกำแพงทะลุ) · city = ถล่มเมืองได้ (ระบบ/ตื่นพลังขั้นสูง/ข้ามมิติ/วิชาขั้นสูง)
+const mwPow=()=>{try{const M=S.mw;if(!M||M.sky||M.fog)return{ok:1,cls:'city'};const H=M.H,aw=H&&H.aw&&H.aw!=='none'?H.aw:'',qi=+M.qi||0,A=(S.arts||[]).filter(a=>a&&a.n),arts=A.length,ar=Math.max(-1,...A.map(a=>a.r|0)),pw=+S.power||0,
+  under=T_(()=>M.wx&&M.wx.on&&M.wx.id==='under')||0,rk=T_(()=>M.U&&M.U.rk)|0,trav=M.native===false;
+ let cls='';if((aw&&pw>=300)||qi>=5||ar>=3||trav&&qi>=1)cls='city';else if(aw||qi>=1||arts||(under&&(pw>=120||rk>=4))||pw>=220)cls='super';else if(under||pw>=15||rk>=1)cls='human';
+ return{ok:!!cls,cls,aw,qi,arts,trav,under,pw}}catch(e){return{ok:1,cls:'city'}}};
+const CAP={human:3.2,super:6.6,city:10};
 const NEW=new Set(['soul','mw','sky','fog','loop']);
 // ---------- ธาตุ/ชนิดพลัง → เอฟเฟกต์ + คำบรรยาย (อ้างอิงวิชาที่ใช้) ----------
 const EL={
@@ -44,6 +48,7 @@ function sources(w){const L=[];
   L.push({k:'sp'+i,ic,n:'วิญญาณยุทธ์ '+nmS,kind:k,col:k==='beam'?['#b48cff','#f0e0ff']:colOf(nmS+(k==='light'?'แดด':'')),mul:1+(rv?.25:0)+(ty==='atk'?.12:0),d:rv?'วิวัฒน์แล้ว':''})})}
  (T_(()=>S.arts)||[]).filter(a=>a&&a.n).sort((x,y)=>(y.r||0)-(x.r||0)||(y.b||0)-(x.b||0)).slice(0,10).forEach((a,i)=>{L.push({k:'a'+i,ic:'📜',n:a.n,kind:kindOf(a.n),col:colOf(a.n),mul:.8+.12*(a.r||0)+.05*(a.lv|0)+.02*(a.star|0),d:a.tier||'',art:a})});
  if(w==='sky'){const n=(T_(()=>S.mw.sky.avs)||[]).length;if(n)L.unshift({k:'av',ic:'🧬',n:`ร่างแยก ${n} ร่างรวมพลัง`,kind:'star',col:['#7aa8ff','#e0ecff'],mul:1+Math.min(.5,n*.12),d:'ร่างแยกที่คุณมีจริง',av:n})}
+ if(w==='mw'&&mwPow().cls==='human'){return[{k:'p',ic:'👊',n:'หมัดตรงเต็มแรง',kind:'fist',col:['#ffc840','#fff4c0'],mul:1,d:'มนุษย์'},{k:'k',ic:'🦵',n:'เตะก้านคอ',kind:'fist',col:['#ff9a4a','#fff0d0'],mul:1.08,d:'มนุษย์'},{k:'e',ic:'💪',n:'ศอกกลับ (มวยไทย)',kind:'fist',col:['#ff6a4a','#ffe0d0'],mul:1.05,d:'มนุษย์'}]}
  if(w==='mw'){const m=mwPow();if(m.aw)L.unshift({k:'aw',ic:m.aw==='sys'?'🟦':'✨',n:m.aw==='sys'?'พลังจากระบบ':'พลังที่ตื่นรู้',kind:CH(['thunder','beam','fire','ice']),col:m.aw==='sys'?['#38a8ff','#e0f4ff']:['#ffd34a','#fff6d0'],mul:1.1,d:'ฮันเตอร์'});if(m.qi>=1)L.unshift({k:'qi',ic:'🌀',n:'ลมปราณจากโลกเดิม',kind:'beam',col:['#8af0c0','#f0fff8'],mul:.85+Math.min(.6,m.qi*.05),d:'ระดับ '+m.qi})}
  L.push({k:'fist',ic:'👊',n:'หมัดเปล่า (เสริมพลัง)',kind:'fist',col:['#ffc840','#fff4c0'],mul:.7,d:''});
  return L}
@@ -58,8 +63,8 @@ soul:{ic:'⭕',n:'ปลดปล่อยวงแหวน',lb:'วงแห�
  unit:(p,v)=>{const r=T_(()=>S.sv.rings[+v]);return[F(((r&&r.t)||10)*(1+p*p*.4)),'ปีวงแหวนที่ถูกเผา']},
  amb:null,mark:['ป่าวงแหวนไหม้ของ','หลุมแสงม่วงของ','ทุ่งเถ้าวิญญาณของ']},
 mw:{ic:'🏙️',n:'ปล่อยพลังกลางเมือง',lb:'ปล่อยที่ไหน',ac:'#38d6ff',d:'วัดเป็น<b>ริกเตอร์ + ยอดวิว</b> · โดนอัดคลิปแน่ ขึ้นเทรนด์ ขึ้นข่าว · ยิ่งดังยิ่งได้ชื่อเสียง แต่แรงเกินไปชายชุดดำจะมาเคาะประตู',
- opts:()=>[['park','🅿️ ลานจอดห้างตีสอง','คนน้อย กล้องเยอะ'],['bld','🏚️ ตึกร้างกลางเมือง','สายลองของชอบมา'],['beach','🏖️ ชายหาด','คนเพียบ'],['dam','🌊 หน้าเขื่อน','อย่าหาทำ']],
- mul:v=>v==='dam'?1.12:1,unit:p=>[(1+p*.85).toFixed(1),'ริกเตอร์'],amb:null,mark:['ลานจอดปริศนาของ','หลุมไวรัลของ','จุดเช็คอินแห่ง']},
+ opts:()=>mwPow().cls==='human'?[['park','🥊 ค่ายมวยตอนเย็น','กระสอบทราย + เครื่องวัดแรง'],['beach','🏖️ ชายหาด','ต่อยเป้าโชว์'],['bld','🧱 ตึกร้าง','ลองต่อยกำแพงอิฐ']]:[['park','🅿️ ลานจอดห้างตีสอง','คนน้อย กล้องเยอะ'],['bld','🏚️ ตึกร้างกลางเมือง','สายลองของชอบมา'],['beach','🏖️ ชายหาด','คนเพียบ'],['dam','🌊 หน้าเขื่อน','อย่าหาทำ']],
+ mul:v=>v==='dam'?1.12:1,unit:p=>{const c=mwPow().cls;return c==='human'?[String(Math.round(180+p*160+R(0,40))),'กก. แรงกระแทก']:c==='super'?[(p*.45).toFixed(1),'ริกเตอร์']:[(1+p*.85).toFixed(1),'ริกเตอร์']},amb:null,mark:['ลานจอดปริศนาของ','หลุมไวรัลของ','จุดเช็คอินแห่ง']},
 sky:{ic:'🌠',n:'ผ่าดาว',lb:'เป้าหมาย',ac:'#7aa8ff',d:'เล็งดาวเคราะห์น้อย ดาวหาง หรือดวงจันทร์ · วัดเป็น<b>เมกะตัน</b> · ถ้ามี<b>ร่างแยก</b> เลือกให้มารวมพลังได้ · เต็มที่ = ดวงจันทร์ขาดสองซีก ชื่อคุณขึ้นแผนที่ดาว',
  opts:()=>[['moon','🌕 ดวงจันทร์ดวงเล็ก','ใหญ่มาก'],['cmt','🌠 ดาวหาง','หางยาว'],['ast','☄️ ดาวเคราะห์น้อย','เล็ก']],tog:'🧬 เรียกร่างแยก 3 ร่างมารวมพลัง',
  mul:v=>v==='moon'?1.05:1,unit:p=>[F(Math.pow(10,p*.9)*R(1,3)),'เมกะตัน'],amb:'wStars',mark:['รอยผ่า','ดวงจันทร์ครึ่งซีกของ','วงแหวนฝุ่นของ']},
@@ -91,7 +96,7 @@ soul(){sky('#1a0f33','#3a1f5a');stars(40,0);mtn(150,40,'#2a1a48',1);mtn(175,26,'
  ST.sc.forEach(s=>crater(s,'#120a1c','#b46cff'));const hx=192,hy=190,L=(T_(()=>S.sv.rings)||[]).slice(0,9);
  L.forEach((r,k)=>{if(!r)return;const on=ST.v===String(k)&&ST.ph==='chg';g.strokeStyle=RINGC(r.t);g.lineWidth=on?3:2;g.globalAlpha=r.burnt?.25:on?.6+.4*Math.sin(T*20):.85;g.beginPath();g.ellipse(hx,hy-4-k*4-(on?ST.ch*6:0),10+k*4,3+k*.8,0,0,7);g.stroke()});g.globalAlpha=1;hero(hx,hy,'#5a3aa8',ST.ph==='chg'?ST.ch:0)},
 mw(){sky('#0a1020','#1c2a48');stars(25,3);for(let i=0;i<14;i++){const x=i*28,h=40+(i*37)%70;P(x,180-h,24,h,'#121a2c');for(let yy=180-h+6;yy<176;yy+=8)for(let xx=x+3;xx<x+22;xx+=6)if(((xx*yy+i)%5)<2)P(xx,yy,3,4,'#ffd86a88')}
- ground(180,'#2a2e38','#15171d');for(let x=10;x<W;x+=40)P(x,200,22,2,'#e8e8e8aa');ST.sc.forEach(s=>crater(s,'#0c0c0c','#ff7a2a'));
+ ground(180,'#2a2e38','#15171d');for(let x=10;x<W;x+=40)P(x,200,22,2,'#e8e8e8aa');if(ST.obj){const o=ST.obj,dm=ST.dmg||0;if(o==='wall'){P(212,150,40,46,'#6a6a72');for(let y=152;y<196;y+=6)for(let x=(y%12?212:218);x<250;x+=12)P(x,y,11,5,'#7e7e88');if(dm>0){g.strokeStyle='#111';g.lineWidth=1;for(let i=0;i<4+dm*3;i++){g.beginPath();g.moveTo(222,172);g.lineTo(222+Math.cos(i*1.7)*(6+dm*6),172+Math.sin(i*1.7)*(5+dm*5));g.stroke()}if(dm>=2.6){P(216,164,14,16,'#0a0a10')}}}else{P(216,140,14,4,'#555');P(221,128,2,12,'#888');P(214,144,18,34,dm>=2.4?'#3a2a1a':'#8a2a2a');if(dm>=2.4){for(let i=0;i<6;i++)P(212+i*4,178+((i*7)%5),3,2,'#c8b89a')}}}ST.sc.forEach(s=>crater(s,'#0c0c0c','#ff7a2a'));
  for(let i=0;i<5;i++){const x=30+i*70+Math.sin(T+i)*3;P(x,186,6,4,'#333');P(x+1,183,2,3,'#ccc');if(Math.sin(T*6+i)>.9)P(x-2,180,10,3,'#fff')}hero(192,196,'#2a2a2a',ST.ph==='chg'?ST.ch:0);
  if(ST.views){g.fillStyle='#ff3b5c';g.font='10px sans-serif';g.fillText('🔴 LIVE  '+F(ST.views)+' views',8,232)}},
 sky(){sky('#02030a','#0a1030');stars(70,T*4);const mx=280,my=70,sp=ST.split||0;g.fillStyle='#d8dce8';g.beginPath();g.arc(mx-sp,my,34,Math.PI*.5,Math.PI*1.5);g.fill();g.beginPath();g.arc(mx+sp,my,34,-Math.PI*.5,Math.PI*.5);g.fill();
@@ -110,7 +115,7 @@ loop(){const k=ST.lp|0;sky('#1a1408','#3a2a10');g.globalAlpha=Math.min(.3,k*.06)
  if(k>=3){P(150,200,20,10,'#000');P(158,196,4,4,'#ffd36a')}if(k>=1){P(230,192,5,8,'#e07aa0');P(230,187,5,5,'#f0c8a0')}hero(120,196,'#8a6a2a',ST.ph==='chg'?ST.ch:0)}
 };
 const HERO={soul:[192,182],mw:[192,188],sky:[120,204],fog:[192,190],loop:[120,188]};
-const TGT={soul:()=>[R(70,320),R(184,200)],mw:()=>[R(70,320),R(196,214)],sky:()=>[ST.v==='moon'?280:ST.v==='cmt'?R(200,340):R(60,340),ST.v==='moon'?70:R(40,110)],fog:()=>[ST.v==='top'?300:ST.v==='port'?80:200,R(90,140)],loop:()=>[ST.v==='tower'?184:R(70,320),R(150,190)]};
+const TGT={soul:()=>[R(70,320),R(184,200)],mw:()=>T_(()=>mwPow().cls)==='human'?[222,172]:[R(70,320),R(196,214)],sky:()=>[ST.v==='moon'?280:ST.v==='cmt'?R(200,340):R(60,340),ST.v==='moon'?70:R(40,110)],fog:()=>[ST.v==='top'?300:ST.v==='port'?80:200,R(90,140)],loop:()=>[ST.v==='tower'?184:R(70,320),R(150,190)]};
 // ---------- pixelfx ----------
 const pfOk=()=>{try{return !!(window.PFXON&&PFXON()&&window.PFX)}catch(e){return false}};
 const ramp=c=>T_(()=>PFX.ramp(c));
@@ -121,15 +126,18 @@ const tierOf=p=>p<2?0:p<4?1:p<6?2:p<8?3:p<9.5?4:5;
 let PT=[];function boomFallback(x,y,p,c){for(let i=0;i<30+p*14;i++){const a=R(0,7),v=R(.6,2+p*.4);PT.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.7-R(0,1.5),l:R(30,70),c:CH([c,'#fff','#ffcf6a'])})}PT.push({ring:1,x,y,t:0,l:40,p,c})}
 function drawPT(){for(let i=PT.length-1;i>=0;i--){const q=PT[i];if(q.ring){q.t++;g.strokeStyle=q.c;g.globalAlpha=Math.max(0,1-q.t/q.l);g.lineWidth=2+q.p*.6;g.beginPath();g.ellipse(q.x,q.y,q.t*(1+q.p*.5),q.t*(1+q.p*.5)*.35,0,0,7);g.stroke();if(q.t>=q.l)PT.splice(i,1);continue}
  q.x+=q.vx;q.y+=q.vy;q.vy+=.06;q.l--;g.globalAlpha=Math.max(0,Math.min(1,q.l/30));P(q.x,q.y,2,2,q.c);if(q.l<=0)PT.splice(i,1)}g.globalAlpha=1}
-function fxBeam(hx,hy,tx,ty,p){const w=ST.w;if(!pfOk())return;
+const HU=()=>ST&&ST.w==='mw'&&mwPow().cls==='human';
+function fxBeam(hx,hy,tx,ty,p){const w=ST.w;if(!pfOk()||HU())return;
  if(w==='sky'){fx('skyCleave',0,0,{x0:hx*K,y0:(hy-10)*K,x1:tx*K,y1:ty*K,w:3+p*1.2},1.6);return}
  if(w==='fog'){fx('ripples',hx,hy+4,{},2);fx('sunburst',hx,hy-16,{},1.2);return}
  const kd=(ST.SR&&ST.SR[ST.src]||{}).kind;if(kd==='thunder'){fx('sparkArc',hx,hy-10,{},1);return}if(kd==='sword'){fx('swordSlash',hx+10,hy-6,{flip:tx<hx},1)}
  const d=Math.abs(tx-hx)*K;fx('qiWave',hx+(tx<hx?-4:4),hy-6,{dist:d,travel:d,flip:tx<hx},1.4)}
 function fxImpact(x,y,p){const t=tierOf(p),w=ST.w,src=ST.SR&&ST.SR[ST.src];
  if(!pfOk()){boomFallback(x,y,p,src?src.col[0]:WD[w].ac);return}
- if(src&&w!=='fog'){const e=EL[src.kind]||EL.beam;(e.fx[t<=1?0:t<=3?1:2]||[]).forEach((n,i)=>fx(n,x+(i?R(-16,16):0),y,{},PFX.M[n]?PFX.M[n].meta.duration+.5:3))}
+ if(src&&w!=='fog'&&!HU()){const e=EL[src.kind]||EL.beam;(e.fx[t<=1?0:t<=3?1:2]||[]).forEach((n,i)=>fx(n,x+(i?R(-16,16):0),y,{},PFX.M[n]?PFX.M[n].meta.duration+.5:3))}
  if(w==='soul'){fx(['manaBurst','manaBurst','implosion','darkExplosion','darkExplosion','darkExplosion'][t],x,y,{},4);if(t>=2)fx('groundSlam',x,y+4,{reach:40+p*10},3.2,ramp(['#6a2cc0','#e0c0ff']));if(t>=4)fx('runeCircle',x,y,{},4);if(t>=5)fx('blackHole',x,y-26,{},4.5)}
+ else if(w==='mw'&&mwPow().cls==='human'){fx('critHit',x,y-6,{},1.2,0);fx('impactFrame',192,120,{},.25,0);if(p>=1.5)fx('bluntHit',x+6,y-4,{},1,0);if(p>=2.4)fx('dirtExplosion',x,y,{},2.4,0)}
+ else if(w==='mw'&&mwPow().cls==='super'){fx('groundSlam',x,y,{reach:40+p*12},3.2,0);fx('critHit',x,y-8,{},1.2,0);if(p>=4)fx('dirtExplosion',x,y,{},3,0);if(p>=5.5)fx('quake',x,y,{reach:50+p*10},3,0);fx('impactFrame',192,120,{},.3,0)}
  else if(w==='mw'){fx(['smallExplosion','smallExplosion','bigExplosion','bigExplosion','bigExplosion','nuke'][t],x,y,{},t>=5?9:6.5,FIRE());if(t>=1)fx('dirtExplosion',x,y,{},3,0);if(t>=3)fx('quake',x,y,{reach:60+p*10},3.1,0);if(t>=4)fx('impactFrame',192,120,{},.3,0)}
  else if(w==='sky'){fx('plasmaExplosion',x,y,{},1.7);if(t>=2)fx('implosion',x,y,{},1.65);if(t>=3)fx('starFall',x,y+60,{},2.5);if(t>=5)fx('impactFrame',192,120,{},.3,0)}
  else if(w==='fog'){fx('portal',x,y+20,{width:30+p*8,height:40+p*8},3.8);if(t>=2)fx('shadowTendrils',x,y+30,{},3,ramp(['#1a2a26','#9fe0c8']));if(t>=4)fx('eclipse',x,y-10,{},4.2)}
@@ -138,13 +146,21 @@ function fxImpact(x,y,p){const t=tierOf(p),w=ST.w,src=ST.SR&&ST.SR[ST.src];
 // ---------- ผลลัพธ์ (มีผลกับตัวละคร) ----------
 function see(v){return{park:.35,bld:.45,beach:.9,dam:.6,old:.5,port:.3,top:.7,city:.9,tower:.6,self:.2,moon:.8,cmt:.5,ast:.3}[v]||.4}
 function resolve(p,crit){const w=ST.w,v=ST.v,L=[],lv=Math.round(p),add=(t,c)=>L.push({t,c:c||''});
- const src=ST.SR&&ST.SR[ST.src];if(src){const e=EL[src.kind]||EL.beam,fl=e.t[p<4?0:p<7.5?1:2];add(`${src.ic} คุณปล่อย<b>《${E(src.n)}》</b>${p>=8?'เต็มกำลัง':p>=5?'อย่างแรง':''} — ${fl}`,p>=7?'my':'');if(src.art&&(src.art.rl||0)<20&&Math.random()<.25){src.art.rl=(src.art.rl||0)+1;src.art.b=Math.round(src.art.b*1.03);add(`💡 ได้ปล่อยเต็มที่แบบนี้ทำให้เข้าใจ《${E(src.n)}》ลึกขึ้นอีกนิด (พลังวิชา +3%)`,'my')}}
+ const src=ST.SR&&ST.SR[ST.src];if(src&&!HU()){const e=EL[src.kind]||EL.beam,fl=e.t[p<4?0:p<7.5?1:2];add(`${src.ic} คุณปล่อย<b>《${E(src.n)}》</b>${p>=8?'เต็มกำลัง':p>=5?'อย่างแรง':''} — ${fl}`,p>=7?'my':'');if(src.art&&(src.art.rl||0)<20&&Math.random()<.25){src.art.rl=(src.art.rl||0)+1;src.art.b=Math.round(src.art.b*1.03);add(`💡 ได้ปล่อยเต็มที่แบบนี้ทำให้เข้าใจ《${E(src.n)}》ลึกขึ้นอีกนิด (พลังวิชา +3%)`,'my')}}
  if(crit)add('⚡ คริติคอล! ปล่อยตรงจังหวะลมหายใจพอดี พลัง ×1.5','my');
  const fmBase=Math.round((4+p*p*1.4)*(1+see(v)));let fame=0;
  if(w==='soul'){const r=T_(()=>S.sv.rings[+v]);add(`⭕ ${r?`วงแหวนที่ ${+v+1} (${RINGN(r.t)})`:'พลังวิญญาณ'}ลุกเป็นไฟ หมุนเร็วจนเกิดเสียงหวีด แล้วระเบิดออก — ${p>=8?'ป่าวิญญาณทั้งผืนราบเป็นหน้ากลอง':p>=5?'ต้นไม้พันปีล้มเป็นวงรัศมีครึ่งลี้':p>=2?'หินผาแตกเป็นร่องลึก':'ใบไม้ร่วงเป็นวง'}`);
   add(p>=4?'🦌 สัตว์วิญญาณนับร้อยแตกฮือหนีออกจากป่าพร้อมกัน ฝูงนกปิดฟ้ามืดไปครู่หนึ่ง':'🐇 กระต่ายวิญญาณสองตัวมองคุณแบบไม่พอใจ');
   if(r&&r.t>=1e5){r.burnt=1;if(r.sk){r.skOld=r.sk;r.sk=''}add('💔 วงแหวนแสนปีแตกร้าวเป็นเส้นเลือดแสง — ทักษะของวงนี้หายไปตลอดกาล','bad')}
   if(p>=7&&Math.random()<.5){add('🐍 พื้นดินสั่น… อสรพิษมรกตแสนปีโผล่จากใต้ดิน มันมองคุณ แล้วก้มหัวลงช้าๆ — “ข้ารอผู้ที่ทำแบบนี้ได้มาสามหมื่นปีแล้ว” · ชื่อเสียง +'+F(fmBase),'my');fame+=fmBase}fame+=fmBase}
+ else if(w==='mw'&&mwPow().cls!=='city'){const c=mwPow().cls,hu=c==='human',views=Math.round(Math.pow(p+1,hu?3:3.6)*R(200,600)*({park:.4,bld:.7,beach:2,dam:1.2}[v]||1));ST.views=views;
+  if(hu){const kg=Math.round(180+p*160+R(0,40));add(ST.obj==='wall'?(p>=2.6?`🧱 กำแพงอิฐแตกเป็นรู กำปั้นทะลุไปอีกฝั่ง — แรงกระแทก ${kg} กก. มือคุณเลือดซิบ`:p>=1.5?`🧱 กำแพงอิฐร้าวเป็นใยแมงมุม ฝุ่นปูนร่วงกราว (${kg} กก.)`:`🧱 ปัง! กำแพงไม่เป็นไร แต่ข้อนิ้วคุณบวมแดง (${kg} กก.)`):(p>=2.4?`🥊 กระสอบทรายขาดกลาง ทรายทะลักเต็มพื้น — แรงกระแทก ${kg} กก.`:p>=1.5?`🥊 กระสอบทรายแกว่งจนโซ่ดังเอี๊ยด เครื่องวัดขึ้น ${kg} กก.`:`🥊 กระสอบทรายแกว่งนิดหน่อย เครื่องวัดขึ้น ${kg} กก.`));
+   add(`📱 มีคนถ่ายคลิปไว้ ยอดวิว <b>${F(views)}</b> · คอมเมนต์: “${CH(['พี่ต่อยหนักจริง','ถ้าโดนหมัดนี้คงหลับยาว','ค่ายมวยไหนครับ','มืออาชีพชัดๆ'])}”`,'my');fame+=Math.round(Math.log10(views+10)*1.5);
+   if(p>=2.6&&Math.random()<.5){T_(()=>{S.hp=Math.max(1,(S.hp||1)-Math.round((S.maxHp||100)*.05))});add('🩹 ข้อมือเคล็ด ต้องพันผ้าไปสองสัปดาห์ · พลังชีวิตลดนิดหน่อย','bad')}
+   if(p>=2.2)add(CH(['🥊 โปรโมเตอร์มวยใต้ดินทักมาขอเบอร์','🏋️ ค่ายมวยแถวบ้านชวนไปขึ้นเวที','🕶️ มีคนในวงการใต้ดินจับตามองคุณ']),'my')}
+  else{add(`💥 ${p>=5.5?'กำแพงตึกทั้งแผงพังลงมา รถสามคันปลิวไปคนละทิศ':p>=4?'คุณต่อยกำแพงคอนกรีตทะลุ แรงอัดอากาศพัดกระจกแตกทั้งแถว':'รถเก๋งที่จอดอยู่ยุบเข้าไปทั้งคัน สัญญาณกันขโมยดังลั่น'}`);
+   add(`📳 เครื่องวัดแผ่นดินไหวแถวนั้นกระตุก ${(p*.45).toFixed(1)} ริกเตอร์ · คลิปไวรัล ยอดวิว <b>${F(views)}</b> · ติดเทรนด์ <b>#${CH(['มนุษย์เหนือมนุษย์','ต่อยทะลุกำแพง','ไม่ใช่CGI'])}</b>`,'my');fame+=Math.round(Math.log10(views+10)*p*1.6);
+   if(p>=5){add('🚓 ตำรวจกั้นพื้นที่ ข่าวเช้ารายงาน “แรงระเบิดปริศนา” · มีคนส่งข้อความว่า “เราเห็นนะ”','bad');T_(()=>{S.karma-=2})}}}
  else if(w==='mw'){const views=Math.round(Math.pow(p+1,4.3)*R(300,900)*({park:.4,bld:.7,beach:2,dam:1.2}[v]||1));ST.views=views;
   add(`📳 กรมอุตุฯ ตรวจพบแรงสั่นสะเทือน <b>${(1+p*.85).toFixed(1)} ริกเตอร์</b>${p>=6?' — ศูนย์กลางไม่ใช่รอยเลื่อน':''}`);
   add(`📱 คลิปถูกอัปโหลด ${Math.max(2,Math.round(p*6))} มุม · ยอดวิว <b>${F(views)}</b> ใน 3 ชั่วโมง · ติดเทรนด์ <b>#${CH(['คนเรืองแสง','ใครทำลานจอดพัง','มนุษย์ริกเตอร์','ไม่ใช่CGI','ฟ้าผ่าแนวนอน'])}</b>`,'my');fame+=Math.round(Math.log10(views+10)*p*2.2);
@@ -169,7 +185,7 @@ function resolve(p,crit){const w=ST.w,v=ST.v,L=[],lv=Math.round(p),add=(t,c)=>L.
  if(w==='loop')fame=0;
  const seen=w==='loop'?true:Math.random()<Math.min(.95,see(v)*(.5+p*.06)+(p>=7?.2:0));
  if(fame>0&&(seen||w==='mw')){S.fame=(S.fame||0)+fame;add(`👀 ข่าวแพร่ไปทั่ว ชื่อเสียง +${F(fame)}`,'my')}else if(!seen&&w!=='loop')add('🤫 ไม่มีใครเห็น เป็นความลับระหว่างคุณกับฟ้าดิน');
- if(p>=6&&w!=='loop'){const nmS=CH(WD[w].mark)+nm();T_(()=>{S.scars=(S.scars||[]).filter(x=>x.n!==nmS);S.scars.unshift({n:nmS,sc:Math.min(10,lv),a:S.age});S.scars=S.scars.slice(0,12)});add(`🗺️ ผู้คนเรียกที่นั่นว่า <b>「${E(nmS)}」</b> นับแต่นั้น`,'my')}
+ if(p>=6&&w!=='loop'&&!(w==='mw'&&mwPow().cls!=='city')){const nmS=CH(WD[w].mark)+nm();T_(()=>{S.scars=(S.scars||[]).filter(x=>x.n!==nmS);S.scars.unshift({n:nmS,sc:Math.min(10,lv),a:S.age});S.scars=S.scars.slice(0,12)});add(`🗺️ ผู้คนเรียกที่นั่นว่า <b>「${E(nmS)}」</b> นับแต่นั้น`,'my')}
  T_(()=>joy(3+Math.round(p*.8)));S.flags=S.flags||{};S.flags.relN=(S.flags.relN||0)+1;S.flags.relMax=Math.max(S.flags.relMax==null?-1:S.flags.relMax,lv);
  if(p>=9.5)T_(()=>keyAdd(`ปลดปล่อยพลังจนโลกจดจำ (${WD[w].n})`));
  return L}
@@ -190,34 +206,34 @@ const css=`#rwOv{position:fixed;inset:0;z-index:9000;background:radial-gradient(
 body.rwShake{animation:rwSh .7s cubic-bezier(.36,.07,.19,.97) both}@keyframes rwSh{10%,90%{transform:translate(-3px,2px)}20%,80%{transform:translate(6px,-4px)}30%,50%,70%{transform:translate(-10px,6px)}40%,60%{transform:translate(10px,-6px)}}`;
 const st0=document.createElement('style');st0.textContent=css;document.head.appendChild(st0);
 let HOLD=0,t0=0,zA=0,zB=0;const CIRC=2*Math.PI*58;
-function frame(){if(!ST||!cv||!cv.isConnected){raf=0;return}T+=1/60;g.setTransform(K,0,0,K,0,0);try{DRAW[ST.w]()}catch(e){}if(ST.ph==='chg'){const[hx,hy]=HERO[ST.w];g.globalAlpha=.25+.2*Math.sin(T*18);g.fillStyle=WD[ST.w].ac;g.beginPath();g.arc(hx,hy-8,6+ST.ch*16,0,7);g.fill();g.globalAlpha=1}drawPT();raf=requestAnimationFrame(frame)}
-window.relwOpen=function(){const w=wk();if(!NEW.has(w))return false;if(w==='mw'&&!mwPow().ok){toast('🙂 คุณเป็นคนธรรมดา ยังไม่มีพลังพิเศษให้ปลดปล่อย — ต้องตื่นพลังหรือได้วิชาก่อน');return true}const why=T_(()=>relCan());if(why){toast(why);return true}if(T_(()=>choice._cur)){toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');return true}
+function frame(){if(!ST||!cv||!cv.isConnected){raf=0;return}T+=1/60;g.setTransform(K,0,0,K,0,0);try{DRAW[ST.w]()}catch(e){}if(ST.ph==='chg'&&!HU()){const[hx,hy]=HERO[ST.w];g.globalAlpha=.25+.2*Math.sin(T*18);g.fillStyle=WD[ST.w].ac;g.beginPath();g.arc(hx,hy-8,6+ST.ch*16,0,7);g.fill();g.globalAlpha=1}drawPT();raf=requestAnimationFrame(frame)}
+window.relwOpen=function(){const w=wk();if(w==='mw'){const c=mwPow().cls;WD.mw.n=c==='human'?'ทดสอบแรงหมัด':c==='super'?'ปลดปล่อยพลังเหนือมนุษย์':'ปล่อยพลังกลางเมือง';WD.mw.d=c==='human'?'คุณเป็น<b>มนุษย์ที่ฝึกมา</b> ไม่ใช่ยอดมนุษย์ · วัดเป็น<b>กก. แรงกระแทก</b> · ต่อยกระสอบหรือกำแพงอิฐ เจ็บมือได้จริง · คลิปอาจเข้าตาค่ายมวยหรือวงการใต้ดิน':c==='super'?'พลัง<b>เหนือมนุษย์</b> · ต่อยกำแพงทะลุ รถยุบ ตึกร้าว · วัดเป็น<b>ริกเตอร์</b> (ยังไม่ถึงขั้นถล่มเมือง) · ตำรวจจะเริ่มสนใจ':'พลังระดับ<b>ถล่มเมือง</b> (ระบบ/ตื่นพลังขั้นสูง/ข้ามมิติ) · วัดเป็น<b>ริกเตอร์ + ยอดวิว</b> · แรงเกินไปชายชุดดำจะมาเคาะประตู'}if(!NEW.has(w))return false;if(w==='mw'&&!mwPow().ok){toast('🙂 คุณเป็นคนธรรมดา ยังไม่มีพลังพิเศษให้ปลดปล่อย — ต้องตื่นพลังหรือได้วิชาก่อน');return true}const why=T_(()=>relCan());if(why){toast(why);return true}if(T_(()=>choice._cur)){toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');return true}
  try{closeM()}catch(e){}T_(()=>PFXON&&PFXON());const D=WD[w],o=D.opts();const SR=sources(w);ST={w,v:o[0][0],tog:SR[0]&&SR[0].av?1:0,src:0,SR,ph:'set',ch:0,sc:[],views:0,lp:T_(()=>LS.get('murim_rlloop',0))|0};
  const ov=document.createElement('div');ov.id='rwOv';ov.style.setProperty('--ac',D.ac);
  const cw=Math.min(880,innerWidth-16),chh=Math.round(cw*240/384);
  ov.innerHTML=`<div class="hd"><b>${D.ic} ${D.n}</b><button class="x" onclick="relwClose()">✕</button></div><div id="rwSt" style="height:${chh}px"><canvas width="576" height="360" style="width:${cw}px;height:${chh}px"></canvas><div class="fl"></div><div class="lv"></div><div class="big"><b></b><span></span></div></div><div id="rwPn"></div>`;
  document.body.appendChild(ov);cv=ov.querySelector('canvas');g=cv.getContext('2d');const amb=()=>{if(D.amb&&pfOk())[100,290].forEach((x,i)=>fx(D.amb,x,w==='fog'?220:200,{seed:i+3},1e6,w==='fog'?0:undefined))};setTimeout(amb,60);setTimeout(()=>{if(!pfOk())return;if(!ST||ST.amb)return;ST.amb=1;try{PFX.clear(cv)}catch(e){}amb()},1500);
- panel();if(!raf)frame();return true};
+ if(w==='mw'&&mwPow().cls==='human')ST.obj='bag';panel();if(!raf)frame();return true};
 window.relwClose=function(){const ov=$('rwOv');if(ov){try{if(window.PFX&&cv)PFX.clear(cv)}catch(e){}ov.remove()}cv=null;ST=null;HOLD=0;try{render()}catch(e){}};
 function panel(){const D=WD[ST.w],o=D.opts(),pn=$('rwPn');
  const SR=ST.SR||[],cur=SR[ST.src]||SR[0];pn.innerHTML=`<p class="d">${D.d}</p><div class="src"><span>⚡ พลังที่ใช้</span><select id="rwSrc">${SR.map((x,i)=>`<option value="${i}" ${i===ST.src?'selected':''}>${x.ic} ${E(x.n)}${x.d?' · '+E(x.d):''}</option>`).join('')}</select></div>${cur?`<div class="sel" style="--c:${cur.col[0]}">${cur.ic} <b>${E(cur.n)}</b> · ธาตุ${{fire:'ไฟ',ice:'น้ำแข็ง',thunder:'สายฟ้า',sword:'กระบี่',dark:'มืด',wind:'ลม',star:'ดารา',water:'น้ำ',palm:'ฝ่ามือ',fist:'หมัด',dragon:'มังกร',light:'แสง',earth:'ดิน',beam:'พลังบริสุทธิ์'}[cur.kind]} · กำลัง ×${cur.mul.toFixed(2)}</div>`:''}<div class="lbl">${D.lb||'เลือก'}</div><div class="ops">${o.map(x=>`<button class="op ${ST.v===x[0]?'on':''}" data-v="${x[0]}">${x[1]}<small>${x[2]}</small></button>`).join('')}</div>
  <div id="rwCg"><svg viewBox="0 0 128 128"><circle cx="64" cy="64" r="58" fill="none" stroke="#ffffff14" stroke-width="8"/><circle id="rwZ" cx="64" cy="64" r="58" fill="none" stroke="#ffd36a" stroke-width="8" stroke-dasharray="0 999" opacity=".35"/><circle id="rwA" cx="64" cy="64" r="58" fill="none" stroke="var(--ac)" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 999"/></svg><i>กดค้าง</i></div>
  <div class="hint">กดค้างเพื่อชาร์จ · ปล่อยนิ้วตอนวงทองกระพริบ = ⚡ คริติคอล ×1.5 · ปีละครั้ง</div><div class="cr">เอฟเฟกต์: pixelfx (MIT · patch-gg · Hugo Duprez)</div>`;
- pn.querySelectorAll('.op[data-v]').forEach(b=>b.onclick=()=>{ST.v=b.dataset.v;panel()});const sl=$('rwSrc');if(sl)sl.onchange=()=>{ST.src=+sl.value;const q=ST.SR[ST.src];ST.tog=q&&q.av?1:0;panel()};const tb=pn.querySelector('.op[data-t]');if(tb)tb.onclick=()=>{ST.tog=ST.tog?0:1;panel()};
+ pn.querySelectorAll('.op[data-v]').forEach(b=>b.onclick=()=>{ST.v=b.dataset.v;if(ST.w==='mw'&&mwPow().cls==='human')ST.obj=ST.v==='bld'?'wall':'bag';panel()});const sl=$('rwSrc');if(sl)sl.onchange=()=>{ST.src=+sl.value;const q=ST.SR[ST.src];ST.tog=q&&q.av?1:0;panel()};const tb=pn.querySelector('.op[data-t]');if(tb)tb.onclick=()=>{ST.tog=ST.tog?0:1;panel()};
  const cg=$('rwCg');cg.addEventListener('pointerdown',down);}
 function zone(){zA=R(.62,.8);zB=zA+.1;const z=$('rwZ');z.setAttribute('stroke-dasharray',`${CIRC*(zB-zA)} ${CIRC}`);z.setAttribute('stroke-dashoffset',-CIRC*zA)}
 function loopC(){if(!HOLD||!ST)return;ST.ch=Math.min(1,(performance.now()-t0)/1800);$('rwA').setAttribute('stroke-dasharray',`${CIRC*ST.ch} ${CIRC}`);const inZ=ST.ch>=zA&&ST.ch<=zB;$('rwZ').setAttribute('opacity',inZ?.6+.4*Math.sin(performance.now()/40):.35);
  const i=$('rwCg').querySelector('i');i.style.setProperty('--g',ST.ch);i.textContent=ST.ch>=1?'เต็ม!':Math.round(ST.ch*100)+'%';$('rwSt').style.transform=`translate(${R(-1,1)*ST.ch*3}px,${R(-1,1)*ST.ch*3}px)`;
- if(ST.ch>.5&&!ST.c2){ST.c2=1;const[hx,hy]=HERO[ST.w];fx('chargeUp',hx,hy+8,{},2.7)}requestAnimationFrame(loopC)}
-function down(e){e.preventDefault();if(!ST||ST.ph!=='set')return;HOLD=1;ST.ph='chg';ST.ch=0;ST.c2=0;t0=performance.now();zone();const[hx,hy]=HERO[ST.w];fx('qiAura',hx,hy+6,{power:.5},2.4);fx('spellCharge',hx+2,hy+4,{},2);addEventListener('pointerup',up,{once:true});addEventListener('pointercancel',up,{once:true});loopC()}
+ if(ST.ch>.5&&!ST.c2){ST.c2=1;const[hx,hy]=HERO[ST.w];if(!HU())fx('chargeUp',hx,hy+8,{},2.7)}requestAnimationFrame(loopC)}
+function down(e){e.preventDefault();if(!ST||ST.ph!=='set')return;HOLD=1;ST.ph='chg';ST.ch=0;ST.c2=0;t0=performance.now();zone();const[hx,hy]=HERO[ST.w];if(!HU()){fx('qiAura',hx,hy+6,{power:.5},2.4);fx('spellCharge',hx+2,hy+4,{},2)}addEventListener('pointerup',up,{once:true});addEventListener('pointercancel',up,{once:true});loopC()}
 function up(){if(!HOLD||!ST)return;HOLD=0;$('rwSt').style.transform='';if(ST.ch<.08){ST.ph='set';const i=$('rwCg').querySelector('i');i.textContent='กดค้าง';return}
- const crit=ST.ch>=zA&&ST.ch<=zB,p=level(ST.ch,crit,WD[ST.w].mul(ST.v,0)*((ST.SR[ST.src]||{}).mul||1));ST.ph='boom';S.relY=S.age;boom(p,crit)}
+ const crit=ST.ch>=zA&&ST.ch<=zB,sm=(ST.SR[ST.src]||{}).mul||1,mc=ST.w==='mw'?mwPow():null,p=mc&&mc.cls==='human'?Math.min(3.2,3.2*ST.ch*(.45+Math.min(.55,(mc.pw||0)/160))*(crit?1.25:1)*sm):mc&&mc.cls==='super'?Math.min(6.6,3.3+3.3*ST.ch*(.5+Math.min(.5,(mc.pw||0)/600))*(crit?1.25:1)*sm):Math.min(10,level(ST.ch,crit,WD[ST.w].mul(ST.v,0)*sm));ST.ph='boom';S.relY=S.age;boom(p,crit)}
 function boom(p,crit){const w=ST.w,D=WD[w],[hx,hy]=HERO[w],[tx,ty]=TGT[w]();$('rwPn').innerHTML='<div class="lg"></div>';fxBeam(hx,hy,tx,ty,p);
  setTimeout(()=>{if(!ST)return;fxImpact(tx,ty,p);const fl=$('rwSt').querySelector('.fl');fl.style.transition='none';fl.style.opacity=Math.min(.95,.15+p*.09);requestAnimationFrame(()=>{fl.style.transition='opacity .8s';fl.style.opacity=0});
   if(p>=8){document.body.classList.remove('rwShake');void document.body.offsetWidth;document.body.classList.add('rwShake');setTimeout(()=>document.body.classList.remove('rwShake'),800)}
-  const r=6+p*p*.9;if(w==='sky'){if(ST.v==='moon'&&p>=8)(function sp(){ST.split=(ST.split||0)+.4;if(ST&&ST.split<16)setTimeout(sp,40)})();ST.sc.push({x:tx+R(-14,14),y:ty+R(-14,14),r:6+p*1.5})}
+  if(w==='mw'&&mwPow().cls==='human')ST.dmg=p;const r=w==='mw'&&mwPow().cls!=='city'?(mwPow().cls==='human'?0:4+p*2.2):6+p*p*.9;if(w==='sky'){if(ST.v==='moon'&&p>=8)(function sp(){ST.split=(ST.split||0)+.4;if(ST&&ST.split<16)setTimeout(sp,40)})();ST.sc.push({x:tx+R(-14,14),y:ty+R(-14,14),r:6+p*1.5})}
   else if(w==='fog'){ST.sc.push({x:tx,y:ty,r:20+p*9});if(p>=9){ST.clear=1;setTimeout(function f(){if(!ST)return;ST.clear=Math.max(0,ST.clear-.02);if(ST.clear>0)setTimeout(f,60)},3000)}}
-  else if(w==='loop'){setTimeout(()=>{if(ST){ST.gone=1;ST.sc.push({x:tx,y:ty+10,r:40+p*6})}},700)}else ST.sc.push({x:tx,y:ty,r});
+  else if(w==='loop'){setTimeout(()=>{if(ST){ST.gone=1;ST.sc.push({x:tx,y:ty+10,r:40+p*6})}},700)}else if(r>0)ST.sc.push({x:tx,y:ty,r});
   const L=resolve(p,crit),[n,u]=D.unit(p,ST.v),bg=$('rwSt').querySelector('.big');bg.querySelector('b').textContent=n;bg.querySelector('span').textContent=u+(crit?' · ⚡ คริติคอล!':'');bg.classList.add('on');
   $('rwSt').querySelector('.lv').innerHTML=`ระดับทำลาย <b style="font-size:16px;color:${D.ac}">${Math.round(p)}/10</b>`;setTimeout(()=>{if(bg)bg.classList.remove('on')},2800);
   const lg=$('rwPn').querySelector('.lg');let i=0;(function nx(){if(!ST)return;if(i>=L.length){done(L,p);return}const x=L[i++],e=document.createElement('p');e.className=x.c;e.innerHTML=x.t;lg.appendChild(e);setTimeout(nx,560)})()},280)}
