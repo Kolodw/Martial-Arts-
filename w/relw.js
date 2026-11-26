@@ -14,6 +14,9 @@ const R=(a,b)=>a+Math.random()*(b-a),CH=a=>a[Math.floor(Math.random()*a.length)]
 const F=n=>{n=+n||0;return n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(Math.round(n))};
 const T_=f=>{try{return f()}catch(e){return null}};
 const wk=()=>{if(typeof S==='undefined'||!S)return null;const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';return null};
+// ยุคปัจจุบัน: คนธรรมดาไม่มีพลังให้ปล่อย — ต้องตื่นพลัง (ฮันเตอร์) / ข้ามมิติมาพร้อมลมปราณ / มีวิชาติดตัว
+const mwPow=()=>{try{const M=S.mw;if(!M||M.sky||M.fog)return{ok:1};const H=M.H,aw=H&&H.aw&&H.aw!=='none'?H.aw:'',qi=+M.qi||0,arts=(S.arts||[]).filter(a=>a&&a.n).length;
+ return{ok:!!(aw||qi>=1||arts||M.native===false),aw,qi,arts,trav:M.native===false}}catch(e){return{ok:1}}};
 const NEW=new Set(['soul','mw','sky','fog','loop']);
 // ---------- ธาตุ/ชนิดพลัง → เอฟเฟกต์ + คำบรรยาย (อ้างอิงวิชาที่ใช้) ----------
 const EL={
@@ -41,7 +44,8 @@ function sources(w){const L=[];
   L.push({k:'sp'+i,ic,n:'วิญญาณยุทธ์ '+nmS,kind:k,col:k==='beam'?['#b48cff','#f0e0ff']:colOf(nmS+(k==='light'?'แดด':'')),mul:1+(rv?.25:0)+(ty==='atk'?.12:0),d:rv?'วิวัฒน์แล้ว':''})})}
  (T_(()=>S.arts)||[]).filter(a=>a&&a.n).sort((x,y)=>(y.r||0)-(x.r||0)||(y.b||0)-(x.b||0)).slice(0,10).forEach((a,i)=>{L.push({k:'a'+i,ic:'📜',n:a.n,kind:kindOf(a.n),col:colOf(a.n),mul:.8+.12*(a.r||0)+.05*(a.lv|0)+.02*(a.star|0),d:a.tier||'',art:a})});
  if(w==='sky'){const n=(T_(()=>S.mw.sky.avs)||[]).length;if(n)L.unshift({k:'av',ic:'🧬',n:`ร่างแยก ${n} ร่างรวมพลัง`,kind:'star',col:['#7aa8ff','#e0ecff'],mul:1+Math.min(.5,n*.12),d:'ร่างแยกที่คุณมีจริง',av:n})}
- L.push({k:'fist',ic:'👊',n:w==='mw'?'แรงล้วนๆ (ไม่ใช้วิชา)':'หมัดเปล่า',kind:'fist',col:['#ffc840','#fff4c0'],mul:.7,d:''});
+ if(w==='mw'){const m=mwPow();if(m.aw)L.unshift({k:'aw',ic:m.aw==='sys'?'🟦':'✨',n:m.aw==='sys'?'พลังจากระบบ':'พลังที่ตื่นรู้',kind:CH(['thunder','beam','fire','ice']),col:m.aw==='sys'?['#38a8ff','#e0f4ff']:['#ffd34a','#fff6d0'],mul:1.1,d:'ฮันเตอร์'});if(m.qi>=1)L.unshift({k:'qi',ic:'🌀',n:'ลมปราณจากโลกเดิม',kind:'beam',col:['#8af0c0','#f0fff8'],mul:.85+Math.min(.6,m.qi*.05),d:'ระดับ '+m.qi})}
+ L.push({k:'fist',ic:'👊',n:'หมัดเปล่า (เสริมพลัง)',kind:'fist',col:['#ffc840','#fff4c0'],mul:.7,d:''});
  return L}
 const nm=()=>T_(()=>String(S.name||'').split(' ').pop())||'ผู้ไร้นาม';
 // ---------- ข้อมูลรายโลก ----------
@@ -187,7 +191,7 @@ body.rwShake{animation:rwSh .7s cubic-bezier(.36,.07,.19,.97) both}@keyframes rw
 const st0=document.createElement('style');st0.textContent=css;document.head.appendChild(st0);
 let HOLD=0,t0=0,zA=0,zB=0;const CIRC=2*Math.PI*58;
 function frame(){if(!ST||!cv||!cv.isConnected){raf=0;return}T+=1/60;g.setTransform(K,0,0,K,0,0);try{DRAW[ST.w]()}catch(e){}if(ST.ph==='chg'){const[hx,hy]=HERO[ST.w];g.globalAlpha=.25+.2*Math.sin(T*18);g.fillStyle=WD[ST.w].ac;g.beginPath();g.arc(hx,hy-8,6+ST.ch*16,0,7);g.fill();g.globalAlpha=1}drawPT();raf=requestAnimationFrame(frame)}
-window.relwOpen=function(){const w=wk();if(!NEW.has(w))return false;const why=T_(()=>relCan());if(why){toast(why);return true}if(T_(()=>choice._cur)){toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');return true}
+window.relwOpen=function(){const w=wk();if(!NEW.has(w))return false;if(w==='mw'&&!mwPow().ok){toast('🙂 คุณเป็นคนธรรมดา ยังไม่มีพลังพิเศษให้ปลดปล่อย — ต้องตื่นพลังหรือได้วิชาก่อน');return true}const why=T_(()=>relCan());if(why){toast(why);return true}if(T_(()=>choice._cur)){toast('ตัดสินใจเรื่องที่ค้างอยู่ก่อน');return true}
  try{closeM()}catch(e){}T_(()=>PFXON&&PFXON());const D=WD[w],o=D.opts();const SR=sources(w);ST={w,v:o[0][0],tog:SR[0]&&SR[0].av?1:0,src:0,SR,ph:'set',ch:0,sc:[],views:0,lp:T_(()=>LS.get('murim_rlloop',0))|0};
  const ov=document.createElement('div');ov.id='rwOv';ov.style.setProperty('--ac',D.ac);
  const cw=Math.min(880,innerWidth-16),chh=Math.round(cw*240/384);
@@ -242,6 +246,8 @@ if(typeof pxShock==='function'){const _sh=pxShock;const w3=function(c,tx,ty,p,co
 if(typeof relResolve==='function'){const _rr=relResolve;const w4=function(p,a,k,sc){const out=_rr.apply(this,arguments);try{if(typeof S!=='undefined'&&S&&S.beastMode&&!S.beastMode.human&&sc>=2){const km=Math.round((sc*sc*.35+.2)*10)/10;out.push(()=>{const old=+S.beastMode.terr||0;S.beastMode.terr=Math.max(old,km);
   log(`🐺 สัตว์ในรัศมี ${km} กม. หมอบราบ${km>old?` — <b>อาณาเขตขยายเป็น ${km} กม.</b>`:''}${sc>=5?' · หมู่บ้านมนุษย์ตีระฆังเตือนภัย':''}${sc>=8?' · ภูเขาไฟที่หลับมาพันปีพ่นควันตอบเสียงคำราม ชาวบ้านแต่งนิทาน “อสูรปลุกภูเขา”':''}`,sc>=8?'myth':'epic');
   if(sc>=5)T_(()=>bountyAdd(.05*sc,'อสูรประกาศอาณาเขต'))})}}catch(e){}return out};try{relResolve=w4}catch(e){}window.relResolve=w4}
-window._relw={WD,wk,level};
+if(typeof relCan==='function'){const _rc=relCan;const w5=function(){const r=_rc.apply(this,arguments);if(r)return r;try{if(wk()==='mw'&&!mwPow().ok)return'คนธรรมดายังไม่มีพลังพิเศษ'}catch(e){}return r};try{relCan=w5}catch(e){}window.relCan=w5}
+setInterval(()=>{try{if(wk()==='mw'&&!mwPow().ok)document.querySelectorAll('#focus .fcx').forEach(b=>{if(/ปลดปล่อย/.test(b.textContent))b.remove()})}catch(e){}},1500);
+window._relw={WD,wk,level,mwPow};
 })()}catch(e){console.error('mod-relw',e)}
 try{wReady('relw')}catch(e){}
