@@ -40989,3 +40989,66 @@ if(typeof aiPick==='function'){const _ap=aiPick;aiPick=function(c){const i=_ap.a
 try{setTimeout(()=>{try{wLoad('legend').catch(()=>{})}catch(e){}},3600)}catch(e){} /* 🌌 ตำนานข้ามชาติ + 🎭 สไตล์ชีวิต + 🖼️ การ์ดตำนาน (/w/legend.js) */
 try{setTimeout(()=>{try{wLoad('bond').catch(()=>{})}catch(e){}},4000)}catch(e){} /* 👥 ผูกชะตาเพื่อน · 🔮 ทายชะตา · 🌍 ยุคประจำสัปดาห์ · 🎧 ฟังนิยาย · 📸 ภาพประกอบนิยาย (/w/bond.js) */
 try{setTimeout(()=>{try{wLoad('pet').catch(()=>{})}catch(e){}},4200)}catch(e){} /* 🐾 สัตว์คู่ใจข้ามชาติ (/w/pet.js) */
+// ============================================================
+// BLOCK 302 📱 โครงหน้าจอมือถือใหม่ (ux2): หัวกระชับ · ป้ายรวมเป็นอันเดียว · เลื่อนอ่านแล้วหัว/ฉากหด · ปุ่มเล่นมีวงแหวนเดือน + กดค้างเลือกความเร็ว
+// ใช้เฉพาะจอแคบ · ปิดได้ที่ ☰ เมนู → "หน้าจอแบบเดิม" (LS murim_uxold)
+// ============================================================
+try{(()=>{
+const mq=matchMedia('(max-width:700px)');
+const want=()=>mq.matches&&!LS.get('murim_uxold',0);
+const css=document.createElement('style');css.textContent=`
+html body.ux2.ux2.ux2.ux2 #game>.box.top{position:relative!important;padding-bottom:30px!important}html body.ux2.ux2.ux2.ux2 #game.uxS>.box.top{padding-bottom:6px!important}html body.ux2.ux2.ux2.ux2 #game.uxS>.box.top:has(#uxRw.on){padding-bottom:28px!important}
+body.ux2 #islDock{display:none!important}
+html body.ux2.ux2.ux2 #game>#goalBox,html body.ux2.ux2.ux2 #game>#rvBar,html body.ux2.ux2.ux2 #game>#goalBox~#rvBar,html body.ux2.ux2.ux2 #game>#goalBox+#rvBar{display:none!important}
+body.ux2 #uxGoal{position:absolute;left:10px;right:100px;bottom:5px;font-size:11.5px;line-height:22px;color:#cbb895;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:1}body.ux2 #uxGoal span{cursor:pointer}
+body.ux2 #uxGoal b{color:#f3e9d8;font-weight:600}
+body.ux2 #uxRw{position:absolute;right:8px;bottom:6px;height:24px;padding:0 10px;border-radius:12px;border:1px solid #6fc3a0aa;background:#0b0810;color:#e8f6ee;font-size:12px;font-weight:600;display:none;align-items:center;gap:4px;cursor:pointer;z-index:2}
+body.ux2 #uxRw.on{display:inline-flex}
+body.ux2 #uxRw.gold{background:#e7b04a;border-color:#e7b04a;color:#1b1309;animation:uxPulse 2.4s ease-in-out infinite}
+@keyframes uxPulse{0%,100%{box-shadow:0 0 0 0 #e7b04a66}50%{box-shadow:0 0 0 6px #e7b04a00}}
+body.ux2 #sceneBox{transition:height .25s ease,margin .25s ease,opacity .2s;overflow:hidden}
+html body.ux2.ux2.ux2.ux2 #game.uxS>#sceneBox{height:0!important;min-height:0!important;margin-top:0!important;margin-bottom:0!important;opacity:0;border-width:0!important;padding:0!important}
+html body.ux2.ux2.ux2 #game.uxS #gMini,html body.ux2.ux2.ux2 #game.uxS #uxGoal{display:none!important}
+
+html body.ux2 #game .crow #spdBtn,html body.ux2 #game .crow #autoBtn,html body.ux2 #game .crow>.ybar{display:none!important}
+html body.ux2 #game .crow #pauseBtn{position:relative;overflow:visible;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body.ux2 #pauseBtn .uxPb{position:absolute;left:12%;bottom:5px;height:3px;width:76%;border-radius:2px;background:#0004;overflow:hidden;pointer-events:none}body.ux2 #pauseBtn .uxPb i{display:block;height:100%;width:calc(var(--uxP,0)*1%);background:#1b1309;border-radius:2px}
+body.ux2 #pauseBtn .uxAu{position:absolute;left:-3px;top:-3px;width:12px;height:12px;border-radius:50%;background:#45c46a;border:2px solid #1b1309;display:none;pointer-events:none;z-index:2}
+body.ux2 #pauseBtn.au .uxAu{display:block}
+
+.uxRwL{display:flex;flex-direction:column;gap:8px}.uxRwL button{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 12px;border-radius:12px;border:1px solid #3a2e20;background:#2d2418;color:#f3e9d8;font-size:14px;text-align:left;font-family:inherit}
+.uxRwL button .i{font-size:20px;width:30px;text-align:center}.uxRwL button.gold{border-color:#e7b04a}
+`;document.head.appendChild(css);
+const $$=id=>document.getElementById(id);
+function chips(){const d=$$('islDock');return d?[...d.querySelectorAll('.islChip')].filter(c=>c.offsetParent!==null||getComputedStyle(c).display!=='none'):[]}
+const isRw=c=>/รับ|เก็บ|พร้อม|!/.test(c.textContent||'')||/rw|claim|lgc|gift/.test(c.dataset.k||'');
+function ensure(){const top=document.querySelector('#game .box.top');if(!top)return;
+ if(!$$('uxRw')){const b=document.createElement('button');b.id='uxRw';b.type='button';b.onclick=e=>{e.stopPropagation();openRw()};top.appendChild(b)}
+ if(!$$('uxGoal')){const g=document.createElement('div');g.id='uxGoal';top.appendChild(g)}
+ const p=$$('pauseBtn');if(p&&!p.querySelector('.uxPb'))p.insertAdjacentHTML('beforeend','<span class="uxPb"><i></i></span><span class="uxAu"></span>')}
+function sync(){if(!document.body.classList.contains('ux2'))return;ensure();
+ try{const g=$$('goalBox'),rv=$$('rvBar'),u=$$('uxGoal');if(u){const gt=g?(g.textContent||'').replace(/\s+/g,' ').trim():'',rt=rv&&getComputedStyle(rv).display!=='none'||rv&&rv.textContent.trim()?(rv.textContent||'').replace(/\s+/g,' ').trim():'';const gb=g&&g.querySelector('b');const h=(gt?`<span data-u="g">🎯 ${gb?'<b>'+esc(gb.textContent)+'</b>':esc(gt.replace(/^.*?:\s*/,''))}</span>`:'')+(rt?`${gt?' · ':''}<span data-u="r">${esc(rt)}</span>`:'');if(u._h!==h){u._h=h;u.innerHTML=h;u.querySelectorAll('span[data-u]').forEach(sp=>sp.onclick=e=>{e.stopPropagation();const t=sp.dataset.u==='g'?g:rv;if(!t)return;const c=t.querySelector('[onclick]')||t;try{c.dispatchEvent(new MouseEvent('click',{bubbles:true}))}catch(x){}})}u.style.display=h?'':'none'}}catch(e){}
+ try{const L=chips(),b=$$('uxRw');if(b){b.classList.toggle('on',L.length>0);const rw=L.filter(isRw).length;b.classList.toggle('gold',rw>0);b.textContent=rw?`รอรับ ${rw}`:`ติดตาม ${L.length}`}}catch(e){}
+ try{const p=$$('pauseBtn');if(p){const yb=$$('ybar'),w=parseFloat((yb&&yb.style.width)||'0')||0;p.style.setProperty('--uxP',Math.max(0,Math.min(100,w)));p.classList.toggle('au',!!auto);const ym=$$('ymon');p.title=(ym&&ym.textContent)||'';
+  const ac=getComputedStyle(document.body).getPropertyValue('--wAc')||'';if(ac.trim())p.style.setProperty('--uxAc',ac.trim())}}catch(e){}}
+function openRw(){const L=chips();if(!L.length)return;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📌 ${L.some(isRw)?'รอรับและติดตาม':'สิ่งที่ติดตามอยู่'}</h3><div class="uxRwL">${L.map((c,i)=>{const ic=c.querySelector('i'),em=c.querySelector('em');const tt=(c.getAttribute('title')||c.dataset.t||'').trim();return`<button type="button" class="${isRw(c)?'gold':''}" data-i="${i}"><span class="i">${ic?ic.innerHTML:''}</span><span style="flex:1;min-width:0"><b>${em?em.innerHTML:esc(c.textContent)}</b>${tt?`<br><small class="tag2">${esc(tt)}</small>`:''}</span><span class="tag2">เปิด ›</span></button>`}).join('')}</div>`,'uxrw');
+ const m=$$('modal');m.querySelectorAll('.uxRwL button').forEach(b=>b.onclick=()=>{const c=L[+b.dataset.i];closeM();setTimeout(()=>{try{c.dispatchEvent(new MouseEvent('click',{bubbles:true}))}catch(e){}},80)})}
+// กดค้างปุ่มเล่น (เมนูลัดเดิม) เพิ่มแถวความเร็วและออโต้ แทนปุ่มความเร็วที่ซ่อนไป
+try{const _qp=qmPlay;qmPlay=function(){const o=_qp.apply(this,arguments);try{if(document.body.classList.contains('ux2')&&o&&Array.isArray(o.rows)){const SP=[1,2,4,8];
+ o.rows.splice(1,0,{ic:'⏩',t:'ความเร็ว',seg:{o:SP.map(v=>v+'×'),cur:Math.max(0,SP.indexOf(speed)),f:j=>{speed=SP[j];try{render()}catch(e){}}}},{ic:'🤖',t:'โหมดอัตโนมัติ',tog:auto?1:0,keep:1,f:()=>toggleAuto()},{sep:1})}}catch(e){}return o}}catch(e){}
+document.addEventListener('click',e=>{try{if(document.body.classList.contains('ux2')&&e.target.closest&&e.target.closest('#pauseBtn')&&!LS.get('murim_uxlp',0)){LS.set('murim_uxlp',1);setTimeout(()=>{try{toast('💡 กดค้างที่ปุ่มเล่นต่อ เพื่อเปลี่ยนความเร็วหรือเปิดออโต้')}catch(x){}},400)}}catch(x){}},true);
+// เลื่อนอ่าน → หัวและฉากหด
+let feedB=null;function bindFeed(){const f=$$('feed'),g=$$('game');if(!f||!g||f===feedB)return;feedB=f;let last=0;
+ f.addEventListener('scroll',()=>{if(!document.body.classList.contains('ux2'))return;const y=f.scrollTop,max=f.scrollHeight-f.clientHeight;
+  // อ่านอยู่ล่างสุด (ตามเรื่องล่าสุด) = เปิดฉาก · เลื่อนขึ้นไปอ่านย้อน = หด
+  const atEnd=max-y<40;const want2=!atEnd&&max>160;if(want2!==g.classList.contains('uxS'))g.classList.toggle('uxS',want2);last=y},{passive:true})}
+function apply(){const on=want();document.body.classList.toggle('ux2',on);if(!on){const g=$$('game');if(g)g.classList.remove('uxS')}else{bindFeed();sync()}}
+window._ux2={apply,sync,openRw};
+const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(document.body.classList.contains('ux2'))sync()}catch(e){}return r};
+setInterval(()=>{try{if(document.body.classList.contains('ux2')&&$$('game')&&$$('game').classList.contains('on'))sync()}catch(e){}},700);
+try{mq.addEventListener('change',apply)}catch(e){}
+apply();setTimeout(apply,1500);
+// ☰ เมนู: สลับหน้าจอแบบเดิม/แบบใหม่
+const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!mq.matches)return r;const m=$$('modal');if(m&&!m.querySelector('.uxTg')){const b=document.createElement('button');b.className='gbtn uxTg';b.style.cssText='width:100%;margin-top:8px';b.textContent=LS.get('murim_uxold',0)?'📱 ใช้หน้าจอมือถือแบบใหม่':'📱 กลับไปใช้หน้าจอแบบเดิม';b.onclick=()=>{LS.set('murim_uxold',LS.get('murim_uxold',0)?0:1);apply();closeM();toast(LS.get('murim_uxold',0)?'ใช้หน้าจอแบบเดิมแล้ว':'ใช้หน้าจอแบบใหม่แล้ว')};m.appendChild(b)}}catch(e){}return r};
+})()}catch(e){console.error('block302',e)}
