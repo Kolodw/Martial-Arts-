@@ -33017,6 +33017,7 @@ function claimable(){try{const d=roll(st());if(['d','w'].some(k=>d[k].q.some(q=>
 function dot(){try{const c=claimable();document.querySelectorAll('.aqDot').forEach(e=>e.style.display=c?'':'none');if(live()&&typeof islChipX==='function'){if(c&&!modalOpen)islChipX('aqc','📜','รับรางวัลภารกิจ',()=>openAQ());else islChipOff('aqc')}}catch(e){}}
 // ---------- ประกาศิตฟ้า / บอสโลก / ศึกสำนัก (ข้อมูลจากเซิร์ฟเวอร์) ----------
 let HQS=null,WB=null,SW=null,hqT=0;
+window.aqHub=async function(){try{if(on()&&!WB)await wbLoad()}catch(e){}try{const d=roll(st());const q=d.d.q||[];return{dn:q.filter(x=>x.ok).length,dt:q.length,cl:claimable(),wb:WB&&WB.ph?{ph:WB.ph,hp:WB.hp,mx:WB.mx,hits:WB.hits|0,hm:WB.hm||5,n:WB.n,ic:WB.ic}:null}}catch(e){return null}};
 const hqS=()=>{const r=HQS?HQS.r:0;let s=LS.get('murim_hqs',null);if(!s||s.r!==r)s={r,n:0,b:0};return s};
 async function hqLoad(){if(!on())return;try{const k=admK();HQS=await api('hq'+(k?'&key='+encodeURIComponent(k):''));hqT=Date.now()}catch(e){}}
 async function hqTry(){try{if(!HQS||!on()||HQS.ph==='cd'&&HQS.my)return;if(HQS.my||LS.get('murim_hqc',0)===HQS.r)return;const Q=HQ[HQS.q];if(!Q||!Q.ck())return;
@@ -34364,6 +34365,7 @@ window.openSP=async function(tab){if(tab)TB=tab;
  if(TB==='en'){try{const r=await api('sp',{o:'ens'});const b=$('spBody');if(b&&$('modal').dataset.k==='sp'&&TB==='en')b.innerHTML=`<div class="card" style="text-align:center"><b style="color:#fff">👑 หน้าจารึก ${esc(j.s.n)}</b><div class="tag2">รายชื่อผู้ถือฉบับจารึก เรียงตามวันที่จารึก · อยู่ในคัมภีร์ฤดูนี้ตลอดไป</div></div>`+((r.L||[]).length?`<div class="card" style="line-height:2">${r.L.map((x,i)=>`<span style="display:inline-block;margin:0 10px 0 0"><b style="color:#9ff0dc">${i+1}.</b> ${esc(x.n||'ผู้ไม่ประสงค์ออกนาม')}${x.w?' <em class="spW">❄ ผู้พิชิต</em>':''}</span>`).join('')}</div>`:'<div class="card tag2" style="text-align:center">หน้านี้ยังว่าง ชื่อแรกรอคุณอยู่</div>')}catch(e){}}
  try{islChipOff('spc')}catch(e){}try{avtMount($('modal'))}catch(e){}};
 async function clOne(tr,lv){const j=await api('sp',{o:'cl',tr,lv});if(j&&(j.ok||j.dup)){J.cl=J.cl||[];if(!J.cl.includes(tr+lv))J.cl.push(tr+lv);return j.ok?j.r:null}return null}
+window.spHub=async function(claim){try{await spLoad();if(!J||!J.R)return null;if(claim){const L=canList(J),rs=[];for(const[tr,lv]of L){try{rs.push(await clOne(tr,lv))}catch(e){break}}if(rs.length)await afterCl(rs);return rs.filter(Boolean).length}return{lv:J.lv,can:canList(J).length,dd:J.dd||{},t:J.t}}catch(e){return null}};
 async function afterCl(rs){let cos=0;const tx=[];rs.forEach(r=>{if(!r)return;const[t,v]=r;if(t==='cos'||t==='org'||t==='cosm')cos=1;tx.push(t==='f'?`🎫×${v}`:t==='g'?`🎟️×${v}`:t==='lk'?`🔒×${v}`:t==='nv'?`📕×${v}`:t==='cosm'?'👑 ชุดผู้จารึกนาม':t==='cos'?(/^a_/.test(v)?'🧑 รูปโปรไฟล์':/^f_/.test(v)?'🖼️ '+((frOf(v)||{}).n||''):/^t_/.test(v)?'🏷️ '+STN[v]:'💬 '+SCN[v]):t==='org'?'🐺 ชาติกำเนิด':t==='ch'||t==='chx'?'📖 บทที่ '+v:'')});
  if(cos){try{await window.cosSync()}catch(e){}try{const d=frGet();let ch=0;['f_s1','f_s2','f_s3','f_s4','f_s5'].forEach(f=>{if(has(f)&&!d.own.includes(f)){d.own.push(f);ch=1}});if(ch){frSet(d);try{profPush()}catch(e){}}}catch(e){}}
  if(tx.length)pop('❄','ได้รับจากคัมภีร์',tx.filter(Boolean).join(' · '),1);try{if(window._RR){window._RR.c=null;window._RR.f=null}}catch(e){}}
@@ -40409,7 +40411,7 @@ try{window.secretBook=window.secretBook||function(){return wNeed('secret',()=>wi
 try{window.mgHall=window.mgHall||function(){return wNeed('mg3',()=>window._mgHall&&window._mgHall())};setTimeout(()=>{try{wLoad('mg3').catch(()=>{})}catch(e){}},1800)}catch(e){console.error('mg3Stub',e)}
 // 🔮 อยากเล่นต่ออีกชาติ (w/hook.js): เส้นทางชะตา · ภารกิจชาติ · หน้าจบชวนเกิดใหม่ · แชร์ผล/ลิงก์ท้าชะตาประจำวัน · ชาติก่อนของตัวเอง · ช่องทางผู้เล่น
 try{window.hkOpen=window.hkOpen||function(){return wNeed('hook',()=>window.hkOpen&&window.hkOpen())};setTimeout(()=>{try{wLoad('hook').catch(()=>{})}catch(e){}},2000)}catch(e){console.error('hkStub',e)}
-try{window.lpOpen=window.lpOpen||function(t){return wNeed('hall',()=>window.lpOpen&&window.lpOpen(t))};setTimeout(()=>{try{wLoad('hall').catch(()=>setTimeout(()=>wLoad('hall').catch(()=>{}),6000))}catch(e){}},2400)}catch(e){console.error('lpStub',e)} /* 🏯 หอชะตา (/w/hall.js) */
+try{window.lpOpen=window.lpOpen||function(t){return wNeed('fhall',()=>window.lpOpen&&window.lpOpen(t))};setTimeout(()=>{try{wLoad('fhall').catch(()=>setTimeout(()=>wLoad('fhall').catch(()=>{}),6000))}catch(e){}},2400)}catch(e){console.error('lpStub',e)} /* 🏯 หอชะตา (/w/fhall.js) */
 try{setTimeout(()=>{try{wLoad('author').catch(()=>{})}catch(e){}},2600)}catch(e){console.error('auStub',e)} /* 🧵 ผู้ประพันธ์ชะตา (/w/author.js) */
 try{setTimeout(()=>{try{wLoad('cast').catch(()=>{})}catch(e){}},3200)}catch(e){console.error('csStub',e)} /* 👤 จักรวาลร่วม (/w/cast.js) */
 try{setTimeout(()=>{try{wLoad('annal').catch(()=>{})}catch(e){}},3800)}catch(e){console.error('anStub',e)} /* 📜 ปูมจักรวาล (/w/annal.js) */
@@ -40965,3 +40967,4 @@ try{(()=>{
 body.islUp.islBottom #islDots{top:calc(env(safe-area-inset-top) + 2px)!important;bottom:auto!important}
 body.islUp #tipCard{display:none!important}`;document.head.appendChild(st);
 })()}catch(e){console.error('perfHold',e)}
+try{window.tdOpen=window.tdOpen||function(){return wNeed('today',()=>window.tdOpen&&window.tdOpen!==window._tdStub&&window.tdOpen())};window._tdStub=window.tdOpen;setTimeout(()=>{try{wLoad('today').catch(()=>setTimeout(()=>wLoad('today').catch(()=>{}),8000))}catch(e){}},2600)}catch(e){console.error('tdStub',e)} /* 📅 วันนี้ทำอะไรดี (/w/today.js) */
