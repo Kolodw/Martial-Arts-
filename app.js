@@ -379,6 +379,10 @@ const tr=id=>!!(S&&S.traits&&S.traits.includes(id)&&!(id==='crippled'&&S.cured))
 const crip=()=>tr('crippled')?.08:1;
 const poisonImm=()=>(S.faction&&S.faction.poison)||(S.clan&&S.clan.poison)||tr('antipoison')||has('vaccine');
 // ============ STATE ============
+window._uLock=false;window._pzLog=[];
+function _pzNote(a,w){try{const L=window._pzLog;L.push({t:Date.now(),age:(typeof S!=='undefined'&&S)?S.age:null,a,w});if(L.length>20)L.shift()}catch(e){}}
+function _pzLock(why){window._uLock=true;paused=true;_pzNote('⏸ หยุด',why)}
+function _pzRes(why,user){if(user){window._uLock=false;paused=false;_pzNote('▶ เล่นต่อ',why);return true}if(window._uLock){_pzNote('🚫 กันไว้',why+' พยายามสั่งเล่นต่อ แต่ผู้เล่นหยุดไว้');return false}paused=false;_pzNote('▶ เล่นต่อ',why);return true}
 let lastNotable=0,S=null,roll=null,rerolls=3,paused=false,auto=false,speed=1,acc=0,timer=null,modalOpen=false,peers=[],detailOpen=false,quiet=null,headerAge=-1;
 
 function genRoll(owRate){
@@ -450,7 +454,7 @@ function startLife(){
 function applyTraitsStart(){if(tr('genius'))S.int+=30;if(tr('beauty'))S.cha+=40;if(tr('longlife'))S.lifespan+=15;if(tr('crippled')&&Math.random()<.45)S.sysFate=R(5,35)}
 function beginLife(){
  peers=[makePeer(),makePeer(),makePeer(),makePeer()];
- flushReveal();$('feed').innerHTML='';headerAge=-1;quiet=null;paused=false;auto=false;speed=1;acc=0;detailOpen=false;choice._cur=null;choice._min=false;if(modalOpen)closeM();
+ flushReveal();$('feed').innerHTML='';headerAge=-1;quiet=null;_pzRes('ชีวิตใหม่',1);auto=false;speed=1;acc=0;detailOpen=false;choice._cur=null;choice._min=false;if(modalOpen)closeM();
  show('game');eqInit();S.age=0;sfx('birth');
  if(S.xian&&S.age===0)log('☁️ <b>โลกเทพเซียน</b> ที่นี่ผู้ฝึกตนมีอายุนับร้อยปี ภูเขาลอยอยู่บนฟ้า และ "ระบบ" ปรากฏบ่อยกว่าโลกมนุษย์','myth',true);
  {const _tt=(S.traits||[]).map(trOf),_tl=_tt.length?`<br>${_tt.map(t=>(t.bad?'⚠️ ':'✨ ')+'<b>'+t.n+'</b>').join(' · ')}`:'';log(`ลืมตาดูโลก${S.family.orphan&&!S.family.beast?'เป็น':'ใน'}${S.family.n} ด้วย${S.talent.n}${_tl}`,(S.talent.m>=3||_tt.some(x=>x.w<=2))?'myth':(S.talent.m>=2||_tt.length)?'epic':'',true)}
@@ -558,7 +562,7 @@ function render(){
 function toggleDetail(){detailOpen=!detailOpen;render()}
 function setFocus(f){S.focus=f;render()}
 function cycleSpeed(){const L=[.5,1,2,4,8,16,32,64,0];speed=L[(L.indexOf(speed)+1)%L.length];render()}
-function togglePause(){paused=!paused;render()}
+function togglePause(){if(paused)_pzRes('ผู้เล่นกดเล่นต่อ',1);else _pzLock('ผู้เล่นกดหยุด');render()}
 function toggleAuto(){auto=!auto;render();toast(auto?'โหมดอัตโนมัติ: ชีวิตจะดำเนินไปเอง':'ปิดโหมดอัตโนมัติ')}
 function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
 function gachaCost(){return Math.round(150*Math.pow(1.35,S.gachaN||0)/10)*10}
@@ -2933,7 +2937,7 @@ function playAs(kind,i){const P=S;let o;
  S.age=o.age;S.xian=P.xian;S.xt=P.xt;S.ch=P.ch;S.slot=P.slot;S.line=R(1,1e9);S.awake=!!o.ow;S.owAwake=0;S.flags.lostParents=1;S.parents=[];S.sibs=[];S.children=[];S.lastRealm=realmIdx();S.focus='train';
  if(o.fac){S.faction=o.fac;S.rank=o.rank;S.merit=MERIT[o.rank]||0}if(o.art)Array.prototype.push.call(S.arts,Object.assign({},o.art));
  if(kind==='peer')peers=peers.filter((x,j)=>j!==i);peers.forEach(p=>{if(p.name===o.name)p.alive=false});
- $('feed').innerHTML='';headerAge=-1;quiet=null;paused=false;auto=false;acc=0;bagInit();show('game');
+ $('feed').innerHTML='';headerAge=-1;quiet=null;_pzRes('สืบชีวิต',1);auto=false;acc=0;bagInit();show('game');
  log(`👻 ชีวิตของ <b>${P.name}</b> จบลงแล้ว เรื่องราวของโลกใบนี้ดำเนินต่อผ่านสายตาของ <b>${S.name}</b> ${kind==='peer'?'คนที่เกิดในวินาทีเดียวกับเขา':'ศิษย์คนแรกของเขา'} (อายุ ${S.age} ปี)`,'myth',true);
  if(kind==='disc'&&o.art)log(`📜 อาจารย์ทิ้งวิชา《${o.art.n}》ไว้ให้เป็นมรดก`,'epic');S.flags.playAs=1;
  render();startTimer()}
@@ -4895,7 +4899,7 @@ function loadGame(n=1){
  setWorld(!!(d.S&&d.S.xian));if(d.S&&d.S.xt)REALMS.forEach((r,i)=>{r.n=XGOD[i];r.p=XGP[i]});CFG.xian=d.S&&d.S.xian?1:0;
  const fac=n=>n?FACTIONS.find(f=>f.n===n)||null:null;
  S=Object.assign(baseState({}),d.S);S.slot=n;S.flags=S.flags||{};S.faction=fac(S.faction);peers=d.peers.map(p=>({...p,fac:fac(p.fac)}));Object.assign(CFG,d.cfg);
- choice._cur=null;choice._min=false;flushReveal();$('feed').innerHTML=d.feed;headerAge=d.headerAge;quiet=null;paused=false;auto=false;speed=1;acc=0;detailOpen=false;
+ choice._cur=null;choice._min=false;flushReveal();$('feed').innerHTML=d.feed;headerAge=d.headerAge;quiet=null;_pzRes('โหลดเกม',1);auto=false;speed=1;acc=0;detailOpen=false;
  show('game');render();startTimer();$('feed').scrollTop=$('feed').scrollHeight;toast('▶ โหลดชีวิตเดิมแล้ว เล่นต่อได้เลย');
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame()});
@@ -5038,7 +5042,7 @@ function sysPop(T,G,inh){try{const old=document.getElementById('sysPop');if(old)
 {const _bl=beginLife;beginLife=function(){_syApplied='';const r=_bl.apply(this,arguments);try{sysApplyCol();if(S&&S.sys&&S._sysInherit){S.sysCol=S.sysCol||ch(SYC_K);const T=SYS_TYPES.find(x=>x.id===S.sys.t);setTimeout(()=>sysPop(T,SYS_GRADE[S.sys.gr||0],1),1200)}}catch(e){}return r}}
 
 // ============ v5.8: กันค้างตอนกลับหน้าแรก ============
-{const _tt=toTitle;toTitle=function(){try{if(S&&S.alive&&choice._cur){fateChoice(true);try{saveGame()}catch(e){}}clearTimeout(choice._t);clearInterval(choice._cd);choice._cur=null;choice._min=false;try{pendBar()}catch(e){}if(modalOpen)closeM();const sp=document.getElementById('sysPop');if(sp)sp.remove();paused=false}catch(e){console.error(e)}return _tt.apply(this,arguments)}}
+{const _tt=toTitle;toTitle=function(){try{if(S&&S.alive&&choice._cur){window._pzForce=1;try{fateChoice(true)}finally{window._pzForce=0}try{saveGame()}catch(e){}}clearTimeout(choice._t);clearInterval(choice._cd);choice._cur=null;choice._min=false;try{pendBar()}catch(e){}if(modalOpen)closeM();const sp=document.getElementById('sysPop');if(sp)sp.remove();_pzRes('กลับหน้าแรก',1)}catch(e){console.error(e)}return _tt.apply(this,arguments)}}
 
 // ============ v5.9: ผู้ข้ามมิติพร้อมระบบ + ระบบไม่ซ้ำ ============
 var OW_SYS=.12;
@@ -5188,7 +5192,7 @@ function awayPause(){try{if(S&&S.alive&&$('game')&&$('game').classList.contains(
 function awayShow(){if(!_awayPaused||!S||!S.alive)return;if(document.getElementById('awayBar'))return;const e=document.createElement('div');e.id='awayBar';
  e.style.cssText='position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(10,8,16,.55)';
  e.innerHTML='<button style="font:inherit;font-size:16px;padding:16px 22px;border-radius:14px;border:3px solid #ffc23a;background:#2a2433;color:#ffe08a;box-shadow:0 0 18px #ffc23a88;cursor:pointer;max-width:80vw;line-height:1.5">⏸ หยุดการจำลองไว้ระหว่างที่คุณออกไป<br><b>แตะเพื่อเล่นต่อ ▶</b></button>';
- e.onclick=()=>{_awayPaused=false;paused=false;e.remove();try{render()}catch(x){}};document.body.appendChild(e)}
+ e.onclick=()=>{_awayPaused=false;_pzRes('ผู้เล่นแตะเล่นต่อ (กลับมาจากที่อื่น)',1);e.remove();try{render()}catch(x){}};document.body.appendChild(e)}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)awayPause();else awayShow()});
 window.addEventListener('pagehide',awayPause);
 {const _rd3=render;render=function(){const r=_rd3.apply(this,arguments);try{if(!paused&&document.getElementById('awayBar')){document.getElementById('awayBar').remove();_awayPaused=false}}catch(e){}return r}}
@@ -18038,7 +18042,7 @@ function rgKey(t){return String(t||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' '
 // ---------- 1) ⏩ เดินตามความทรงจำ ----------
 function rgFFok(){const G=S&&S.rg;return!!(G&&G.v===2&&!G.free&&G.awake&&G.loop>1&&G.prev&&S.alive)}
 function rgFFstop(why){const G=S.rg;if(!G||!G.ff)return;G.ff=0;try{speed=G.ffSp||1}catch(e){}if(why)toast('⏸ '+why);rgFFbtn()}
-function rgFFgo(){if(!rgFFok())return toast('ใช้ได้ตั้งแต่รอบที่ 2 หลังความทรงจำตื่น');const G=S.rg;if(G.ff)return rgFFstop('หยุดเดินตามความทรงจำ');G.ff=1;G.ffSp=speed;G.ffY=0;try{speed=16;paused=false}catch(e){}toast('⏩ เดินตามความทรงจำ เลือกเหมือนรอบก่อน หยุดเองเมื่อเจอสิ่งใหม่');rgFFbtn()}
+function rgFFgo(){if(!rgFFok())return toast('ใช้ได้ตั้งแต่รอบที่ 2 หลังความทรงจำตื่น');const G=S.rg;if(G.ff)return rgFFstop('หยุดเดินตามความทรงจำ');G.ff=1;G.ffSp=speed;G.ffY=0;try{speed=16;_pzRes('ผู้เล่นเดินตามความทรงจำ',1)}catch(e){}toast('⏩ เดินตามความทรงจำ เลือกเหมือนรอบก่อน หยุดเองเมื่อเจอสิ่งใหม่');rgFFbtn()}
 function rgFFbtn(){try{let b=$('rgFFp');const a=$('brkPill')||$('ascPill');if(!b&&a){a.insertAdjacentHTML('afterend','<button id="rgFFp" class="ascpill" style="display:none;margin-right:6px;border-color:#8ad0ff;background:linear-gradient(180deg,#183a5a,#0a1a2a)" onclick="rgFFgo()">⏩ ตามความทรงจำ</button>');b=$('rgFFp')}if(!b)return;const on=rgFFok();b.style.display=on?'':'none';if(on){const t=S.rg.ff?'⏸ หยุดเดินตามความทรงจำ':'⏩ ตามความทรงจำ';if(b.textContent!==t)b.textContent=t}}catch(e){}}
 setInterval(rgFFbtn,1500);
 {const _chFF=choice;const nf=function(title,text,opts){const r=_chFF.apply(this,arguments);try{const G=S&&S.rg;if(G&&G.ff&&choice._cur&&choice._cur.title===title){const k=S.age+'|'+rgKey(title),imp=/^(🔁|👀|😈|🌅|👑|🔓|🌌|💀|🗣️|💰)/.test(rgKey(title));if(!imp&&G.prev&&G.prev[k]!=null&&opts[G.prev[k]]){const idx=G.prev[k],cur=choice._cur;setTimeout(()=>{if(choice._cur===cur&&S.rg&&S.rg.ff)choiceRun(idx)},120)}else rgFFstop(imp?'เหตุการณ์สำคัญ ตัดสินใจเอง':'พบสิ่งที่ไม่เคยเจอ หยุดเดินตามความทรงจำ')}}catch(e){}return r};for(const k in _chFF)nf[k]=_chFF[k];choice=nf}
@@ -18484,11 +18488,11 @@ function qmSpecFor(el){if(el.matches('#tCont'))return qmCont;if(el.matches('#tGo
  window.addEventListener('resize',()=>qmClose(true));})();
 // ---------- ⏸/▶ เล่น ----------
 let qmStopAt=null;
-function qmPlayFor(n){qmStopAt=S.age+n;paused=false;render();toast(`▶ เล่นต่อ ${n} ปีแล้วหยุด`)}
+function qmPlayFor(n){qmStopAt=S.age+n;_pzRes(`ผู้เล่นสั่งเล่น ${n} ปี`,1);render();toast(`▶ เล่นต่อ ${n} ปีแล้วหยุด`)}
 function qmApz(){return LS.get('murim_apz',0)}
-{const _pyQ=passYear;passYear=function(){const r=_pyQ.apply(this,arguments);try{if(qmStopAt!=null&&S&&S.age>=qmStopAt){qmStopAt=null;paused=true;render();toast('⏸ ครบตามที่ตั้งไว้ หยุดแล้ว')}
- if(S&&S.alive&&LS.get('murim_apzhp',0)&&S.hp<S.maxHp*.25&&!paused&&S._apzHp!==S.age){S._apzHp=S.age;paused=true;render();toast('⏸ พลังชีวิตต่ำ หยุดให้ตัดสินใจ')}}catch(e){}return r}}
-{const _lgQ=log;log=function(t,c){const r=_lgQ.apply(this,arguments);try{if(qmApz()&&S&&S.alive&&!paused&&(c==='myth'||c==='epic')&&!window._inQmFF){paused=true;setTimeout(()=>{try{render();toast('⏸ มีเหตุการณ์สำคัญ หยุดให้อ่าน')}catch(e){}},0)}}catch(e){}return r}}
+{const _pyQ=passYear;passYear=function(){const r=_pyQ.apply(this,arguments);try{if(qmStopAt!=null&&S&&S.age>=qmStopAt){qmStopAt=null;_pzLock('ครบจำนวนปีที่ผู้เล่นตั้งไว้');render();toast('⏸ ครบตามที่ตั้งไว้ หยุดแล้ว')}
+ if(S&&S.alive&&LS.get('murim_apzhp',0)&&S.hp<S.maxHp*.25&&!paused&&S._apzHp!==S.age){S._apzHp=S.age;_pzLock('พลังชีวิตต่ำ (ผู้เล่นตั้งให้หยุด)');render();toast('⏸ พลังชีวิตต่ำ หยุดให้ตัดสินใจ')}}catch(e){}return r}}
+{const _lgQ=log;log=function(t,c){const r=_lgQ.apply(this,arguments);try{if(qmApz()&&S&&S.alive&&!paused&&(c==='myth'||c==='epic')&&!window._inQmFF){_pzLock('เหตุการณ์สำคัญ (ผู้เล่นตั้งให้หยุด)');setTimeout(()=>{try{render();toast('⏸ มีเหตุการณ์สำคัญ หยุดให้อ่าน')}catch(e){}},0)}}catch(e){}return r}}
 function qmPlay(){return{ic:paused?'▶':'⏸',t:paused?'หยุดอยู่':'กำลังเล่น',sub:`อายุ ${S.age} ปี`,rows:[
  {ic:paused?'▶':'⏸',t:paused?'เล่นต่อ':'หยุด',f:togglePause},
  {ic:'1️⃣',t:'เล่นต่อ 1 ปีแล้วหยุด',f:()=>qmPlayFor(1)},
@@ -22436,7 +22440,7 @@ const CT={i:0,was:null,L:null};
 function ctSteps(){return CT_STEPS.filter(x=>{const e=document.querySelector(x[0]);return e&&e.offsetParent})}
 function ctStart(){try{closeM()}catch(e){}if(!$('game')||!$('game').classList.contains('on')){toast('เริ่มหรือโหลดชีวิตก่อน แล้วค่อยเปิดบทนี้');return}
  CT.L=ctSteps();CT.i=-1;CT.was=paused;paused=true;try{render()}catch(e){}LS.set('murim_ctour',1);LS.set('murim_ctour2',1);ctDraw()}
-function ctEnd(){const o=$('ctOv');if(o)o.remove();window.removeEventListener('resize',ctDraw);if(CT.was===false){paused=false;try{render()}catch(e){}}CT.L=null}
+function ctEnd(){const o=$('ctOv');if(o)o.remove();window.removeEventListener('resize',ctDraw);if(CT.was===false){_pzRes('จบทัวร์แนะนำ');try{render()}catch(e){}}CT.L=null}
 function ctNext(d){CT.i+=d;if(CT.i<-1)CT.i=-1;ctDraw()}
 function ctSetHtml(){const am=LS.get('murim_automin',0)?1:0,lk=LS.get('murim_chlock',0)?1:0,pc=LS.get('murim_pace',1)?1:0,fs=LS.get('murim_fate',0)||0;
  const sw=(on,f,dis)=>`<button class="ctSw${on?' on':''}" ${dis?'disabled':''} onclick="${f}"><i></i></button>`;
@@ -41052,3 +41056,40 @@ apply();setTimeout(apply,1500);
 // ☰ เมนู: สลับหน้าจอแบบเดิม/แบบใหม่
 const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!mq.matches)return r;const m=$$('modal');if(m&&!m.querySelector('.uxTg')){const b=document.createElement('button');b.className='gbtn uxTg';b.style.cssText='width:100%;margin-top:8px';b.textContent=LS.get('murim_uxold',0)?'📱 ใช้หน้าจอมือถือแบบใหม่':'📱 กลับไปใช้หน้าจอแบบเดิม';b.onclick=()=>{LS.set('murim_uxold',LS.get('murim_uxold',0)?0:1);apply();closeM();toast(LS.get('murim_uxold',0)?'ใช้หน้าจอแบบเดิมแล้ว':'ใช้หน้าจอแบบใหม่แล้ว')};m.appendChild(b)}}catch(e){}return r};
 })()}catch(e){console.error('block302',e)}
+// ============================================================
+// BLOCK 303 ⏸ หยุดของผู้เล่นเป็นของผู้เล่น: ล็อกหยุด (_uLock) ที่ไม่มีระบบไหนปลดได้ · AI/ตัวนับถอยหลังรอด้วย · โหมดกำลังอ่าน · ประวัติการหยุด 20 ครั้ง
+// ============================================================
+try{(()=>{
+const $$=id=>document.getElementById(id);
+// 1) บังคับล็อก: ระบบไหนคืนค่า paused=false ระหว่างที่ผู้เล่นหยุดไว้ จะถูกหยุดคืนทันที (และจดไว้)
+let pv=null;setInterval(()=>{try{if(typeof S==='undefined'||!S||!S.alive){pv=null;return}
+ if(window._uLock&&!paused){paused=true;_pzNote('🚫 กันไว้','มีระบบคืนค่าให้เล่นต่อเอง ('+((modalOpen&&$$('modal'))?($$('modal').dataset.k||'หน้าต่าง'):'เบื้องหลัง')+')');try{render()}catch(e){}}
+ if(pv!==null&&pv!==paused){const L=window._pzLog,last=L[L.length-1];if(!last||Date.now()-last.t>300)_pzNote(paused?'⏸ หยุด':'▶ เล่นต่อ',paused?('ระบบ: '+((modalOpen&&$$('modal'))?($$('modal').dataset.k||'หน้าต่าง'):choice._cur?'ตัวเลือก':'อื่นๆ')):'ระบบ: ปิดหน้าต่าง/คืนค่า')}pv=paused}catch(e){}},120);
+// 2) โหมดกำลังอ่าน: แตะ/เลื่อนหน้าเรื่องใน 8 วิ หรือเลื่อนขึ้นไปอ่านย้อน → เวลาเกมและ AI รอ
+let lastT=0;const READ_MS=8000;
+const touchF=e=>{try{const f=$$('feed');if(f&&f.contains(e.target))lastT=Date.now()}catch(x){}};
+['pointerdown','touchmove','wheel'].forEach(ev=>document.addEventListener(ev,touchF,{passive:true,capture:true}));
+const upRead=()=>{const f=$$('feed');if(!f||!$$('game')||!$$('game').classList.contains('on'))return false;return f.scrollHeight-f.clientHeight-f.scrollTop>90};
+const reading=()=>!!(typeof S!=='undefined'&&S&&S.alive)&&(Date.now()-lastT<READ_MS||upRead());
+window._pzReading=reading;
+setInterval(()=>{try{const r=reading();if(r)window._rdU=Math.max(window._rdU||0,Date.now()+400);rdChip(r)}catch(e){}},250);
+function rdChip(on){let c=$$('rdChip');if(!on||paused||(modalOpen&&!choice._cur)){if(c)c.remove();return}
+ if(!c){c=document.createElement('button');c.id='rdChip';c.type='button';c.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 104px);z-index:60;background:#211910ee;border:1px solid #e7b04a99;color:#f3e9d8;border-radius:16px;padding:6px 14px;font:600 12.5px inherit;font-family:inherit;box-shadow:0 4px 14px #0008';
+  c.onclick=e=>{e.stopPropagation();lastT=0;window._rdU=0;const f=$$('feed');if(f)f.scrollTop=f.scrollHeight;c.remove()};document.body.appendChild(c)}
+ const t=upRead()?'📖 อ่านย้อนอยู่ เวลารอคุณ · แตะเพื่อไปต่อ ▾':'📖 กำลังอ่าน เวลารอคุณสักครู่ · แตะเพื่อไปต่อ';if(c.textContent!==t)c.textContent=t}
+// 3) AI / ตัวนับถอยหลังของตัวเลือก: ผู้เล่นหยุดไว้ หรือกำลังอ่าน → ไม่เลือกแทน รอจนพร้อม แล้วให้เวลาอีก 3 วิ
+let held=0;
+const _fc=fateChoice;fateChoice=function(force){try{const c=choice._cur;if(c&&!window._pzForce&&(window._uLock||reading())){
+ held=Date.now();const e=$$('chCd');if(e)e.textContent=window._uLock?'⏸ คุณหยุดไว้ ชะตาจะไม่เลือกแทน':'📖 รอคุณอ่านก่อน ชะตายังไม่เลือกแทน';
+ clearTimeout(choice._t);choice._t=setTimeout(()=>{try{if(choice._cur===c)fateChoice(force)}catch(x){}},1500);return}
+ if(c&&!window._pzForce&&held&&Date.now()-held<3200){clearTimeout(choice._t);choice._t=setTimeout(()=>{try{if(choice._cur===c)fateChoice(force)}catch(x){}},3200-(Date.now()-held));return}
+ held=0}catch(e){}return _fc.apply(this,arguments)};
+// AI ที่เลือกเองใน choice (aiPick) ก็เคารพการหยุดผ่าน fateChoice อยู่แล้ว
+// 4) ป้ายบนปุ่มเล่น: "คุณหยุดไว้"
+const css=document.createElement('style');css.textContent=`#pauseBtn .pzLk{position:absolute;left:50%;transform:translateX(-50%);top:-20px;white-space:nowrap;background:#1b1309;color:#f5cf7d;border:1px solid #e7b04a;border-radius:9px;font-size:10.5px;font-weight:700;padding:1px 7px;pointer-events:none;display:none;z-index:3}#pauseBtn.pzU .pzLk{display:block}#pauseBtn{position:relative;overflow:visible}`;document.head.appendChild(css);
+setInterval(()=>{try{const p=$$('pauseBtn');if(!p)return;if(!p.querySelector('.pzLk'))p.insertAdjacentHTML('beforeend','<span class="pzLk">⏸ คุณหยุดไว้</span>');p.classList.toggle('pzU',!!(window._uLock&&paused&&S&&S.alive))}catch(e){}},300);
+// 5) ประวัติการหยุด: กดค้างปุ่มเล่นต่อ → "📜 ประวัติการหยุด"
+window.openPzLog=function(){const L=(window._pzLog||[]).slice().reverse();const tm=t=>{const d=new Date(t);return d.toTimeString().slice(0,8)};
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 ประวัติการหยุด/เล่นต่อ</h3><p class="tag2">20 ครั้งล่าสุด · ถ้าเกมเล่นต่อเองทั้งที่คุณหยุดไว้ แคปหน้านี้ส่งมาได้เลย</p><div style="display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow:auto">${L.length?L.map(x=>`<div style="background:#2d2418;border-radius:10px;padding:7px 10px;font-size:13px"><b>${x.a}</b> <span class="tag2">${tm(x.t)}${x.age!=null?' · อายุ '+x.age:''}</span><br>${esc(String(x.w||''))}</div>`).join(''):'<p class="tag2">ยังไม่มีบันทึก</p>'}</div><p class="tag2" style="margin-top:8px">สถานะตอนนี้: ${paused?(window._uLock?'⏸ คุณหยุดไว้ (ล็อก)':'⏸ ระบบหยุดชั่วคราว'):'▶ กำลังเล่น'}${reading()?' · 📖 กำลังอ่าน':''}</p>`,'pzlog')};
+try{const _qp=qmPlay;qmPlay=function(){const o=_qp.apply(this,arguments);try{if(o&&Array.isArray(o.rows))o.rows.push({sep:1},{ic:'📜',t:'ประวัติการหยุด',sub:'ดูว่าใครสั่งหยุด/เล่นต่อ',f:()=>openPzLog()})}catch(e){}return o}}catch(e){}
+})()}catch(e){console.error('block303',e)}

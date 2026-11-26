@@ -23,7 +23,7 @@ addEventListener('error',e=>er(e&&(e.message||e.error)));addEventListener('unhan
 // ---------- 1) ทำไมไปต่อไม่ได้ ----------
 function rank(){try{if(!S)return'';if(S.mw&&S.mw.sky&&window._sky){const K=_sky.SK(),R=_sky.RK;if(K&&K.rk>=0)return`ขั้น ${K.rk+1}/36 ${R[K.rk].n} ${K.sub>=10?'สมบูรณ์':'ชั้น '+K.sub+'/9'}`}const r=typeof realmLabel==='function'?realmLabel():null;return r?`${r.base} ${r.sub||''}`:''}catch(e){return''}}
 function checks(){const L=[];if(!alive())return L;
- if(paused)L.push(['⏸️','เกมหยุดอยู่','เวลาไม่เดินจนกว่าจะกดเล่นต่อ','▶ เล่นต่อ',()=>{paused=false;render()}]);
+ if(paused)L.push(['⏸️','เกมหยุดอยู่','เวลาไม่เดินจนกว่าจะกดเล่นต่อ','▶ เล่นต่อ',()=>{_pzRes('ผู้เล่นกดเล่นต่อจากตัวช่วย',1);render()}]);
  if(choice._cur&&!(modalOpen&&$$('modal')&&$$('modal').dataset.k==='choice'))L.push(['📩','มีเหตุการณ์รอให้ตอบ',`“${strip(choice._cur.title).slice(0,40)}” — ต้องเลือกก่อน เวลาถึงจะเดินต่อ`,'เปิดเหตุการณ์',()=>{choice._min=false;closeM();setTimeout(()=>{try{choiceShow()}catch(e){}},150)}]);
  const st=(choice._q||[]).filter(q=>q&&q[3]!==S).length;if(st)L.push(['🧹',`เหตุการณ์ค้างจากชีวิตก่อน ${st} เรื่อง`,'อยู่ในคิวแต่จะไม่มีวันขึ้น','ล้างคิว',()=>{choice._q=(choice._q||[]).filter(q=>q&&q[3]===S)}]);
  try{if(S.mw&&S.mw.sky&&window._sky){const K=_sky.SK(),R=_sky.RK;if(K&&K.rk>=0&&K.sub>=10&&K.rk<R.length-1){let ok=false;try{ok=R[K.rk].g(K)}catch(e){}if(!ok)L.push(['🔑','ด่านข้ามขั้นยังไม่ผ่าน',`ต้อง: ${R[K.rk].gate}`,'เรียกด่านมาอีกครั้ง',()=>{try{window._skyUnstick&&_skyUnstick();toast('🔑 เรียกด่านแล้ว จะขึ้นในปีถัดไป')}catch(e){}}])}}}catch(e){}
@@ -90,13 +90,13 @@ window.aOpen=aOpen;window.aSet=(k,v)=>{if(k==='stop'){LSS('murim_fa',v?0:1);retu
 // ก) ออโต้เปิดอยู่แต่เกมถูกหยุด (หน้าต่างที่หยุดเวลาถูกปิดโดยไม่คืนค่า) และไม่มีอะไรรอ → เดินเวลาต่อ
 // ข) มีเหตุการณ์ค้างคิวแต่ปีไม่เดิน (เช่น ยืนอยู่ขอบกัลป์ อายุถูกตรึง งบเหตุการณ์ต่อปีเต็ม) นานเกิน 8 วิ → เปิดเหตุการณ์นั้นเลย
 {let pz=0,qz=0;setInterval(()=>{try{if(!alive()||document.hidden)return;const idle=!choice._cur&&!modalOpen&&!(typeof DU!=='undefined'&&DU)&&!(window._mgBusy&&_mgBusy());
- if(typeof auto!=='undefined'&&auto&&paused&&idle){if(++pz>=2){pz=0;paused=false;try{render()}catch(e){}}}else pz=0;
+ if(typeof auto!=='undefined'&&auto&&paused&&idle&&!window._uLock){if(++pz>=2){pz=0;_pzRes('ตัวกันค้าง (ออโต้)');try{render()}catch(e){}}}else pz=0;
  if(!paused&&idle&&choice._q&&choice._q.length){if(++qz>=4){qz=0;const q=choice._q.shift();if(q&&q[3]===S){S._chN=0;choice(q[0],q[1],q[2])}}}else qz=0}catch(e){}},2000)}
 // ค) หน้าต่างที่หยุดเวลาไว้ (แนะนำโหมด ฉากพิเศษ ฯลฯ) ถูกปิดทางอื่น/ถูกหน้าต่างอื่นทับ → เดิมเกมหยุดค้างไม่มีปุ่มให้กด
 //    จับเฉพาะการหยุดที่เกิดขึ้นตอนมีหน้าต่างเปิด (ไม่ยุ่งกับ ⏸ ที่ผู้เล่นกดเอง หรือ "เล่น N ปีแล้วหยุด")
 {let pv=false,mp=false,uz=false,n=0;{const _tp=togglePause;togglePause=function(){const r=_tp.apply(this,arguments);uz=!!paused;mp=false;return r}}
  setInterval(()=>{try{if(!alive()){pv=false;mp=false;return}const p=!!paused;if(p&&!pv){mp=!uz&&!!modalOpen}if(!p){uz=false;mp=false}pv=p;
-  if(p&&mp&&!modalOpen&&!choice._cur&&!(typeof DU!=='undefined'&&DU)&&!window._scrOpen&&!document.hidden&&!$$('coach')&&!$$('ctOv')){if(++n>=12){n=0;mp=false;paused=false;try{render()}catch(e){}}}else n=0}catch(e){}},250)}
+  if(p&&mp&&!modalOpen&&!choice._cur&&!(typeof DU!=='undefined'&&DU)&&!window._scrOpen&&!document.hidden&&!$$('coach')&&!$$('ctOv')){if(++n>=12){n=0;mp=false;if(!window._uLock){_pzRes('ตัวกันค้าง (หลังปิดหน้าต่าง)');try{render()}catch(e){}}}}else n=0}catch(e){}},250)}
 // ---------- ⏳ จับเวลาตัวเลือก: หยุดนับ/ปิดได้จากหน้าตัวเลือกเลย (ผู้เล่นอ่านช้าแจ้งว่าอ่านไม่ทันแล้วเกมเลือกให้ และหาที่ปิดไม่เจอ) ----------
 function fateStop(){try{clearInterval(choice._cd);clearTimeout(choice._t);const m=$$('modal');if(m&&m._chuT)clearInterval(m._chuT);const c=choice._cur;if(c)c._noFate=1;const e=$$('chCd');if(e)e.innerHTML='⏸ หยุดนับแล้ว อ่านได้ตามสบาย'}catch(e){}}
 window.fateStop=fateStop;window.fateOff=function(){try{LS.set('murim_fate',0)}catch(e){}fateStop();toast('⏳ ปิดจับเวลาแล้ว ตัวเลือกจะรอคุณเสมอ · เปิดใหม่ได้ที่ ☰ → ⚙️ อัตโนมัติ')};

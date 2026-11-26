@@ -125,7 +125,7 @@ function wrapOpts(title,text,opts){const D=S._dr;if(!D||opts.some(o=>o&&(o._id||
  return{text:tagHtml+text,opts:out,timed:!auto&&chance(D.md==='sh'?.25:.14)}}
 if(typeof choice==='function'){const _c=choice;choice=function(title,text,opts){
  // ระหว่างสลับร่าง: เรื่องของโลกเดิมเกิดกับร่างคุณ แต่คนที่อยู่ในร่างเป็นคนเลือก
- try{const D=S&&S._dr;if(D&&D.xv&&!/ข้ามโลก|กลับสู่ร่างเดิม|คืนที่ร่างสลับ|โลกทับซ้อน/.test(strip(title)+strip(text))){const r=_c.call(this,title,text,opts);const c=choice._cur;setTimeout(()=>{try{if(choice._cur===c&&c){const V=WEL[D.xv.w]||{};log(`🌀 ระหว่างที่คุณอยู่ใน${V.n||'อีกโลก'} — คนที่อยู่ในร่างคุณเจอเรื่อง「${strip(title).slice(0,40)}」และเลือกแทนคุณ`,'sum');fateChoice(true)}}catch(e){}},350);return r}}catch(e){}
+ try{const D=S&&S._dr;if(D&&D.xv&&!/ข้ามโลก|กลับสู่ร่างเดิม|คืนที่ร่างสลับ|โลกทับซ้อน/.test(strip(title)+strip(text))){const r=_c.call(this,title,text,opts);const c=choice._cur;setTimeout(()=>{try{if(choice._cur===c&&c){const V=WEL[D.xv.w]||{};log(`🌀 ระหว่างที่คุณอยู่ใน${V.n||'อีกโลก'} — คนที่อยู่ในร่างคุณเจอเรื่อง「${strip(title).slice(0,40)}」และเลือกแทนคุณ`,'sum');window._pzForce=1;try{fateChoice(true)}finally{window._pzForce=0}}}catch(e){}},350);return r}}catch(e){}
  let tm=false;try{if(S&&S.alive&&S._dr&&Array.isArray(opts)&&opts.length&&!skipT(title)&&!skipT(text)){const r=wrapOpts(title,text,opts);text=r.text;opts=r.opts;tm=r.timed&&opts.length>=2}}catch(e){console.error('dir3 choice',e)}
  const ret=_c.call(this,title,text,opts);if(tm)setTimeout(()=>timed(choice._cur),120);return ret}}
 // ---------- ตัวเลือกจับเวลา (ใช้ตัวนับชะตาของเกม) ----------
