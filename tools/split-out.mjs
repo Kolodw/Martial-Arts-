@@ -27,6 +27,8 @@ const slots = pick.map((st, k) => {
     if (n.left.type === 'Identifier') { const nm = n.left.name; if (G.has(nm) && !own.has(nm)) W.add(nm) }
     else if (n.left.type === 'MemberExpression' && n.left.object.name === 'window' && !n.left.computed) { const nm = n.left.property.name; if ((G.has(nm) || (outW.has(nm) && outW.get(nm) < st.start)) && !own.has(nm)) { W.add(nm); WW.add(nm) } } });
   extra[k].forEach(n => { W.add(n); WW.add(n) });
+  // อ่าน/เขียน window.X ของชื่อที่ห่อ (เช่น const _o=window.X||X; … window.X=X) ต้องผ่าน window เงาด้วย ไม่งั้นวนเรียกตัวเองไม่รู้จบ
+  walk.full(st, n => { if (n.type === 'MemberExpression' && !n.computed && n.object.type === 'Identifier' && n.object.name === 'window' && W.has(n.property.name)) WW.add(n.property.name) });
   return { id: world + (k + 1), names: [...W], win: WW.size > 0, st };
 });
 // เขียนไฟล์โลก

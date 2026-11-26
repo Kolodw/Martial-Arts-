@@ -2274,7 +2274,9 @@ try{const st=document.createElement('style');st.textContent=`
 __done=1;SL.impl.rrMenu=rrMenu;rrMenu=function(){return globalThis.rrMenu.apply(this,arguments)};SL.impl.vipMenu=vipMenu;vipMenu=function(){return globalThis.vipMenu.apply(this,arguments)};SL.impl.vipPaid=vipPaid;vipPaid=function(){return globalThis.vipPaid.apply(this,arguments)};SL.impl.rrPaid=rrPaid;rrPaid=function(){return globalThis.rrPaid.apply(this,arguments)};SL.impl.vipSet=vipSet;vipSet=function(){return globalThis.vipSet.apply(this,arguments)};SL.impl.chatRender=chatRender;chatRender=function(){return globalThis.chatRender.apply(this,arguments)};SL.impl.vipWall=vipWall;vipWall=function(){return globalThis.vipWall.apply(this,arguments)};})();
 
 // ---- ท่อน late54 (เดิมอยู่ app.js บรรทัด 27600) · ห่อ: openRealm ----
-(function(){const SL=globalThis.__wSlots['late54'];let openRealm=SL.base.openRealm;
+(function(){const SL=globalThis.__wSlots['late54'];let openRealm=SL.base.openRealm;const __G={openRealm:()=>openRealm},__S={openRealm:v=>{openRealm=v}};let __done=0;const __bc=new Map(),__nat=f=>{try{return /\[native code\]/.test(Function.prototype.toString.call(f))}catch(e){return false}};
+const window=new Proxy(globalThis,{get(t,k){if(!__done&&k in __G)return __G[k]();const v=Reflect.get(t,k);if(typeof v==='function'&&__nat(v)){let b=__bc.get(v);if(!b){b=v.bind(t);__bc.set(v,b)}return b}return v},set(t,k,v){if(!__done&&k in __S){__S[k](v);return true}t[k]=v;return true},has(t,k){return k in t||k in __G}});
+
 try{(()=>{
 const _or=openRealm;
 const card=(ic,nm,sub,d,ab,q,c1,c2,st)=>`<div class="rlmc ${st==='cur'?'cur':''} ${st==='lk'?'lk':''}" style="--c1:${c1};--c2:${c2}"><div class="rlmch"><span class="rlmci">${st==='lk'?'🔒':ic}</span><div><b>${st==='lk'?'???':esc(nm)}</b>${st==='cur'?' <span class="rlmnow">ตอนนี้</span>':st==='done'?' ✅':''}<div class="tag2">${st==='lk'?'ยังไม่มีใครเล่าให้ฟัง…':sub}</div></div></div>${st==='lk'?'':`<div class="rlmcd">${d}</div>${ab&&ab.length?`<div class="rlmca">${ab.map(a=>`<span>✦ ${a}</span>`).join('')}</div>`:''}${q?`<div class="rlmcq">“${q}”</div>`:''}`}</div>`;
@@ -2306,7 +2308,7 @@ window.openRealm=openRealm=function(tab){if(!S)return;const c=rlmCur();tab=tab||
 function passedAll(c){return false}
 try{const st=document.createElement('style');st.textContent=`.rlm9{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.rlmst{font-style:normal;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;border:1.5px solid var(--line);opacity:.55}.rlmst.d{background:var(--c1);color:#111;border-color:var(--c1);opacity:1}.rlmst.c{border-color:var(--c1);box-shadow:0 0 0 2px var(--c1);opacity:1}.rlmnext{border-left:4px solid #c9a24a}.cxtabs{flex-wrap:wrap;gap:6px}`;document.head.appendChild(st)}catch(e){}
 })()}catch(e){console.error(e)}
-SL.impl.openRealm=openRealm;openRealm=function(){return globalThis.openRealm.apply(this,arguments)};})();
+__done=1;SL.impl.openRealm=openRealm;openRealm=function(){return globalThis.openRealm.apply(this,arguments)};})();
 
 // ---- ท่อน late55 (เดิมอยู่ app.js บรรทัด 27644) · ห่อ: openOnline, openMenu ----
 (function(){const SL=globalThis.__wSlots['late55'];let openOnline=SL.base.openOnline;let openMenu=SL.base.openMenu;
@@ -2820,7 +2822,9 @@ const st=document.createElement('style');st.textContent=`
 SL.impl.frWrap=frWrap;frWrap=function(){return globalThis.frWrap.apply(this,arguments)};SL.impl.chatRender=chatRender;chatRender=function(){return globalThis.chatRender.apply(this,arguments)};})();
 
 // ---- ท่อน late68 (เดิมอยู่ app.js บรรทัด 32403) · ห่อ: openEquip ----
-(function(){const SL=globalThis.__wSlots['late68'];let openEquip=SL.base.openEquip;
+(function(){const SL=globalThis.__wSlots['late68'];let openEquip=SL.base.openEquip;const __G={openEquip:()=>openEquip},__S={openEquip:v=>{openEquip=v}};let __done=0;const __bc=new Map(),__nat=f=>{try{return /\[native code\]/.test(Function.prototype.toString.call(f))}catch(e){return false}};
+const window=new Proxy(globalThis,{get(t,k){if(!__done&&k in __G)return __G[k]();const v=Reflect.get(t,k);if(typeof v==='function'&&__nat(v)){let b=__bc.get(v);if(!b){b=v.bind(t);__bc.set(v,b)}return b}return v},set(t,k,v){if(!__done&&k in __S){__S[k](v);return true}t[k]=v;return true},has(t,k){return k in t||k in __G}});
+
 try{(function(){if(typeof openEquip!=='function'||typeof EQI==='undefined')return;
 const GS=['weapon','armor','mount','house'],ES=()=>['fw','acc1','acc2','trs','fit'].filter(k=>k!=='fw'||(typeof EQS!=='undefined'&&EQS.fw));
 const LBL=k=>(GS.includes(k)?SLOT_N[k]:EQS[k])||k,ICO=k=>({weapon:'⚔️',armor:'🛡️',mount:'🐎',house:'🏠',fw:'🗡️',acc1:'💍',acc2:'💍',trs:'🧿',fit:'👘'})[k]||'▫️';
@@ -2889,7 +2893,7 @@ const st=document.createElement('style');st.textContent=`
 #modal .eqTabs button{flex:none;border:1.5px solid color-mix(in srgb,var(--ink) 25%,transparent);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}#modal .eqTabs button.on{background:var(--pink);color:#fff;border-color:var(--pink)}#modal .eqTabs small{opacity:.75}
 @media (max-width:380px){#modal .eqDoll{grid-template-columns:minmax(0,1fr) 100px minmax(0,1fr)}#modal .eqMid canvas{width:96px;height:106px}}`;document.head.appendChild(st);
 })()}catch(e){console.error('mod-eqrpg',e)}
-SL.impl.openEquip=openEquip;openEquip=function(){return globalThis.openEquip.apply(this,arguments)};})();
+__done=1;SL.impl.openEquip=openEquip;openEquip=function(){return globalThis.openEquip.apply(this,arguments)};})();
 
 // ---- ท่อน late69 (เดิมอยู่ app.js บรรทัด 32473) · ห่อ: passYear, startLife, openArts ----
 (function(){const SL=globalThis.__wSlots['late69'];let passYear=SL.base.passYear;let startLife=SL.base.startLife;let openArts=SL.base.openArts;
@@ -4995,7 +4999,9 @@ window._b95={poseFix,AU,FOE,todOf,wxOf};window.dusBg=dusBg;window.dusFoeLook=dus
 __done=1;SL.impl.pxScene=pxScene;pxScene=function(){return globalThis.pxScene.apply(this,arguments)};SL.impl.pxPlay=pxPlay;pxPlay=function(){return globalThis.pxPlay.apply(this,arguments)};SL.impl.dusBg=dusBg;dusBg=function(){return globalThis.dusBg.apply(this,arguments)};SL.impl.dusBoom=dusBoom;dusBoom=function(){return globalThis.dusBoom.apply(this,arguments)};SL.impl.dusFoeLook=dusFoeLook;dusFoeLook=function(){return globalThis.dusFoeLook.apply(this,arguments)};SL.impl.pxHero=pxHero;pxHero=function(){return globalThis.pxHero.apply(this,arguments)};SL.impl.dusHero=dusHero;dusHero=function(){return globalThis.dusHero.apply(this,arguments)};SL.impl.dsPlay=dsPlay;dsPlay=function(){return globalThis.dsPlay.apply(this,arguments)};})();
 
 // ---- ท่อน late91 (เดิมอยู่ app.js บรรทัด 40314) · ห่อ: applyTheme ----
-(function(){const SL=globalThis.__wSlots['late91'];let applyTheme=SL.base.applyTheme;
+(function(){const SL=globalThis.__wSlots['late91'];let applyTheme=SL.base.applyTheme;const __G={applyTheme:()=>applyTheme},__S={applyTheme:v=>{applyTheme=v}};let __done=0;const __bc=new Map(),__nat=f=>{try{return /\[native code\]/.test(Function.prototype.toString.call(f))}catch(e){return false}};
+const window=new Proxy(globalThis,{get(t,k){if(!__done&&k in __G)return __G[k]();const v=Reflect.get(t,k);if(typeof v==='function'&&__nat(v)){let b=__bc.get(v);if(!b){b=v.bind(t);__bc.set(v,b)}return b}return v},set(t,k,v){if(!__done&&k in __S){__S[k](v);return true}t[k]=v;return true},has(t,k){return k in t||k in __G}});
+
 try{(()=>{
 const P=s=>{s=s||'';let m=/color\(srgb ([^)]+)\)/.exec(s);if(m){const v=m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);return[v[0]*255,v[1]*255,v[2]*255,v.length>3?v[3]:1]}m=/rgba?\(([^)]+)\)/.exec(s);if(!m)return null;const v=m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);return[v[0],v[1],v[2],v.length>3?v[3]:1]};
 const L=c=>{const f=x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)};return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2])};
@@ -5037,7 +5043,7 @@ setTimeout(()=>scan(document.body,5000),1500);
 // หน้าต่างที่เปิดอยู่: ตรวจซ้ำเบาๆ (กรณีสลับคลาส/สีโดยไม่เพิ่มโหนด)
 setInterval(()=>{const go=()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}};window.requestIdleCallback?requestIdleCallback(go,{timeout:1000}):go()},1500);
 })()}catch(e){console.error('block102',e)}
-SL.impl.applyTheme=applyTheme;applyTheme=function(){return globalThis.applyTheme.apply(this,arguments)};})();
+__done=1;SL.impl.applyTheme=applyTheme;applyTheme=function(){return globalThis.applyTheme.apply(this,arguments)};})();
 
 // ---- ท่อน late92 (เดิมอยู่ app.js บรรทัด 40814) · ห่อ: - ----
 (function(){const SL=globalThis.__wSlots['late92'];
@@ -5733,7 +5739,9 @@ window._compTest=g=>{shown=0;show(g||10)};
 })();
 
 // ---- ท่อน late99 (เดิมอยู่ app.js บรรทัด 42515) · ห่อ: openBag, openAssets, passYear ----
-(function(){const SL=globalThis.__wSlots['late99'];let openBag=SL.base.openBag;let openAssets=SL.base.openAssets;let passYear=SL.base.passYear;
+(function(){const SL=globalThis.__wSlots['late99'];let openBag=SL.base.openBag;let openAssets=SL.base.openAssets;let passYear=SL.base.passYear;const __G={openBag:()=>openBag,openAssets:()=>openAssets,passYear:()=>passYear},__S={openBag:v=>{openBag=v},openAssets:v=>{openAssets=v},passYear:v=>{passYear=v}};let __done=0;const __bc=new Map(),__nat=f=>{try{return /\[native code\]/.test(Function.prototype.toString.call(f))}catch(e){return false}};
+const window=new Proxy(globalThis,{get(t,k){if(!__done&&k in __G)return __G[k]();const v=Reflect.get(t,k);if(typeof v==='function'&&__nat(v)){let b=__bc.get(v);if(!b){b=v.bind(t);__bc.set(v,b)}return b}return v},set(t,k,v){if(!__done&&k in __S){__S[k](v);return true}t[k]=v;return true},has(t,k){return k in t||k in __G}});
+
 try{(function(){
 const ON=()=>!!(S&&S.mw&&S.alive);
 const WK=M=>!M?'normal':M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal');
@@ -5794,7 +5802,7 @@ const FIND={normal:['ฝากของจากญาติต่างจั�
  if(b)for(const id in b.it){const x=IT[id];if(x&&x[5]&&b.it[id]>0)try{x[5]()}catch(e){}}
  if(S.age>=6&&Math.random()<.07){const w=WK(M),L=avail(M).filter(id=>IT[id][2]<=.3),sp=L.filter(id=>IT[id][6]),id=(sp.length&&Math.random()<.6)?ch(sp):ch(L);if(id){const bb=B();bb.it[id]=(bb.it[id]||0)+1;mwSay(`🎒 ${ch(FIND[w]||FIND.normal)} ได้ ${IT[id][0]} <b>${IT[id][1]}</b> เก็บเข้ากระเป๋าแล้ว`,'good')}}}catch(e){console.error('mwbag',e)}return r}}
 })()}catch(e){console.error('block122',e)}
-SL.impl.openBag=openBag;openBag=function(){return globalThis.openBag.apply(this,arguments)};SL.impl.openAssets=openAssets;openAssets=function(){return globalThis.openAssets.apply(this,arguments)};SL.impl.passYear=passYear;passYear=function(){return globalThis.passYear.apply(this,arguments)};})();
+__done=1;SL.impl.openBag=openBag;openBag=function(){return globalThis.openBag.apply(this,arguments)};SL.impl.openAssets=openAssets;openAssets=function(){return globalThis.openAssets.apply(this,arguments)};SL.impl.passYear=passYear;passYear=function(){return globalThis.passYear.apply(this,arguments)};})();
 
 // ---- ท่อน late100 (เดิมอยู่ app.js บรรทัด 42698) · ห่อ: _mbHook ----
 (function(){const SL=globalThis.__wSlots['late100'];let _mbHook=SL.base._mbHook;const __G={_mbHook:()=>_mbHook},__S={_mbHook:v=>{_mbHook=v}};let __done=0;const __bc=new Map(),__nat=f=>{try{return /\[native code\]/.test(Function.prototype.toString.call(f))}catch(e){return false}};
@@ -6641,7 +6649,9 @@ window.openTickets=function(){draw();const RR=window._RR;try{if(RR&&(RR.f==null|
 __done=1;SL.impl.openMenu=openMenu;openMenu=function(){return globalThis.openMenu.apply(this,arguments)};SL.impl.rrMenu=rrMenu;rrMenu=function(){return globalThis.rrMenu.apply(this,arguments)};})();
 
 // ---- ท่อน late109 (เดิมอยู่ app.js บรรทัด 45614) · ห่อ: checkDeath ----
-(function(){const SL=globalThis.__wSlots['late109'];let checkDeath=SL.base.checkDeath;
+(function(){const SL=globalThis.__wSlots['late109'];let checkDeath=SL.base.checkDeath;const __G={checkDeath:()=>checkDeath},__S={checkDeath:v=>{checkDeath=v}};let __done=0;const __bc=new Map(),__nat=f=>{try{return /\[native code\]/.test(Function.prototype.toString.call(f))}catch(e){return false}};
+const window=new Proxy(globalThis,{get(t,k){if(!__done&&k in __G)return __G[k]();const v=Reflect.get(t,k);if(typeof v==='function'&&__nat(v)){let b=__bc.get(v);if(!b){b=v.bind(t);__bc.set(v,b)}return b}return v},set(t,k,v){if(!__done&&k in __S){__S[k](v);return true}t[k]=v;return true},has(t,k){return k in t||k in __G}});
+
 try{(()=>{
 const pk=a=>a[Math.floor(Math.random()*a.length)];
 // จำตัวเลือกใน "บทสุดท้าย"
@@ -6667,10 +6677,12 @@ function cause(){const k=+S.karma||0,sp=typeof S.spouse==='string'?S.spouse:(S.s
  const r=_cd.apply(this,arguments);try{if(S&&S.alive&&S.deathCause&&/วัยชรา/.test(S.deathCause)&&S.age<lifeMax())S.deathCause=null}catch(e){}return r};window.checkDeath=checkDeath}
 window._oldCause=cause;
 })()}catch(e){console.error('block203',e)}
-SL.impl.checkDeath=checkDeath;checkDeath=function(){return globalThis.checkDeath.apply(this,arguments)};})();
+__done=1;SL.impl.checkDeath=checkDeath;checkDeath=function(){return globalThis.checkDeath.apply(this,arguments)};})();
 
 // ---- ท่อน late110 (เดิมอยู่ app.js บรรทัด 45781) · ห่อ: checkDeath ----
-(function(){const SL=globalThis.__wSlots['late110'];let checkDeath=SL.base.checkDeath;
+(function(){const SL=globalThis.__wSlots['late110'];let checkDeath=SL.base.checkDeath;const __G={checkDeath:()=>checkDeath},__S={checkDeath:v=>{checkDeath=v}};let __done=0;const __bc=new Map(),__nat=f=>{try{return /\[native code\]/.test(Function.prototype.toString.call(f))}catch(e){return false}};
+const window=new Proxy(globalThis,{get(t,k){if(!__done&&k in __G)return __G[k]();const v=Reflect.get(t,k);if(typeof v==='function'&&__nat(v)){let b=__bc.get(v);if(!b){b=v.bind(t);__bc.set(v,b)}return b}return v},set(t,k,v){if(!__done&&k in __S){__S[k](v);return true}t[k]=v;return true},has(t,k){return k in t||k in __G}});
+
 try{(()=>{const pk=a=>a[Math.floor(Math.random()*a.length)];
 const ctx=()=>{const k=+S.karma||0,sp=typeof S.spouse==='string'?S.spouse:(S.spouse&&S.spouse.n)||'',kids=(S.kids|0)>0||(S.children||[]).length>0,ill=S.chronic&&S.chronic.n,nemO=(S.nem&&S.nem.alive&&S.nem)||(S._dr&&S._dr.nem&&S._dr.nem.alive&&S._dr.nem);
  return{k,sp,kids,ill,nem:nemO&&nemO.n,fam:kids?' ท่ามกลางลูกหลาน':sp?` โดยมี ${sp} กุมมืออยู่ข้างเตียง`:'',fin:S._finK||'',rich:(+S.money||0)>5e6,poor:(+S.money||0)<2e4,fame:(+S.fame||0)+((S.mw&&S.mw.fame)||0)}};
@@ -6715,7 +6727,7 @@ window._dvPick=function(w){try{const f=W[w];return f?f(ctx()):null}catch(e){cons
  if(S.beastMode&&!S.beastMode.human)S.deathCause=window._dvPick('beast');else if(S.sv&&(CFG.chm===5||S.soul))S.deathCause=window._dvPick('soul')}}catch(e){}
  const r=_cd.apply(this,arguments);try{if(S&&S.alive&&S.deathCause&&/วัยชรา/.test(S.deathCause)&&S.age<lifeMax()&&!S.mw)S.deathCause=null}catch(e){}return r};window.checkDeath=checkDeath}
 })()}catch(e){console.error('block204',e)}
-SL.impl.checkDeath=checkDeath;checkDeath=function(){return globalThis.checkDeath.apply(this,arguments)};})();
+__done=1;SL.impl.checkDeath=checkDeath;checkDeath=function(){return globalThis.checkDeath.apply(this,arguments)};})();
 
 // ---- ท่อน late111 (เดิมอยู่ app.js บรรทัด 46036) · ห่อ: - ----
 (function(){const SL=globalThis.__wSlots['late111'];
