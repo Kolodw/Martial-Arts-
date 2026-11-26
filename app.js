@@ -8560,10 +8560,12 @@ const GD2=[
  {s:'net',ic:'💬',t:'เสียงจากผู้เล่น',d:'แจ้งบั๊ก ขอฟีเจอร์ ให้คะแนนเกม แก้ข้อความตัวเองได้ และผู้พัฒนาตอบกลับได้',go:'openReport',
   te:'Player feedback',de:'Report bugs, request features, rate the game, edit your own posts — and the developer can reply.'}];
 SYS_GUIDE.length=0;GD2.forEach(g=>SYS_GUIDE.push(g));
+function gdAvail(g){try{if(!S)return true;const k=g.go||'';if(g.s==='beast'&&!S.beastMode)return false;if(/MW$|^openMw/.test(k)&&!S.mw)return false;if(k==='openHib'&&!(S.beastMode&&!S.beastMode.human))return false;return true}catch(e){return true}}
+function gdGo(k){closeM();setTimeout(()=>{try{const r=window[k]();if(r&&r.catch)r.catch(()=>{})}catch(e){console.warn('guide',k,e);try{toast('ระบบนี้ยังเปิดไม่ได้ในชีวิตนี้ ต้องปลดล็อกในเนื้อเรื่องก่อน')}catch(x){}}},60)}
 function openGuide(sec){const en=LANG==='en',inLife=!!(S&&S.alive&&$('game')&&$('game').classList.contains('on'));sec=sec||'all';
  const tabs=[['all','✨ '+(en?'All':'ทั้งหมด')]].concat(GD_SEC.map(s=>[s[0],(en?s[2]:s[1]).replace(/^(\S+) (.*)$/,(m,a,b)=>a+' '+(en?b.charAt(0)+b.slice(1).toLowerCase():b))])).map(([k,t])=>`<button class="cxtab ${k===sec?'on':''}" onclick="openGuide('${k}')">${t}</button>`).join('');
- const card=g=>{const can=g.go&&typeof window[g.go]==='function'&&(!g.life||inLife)&&(!g.need||g.need());
-  return`<div class="gdc${g.nw?' gnw':''}"><div class="gdi2">${g.ic}</div><div class="gdb"><b>${en?g.te:g.t}</b>${g.nw?`<span class="gdnew">${en?'NEW':'ใหม่'}</span>`:''}<p>${en?g.de:g.d}</p>${can?`<button class="gbtn gdgo" onclick="closeM();setTimeout(()=>${g.go}(),60)">${en?'Open ▶':'เปิดดู ▶'}</button>`:''}</div></div>`};
+ const card=g=>{const can=g.go&&typeof window[g.go]==='function'&&(!g.life||inLife)&&(!g.need||g.need())&&gdAvail(g);
+  return`<div class="gdc${g.nw?' gnw':''}"><div class="gdi2">${g.ic}</div><div class="gdb"><b>${en?g.te:g.t}</b>${g.nw?`<span class="gdnew">${en?'NEW':'ใหม่'}</span>`:''}<p>${en?g.de:g.d}</p>${can?`<button class="gbtn gdgo" onclick="gdGo('${g.go}')">${en?'Open ▶':'เปิดดู ▶'}</button>`:''}</div></div>`};
  const body=GD_SEC.filter(s=>sec==='all'||s[0]===sec).map(s=>{const L=SYS_GUIDE.filter(g=>g.s===s[0]);return L.length?`<div class="gdsec">${en?s[2]:s[1]}</div>`+L.map(card).join(''):''}).join('');
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📘 ${en?'Game guide':'คู่มือระบบ'}</h3>
  <div class="gdh"><b>${en?'Lots of systems — read any time from ☰':'ระบบในเกมมีเยอะ เปิดอ่านได้ทุกเมื่อจากเมนู ☰'}</b><p>${en?'Tap "Open" to jump to that screen · cards marked NEW are recent additions':'กด "เปิดดู" เพื่อไปหน้านั้น · การ์ดที่มีป้าย ใหม่ คือระบบที่เพิ่งเพิ่ม'}</p></div>
