@@ -7163,7 +7163,7 @@ const MT_OPT=[['fight','⚔️ ท้าดวล','ชนะตามพลั�
 function mtDone(rid){S.mtd=S.mtd||[];return S.mtd.includes(rid)}
 function mtMark(rid){S.mtd=S.mtd||[];S.mtd.push(rid);if(S.mtd.length>30)S.mtd.shift()}
 function mtCountdown(rid,dl){clearInterval(MT.cd);MT.cd=setInterval(()=>{const c=choice._cur;if(!c||c.mt!==rid){clearInterval(MT.cd);return}const left=Math.max(0,Math.ceil((dl-Date.now())/1000));const e=$('chCd');if(e&&$('modal').dataset.k==='choice')e.textContent=`⏳ เหลือ ${left} วิ — ไม่เลือกจะสุ่มให้`;else{const pb=$('pendBar');if(pb&&choice._min)pb.innerHTML=`⏸ 🌐 ผู้เล่นจริงรอคุณอยู่ · เหลือ ${left} วิ — แตะเพื่อเลือก`}
- if(left<=0){clearInterval(MT.cd);const i=c.mtKeep?0:(window.mtStIdx?mtStIdx(c):Math.floor(Math.random()*c.opts.length));window._mtWho='⏳ หมดเวลา';addFeed('ev',`⏳ หมดเวลา — ${c.mtKeep?'คงตัวเลือกเดิม':'สุ่มให้'}: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i)}},250)}
+ if(left<=0){clearInterval(MT.cd);if(!window._chAllow||!_chAllow()){_chWait();return}const i=c.mtKeep?0:(window.mtStIdx?mtStIdx(c):Math.floor(Math.random()*c.opts.length));window._mtWho='⏳ หมดเวลา';addFeed('ev',`⏳ หมดเวลา — ${c.mtKeep?'คงตัวเลือกเดิม':'สุ่มให้'}: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i)}},250)}
 function mtShow(st){const o=st.o||{},rid=st.rid,RN=S.xian?(typeof XREALM!=='undefined'?XREALM:[]):REALMS.map(r=>r.n),ep=Math.max(50,o.p||100),r=total()/ep;
  const pw=Math.round(Math.max(3,Math.min(97,Math.pow(total(),1.3)/(Math.pow(total(),1.3)+Math.pow(ep,1.3))*100)));
  MT.room={rid,o,ep,side:st.side};setScene('portal');let rv='';const tr=(S.allies||[]).find(x=>x.n===o.n&&x.tr);if(tr){S.allies=S.allies.filter(x=>x!==tr);S.flags.betrayed=1;rv=`<br><b style="color:#ff6b6b">🗡️ คุณจำใบหน้านี้ได้ ${esc(o.n)} คือคนที่แอบหักหลังคุณตอนสาบานครั้งก่อน!</b>`;log(`🗡️ เจอกันอีกครั้ง… คุณรู้แล้วว่า <b>${esc(o.n)}</b> หักหลังคุณมาตลอด`,'bad',true);keyAdd(`รู้ว่าผู้เล่น ${o.n} หักหลัง`)}
@@ -19898,7 +19898,7 @@ function paceMinor(c){try{const tx=String(c.title)+' '+String(c.text||'').slice(
   m.insertAdjacentHTML('beforeend',`<div class="paceMin" id="paceMin">⚡ เหตุการณ์เล็ก ระบบจะเลือกให้ใน <b>${left}</b> วิ · แตะเพื่อเลือกเอง</div>`);
   const cancel=()=>{stop=true;const e=$('paceMin');if(e)e.remove();m.removeEventListener('pointerdown',cancel,true)};m.addEventListener('pointerdown',cancel,true);
   const tk=()=>{if(stop||choice._cur!==c)return;if(pendModal||!modalOpen){setTimeout(tk,400);return}left--;const e=$('paceMin');if(e)e.querySelector('b').textContent=left;
-   if(left<=0){m.removeEventListener('pointerdown',cancel,true);const valid=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip);const i=valid.length?ch(valid):0;addFeed('ev',`⚡ ระบบเลือกให้ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i);return}setTimeout(tk,1000)};
+   if(left<=0){m.removeEventListener('pointerdown',cancel,true);if(!window._chAllow||!_chAllow()){_chWait();return}const valid=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip);const i=valid.length?ch(valid):0;addFeed('ev',`⚡ ระบบเลือกให้ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i);return}setTimeout(tk,1000)};
   setTimeout(tk,1000)}catch(e){console.error(e)}return r}}
 // เตือนพัก
 function paceBreak(){if(modalOpen||choice._cur)return;PACE.brkAt=PACE.play;const was=paused;paused=true;try{if(typeof saveGame==='function')saveGame()}catch(e){}
@@ -20414,7 +20414,7 @@ PACE.am=()=>LS.get('murim_automin',0)?1:0;
   let left=10,stop=false;m.insertAdjacentHTML('beforeend',`<div class="paceMin" id="paceMin">⚡ เหตุการณ์เล็ก ระบบจะเลือกให้ใน <b>${left}</b> วิ · แตะเพื่อเลือกเอง</div>`);
   const cancel=()=>{stop=true;const x=$('paceMin');if(x)x.remove();m.removeEventListener('pointerdown',cancel,true)};m.addEventListener('pointerdown',cancel,true);
   const tk=()=>{if(stop||choice._cur!==c)return;if(pendModal||!modalOpen||document.hidden){setTimeout(tk,500);return}left--;const x=$('paceMin');if(x)x.querySelector('b').textContent=left;
-   if(left<=0){m.removeEventListener('pointerdown',cancel,true);const v=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip&&!c.opts[i].noFate);const i=v.length?ch(v):0;addFeed('ev',`⚡ ระบบเลือกให้ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i);return}setTimeout(tk,1000)};setTimeout(tk,1000)}catch(e){console.error(e)}return r}}
+   if(left<=0){m.removeEventListener('pointerdown',cancel,true);if(!window._chAllow||!_chAllow()){_chWait();return}const v=c.opts.map((o,i)=>i).filter(i=>!c.opts[i].skip&&!c.opts[i].noFate);const i=v.length?ch(v):0;addFeed('ev',`⚡ ระบบเลือกให้ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum');choiceRun(i);return}setTimeout(tk,1000)};setTimeout(tk,1000)}catch(e){console.error(e)}return r}}
 
 
 // ===================== v17.8 ใช้เวลากับครอบครัว: คู่ชีวิต · ตำหนักใน · ลูก =====================
@@ -34922,7 +34922,7 @@ const paint=()=>{try{const m=$('modal');if(!m||m.dataset.k!=='choice')return;con
   if(auto&&askU()&&AK.n&&!offT()&&!big(c)&&!fateChoice._force&&!lkOf(c)){c._akh=1;const e=$('chCd');if(e)e.textContent='⏸ เหตุการณ์ที่ยังไม่ล็อก หยุดรอให้คุณเลือก (กด 🔓 เพื่อจำไว้)';
    try{if(choice._min){choice._min=false;pendBar();choiceShow()}}catch(x){}return}}}catch(e){console.error('akFate',e)}return _fc.apply(this,arguments)}}
 // ตอนเล่นเอง: เหตุการณ์ที่ล็อกไว้ เลือกให้หลังโชว์แป๊บเดียว (กดเลือกเองก่อนได้)
-const soon=c=>{if(!find(c))return;clearTimeout(choice._akT);choice._akT=setTimeout(()=>{try{if(choice._cur===c&&find(c)&&!(modalOpen&&$('modal').dataset.k!=='choice'))fateChoice()}catch(e){}},auto?300:4500)};
+const soon=c=>{if(!find(c))return;clearTimeout(choice._akT);choice._akT=setTimeout(()=>{try{if(choice._cur===c&&find(c)&&!(modalOpen&&$('modal').dataset.k!=='choice')&&(auto||(window._chAllow&&_chAllow())))fateChoice()}catch(e){}},auto?300:4500)};
 {const _cs=choiceShow;choiceShow=function(){const r=_cs.apply(this,arguments);try{paint();const c=choice._cur;if(c&&find(c)){if(!auto)soon(c);const e=$('chCd');if(e)e.textContent='🔒 กำลังใช้คำตอบที่ล็อกไว้ แตะ 🔒 เพื่อปลดล็อก'}}catch(e){}return r}}
 {const _ch=choice;choice=function(){const r=_ch.apply(this,arguments);try{const c=choice._cur;if(c&&choice._min&&!auto&&find(c))soon(c)}catch(e){}return r};for(const k in _ch)try{choice[k]=_ch[k]}catch(e){}}
 // --- หน้าจัดการ ---
@@ -41080,7 +41080,7 @@ function rdChip(on){let c=$$('rdChip');if(!on||paused||(modalOpen&&!choice._cur)
 // 3) AI / ตัวนับถอยหลังของตัวเลือก: ผู้เล่นหยุดไว้ หรือกำลังอ่าน → ไม่เลือกแทน รอจนพร้อม แล้วให้เวลาอีก 3 วิ
 let held=0;
 const _fc=fateChoice;fateChoice=function(force){try{const c=choice._cur;if(c&&!window._pzForce&&(window._uLock||reading())){
- held=Date.now();const e=$$('chCd');if(e)e.textContent=window._uLock?'⏸ คุณหยุดไว้ ชะตาจะไม่เลือกแทน':'📖 รอคุณอ่านก่อน ชะตายังไม่เลือกแทน';
+ held=Date.now();const e=$$('chCd');if(e)e.textContent=window._uLock?'⏸ คุณหยุดไว้':'📖 รอคุณอ่าน';
  clearTimeout(choice._t);choice._t=setTimeout(()=>{try{if(choice._cur===c)fateChoice(force)}catch(x){}},1500);return}
  if(c&&!window._pzForce&&held&&Date.now()-held<3200){clearTimeout(choice._t);choice._t=setTimeout(()=>{try{if(choice._cur===c)fateChoice(force)}catch(x){}},3200-(Date.now()-held));return}
  held=0}catch(e){}return _fc.apply(this,arguments)};
@@ -41093,3 +41093,24 @@ window.openPzLog=function(){const L=(window._pzLog||[]).slice().reverse();const 
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📜 ประวัติการหยุด/เล่นต่อ</h3><p class="tag2">20 ครั้งล่าสุด · ถ้าเกมเล่นต่อเองทั้งที่คุณหยุดไว้ แคปหน้านี้ส่งมาได้เลย</p><div style="display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow:auto">${L.length?L.map(x=>`<div style="background:#2d2418;border-radius:10px;padding:7px 10px;font-size:13px"><b>${x.a}</b> <span class="tag2">${tm(x.t)}${x.age!=null?' · อายุ '+x.age:''}</span><br>${esc(String(x.w||''))}</div>`).join(''):'<p class="tag2">ยังไม่มีบันทึก</p>'}</div><p class="tag2" style="margin-top:8px">สถานะตอนนี้: ${paused?(window._uLock?'⏸ คุณหยุดไว้ (ล็อก)':'⏸ ระบบหยุดชั่วคราว'):'▶ กำลังเล่น'}${reading()?' · 📖 กำลังอ่าน':''}</p>`,'pzlog')};
 try{const _qp=qmPlay;qmPlay=function(){const o=_qp.apply(this,arguments);try{if(o&&Array.isArray(o.rows))o.rows.push({sep:1},{ic:'📜',t:'ประวัติการหยุด',sub:'ดูว่าใครสั่งหยุด/เล่นต่อ',f:()=>openPzLog()})}catch(e){}return o}}catch(e){}
 })()}catch(e){console.error('block303',e)}
+// ============================================================
+// BLOCK 304 🙅 ไม่มีอะไรเลือกแทนผู้เล่น (นอกจากผู้เล่นอนุญาต): ประตูเดียวที่ choiceRun
+// อนุญาตเมื่อ: ผู้เล่นแตะ/กดเอง · เปิดออโต้ · ตั้ง "ชะตาตัดสินแทน" เป็นวินาทีเอง · เปิด "เหตุการณ์จับเวลา" · ระบบที่ผู้เล่นสั่ง (ข้ามปี/ย้อนความทรงจำ/ร่างที่อยู่อีกโลก)
+// ============================================================
+try{(()=>{
+let lastU=0;
+const mark=e=>{try{if(!e.isTrusted)return;if(e.type==='keydown'){if(choice._cur)lastU=Date.now();return}const t=e.target;if(t&&t.closest&&t.closest('button,.opt,a,[onclick],.isl,#isl,#pendBar'))lastU=Date.now()}catch(x){}};
+['pointerup','click','keydown'].forEach(ev=>document.addEventListener(ev,mark,true));
+window._chAllow=function(){try{return !!(auto||fateSec()>0||LS.get('murim_timed',0)||window._pzForce||window._inQmFF||(S&&S.rg&&S.rg.ff)||Date.now()-lastU<1500)}catch(e){return true}};
+window._chWait=function(){try{clearTimeout(choice._t);clearInterval(choice._cd);const c=choice._cur;if(!c)return;
+ if(!(modalOpen&&$('modal')&&$('modal').dataset.k==='choice')&&!choice._min&&!(typeof pendModal!=='undefined'&&pendModal)){try{choiceShow()}catch(e){}}
+ const e=$('chCd');if(e)e.innerHTML='⏸ <b>รอคุณเลือกเอง</b>';e.title='หมดเวลาแล้ว แต่เกมจะไม่เลือกแทน';
+ const bars=document.querySelectorAll('#modal .mtBar,#modal .drBar,#modal [class*="cdBar"]');bars.forEach(b=>b.style.display='none');try{$('modal').classList.remove('drHurry')}catch(x){}}catch(e){}};
+const _cr=choiceRun;choiceRun=function(i){try{if(choice._cur&&!_chAllow()){
+ // ตัดบรรทัด "เลือกแทน" ที่เพิ่งถูกเขียนไว้ก่อนเรียก (ถ้ามี) ออก
+ try{const f=$('feed'),L=f&&f.lastElementChild;if(L&&/หมดเวลา|ระบบเลือกให้|เลือกไปแล้วก่อน|ปล่อยให้ชะตาเลือก|เลือกแทน|ลังเลนานเกินไป/.test(L.textContent||''))L.remove()}catch(x){}
+ try{_pzNote&&_pzNote('🙅 กันไว้','มีระบบพยายามเลือกแทนในเหตุการณ์ '+String(choice._cur.title).replace(/<[^>]+>/g,'').slice(0,30))}catch(x){}
+ _chWait();return}}catch(e){}return _cr.apply(this,arguments)};
+// ตั้งค่า: เหตุการณ์จับเวลา (ปิดเป็นค่าเริ่มต้น)
+try{const _oa=openAuto;openAuto=function(){const r=_oa.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.tmdTg')){const on=LS.get('murim_timed',0);const d=document.createElement('div');d.className='item tmdTg';d.innerHTML=`<div class="h"><b>⏱ เหตุการณ์จับเวลา</b><button class="sysb">${on?'เปิด':'ปิด'}</button></div><p class="tag2">${on?'บางเหตุการณ์มีเวลาจำกัด หมดเวลาแล้วเกมเลือกให้':'ปิดอยู่: หมดเวลาแล้วเกมจะรอให้คุณเลือกเองเสมอ ไม่มีใครเลือกแทน'}</p>`;d.querySelector('button').onclick=()=>{LS.set('murim_timed',on?0:1);openAuto()};const ref=[...m.querySelectorAll('.item')].find(x=>/ชะตาตัดสินแทน/.test(x.textContent));if(ref)ref.after(d);else m.appendChild(d)}}catch(e){}return r}}catch(e){}
+})()}catch(e){console.error('block304',e)}
