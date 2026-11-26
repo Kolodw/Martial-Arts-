@@ -19607,14 +19607,18 @@ function fdSpec(btn,id){const lb=btn.textContent.replace(/\s+/g,' ').trim();cons
 
 
 // ===================== ชิปข้างชื่อไม่ล้นไปทับปุ่มออนไลน์ =====================
+// เดิมถอดคลาสแล้ววัดความกว้างใหม่ทุกครั้งที่ render/ทุกวินาที (บังคับคำนวณเลย์เอาต์ทั้งหน้า = เกมกระตุก) → วัดเฉพาะเมื่อขนาด/ชิปเปลี่ยน และรวมเป็นครั้งเดียวต่อเฟรม
 function islFit(d){try{d=d||$('islDock');if(!d||!d.isConnected)return;const info=d.parentElement,W=info.clientWidth;if(!W)return;
+ const sig=W+'|'+d.style.left+'|'+d.children.length+'|'+d.textContent;if(d._fs===sig)return;
  d.classList.remove('tight','flow');const L0=parseFloat(d.style.left)||0;
  const fit=()=>L0+d.offsetWidth<=W-2;
  if(!fit())d.classList.add('tight');
  if(!fit()){d.classList.add('flow');const nm=$('gName');if(nm&&nm.nextSibling!==d)nm.after(d)}
+ d._fs=W+'|'+d.style.left+'|'+d.children.length+'|'+d.textContent;
 }catch(e){}}
-{const _idE=islDockEl;islDockEl=function(){const d=_idE.apply(this,arguments);if(d){islFit(d);requestAnimationFrame(()=>islFit(d))}return d}}
-{const _icF=islChip;islChip=function(){const c=_icF.apply(this,arguments);try{requestAnimationFrame(()=>islFit())}catch(e){}return c}}
+let _ifRaf=0;const islFitSoon=()=>{if(!_ifRaf)_ifRaf=requestAnimationFrame(()=>{_ifRaf=0;islFit()})};
+{const _idE=islDockEl;islDockEl=function(){const d=_idE.apply(this,arguments);if(d)islFitSoon();return d}}
+{const _icF=islChip;islChip=function(){const c=_icF.apply(this,arguments);try{islFitSoon()}catch(e){}return c}}
 window.addEventListener('resize',()=>{try{if($('islDock'))islDockEl()}catch(e){}});
 try{new ResizeObserver(()=>{const d=$('islDock');if(d)islFit(d)}).observe(document.body)}catch(e){}
 (()=>{const st=document.createElement('style');st.textContent=`#islDock{flex-wrap:nowrap;white-space:nowrap}
@@ -33225,7 +33229,7 @@ body.hzTGrid #tMwCard,body.hzTGrid #tAqBtn{display:none!important}
  body #game .crow :is(#bagBtn,#questBtn,#aqCb,#sysBtn,#menuBtn,#pauseBtn){flex:1 1 0!important;min-height:50px!important;border-radius:14px!important;font-size:18px!important;position:relative}
  body #game .crow #pauseBtn{flex:1.35 1 0!important;min-height:54px!important;font-size:22px!important;color:#2a1a04!important;background:linear-gradient(180deg,#ffe9a8,#e8b54a 55%,#c98d22)!important;border:2px solid #7a5512!important;box-shadow:0 3px 0 #7a5512,0 0 14px #e8b54a55!important}
  body #game .crow #pauseBtn .cbL{opacity:.9!important;font-weight:800!important}
- body #game.pz .crow #pauseBtn{animation:stPz 1.3s ease-in-out infinite}@keyframes stPz{50%{box-shadow:0 3px 0 #7a5512,0 0 26px #ffd86a!important}}
+ body #game.pz .crow #pauseBtn{animation:stPz 1.3s ease-in-out 6}@keyframes stPz{50%{box-shadow:0 3px 0 #7a5512,0 0 26px #ffd86a!important}}
  body #game .crow #aqCb .aqDot{top:3px;right:6px}
  body.hzRvA #game>#goalBox{align-self:flex-start;width:calc(50% - 3px)!important;height:30px!important;max-height:30px!important;overflow:hidden;font-size:11.5px!important;box-sizing:border-box;margin-top:4px!important;margin-bottom:0!important;white-space:nowrap;text-overflow:ellipsis;display:flex!important;align-items:center}
  body.hzRvA #game>#goalBox+#rvBar{align-self:flex-end;width:calc(50% - 3px)!important;height:30px!important;margin:-30px 0 2px 0!important;font-size:11px!important;box-sizing:border-box;display:flex!important}
@@ -40942,3 +40946,22 @@ try{(()=>{const ok=()=>typeof wIs==='function'&&wIs('late');
  let n0=0;const w8=()=>{if(!document.getElementById('bootL')||++n0>30)return setTimeout(ld,150);setTimeout(w8,100)};setTimeout(w8,50);
  ['goBirth','goBirthPick','startLife','qStart','rebirthSame','loadGame','chStart'].forEach(n=>{const f=window[n];if(typeof f!=='function')return;const g=window[n]=function(){if(ok())return f.apply(this,arguments);const a=arguments,t=this;return wNeed('late',()=>f.apply(t,a),()=>f.apply(t,a))};try{Object.assign(g,f)}catch(e){}});
 })()}catch(e){console.error('lateGate',e)}
+// ===================== ⚡ ลดอาการค้าง + ป้ายแจ้งเตือนไม่บังหน้าต่างที่กำลังอ่าน =====================
+// 1) บันทึกเกมทุกปีเขียน+อ่านเซฟทั้งก้อนซ้ำหลายรอบ (100–200ms ต่อครั้งบนมือถือ) → ระหว่างผ่านปีรวบให้บันทึกไม่ถี่กว่า 2.5 วิ (ครั้งสุดท้ายยังบันทึกตามมาเสมอ)
+//    การบันทึกจากที่อื่น (ปิดแท็บ ซ่อนแอป กดเอง) ยังบันทึกทันทีเหมือนเดิม
+// 2) ระหว่างเปิดหน้าต่างเหตุการณ์/เมนู: การ์ดแจ้งเตือนใหญ่พักไว้ก่อนแล้วค่อยแสดงตอนปิด · ป้ายเล็กย้ายไปขอบบน · การ์ดแนะนำซ่อนไว้
+try{(()=>{
+ let inPY=0,last=0,tm=0;const GAP=2500;
+ const _sg=saveGame;saveGame=function(){
+  if(inPY&&!document.hidden&&Date.now()-last<GAP){if(!tm)tm=setTimeout(()=>{tm=0;try{saveGame()}catch(e){}},Math.max(200,GAP-(Date.now()-last)));return}
+  if(tm){clearTimeout(tm);tm=0}last=Date.now();return _sg.apply(this,arguments)};
+ try{Object.assign(saveGame,_sg)}catch(e){}
+ const _py=passYear;passYear=function(){inPY++;try{return _py.apply(this,arguments)}finally{inPY--}};
+ try{Object.assign(passYear,_py)}catch(e){}
+ const HOLD=[];const mOn=()=>{try{if(modalOpen&&document.getElementById('mask').classList.contains('on'))return true;const c=document.getElementById('ctOv');if(!c)return false;const r=c.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(c).visibility!=='hidden'}catch(e){return false}};
+ const _is=island;island=function(n){try{if(n&&n.big&&!n.sticky&&!n.act&&!n.btns&&n.key!=='ch'&&mOn()){const k=n.key||(n.ic||'')+n.t;if(!HOLD.some(x=>(x.key||(x.ic||'')+x.t)===k)){HOLD.push(n);if(HOLD.length>5)HOLD.splice(HOLD.findIndex(x=>!x.pri),1)}return}}catch(e){}return _is.apply(this,arguments)};
+ setInterval(()=>{const on=mOn();document.body.classList.toggle('islUp',on);if(!HOLD.length||on)return;const a=HOLD.splice(0);a.forEach(n=>{try{_is(n)}catch(e){}})},250);
+ const st=document.createElement('style');st.textContent=`body.islUp.islBottom #isl{top:calc(env(safe-area-inset-top) + 6px)!important;bottom:auto!important}
+body.islUp.islBottom #islDots{top:calc(env(safe-area-inset-top) + 2px)!important;bottom:auto!important}
+body.islUp #tipCard{display:none!important}`;document.head.appendChild(st);
+})()}catch(e){console.error('perfHold',e)}

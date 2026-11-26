@@ -1308,8 +1308,8 @@ body.isl-jade .islGhost{background:#123a2e;box-shadow:0 0 0 1px #e8c46a,0 0 16px
 .islBolt svg{width:100%;height:100%}@keyframes islBolt{0%{opacity:1}30%{opacity:.2}45%{opacity:1}100%{opacity:0}}
 #game.islShake{animation:islGm .4s ease}@keyframes islGm{20%{transform:translate(-3px,1px)}40%{transform:translate(3px,-1px)}60%{transform:translate(-2px,0)}80%{transform:translate(2px,1px)}}
 /* ⚡ perf: เดิมเคลื่อนไหว box-shadow ตรงๆ ทำให้เบราว์เซอร์วาดใหม่ทุกเฟรมตลอดเวลา → ย้ายแสงไปอยู่ ::after แล้วเคลื่อนไหวแค่ opacity (ทำงานบน GPU · หน้าตาเหมือนเดิม) */
-#islDock .islChip{position:relative;animation:islBreath 3.2s ease-in-out infinite}
-#islDock .islChip::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;box-shadow:0 0 calc(4px + 10px*var(--gl,0)) rgba(255,215,106,calc(.25 + .5*var(--gl,0)));animation:islGlowP 3.2s ease-in-out infinite}
+#islDock .islChip{position:relative;animation:islBreath 3.2s ease-in-out 3}
+#islDock .islChip::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;box-shadow:0 0 calc(4px + 10px*var(--gl,0)) rgba(255,215,106,calc(.25 + .5*var(--gl,0)));animation:islGlowP 3.2s ease-in-out 3}
 @keyframes islBreath{50%{transform:scale(1.06)}}
 @keyframes islGlowP{50%{opacity:1}}
 #islDock .islChip.pop{animation:islChipPop .45s cubic-bezier(.3,1.8,.5,1)}#islDock .islChip.bye{animation:islChipBye .35s ease-in forwards}#islDock .islChip.wait{animation:none}
