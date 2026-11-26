@@ -40969,3 +40969,18 @@ body.islUp #tipCard{display:none!important}`;document.head.appendChild(st);
 })()}catch(e){console.error('perfHold',e)}
 try{window.tdOpen=window.tdOpen||function(){return wNeed('today',()=>window.tdOpen&&window.tdOpen!==window._tdStub&&window.tdOpen())};window._tdStub=window.tdOpen;setTimeout(()=>{try{wLoad('today').catch(()=>setTimeout(()=>wLoad('today').catch(()=>{}),8000))}catch(e){}},2600)}catch(e){console.error('tdStub',e)} /* 📅 วันนี้ทำอะไรดี (/w/today.js) */
 try{(()=>{const NW=()=>{try{if(!S)return 0;const M=S.mw;if(S.beastMode&&!S.beastMode.human)return 0;return !!(M||S.ch==='soul'||S.rg)}catch(e){return 0}};const _ro=relOpen;relOpen=function(){if(NW()&&!window._relw)return wNeed('relw',()=>window.relOpen());return _ro.apply(this,arguments)};setTimeout(()=>{try{wLoad('relw').catch(()=>{})}catch(e){}},3200)})()}catch(e){console.error('relwStub',e)} /* 💥 ปลดปล่อยทุกโลก (/w/relw.js) */
+// ============================================================
+// BLOCK 301 🛑 ออโต้ไม่ย้ายโลก: ตัวเลือกที่พาข้ามโลก (รอยแยก · หลงยุค · ประตูมิติ) ระบบจะเลือกข้อที่อยู่โลกเดิมแทน · ถ้าไม่มีข้อให้อยู่ จะหยุดรอผู้เล่น
+// ============================================================
+try{(()=>{
+const XO=o=>{try{if(!o)return false;const f=typeof o.f==='function'?o.f.toString():'';const t=String(o.t||'').replace(/<[^>]+>/g,'');
+ return /\bcross\(|mwEnter\(|mwMake\(|dreamStart\(|cross2?\(|beastToMw|goWorld\(/.test(f)||/ก้าวข้ามไป|ข้ามไปทั้งตัว|วิญญาณหลุดเข้าไป|ก้าวเข้าไปในรอยแยก|ก้าวผ่านมิติ|นำทั้งหมู่บ้านข้าม|ให้วิญญาณเข้าไปใน/.test(t)}catch(e){return false}};
+const isX=c=>!!(c&&Array.isArray(c.opts)&&c.opts.some(XO));
+window._autoStayX=isX;
+const _fc=fateChoice;fateChoice=function(){try{const c=choice._cur;if(c&&auto&&isX(c)&&!fateChoice._force){
+  const i=c.opts.findIndex(o=>o&&!XO(o)&&!o.skip);
+  if(i>=0){try{addFeed('ev',`🛑 โหมดอัตโนมัติไม่ย้ายโลกแทนคุณ — <b>${String(c.title).replace(/<[^>]+>/g,'')}</b>: ${String(c.opts[i].t).replace(/<[^>]+>/g,'')}`,'sum')}catch(e){}return choiceRun(i)}
+  c._held=1;const e=$('chCd');if(e)e.textContent='✋ เรื่องย้ายโลก ระบบจะไม่เลือกแทน รอคุณตัดสินใจ';return}}catch(e){console.error('autoStay',e)}return _fc.apply(this,arguments)};
+// ระบบ AI เลือกแทน (ถ้ามี) ก็ห้ามย้ายโลกเช่นกัน
+if(typeof aiPick==='function'){const _ap=aiPick;aiPick=function(c){const i=_ap.apply(this,arguments);try{if(auto&&c&&c.opts&&XO(c.opts[i])){const j=c.opts.findIndex(o=>o&&!XO(o)&&!o.skip);if(j>=0)return j}}catch(e){}return i}}
+})()}catch(e){console.error('block301',e)}
