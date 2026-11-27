@@ -5052,9 +5052,9 @@ new MutationObserver(ms=>{for(const m of ms){if(m.type==='childList'){for(const 
 {const _at=applyTheme;applyTheme=function(){const r=_at.apply(this,arguments);try{FCK=new WeakMap();_bb=null;unfix(document);setTimeout(()=>scan(document.body,5000),60)}catch(e){}return r};window.applyTheme=applyTheme}
 setTimeout(()=>scan(document.body,5000),1500);
 // สกินโลก/ธีมเปลี่ยนแบบหน่วงเวลา (เช่น data-hud ของแต่ละโลก) → ล้างสีที่บังคับไว้แล้วตรวจใหม่ทั้งหน้า (เดิมค้างสีจากธีมก่อน: ตัวหนังสือดำบนพื้นดำ / ขาวบนพื้นขาว)
-{let sig='',rt=0;const bs=()=>{const b=document.body;return b.className.replace(/\b(pz|islUp|hzMask|hs-mask|mdl|scrFx)\b/g,'')+'|'+(b.dataset.hud||'')+'|'+getComputedStyle(b).backgroundImage.slice(0,60)+getComputedStyle(b).backgroundColor};
+{let sig='',rt=0;const bs=()=>{const b=document.body;return ((b.className.match(/\b(dark|royal|mono|jade|ember|gold|lite|mwOn)\b/g)||[]).sort().join(' '))+'|'+(b.dataset.hud||'')};
  const re=()=>{rt=0;try{const n=bs();if(n===sig)return;sig=n;FCK=new WeakMap();_bb=null;unfix(document);scan(document.body,5000)}catch(e){}};
- new MutationObserver(()=>{clearTimeout(rt);rt=setTimeout(re,350)}).observe(document.body,{attributes:true,attributeFilter:['class','data-hud','style']});setTimeout(()=>{sig=bs()},1600)}
+ new MutationObserver(()=>{const n=bs();if(n===sig)return;clearTimeout(rt);rt=setTimeout(re,350)}).observe(document.body,{attributes:true,attributeFilter:['class','data-hud']});setTimeout(()=>{sig=bs()},1600)}
 // หน้าต่างที่เปิดอยู่: ตรวจซ้ำเบาๆ (กรณีสลับคลาส/สีโดยไม่เพิ่มโหนด)
 setInterval(()=>{const go=()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}};window.requestIdleCallback?requestIdleCallback(go,{timeout:1000}):go()},1500);
 })()}catch(e){console.error('block102',e)}

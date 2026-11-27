@@ -119,7 +119,7 @@ html body.frDesk #frReady{display:flex;flex-direction:column;gap:10px;padding:14
 let fontsOn=0;
 function fonts(){if(fontsOn)return;fontsOn=1;try{if(document.querySelector('link[href*="Chakra+Petch"]'))return;const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Charm:wght@700&family=Trirong:wght@600;700&family=Chakra+Petch:wght@600;700&family=Mitr:wght@500;600&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap';document.head.appendChild(l)}catch(e){}}
 // ---------- build ----------
-const txt=e=>e?(e.innerText||e.textContent||'').replace(/\s+/g,' ').trim():'';
+const txt=e=>e?(e.textContent||'').replace(/\s+/g,' ').trim():'';
 function build(T0){
  if(!$('frTint')){const cv=$('tbg2');const d=document.createElement('div');d.id='frTint';if(cv&&cv.parentNode)cv.insertAdjacentElement('afterend',d);else T0.prepend(d)}
  if(!$('frTopR')){const d=document.createElement('div');d.id='frTopR';d.innerHTML=`<button type="button" class="g" aria-label="ร้านค้า"><i class="frPx">${px('#tSup','💎')}</i><span class="l">ร้านค้า</span></button><button type="button" class="dk" aria-label="คัมภีร์ฤดูกาล"><i class="frPx">${px('#tSp,#tSea','📖')}</i><span class="l">คัมภีร์</span></button><button type="button" class="dk" aria-label="ชุมชน"><i class="frPx">${px('#tFb','💬')}</i><span class="l">ชุมชน</span></button><button type="button" aria-label="เมนู">${ic(I.menu)}<span class="l">เมนู</span></button>`;

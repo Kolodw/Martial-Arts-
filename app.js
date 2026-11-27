@@ -13652,7 +13652,7 @@ body.mono{--onacc:#fff}body.jade,body.ember{--onacc:#fff}body.gold{--onacc:#2a1a
   // อนุภาค
   parts=[];const np=fxQ>=2?Math.round(W*H/900):0;for(let i=0;i<np;i++)parts.push({x:Math.random()*W,y:Math.random()*H,v:.2+Math.random()*.5,p:Math.random()*6.28})}
  function ensure(){if(!cv){cv=document.createElement('canvas');cv.id='tbg2';const t=$('title');(t||document.body).prepend(cv);cx=cv.getContext('2d')}
-  const vw0=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth),w=Math.ceil(vw0/PX),h=Math.ceil(innerHeight/PX)+2;const k=[w,h,world(),tod(),season(),fxQ,window._tbMvar||'',window._tbSkyV||'',window._tbMsub||''].join('|');if(k!==key){const wdPrev=L.wd;W=w;H=h;cv.width=W;cv.height=H;cv.style.width='100%';cv.style.height=H*PX+'px';cx.imageSmoothingEnabled=false;build();if(wdPrev&&wdPrev!==L.wd&&fxQ>=1)wipe={t0:performance.now()};key=k}}
+  if(!ensure._vw||ensure._iw!==innerWidth){ensure._iw=innerWidth;ensure._vw=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth)}const vw0=ensure._vw,w=Math.ceil(vw0/PX),h=Math.ceil(innerHeight/PX)+2;const k=[w,h,world(),tod(),season(),fxQ,window._tbMvar||'',window._tbSkyV||'',window._tbMsub||''].join('|');if(k!==key){const wdPrev=L.wd;W=w;H=h;cv.width=W;cv.height=H;cv.style.width='100%';cv.style.height=H*PX+'px';cx.imageSmoothingEnabled=false;build();if(wdPrev&&wdPrev!==L.wd&&fxQ>=1)wipe={t0:performance.now()};key=k}}
  function draw(now){if(!$('title')||!$('title').classList.contains('on'))return;ensure();const T=now/1000,sc=Math.min(60,(scrollY||0)/PX),still=fxQ<2||matchMedia('(prefers-reduced-motion: reduce)').matches;
   const oy=f=>Math.round(-Math.min(14,sc*.25)*f),ox=f=>Math.round(tilt*f*4);
   cx.drawImage(L.sky,0,Math.round(-sc*.05));
@@ -33446,10 +33446,10 @@ function paint(){const P=$$('wPick');if(!P)return;const k=SEL||cur(),w=W.find(x=
  {const abN=(CFG.chm|0)===1&&+LS.get('murim_abyss',0)===1;P.querySelectorAll('.wpC button[data-c]').forEach(b=>{b.disabled=!w.ch;const on=b.dataset.c==='ab'?abN:(+b.dataset.c===(CFG.chm|0)&&!(b.dataset.c==='1'&&abN));b.classList.toggle('on',!!w.ch&&on);if(b.dataset.c==='ab'){b.style.opacity=abU()?'':'.55';b.textContent='🕳️ อเวจี'+(abU()?'':' 🔒')}})}
  const sb=P.querySelector('.wpC .spd');if(sb){const s=SPD.find(x=>x[0]===CFG.len)||SPD[1];sb.textContent=s[1]+' ▾'}
  const n=P.querySelector('.wpNote');if(n){const ch=(CFG.chm|0)===1&&+LS.get('murim_abyss',0)===1?[1,'🕳️','อเวจี 1000 ชั้น']:CHAL.find(c=>c[0]===(CFG.chm|0));n.textContent=w.ch?`เลือกแล้ว: ${w.ic} ${w.n}${ch&&ch[0]?` · ${ch[1]} ${ch[2]}`:''} กดปุ่มเริ่มเล่นหรือ ▶ บนการ์ดได้เลย`:`เลือกแล้ว: ${w.ic} ${w.n} โลกนี้มีความท้าทายในตัวอยู่แล้ว`}}
-function dots(){const P=$$('wPick');if(!P)return;const S0=P.querySelector('.wpS'),cs=[...P.querySelectorAll('.wc')],ds=[...P.querySelectorAll('.wDots i')];if(!S0||!cs.length)return;const mid=S0.scrollLeft+S0.clientWidth/2;let bi=0,bd=1e9;cs.forEach((c,i)=>{const d=Math.abs(c.offsetLeft+c.offsetWidth/2-mid);if(d<bd){bd=d;bi=i}});ds.forEach((d,i)=>d.classList.toggle('on',i===bi))}
+function dots(){const P=$$('wPick');if(!P)return;const S0=P.querySelector('.wpS');if(!S0)return;const cs=P.querySelectorAll('.wc');if(!cs.length)return;if(dots._iw!==innerWidth){dots._iw=innerWidth;dots._c=null;dots._w=S0.clientWidth||innerWidth}const W=dots._w||innerWidth;let C=dots._c;if(!C||C.n!==cs.length||C.w!==W||C.s!==S0){C=dots._c={n:cs.length,w:W,s:S0,x:[...cs].map(c=>c.offsetLeft+c.offsetWidth/2)}}const mid=S0.scrollLeft+W/2;let bi=0,bd=1e9;C.x.forEach((x,i)=>{const d=Math.abs(x-mid);if(d<bd){bd=d;bi=i}});if(dots._bi===bi)return;dots._bi=bi;P.querySelectorAll('.wDots i').forEach((d,i)=>d.classList.toggle('on',i===bi))}
 function mount(){try{const T=$$('title');if(!T||!T.classList.contains('on'))return;let P=$$('wPick');const box=T.querySelector('.box.opts'),st=$$('tStartIn');
  const boxVis=!!(box&&getComputedStyle(box).display!=='none'),stVis=!!(st&&st.offsetParent);
- if(!P){P=document.createElement('div');P.id='wPick';P.innerHTML=build();P.querySelector('.wpS').addEventListener('scroll',dots,{passive:true});P._new=1}
+ if(!P){P=document.createElement('div');P.id='wPick';P.innerHTML=build();P.querySelector('.wpS').addEventListener('scroll',()=>{if(dots._r)return;dots._r=requestAnimationFrame(()=>{dots._r=0;dots()})},{passive:true});P._new=1}
  if(stVis&&!boxVis){if(box)box.classList.remove('wpOn');const anc=$$('tGrid')||st;if(!__after(P,anc))anc.insertAdjacentElement('afterend',P)}
  else if(box){box.classList.add('wpOn');if(P.parentNode!==box)box.prepend(P)}else return;
  if(P._new){P._new=0;setTimeout(()=>{try{const k=SEL||cur(),c=P.querySelector(`.wc[data-k="${k}"]`),sc=P.querySelector('.wpS');if(c&&sc)sc.scrollLeft=c.offsetLeft-(sc.clientWidth-c.offsetWidth)/2;dots()}catch(e){}},80)}
@@ -41047,9 +41047,9 @@ try{const _qp=qmPlay;qmPlay=function(){const o=_qp.apply(this,arguments);try{if(
 document.addEventListener('click',e=>{try{if(document.body.classList.contains('ux2')&&e.target.closest&&e.target.closest('#pauseBtn')&&!LS.get('murim_uxlp',0)){LS.set('murim_uxlp',1);setTimeout(()=>{try{toast('💡 กดค้างที่ปุ่มเล่นต่อ เพื่อเปลี่ยนความเร็วหรือเปิดออโต้')}catch(x){}},400)}}catch(x){}},true);
 // เลื่อนอ่าน → หัวและฉากหด
 let feedB=null;function bindFeed(){const f=$$('feed'),g=$$('game');if(!f||!g||f===feedB)return;feedB=f;let last=0;
- f.addEventListener('scroll',()=>{if(!document.body.classList.contains('ux2'))return;const y=f.scrollTop,max=f.scrollHeight-f.clientHeight;
+ let uxR=0;f.addEventListener('scroll',()=>{if(!document.body.classList.contains('ux2')||uxR)return;uxR=requestAnimationFrame(()=>{uxR=0;const y=f.scrollTop,max=f.scrollHeight-f.clientHeight;
   // อ่านอยู่ล่างสุด (ตามเรื่องล่าสุด) = เปิดฉาก · เลื่อนขึ้นไปอ่านย้อน = หด
-  const atEnd=max-y<40;const want2=!atEnd&&max>160;if(want2!==g.classList.contains('uxS'))g.classList.toggle('uxS',want2);last=y},{passive:true})}
+  const atEnd=max-y<40;const want2=!atEnd&&max>160;if(want2!==g.classList.contains('uxS'))g.classList.toggle('uxS',want2);last=y})},{passive:true})}
 function apply(){const on=want();document.body.classList.toggle('ux2',on);if(!on){const g=$$('game');if(g)g.classList.remove('uxS')}else{bindFeed();sync()}}
 window._ux2={apply,sync,openRw};
 const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(document.body.classList.contains('ux2'))sync()}catch(e){}return r};
@@ -41072,7 +41072,9 @@ let pv=null;setInterval(()=>{try{if(typeof S==='undefined'||!S||!S.alive){pv=nul
 let lastT=0;const READ_MS=8000;
 const touchF=e=>{try{const f=$$('feed');if(f&&f.contains(e.target))lastT=Date.now()}catch(x){}};
 ['pointerdown','touchmove','wheel'].forEach(ev=>document.addEventListener(ev,touchF,{passive:true,capture:true}));
-const upRead=()=>{const f=$$('feed');if(!f||!$$('game')||!$$('game').classList.contains('on')||(modalOpen&&!choice._cur))return false;return f.scrollHeight-f.clientHeight-f.scrollTop>90};
+// ⚡ ไม่วัดตำแหน่งเลื่อนทุก 250ms (บังคับคำนวณหน้าใหม่ = กระตุก) · อ่านค่าเฉพาะตอนผู้เล่นเลื่อนเท่านั้น
+let upS=false,upF=null,upR=0;const upBind=()=>{const f=$$('feed');if(!f||f===upF)return;upF=f;f.addEventListener('scroll',()=>{if(upR)return;upR=requestAnimationFrame(()=>{upR=0;upS=f.scrollHeight-f.clientHeight-f.scrollTop>90})},{passive:true})};
+const upRead=()=>{upBind();if(!upF||!upF.isConnected||!$$('game')||!$$('game').classList.contains('on')||(modalOpen&&!choice._cur))return false;return upS};
 const reading=()=>!!(typeof S!=='undefined'&&S&&S.alive)&&(Date.now()-lastT<READ_MS||upRead());
 window._pzReading=reading;
 setInterval(()=>{try{const r=reading();if(r)window._rdU=Math.max(window._rdU||0,Date.now()+400);rdChip(r)}catch(e){}},250);
@@ -41157,27 +41159,27 @@ const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);try{if(!mod
 try{(()=>{
 const B='html body.royal[data-front]';
 const css=document.createElement('style');css.id='frPop';css.textContent=`
-@keyframes frGlow{0%,100%{box-shadow:0 0 0 1px #0005,0 0 14px color-mix(in srgb,var(--fA) 35%,transparent)}50%{box-shadow:0 0 0 1px #0005,0 0 26px color-mix(in srgb,var(--fA) 60%,transparent)}}
+@keyframes frGlow{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes frShine{0%{transform:translateX(-140%) skewX(-18deg)}55%,100%{transform:translateX(320%) skewX(-18deg)}}
 @keyframes frFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @keyframes frPopIn{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
-@keyframes frSwap{0%{transform:scale(.97);filter:brightness(1.35)}100%{transform:scale(1);filter:none}}
-@keyframes frTitleGlow{0%,100%{text-shadow:0 3px 0 rgba(0,0,0,.45),0 0 12px color-mix(in srgb,var(--fA) 30%,transparent)}50%{text-shadow:0 3px 0 rgba(0,0,0,.45),0 0 26px color-mix(in srgb,var(--fA) 65%,transparent)}}
+@keyframes frSwap{0%{transform:scale(.97);opacity:.7}100%{transform:scale(1);opacity:1}}
 @keyframes frDot{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
-${B} #title,${B} #frCont,${B} #tdTitle,${B} #frToday button,${B} #tDock .tgo,${B} #uxGo .uxBorn,${B} #frTopR button,${B} #tTop .tav,${B} #tDock .nav,${B} #frMode{transition:background .5s,border-color .5s,color .5s,box-shadow .5s}
+${B} #title,${B} #frCont,${B} #tdTitle,${B} #frToday button,${B} #tDock .tgo,${B} #uxGo .uxBorn,${B} #frTopR button,${B} #tTop .tav,${B} #tDock .nav,${B} #frMode{transition:border-color .4s,color .4s}
 /* หัวเรื่อง + ป้ายชื่อโลก */
-${B} #title .big .gold{animation:frTitleGlow 3.6s ease-in-out infinite}
+${B} #title .big .gold{text-shadow:0 3px 0 rgba(0,0,0,.45),0 0 18px color-mix(in srgb,var(--fA) 50%,transparent)!important}
 #frWChip{display:none}
-${B} #frWChip{display:table;margin:0 auto 2px;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:.3px;background:var(--fA);color:#fff;box-shadow:0 0 14px color-mix(in srgb,var(--fA) 55%,transparent);text-shadow:0 1px 0 #0006;animation:frPopIn .45s ease-out both}
+${B} #frWChip{display:table;margin:0 auto 2px;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:.3px;background:var(--fA);color:#fff;text-shadow:0 1px 0 #0006;animation:frPopIn .45s ease-out both}
 /* การ์ดเล่นต่อ: ขอบ + แสงเรืองสีโลก หายใจช้าๆ */
-${B} #frCont{border:1.5px solid var(--fA)!important;background:linear-gradient(135deg,color-mix(in srgb,var(--fA) 24%,var(--card)),var(--card) 62%)!important;animation:frGlow 3.2s ease-in-out infinite}
-${B} #frCont .ic{background:var(--fA)!important;color:#fff!important;box-shadow:0 0 12px color-mix(in srgb,var(--fA) 60%,transparent)}
+${B} #frCont{position:relative;border:1.5px solid var(--fA)!important;background:linear-gradient(135deg,color-mix(in srgb,var(--fA) 24%,var(--card)),var(--card) 62%)!important;box-shadow:0 0 0 1px #0005!important}
+${B} #frCont:before{content:'';position:absolute;inset:-1px;border-radius:inherit;box-shadow:0 0 22px color-mix(in srgb,var(--fA) 60%,transparent);animation:frGlow 3.2s ease-in-out infinite;pointer-events:none;will-change:opacity}
+${B} #frCont .ic{background:var(--fA)!important;color:#fff!important}
 ${B} #frCont .ch{color:var(--fA)!important}
 /* วันนี้ทำอะไรดี */
 ${B} #tdTitle{border:1px solid color-mix(in srgb,var(--fG) 50%,var(--line))!important;background:linear-gradient(135deg,color-mix(in srgb,var(--fG) 12%,var(--card)),var(--card) 70%)!important}
 ${B} #tdTitle em.pxn{animation:frDot 1.6s ease-in-out infinite}
 /* ปุ่มทางลัด 4 ช่อง: สีประจำปุ่มเสมอ + ลอยเบาๆ */
-${B} #frToday button{--q:#f0883e;background:linear-gradient(160deg,color-mix(in srgb,var(--q) 20%,var(--card)),var(--card))!important;border:1px solid color-mix(in srgb,var(--q) 60%,transparent)!important;animation:frFloat 4s ease-in-out infinite}
+${B} #frToday button{--q:#f0883e;background:linear-gradient(160deg,color-mix(in srgb,var(--q) 20%,var(--card)),var(--card))!important;border:1px solid color-mix(in srgb,var(--q) 60%,transparent)!important;animation:frFloat 4s ease-in-out infinite;will-change:transform}
 ${B} #frToday button:nth-child(2){--q:#4fa3ff;animation-delay:-1s}${B} #frToday button:nth-child(3){--q:#a78bfa;animation-delay:-2s}${B} #frToday button:nth-child(4){--q:#f472b6;animation-delay:-3s}
 ${B} #frToday button b{color:color-mix(in srgb,var(--q) 35%,#fff)!important}
 ${B} #frToday button:active{transform:scale(.95)!important}
@@ -41206,5 +41208,5 @@ function tick(){try{const b=document.body,k=b.dataset.front||'';const big=docume
  let c=document.getElementById('frWChip');if(!c){c=document.createElement('div');c.id='frWChip';big.parentNode.insertBefore(c,big)}
  const on=document.querySelector('#wPick .wc.on b');const nm=on?on.textContent.trim():'';if(c.textContent!==nm){c.textContent=nm;c.style.animation='none';void c.offsetWidth;c.style.animation=''}
  if(k&&k!==last){if(last){b.classList.add('frSw');setTimeout(()=>b.classList.remove('frSw'),520)}last=k}}catch(e){}}
-setInterval(tick,300);setTimeout(tick,800);
+setInterval(tick,600);setTimeout(tick,800);document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#wPick'))setTimeout(tick,30)},true);
 })()}catch(e){console.error('block306',e)}
