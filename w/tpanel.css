@@ -1,0 +1,114 @@
+/* ============================================================
+   🎮 ธีม "แผงเกม" (theme = 'panel' → body.dark.royal.panel)
+   ต่อยอดจากทองราตรี (ได้ตัวแก้สี/ความอ่านง่ายของ royal ทั้งหมด) แล้วเปลี่ยนเป็นแผง HUD:
+   พื้นน้ำเงินดำ · เส้นสแกน · มุมตัด/วงเล็บมุมเรืองแสง · ตัวเลขโมโน · สีหลักตามโลก (--hA ในเกม · --fA หน้าแรก)
+   รอบ 1: พื้นฐานทั้งเว็บ · หน้าแรก/เลือกโลก · หน้าเล่น (แถบบน บันทึก แถบล่าง) · หน้าต่างพื้นฐาน
+   ============================================================ */
+html:root body.panel.panel.panel{
+ --bg:#070a10;--card:#0d131c;--w:#131b27;--ink:#e6edf6;--mut:#8fa4bf;--line:#2c4058;--grid:transparent;
+ --pBd:rgba(140,190,255,.24);--pBd2:rgba(140,190,255,.14);--pSf:#0d131c;--pSf2:#111925;
+ --pa:var(--hA,var(--fA,#e8b54a));--pa2:var(--hG,var(--fG,#ffd98a));
+ --brk:linear-gradient(var(--pa),var(--pa)) 0 0/10px 2px no-repeat,linear-gradient(var(--pa),var(--pa)) 0 0/2px 10px no-repeat,linear-gradient(var(--pa),var(--pa)) 100% 100%/10px 2px no-repeat,linear-gradient(var(--pa),var(--pa)) 100% 100%/2px 10px no-repeat;
+ --scan:linear-gradient(rgba(120,180,255,.045) 1px,transparent 1px) 0 0/100% 4px;
+ --hR:4px;--hR1:4px;--hR2:4px;
+ background:var(--scan) fixed,radial-gradient(120% 60% at 50% -10%,#12203a 0%,#070a10 60%) fixed,#070a10!important;
+ font-variant-numeric:tabular-nums}
+html:root body.panel.panel.panel[data-hud],html:root body.panel.panel.panel[data-front]{--bg:#070a10;--card:#0d131c;--w:#131b27;--ink:#e6edf6;--mut:#8fa4bf;--line:#2c4058;--hR:4px}
+html:root body.panel.panel.panel .px,html:root body.panel.panel.panel .ag{font-family:ui-monospace,Menlo,Consolas,monospace!important;letter-spacing:0}
+
+/* ---------- ปุ่ม ---------- */
+html:root body.panel.panel.panel .pbtn{background:var(--pa)!important;background-image:none!important;color:#081018!important;border:0!important;border-radius:3px!important;box-shadow:0 0 16px color-mix(in srgb,var(--pa) 40%,transparent)!important;text-shadow:none!important;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px)}
+html:root body.panel.panel.panel .gbtn,html:root body.panel.panel.panel .sysb{background:rgba(140,190,255,.06)!important;background-image:none!important;border:1px solid var(--pBd)!important;border-radius:3px!important;box-shadow:none!important;color:var(--ink)!important}
+html:root body.panel.panel.panel .gbtn:hover,html:root body.panel.panel.panel .sysb:hover{border-color:var(--pa)!important}
+html:root body.panel.panel.panel .sysb.on{background:var(--pa)!important;color:#081018!important;border-color:var(--pa)!important}
+
+/* ---------- หน้าต่าง ---------- */
+html:root body.panel.panel.panel .mask{background:rgba(2,4,8,.66)!important}
+html:root body.panel.panel.panel .modal,html:root body.panel.panel.panel #modal.modal,html:root body.panel.panel.panel #modal.modal[data-k]{background:var(--brk),var(--scan),radial-gradient(120% 40% at 50% 0%,rgba(80,130,200,.14),transparent 60%),#0b1019!important;border:1px solid var(--pBd)!important;border-radius:6px!important;box-shadow:0 14px 44px #000c,inset 0 1px 0 #ffffff12!important;color:var(--ink)}
+html:root body.panel.panel.panel .modal>h3,html:root body.panel.panel.panel .modal>div>h3:first-child{color:#f0f5fb!important;text-shadow:0 0 14px color-mix(in srgb,var(--pa) 45%,transparent)!important;letter-spacing:.2px}
+html:root body.panel.panel.panel .modal h3{border-color:color-mix(in srgb,var(--pa) 50%,transparent)!important}
+html:root body.panel.panel.panel .modal h4{color:var(--pa2)!important}
+html:root body.panel.panel.panel .modal .xbtn{background:rgba(255,255,255,.04)!important;border:1px solid var(--pBd)!important;color:#cfe0f5!important;border-radius:3px!important;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+html:root body.panel.panel.panel #modal.modal[data-k] .opt,html:root body.panel.panel.panel .modal .opt,html:root body.panel.panel.panel #choiceBox .opt,html:root body.panel.panel.panel .chBox .opt{background:linear-gradient(90deg,color-mix(in srgb,var(--pa) 9%,transparent),rgba(255,255,255,.02) 55%),var(--pSf)!important;border:1px solid var(--pBd2)!important;border-left:2px solid var(--pa)!important;border-radius:3px!important;box-shadow:none!important;color:var(--ink)!important}
+html:root body.panel.panel.panel #modal.modal[data-k] .opt:hover,html:root body.panel.panel.panel .modal .opt:hover{border-color:color-mix(in srgb,var(--pa) 60%,transparent)!important;border-left-color:var(--pa)!important}
+html:root body.panel.panel.panel .modal .opt.on,html:root body.panel.panel.panel .modal .opt:active{border-color:var(--pa)!important;box-shadow:inset 0 0 16px color-mix(in srgb,var(--pa) 25%,transparent)!important}
+html:root body.panel.panel.panel .modal .opt small{color:var(--mut)!important}
+html:root body.panel.panel.panel .modal .item{background:rgba(255,255,255,.025)!important;border:1px solid var(--pBd2)!important;border-radius:3px!important;box-shadow:none!important}
+html:root body.panel.panel.panel .modal .tabs button,html:root body.panel.panel.panel .modal .seg button,html:root body.panel.panel.panel .tabb{border-radius:3px!important}
+html:root body.panel.panel.panel .modal .tabs button.on,html:root body.panel.panel.panel .modal .seg button.on,html:root body.panel.panel.panel .tabb.on{background:var(--pa)!important;background-image:none!important;color:#081018!important;border-color:var(--pa)!important;box-shadow:0 0 12px color-mix(in srgb,var(--pa) 40%,transparent)!important}
+html:root body.panel.panel.panel .modal input:not([type=checkbox]):not([type=radio]):not([type=range]),html:root body.panel.panel.panel .modal textarea,html:root body.panel.panel.panel .modal select{background:#05080d!important;border:1px solid var(--pBd)!important;border-radius:3px!important;color:var(--ink)!important}
+html:root body.panel.panel.panel .modal .item button:not(.pbtn):not(.tabb){background:color-mix(in srgb,var(--pa) 85%,#000)!important;background-image:none!important;border:0!important;color:#081018!important;border-radius:3px!important}
+html:root body.panel.panel.panel .toast{background:#0b1019!important;border:1px solid var(--pa)!important;border-radius:3px!important;color:#e6edf6!important;box-shadow:0 0 18px color-mix(in srgb,var(--pa) 30%,transparent),0 6px 20px #000a!important}
+html:root body.panel.panel.panel .tag2{color:var(--mut)}
+
+/* ---------- หน้าแรก ---------- */
+html:root body.panel.panel.panel #frCont,html:root body.panel.panel.panel #tdTitle,html:root body.panel.panel.panel #lpTitle{background:var(--brk),linear-gradient(90deg,color-mix(in srgb,var(--pa) 16%,transparent),rgba(255,255,255,.02) 60%),rgba(11,16,25,.88)!important;border:1px solid var(--pBd)!important;border-radius:4px!important;box-shadow:none!important}
+html:root body.panel.panel.panel #frToday button{background:linear-gradient(180deg,color-mix(in srgb,var(--pa) 10%,transparent),transparent 60%),rgba(11,16,25,.88)!important;border:1px solid var(--pBd2)!important;border-top:2px solid var(--pa)!important;border-radius:3px!important;box-shadow:none!important}
+html:root body.panel.panel.panel #nbRow button,html:root body.panel.panel.panel #obRow button,html:root body.panel.panel.panel #tStartIn{background:rgba(11,16,25,.85)!important;background-image:none!important;border:1px solid var(--pBd)!important;border-radius:3px!important;color:var(--ink)!important;box-shadow:none!important;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+html:root body.panel.panel.panel #nbRow button *,html:root body.panel.panel.panel #obRow button *{color:inherit!important}
+html:root body.panel.panel.panel #frTopR button,html:root body.panel.panel.panel #title>.ttlR button{border-radius:3px!important}
+html:root body.panel.panel.panel #title .big .gold{text-shadow:0 0 18px color-mix(in srgb,var(--pa) 55%,transparent),0 2px 0 #000!important}
+html:root body.panel.panel.panel #title .box{background:var(--brk),var(--scan),rgba(9,13,20,.9)!important;border:1px solid var(--pBd)!important;border-radius:6px!important;box-shadow:0 10px 30px #0008!important}
+html:root body.panel.panel.panel #syncSt{font-family:ui-monospace,Menlo,monospace}
+/* เลือกโลก */
+html:root body.panel.panel.panel #wPick .wpH b{color:#f0f5fb!important;font-family:inherit}
+html:root body.panel.panel.panel #wPick .wpH button{border-radius:3px!important;border-color:var(--pBd)!important;background:rgba(255,255,255,.04)!important;color:var(--ink)!important}
+html:root body.panel.panel.panel #wPick .wcT button{background:rgba(255,255,255,.03)!important;border:1px solid var(--pBd2)!important;border-radius:3px!important;box-shadow:none!important}
+html:root body.panel.panel.panel #wPick .wcT button.on{background:linear-gradient(180deg,color-mix(in srgb,var(--pa) 26%,transparent),transparent)!important;border-color:var(--pa)!important;box-shadow:inset 0 -2px 0 var(--pa),0 0 14px color-mix(in srgb,var(--pa) 30%,transparent)!important}
+html:root body.panel.panel.panel #wPick .wcH{border-radius:4px!important;background:var(--brk),rgba(11,16,25,.9)!important;border:1px solid var(--pBd)!important}
+html:root body.panel.panel.panel #wPick .wc,html:root body.panel.panel.panel #wPick .fwc{border-radius:5px!important}
+html:root body.panel.panel.panel #wPick .wc.on,html:root body.panel.panel.panel #wPick .fwc.on{box-shadow:0 0 0 1px var(--pa),0 0 20px color-mix(in srgb,var(--pa) 45%,transparent)!important}
+html:root body.panel.panel.panel #wPick .wc .tg span,html:root body.panel.panel.panel #wPick .fwc .tg span{border-radius:2px!important;font-family:ui-monospace,Menlo,monospace}
+html:root body.panel.panel.panel #wPick .uxTick,html:root body.panel.panel.panel #wPick .fwc .tick{border-radius:3px!important}
+html:root body.panel.panel.panel #wPick .wpC button{border-radius:3px!important}
+html:root body.panel.panel.panel #tDock .tgo,html:root body.panel.panel.panel #uxGo .uxBorn,html:root body.panel.panel.panel #wPick .fanGo{background:var(--pa)!important;background-image:none!important;color:#081018!important;border:0!important;border-radius:3px!important;box-shadow:0 0 22px color-mix(in srgb,var(--pa) 45%,transparent)!important;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);text-shadow:none!important}
+html:root body.panel.panel.panel #tDock .tgo *,html:root body.panel.panel.panel #uxGo .uxBorn *{color:inherit!important}
+html:root body.panel.panel.panel #tDock{background:linear-gradient(transparent,rgba(5,8,13,.92) 35%)!important}
+
+/* ---------- หน้าเล่น ---------- */
+html:root body.panel.panel.panel #game>.box.top,html:root body.panel.panel.panel #game .box{background:var(--brk),var(--scan),linear-gradient(160deg,color-mix(in srgb,var(--pa) 8%,#0d131c),#0a0f17)!important;border:1px solid var(--pBd)!important;border-radius:4px!important;box-shadow:0 8px 24px #0007!important}
+html:root body.panel.panel.panel #game #gAge{font-family:ui-monospace,Menlo,monospace!important;color:#f0f5fb!important;text-shadow:0 0 12px color-mix(in srgb,var(--pa) 55%,transparent)}
+html:root body.panel.panel.panel #game .hpbar{border-radius:0!important;background:rgba(255,255,255,.08)!important;height:6px!important;border:0!important;clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%)}
+html:root body.panel.panel.panel #game .hpbar i{border-radius:0!important}
+html:root body.panel.panel.panel #game .hudr button{border-radius:3px!important;background:rgba(255,255,255,.04)!important;border:1px solid var(--pBd2)!important}
+html:root body.panel.panel.panel #game .crow .cb,html:root body.panel.panel.panel #game .focus .fc{background:linear-gradient(180deg,rgba(255,255,255,.04),transparent),var(--pSf)!important;border:1px solid var(--pBd)!important;border-radius:3px!important;box-shadow:none!important;color:var(--ink)!important}
+html:root body.panel.panel.panel #game .crow .cb:active{border-color:var(--pa)!important}
+html:root body.panel.panel.panel #game .crow #pauseBtn{background:var(--pa)!important;background-image:none!important;color:#081018!important;border:0!important;box-shadow:0 0 18px color-mix(in srgb,var(--pa) 45%,transparent)!important;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px)}
+html:root body.panel.panel.panel #game .crow #pauseBtn *{color:#081018!important}
+html:root body.panel.panel.panel #game .crow #spdBtn{color:var(--pa2)!important;font-family:ui-monospace,Menlo,monospace!important}
+html:root body.panel.panel.panel #game .focus .fc.on{background:var(--pa)!important;color:#081018!important;border-color:var(--pa)!important}
+html:root body.panel.panel.panel #game .crow #autoBtn.on{background:#1f5a38!important;border-color:#3fae5a!important}
+html:root body.panel.panel.panel #feed .bub{border-radius:3px!important;border-left:2px solid var(--pBd)!important}
+html:root body.panel.panel.panel #feed .bub.good{border-left-color:#3fae5a!important}
+html:root body.panel.panel.panel #feed .bub.bad{border-left-color:#e0484f!important}
+html:root body.panel.panel.panel #feed .bub.epic,html:root body.panel.panel.panel #feed .bub.myth{border-left-color:var(--pa2)!important;box-shadow:inset 18px 0 24px -18px color-mix(in srgb,var(--pa2) 45%,transparent)!important}
+html:root body.panel.panel.panel #feed .yr,html:root body.panel.panel.panel #feed .ageH,html:root body.panel.panel.panel .feed .hdr{font-family:ui-monospace,Menlo,monospace}
+
+@media (prefers-reduced-motion:reduce){html:root body.panel.panel.panel{background-attachment:scroll}}
+
+html:root body.panel.panel.panel #modal.modal[data-k] .chtop,html:root body.panel.panel.panel #modal.modal[data-k] .chfoot{border-color:var(--pBd2)!important}
+html:root body.panel.panel.panel #modal.modal[data-k] .minb{border-radius:3px!important}
+html:root body.panel.panel.panel #title .box.opts,html:root body.panel.panel.panel #wPick{border-radius:6px!important}
+html:root body.panel.panel.panel #modal#modal.modal{border-radius:6px!important}
+html:root body.panel.panel.panel #game .crow.crow.crow>button.cb.cb,html:root body.panel.panel.panel #game .crow.crow #spdBtn.cb.cb,html:root body.panel.panel.panel #game .crow.crow #pauseBtn.cb.cb{border-radius:3px!important}
+html:root body.panel.panel.panel #game .crow.crow.crow>button.cb.cb{background:linear-gradient(180deg,rgba(255,255,255,.04),transparent),var(--pSf)!important;border:1px solid var(--pBd)!important;box-shadow:none!important}
+html:root body.panel.panel.panel #game .crow.crow #pauseBtn.cb.cb{background:var(--pa)!important;background-image:none!important;border:0!important;clip-path:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px)}
+html:root body.panel.panel.panel #feed.feed>.bub.bub{border-radius:3px!important}
+html:root body.panel.panel.panel #feed .ageH,html:root body.panel.panel.panel #feed .yrH,html:root body.panel.panel.panel #feed [class*="ageb"]{border-radius:3px!important}
+html:root body.panel.panel.panel #game .crow.crow #bagBtn.cb,html:root body.panel.panel.panel #game .crow.crow #questBtn.cb,html:root body.panel.panel.panel #game .crow.crow #menuBtn.cb,html:root body.panel.panel.panel #game .crow.crow #logBtn.cb,html:root body.panel.panel.panel #game .crow.crow #sysBtn.cb,html:root body.panel.panel.panel #game .crow.crow #aqCb.cb,html:root body.panel.panel.panel #game .crow.crow #skipBtn.cb,html:root body.panel.panel.panel #game .crow.crow #autoBtn.cb,html:root body.panel.panel.panel #game .crow.crow #trainBtn.cb,html:root body.panel.panel.panel #game .crow.crow #mDockTr.cb,html:root body.panel.panel.panel #game .crow.crow #fcBtn.cb{border-radius:3px!important;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent),var(--pSf)!important;border:1px solid var(--pBd)!important;box-shadow:none!important}
+html:root body.panel.panel.panel #game .crow.crow #autoBtn.cb.on{background:#1f5a38!important;border-color:#3fae5a!important}
+html:root body.panel.panel.panel #game .crow.crow>button[id].cb.cb.cb{border-radius:3px!important}
+html:root body.panel.panel.panel #game .crow.crow #mFoc.cb{border-radius:3px!important;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent),var(--pSf)!important;border:1px solid var(--pBd)!important;box-shadow:none!important}
+/* หน้าแรกบนคอม: แผงข้าง · แถบซ้าย · การ์ดเมนูกลาง */
+html:root body.panel.panel.panel .tsP .tsC{background:var(--brk),var(--scan),rgba(9,13,20,.9)!important;border:1px solid var(--pBd)!important;border-radius:4px!important;box-shadow:0 8px 24px #0007!important}
+html:root body.panel.panel.panel .tsP .tsC h3,html:root body.panel.panel.panel .tsP .tsC h4,html:root body.panel.panel.panel .tsP .tsC b{text-shadow:none}
+html:root body.panel.panel.panel .tsP .tsC button:not(.tgo){border-radius:3px!important}
+html:root body.panel.panel.panel #frRail{background:var(--scan),rgba(9,13,20,.92)!important;border:1px solid var(--pBd)!important;border-radius:4px!important;box-shadow:inset 2px 0 0 var(--pa)!important}
+html:root body.panel.panel.panel #frRail button{border-radius:3px!important}
+html:root body.panel.panel.panel #frRail button:hover{background:color-mix(in srgb,var(--pa) 14%,transparent)!important}
+html:root body.panel.panel.panel #tGrid>button,html:root body.panel.panel.panel #tGrid .gAq,html:root body.panel.panel.panel #tGrid .gSt,html:root body.panel.panel.panel #tGrid .gOn,html:root body.panel.panel.panel #tGrid .gMw{--bg:var(--pSf)!important;background:var(--brk),linear-gradient(180deg,color-mix(in srgb,var(--pa) 12%,transparent),transparent 70%),rgba(11,16,25,.9)!important;border:1px solid var(--pBd)!important;border-top:2px solid var(--pa)!important;border-radius:4px!important;box-shadow:none!important}
+html:root body.panel.panel.panel .tgo,html:root body.panel.panel.panel #tGo.tgo{background:var(--pa)!important;background-image:none!important;color:#081018!important;border:0!important;border-radius:3px!important;box-shadow:0 0 22px color-mix(in srgb,var(--pa) 45%,transparent)!important;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);text-shadow:none!important}
+html:root body.panel.panel.panel .tgo *{color:inherit!important}
+html:root body.panel.panel.panel #frReady .frRb>div:first-child,html:root body.panel.panel.panel #frReady [class*="frRc"]{border-radius:4px!important}
+html:root body.panel.panel.panel #frReady #tGo.tgo,html:root body.panel.panel.panel .frRb #tGo.tgo{background:var(--pa)!important;background-image:none!important;color:#081018!important;border:0!important;border-radius:3px!important;box-shadow:0 0 22px color-mix(in srgb,var(--pa) 45%,transparent)!important;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+html:root body.panel.panel.panel #frReady #tGo.tgo *{color:#081018!important}

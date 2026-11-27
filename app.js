@@ -52,9 +52,9 @@ const LS={raw(k){try{let v=ID.ov.has(k)?ID.ov.get(k):localStorage.getItem(k);ret
 setTimeout(()=>{try{ID.init()}catch(e){}},0);
 
 // ============ THEME ============
-const THEMES=[['royal','👑','ทองราตรี'],['light','☀️','สว่าง'],['dark','🌙','มืด'],['mono','⚫','ขาวดำ'],['jade','🍃','หยกเขียว'],['ember','🩸','โลหิตมาร'],['gold','✨','ทองเซียน']];
+const THEMES=[['royal','👑','ทองราตรี'],['panel','🎮','แผงเกม'],['light','☀️','สว่าง'],['dark','🌙','มืด'],['mono','⚫','ขาวดำ'],['jade','🍃','หยกเขียว'],['ember','🩸','โลหิตมาร'],['gold','✨','ทองเซียน']];
 let theme=LS.get('murim_theme','royal');if(theme==='dark'&&!LS.get('murim_thR',0)){theme='royal';LS.set('murim_thR',1);LS.set('murim_theme','royal')}
-function applyTheme(){document.body.classList.remove('dark','mono','jade','ember','gold','royal');if(theme==='royal')document.body.classList.add('dark','royal');else if(theme!=='light')document.body.classList.add(theme);const t=THEMES.find(x=>x[0]===theme);const tb=$('themeBtn');if(tb)tb.textContent=t[1]}
+function applyTheme(){document.body.classList.remove('dark','mono','jade','ember','gold','royal','panel');if(theme==='royal')document.body.classList.add('dark','royal');else if(theme==='panel'){document.body.classList.add('dark','royal','panel');if(!document.getElementById('tpanelCss')){const l=document.createElement('link');l.id='tpanelCss';l.rel='stylesheet';l.href='/w/tpanel.css?v=1';document.head.appendChild(l)}}else if(theme!=='light')document.body.classList.add(theme);const t=THEMES.find(x=>x[0]===theme);const tb=$('themeBtn');if(tb)tb.textContent=t[1]}
 function cycleTheme(){const U=THEMES.filter(t=>{const x=typeof XTHEME!=='undefined'&&XTHEME.find(y=>y[0]===t[0]);return !x||x[4]()});const i=U.findIndex(x=>x[0]===theme);theme=U[(i+1)%U.length][0];LS.set('murim_theme',theme);applyTheme();toast('ธีม: '+THEMES.find(x=>x[0]===theme)[2]);if(S&&modalOpen&&$('modal').dataset.k==='menu')openMenu()}
 applyTheme();
 setTimeout(()=>{const b=$('sfxBtn');if(b)b.textContent=LS.get('murim_sfx',true)?'🔊':'🔇'},0);
