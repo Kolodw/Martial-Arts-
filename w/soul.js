@@ -2310,7 +2310,7 @@ const RKN=[30,60,110];window._sgScr={RK,RKN,GD:()=>GD()};
 const GODS=[['🌅','เทพีแห่งรุ่งอรุณสีชาด'],['✨','เทพผู้นับดวงดาว'],['⚙️','เทพแห่งเหล็กไม่ขึ้นสนิม'],['💧','เทพีแห่งน้ำตาที่ไม่ไหล'],['🌑','เทพผู้กินความกลัว'],['🗡️','เทพแห่งการฆ่า']];
 const BLD={tem:['🏛️','วิหาร','ผู้ศรัทธา +1 ต่อรูปปั้นที่อยู่ติดกัน'],sta:['🗿','รูปปั้น','ต้องอยู่ติดวิหารถึงจะมีผล'],gar:['🌳','สวนเทพ','ค่าดูแลศรัทธา −2 ต่อวิหารที่อยู่ติดกัน'],tow:['🗼','หอเฝ้า','อยู่มุมเกาะ: ลดความเสียหายจากภัย'],are:['⚔️','ลานประลอง','อยู่ติดหอเฝ้า: พลังเพิ่มทุกปี'],fou:['⛲','น้ำพุ','อยู่กลางเกาะ: พลังชีวิตฟื้นทุกปี']};
 // ---------- สถานะ ----------
-function sgInit(dom){const g=S.sv;g.gd={on:1,line:S.line,y0:S.age,y:0,dom,rk:0,fa:80,fol:18,fade:0,ru:0,mer:0,isl:Array(9).fill(''),bld:{tem:1,sta:1,gar:1},heir:null,arc:0,arcY:S.age+3,gods:GODS.map(x=>({ic:x[0],n:x[1],rel:0,al:1})),lat:[],dn:{},prY:-1,gateY:-1,lv:S.spouse?{n:S.spouse,y:S.age}:null,end:null};return g.gd}
+function sgInit(dom){const g=S.sv;setTimeout(()=>{try{toast('🎯 เลือกสิ่งที่จะทำในแต่ละปีของเทพได้ที่ปุ่มฝึก / แถบด้านล่าง')}catch(e){}},1500);g.gd={fc:'pray',on:1,line:S.line,y0:S.age,y:0,dom,rk:0,fa:80,fol:18,fade:0,ru:0,mer:0,isl:Array(9).fill(''),bld:{tem:1,sta:1,gar:1},heir:null,arc:0,arcY:S.age+3,gods:GODS.map(x=>({ic:x[0],n:x[1],rel:0,al:1})),lat:[],dn:{},prY:-1,gateY:-1,lv:S.spouse?{n:S.spouse,y:S.age}:null,end:null};return g.gd}
 const isl=G=>{const I=G.isl,adj=i=>[i-3,i+3,i%3?i-1:-1,i%3<2?i+1:-1].filter(j=>j>=0&&j<9);let fol=0,up=0,pw=0,hp=0,def=0;
  I.forEach((b,i)=>{if(b==='tem')fol+=adj(i).filter(j=>I[j]==='sta').length;if(b==='gar')up+=2*adj(i).filter(j=>I[j]==='tem').length;if(b==='tow'&&[0,2,6,8].includes(i))def++;if(b==='are'&&adj(i).some(j=>I[j]==='tow'))pw++;if(b==='fou'&&i===4)hp=1});return{fol,up,pw,hp,def}};
 window._sgFaith=(n,why)=>{const G=GD();if(!G)return'';G.fa+=n*3;if(n>=3)G.fol++;return` · 🌟 ศรัทธา +${n*3}`};
@@ -2328,14 +2328,29 @@ function sgStart(){const g=S.sv;if(g.gd)return;const ty=(window._svTy&&window._s
   if(G.lv)say(`💔 ${esc(G.lv.n)}ยังอยู่ในทวีปเบื้องล่าง ตั้งแต่คืนนี้ คุณมองเห็นเขาได้ แต่แตะต้องไม่ได้อีกแล้ว`,'myth');
   try{gbCross('soul','sg')}catch(e){}render();saveGame()},k===L[0]?.6:.2)}))}
 // ---------- วงจรรายปีของเทพ ----------
-function sgYear(){const G=GD();S.age++;G.y++;const I=isl(G),up=Math.max(2,8+G.rk*6-I.up),inc=Math.round(G.fol*(1+G.rk*.25)*.6);
+function sgYear(){const G=GD();S.age++;G.y++;try{focApply(G)}catch(e){console.error('sgFoc',e)}const I=isl(G),up=Math.max(2,8+G.rk*6-I.up),inc=Math.round(G.fol*(1+G.rk*.25)*.6);
  G.fa+=inc-up;G.fol=Math.max(0,G.fol+I.fol*(rnd()<.5?1:0)-(G.arc>=2?Ri(1,3):Ri(0,1)));
  if(I.pw)S.power=(S.power||0)+pctPow(.01*I.pw);S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*(I.hp?.2:.08)));
  if(G.fa<=0){G.fa=0;G.fade++;say(`🌫️ <b>แสงของคุณจางลง</b> — ไม่มีใครเอ่ยชื่อคุณพอจะประคองร่างเทพไว้ (${G.fade}/4)`,'bad',true);if(G.fade>=4){endLife('จางหายไปจากภพเทพ เพราะไม่มีใครในทวีปเอ่ยชื่อคุณอีกแล้ว');return}}else G.fade=0;
  if(G.ru>=3){G.ru=0;if(G.rk>0){G.rk--;say(`⚖️ <b>สภาลงโทษ</b> — คุณแทรกแซงโลกล่างเกินกว่าที่กฎยอม ถูกลดขั้นเป็น${RK[G.rk]}${fa(-20)}`,'bad',true)}else say(`⚖️ <b>สภาลงโทษ</b> — ถูกยึดแสงศรัทธาครึ่งหนึ่ง${fa(-Math.round(G.fa/2))}`,'bad',true)}
  if(S.age>=lifeMax()&&!S.deathCause)S.deathCause=pick(['หลับไปบนบัลลังก์เมฆ แสงสุดท้ายโปรยลงทวีปเป็นฝนดาว','ส่งต่อตำแหน่งแล้วสลายเป็นแสงในวิหารของตัวเอง']);
- if(!S.deathCause){const due=G.lat.filter(x=>x[0]<=S.age);G.lat=G.lat.filter(x=>x[0]>S.age);let q=due.map(x=>()=>(LAT[x[1]]||(()=>{}))(G,x[2]));q.push(()=>sgEvent(G));run(q)}
+ if(!S.deathCause){const due=G.lat.filter(x=>x[0]<=S.age);G.lat=G.lat.filter(x=>x[0]>S.age);let q=due.map(x=>()=>(LAT[x[1]]||(()=>{}))(G,x[2]));if(!(G.fc==='rest'&&rnd()<.5))q.push(()=>sgEvent(G));if(G.fc==='roam'&&rnd()<.35)q.push(()=>sgEvent(G));run(q)}
  render();checkDeath();saveGame()}
+// ---------- 🎯 สิ่งที่ทำในแต่ละปีของเทพ (แทนปุ่มฝึกของคนธรรมดา ซึ่งไม่มีผลในภพเทพ) ----------
+const FOC={pray:['🙏','ฟังคำอธิษฐาน','ผู้ศรัทธา +2–4 · แสง −6'],temple:['⛩️','ดูแลวิหาร','อาจได้สิ่งก่อสร้างใหม่ · แสง +4'],council:['📜','เข้าสภาเทพ','เทพที่ไม่ไว้ใจคุณ ใจอ่อนลง · อาจล้างความผิด'],train:['⚔️','ฝึกพลังเทพ','พลัง +2% · ฟื้นพลังชีวิต'],roam:['🌌','ท่องภพเทพ','เจอเรื่องราวบ่อยขึ้น · อาจพบแสงดาวตกค้าง'],heir:['👤','ดูแลผู้สืบทอด','ผู้สืบทอดภักดีและเก่งขึ้น'],rest:['🧘','สงบนิ่ง','แสง +12 · ปีนี้เรื่องวุ่นวายน้อยลง']};
+const focOk=(G,k)=>k!=='heir'||(G.heir&&!G.heir.done);
+function focApply(G){const k=focOk(G,G.fc)?G.fc:'pray';let t='';
+ if(k==='pray'){const n=Ri(2,4);G.fol+=n;G.fa=Math.max(0,G.fa-6);t=`ฟังคำอธิษฐานทั้งปี · 🙏 ผู้ศรัทธา +${n} · 🌟 −6`}
+ else if(k==='temple'){G.fa+=4;t='ดูแลวิหาร · 🌟 +4';if(rnd()<.35){t+='';setTimeout(()=>{try{if(GD())bldGain(G)}catch(e){}},400)}}
+ else if(k==='council'){const al=G.gods.filter(x=>x.al).sort((a,b)=>a.rel-b.rel)[0];if(al){al.rel++;t=`ใช้เวลาในสภา · ${al.ic} ${al.n} ไว้ใจคุณขึ้น`}if(G.ru>0&&rnd()<.3){G.ru--;t+=' · ⚖️ สภายกโทษความผิดหนึ่งครั้ง'}}
+ else if(k==='train'){const g=Math.max(pctPow(.02),Math.round((S.power||0)*.02)+5);S.power=(S.power||0)+g;S.hp=Math.min(S.maxHp,S.hp+Math.round(S.maxHp*.2));t=`ฝึกพลังเทพ · พลัง +${fmt(g)}`}
+ else if(k==='roam'){if(rnd()<.2){G.fa+=10;S.power=(S.power||0)+pctPow(.01);t='ท่องภพเทพ · ✨ พบแสงดาวตกค้าง 🌟 +10'}else t='ท่องภพเทพ'}
+ else if(k==='heir'){const h=G.heir;h.loy=Math.min(100,(h.loy|0)+6);h.pw=(h.pw|0)+1;t=`ดูแล${esc(h.n)} · ความภักดี +6`}
+ else if(k==='rest'){G.fa+=12;t='สงบนิ่ง · 🌟 +12'}
+ if(t)say(`${FOC[k][0]} ${t}`,'sum')}
+window.sgFocOpen=function(){const m=document.getElementById('mFoc');if(m&&m.offsetParent)return m.click();const f=document.getElementById('focus');if(f)f.scrollIntoView({block:'center',behavior:'smooth'})};
+window.sgFoc=function(k){const G=GD();if(!G||!FOC[k]||!focOk(G,k))return;G.fc=k;try{sfx&&sfx('click')}catch(e){}render();try{toast(`${FOC[k][0]} ปีนี้: ${FOC[k][1]}`)}catch(e){}};
+function focHtml(G){const cur=focOk(G,G.fc)?G.fc:'pray';return Object.keys(FOC).filter(k=>focOk(G,k)).map(k=>`<button class="fc${k===cur?' on':''}" onclick="sgFoc('${k}')" title="${FOC[k][2]}">${FOC[k][0]} ${FOC[k][1]} <small style="display:block;opacity:.75;font-size:10.5px;font-weight:400">${FOC[k][2]}</small></button>`).join('')}
 function run(q){const go=()=>{if(!on()||!q.length)return;if(!free())return setTimeout(go,600);const f=q.shift();try{f()}catch(e){console.error('sg ev',e)}if(q.length)setTimeout(go,700)};setTimeout(go,300)}
 function sgEvent(G){
  if(G.rk<3&&G.fol>=RKN[G.rk]&&!G.dn['vote'+G.rk]&&(G.vY==null||S.age-G.vY>=2))return vote(G);
@@ -2449,7 +2464,7 @@ window.sgPrayNow=()=>{const G=GD();if(G)prayAsk(G)};
 {const _py=passYear;passYear=function(){try{const G0=S&&S.sv&&S.sv.gd;if(G0&&G0.line!=null&&G0.line!==S.line){S.sv.gd=null;if(S.sv.x&&S.sv.x.ge==='ascend')S.sv.x.ge='gone'}}catch(e){}if(on()){try{sgYear()}catch(e){console.error('sgYear',e);S.age++;saveGame()}return}const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.ch==='soul'&&S.sv&&S.sv.x&&S.sv.x.ge==='ascend'&&!S.sv.gd)setTimeout(()=>{if(free()&&!S.sv.gd)sgStart()},800)}catch(e){}return r}}
 {const _rn=render;render=function(){const r=_rn.apply(this,arguments);try{document.body.classList.toggle('sgW',on());let h=$('sgHud');if(!on()){if(h)h.remove();return r}const G=GD(),D=DOM[G.dom];
  if(!h){const top=document.querySelector('#game .box.top');if(!top)return r;top.insertAdjacentHTML('afterend','<div id="sgHud"></div>');h=$('sgHud')}
- const fp=cl(G.fa/3,0,100);h.innerHTML=`<div class="sgT">🌌 ภพเทพแห่งทวีป · ปีที่ ${G.y} ของการเป็นเทพ</div><div class="sgR">${D[0]} ${D[1]} <span>${RK[G.rk]}</span></div><div class="sgA">🌟 แสงศรัทธา<div class="bar"><i style="width:${fp}%"></i></div><b>${fmt(G.fa)}</b></div><div class="sgN">🙏 ผู้ศรัทธา ${G.fol}${G.rk<3?'/'+RKN[G.rk]:''} · ⚖️ ผิดกฎ ${G.ru}/3${G.heir?' · 👤 '+esc(G.heir.n):''}${G.fade?' · 🌫️ กำลังจาง':''}</div><div class="fgB"><button onclick="sgHub()">🌌 ภพเทพ</button><button onclick="sgIsle()">🏝️ อาณาเขต</button><button onclick="gbSend()">🌟 ส่งพร</button></div>`}catch(e){console.error('sg render',e)}return r}}
+ const fp=cl(G.fa/3,0,100);h.innerHTML=`<div class="sgT">🌌 ภพเทพแห่งทวีป · ปีที่ ${G.y} ของการเป็นเทพ</div><div class="sgR">${D[0]} ${D[1]} <span>${RK[G.rk]}</span></div><div class="sgA">🌟 แสงศรัทธา<div class="bar"><i style="width:${fp}%"></i></div><b>${fmt(G.fa)}</b></div><div class="sgN">🙏 ผู้ศรัทธา ${G.fol}${G.rk<3?'/'+RKN[G.rk]:''} · ⚖️ ผิดกฎ ${G.ru}/3${G.heir?' · 👤 '+esc(G.heir.n):''}${G.fade?' · 🌫️ กำลังจาง':''}</div><div class="fgB"><button onclick="sgFocOpen()">🎯 ปีนี้: ${FOC[focOk(G,G.fc)?G.fc:'pray'][0]} ${FOC[focOk(G,G.fc)?G.fc:'pray'][1]}</button><button onclick="sgHub()">🌌 ภพเทพ</button><button onclick="sgIsle()">🏝️ อาณาเขต</button><button onclick="gbSend()">🌟 ส่งพร</button></div>`;const fe=$('focus');if(fe){const fh=focHtml(G);if(fe._sgH!==fh||!fe.querySelector('.fc[onclick^="sgFoc"]')){fe.innerHTML=fh;fe._sgH=fh}}}catch(e){console.error('sg render',e)}return r}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const g=$('modal').querySelector('.mgrid');if(g&&!g.querySelector('.sgM'))g.insertAdjacentHTML('afterbegin','<button class="opt sgM" onclick="closeM();sgHub()">🌌 ภพเทพ<small>ตำแหน่ง ศรัทธา สภา</small></button>')}}catch(e){}return r}}
 {const _ds=drawScene;drawScene=function(ctx,type){try{if(on()&&type!=='death'){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const f=frame||0,R2=(x,y,w,h,c,a)=>{if(a!=null)ctx.globalAlpha=a;ctx.fillStyle=c;ctx.fillRect(x,y,w,h);ctx.globalAlpha=1};
  for(let y=0;y<SH;y+=4)R2(0,y,SW,4,['#2a1a5a','#3a2a7a','#5a3a8a','#8a5a9a','#c08aa0','#e0b0a0','#f0d0a8','#f8e8c0','#fff0d0','#fff6e0','#fffaf0','#ffffff','#ffffff','#ffffff'][Math.min(13,y>>2)]);
@@ -2459,6 +2474,7 @@ window.sgPrayNow=()=>{const G=GD();if(G)prayAsk(G)};
  try{const me=meLook();curMe=me;person(82,43,me,'stand')}catch(e){}return}}catch(e){console.error('sg scene',e)}return _ds.apply(this,arguments)}}
 {const _sc=sceneCap;sceneCap=function(t){try{if(on()){const G=GD();return`🌌 ภพเทพ · ${DOM[G.dom][1]}`}}catch(e){}return _sc.apply(this,arguments)}}
 const css=document.createElement('style');css.textContent=`
+html body.sgW.sgW :is(#modal,#focus,#game) .fc[onclick^="sgFoc"].on{background:linear-gradient(135deg,#ffe08a,#f0a93a)!important;color:#1b1309!important;border-color:#f0a93a!important;box-shadow:0 0 14px #f0a93a66!important}html body.sgW.sgW :is(#modal,#focus,#game) .fc[onclick^="sgFoc"].on small{color:#3a2a10!important;opacity:.9!important}
 #sgHud{margin:10px 0;padding:11px 13px;border-radius:16px;background:linear-gradient(180deg,#2a1f4a,#1a1430);border:1px solid #b89aff66;color:#f0e8ff;box-shadow:0 0 18px #8a6aff33}
 #sgHud .sgT{font-size:12px;opacity:.75}#sgHud .sgR{font-size:17px;font-weight:800;margin:3px 0}#sgHud .sgR span{font-size:12.5px;color:#ffe08a;margin-left:6px}
 #sgHud .sgA{display:flex;align-items:center;gap:8px;font-size:13px;margin:4px 0}#sgHud .sgA .bar{flex:1;height:8px;background:#0a0818;border-radius:6px;overflow:hidden}#sgHud .sgA .bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd84a,#fff6c0)}
