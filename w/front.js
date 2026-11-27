@@ -13,14 +13,14 @@ const LSg=(k,d)=>{try{return window.LS?LS.get(k,d):d}catch(e){return d}};
 const CH="'Charm','Itim',serif",TR="'Trirong','Itim',serif",CP="'Chakra Petch','Itim',sans-serif",MI="'Mitr','Itim',sans-serif",PX="'IBM Plex Sans Thai','Itim',sans-serif";
 // [bg, card, raised, line, ink, muted, accent, accent2, track, font, tint]
 const T={
- murim:['#120f0d','#1d1814','#241d18','#3a2e24','#efe6d6','#a89a86','#c8402f','#d6a647','#2a221c',CH,'rgba(0,0,0,0)'],
- xian:['#0f1a18','#16261f','#1c2f27','#2f4a3f','#eef3ea','#a3b8ad','#3f9c80','#e8dcb4','#213a30',CH,'rgba(110,190,165,.38)'],
- mw:['#0f1622','#172131','#1d2a3d','#2c3d57','#e8eef7','#9fb0c6','#dc2626','#7cb4ff','#1f2c40',PX,'rgba(20,40,90,.5)'],
- soul:['#0c0b14','#15131f','#1c1929','#2e2742','#ece8f7','#a39cbd','#7c4ddb','#6ee7b7','#221e33',CH,'rgba(60,30,130,.55)'],
- loop:['#17120c','#211a12','#2a2117','#45372a','#f0e6d6','#b0a28c','#b3612c','#e3c48c','#2e2419',TR,'rgba(110,70,25,.5)'],
- beast:['#101710','#18221a','#1f2b20','#33452f','#eaf1e3','#a5b59b','#c9702a','#9cc56b','#243324',MI,'rgba(30,90,35,.5)'],
- sky:['#060920','#0d1336','#121a46','#22306a','#e6ecff','#9aa6d6','#7c3aed','#5ee0ff','#1a2352',CP,'rgba(6,9,46,.74)'],
- fog:['#121416','#1c1f22','#24272a','#4d483d','#ece6da','#a7a293','#2f7d74','#c9a15a','#2c2f31',TR,'rgba(48,54,60,.66)']
+ murim:['#120f0d','#1d1814','#241d18','#3a2e24','#efe6d6','#a89a86','#d9452b','#f2c14e','#2a221c',CH,'rgba(0,0,0,0)'],
+ xian:['#0f1a18','#16261f','#1c2f27','#2f4a3f','#eef3ea','#a3b8ad','#34c3a0','#bff3ff','#213a30',CH,'rgba(110,190,165,.38)'],
+ mw:['#0f1622','#172131','#1d2a3d','#2c3d57','#e8eef7','#9fb0c6','#3b82f6','#ff4fa3','#1f2c40',PX,'rgba(20,40,90,.5)'],
+ soul:['#0c0b14','#15131f','#1c1929','#2e2742','#ece8f7','#a39cbd','#9b5cff','#6ef7c0','#221e33',CH,'rgba(60,30,130,.55)'],
+ loop:['#17120c','#211a12','#2a2117','#45372a','#f0e6d6','#b0a28c','#f08a3c','#3fb6c9','#2e2419',TR,'rgba(110,70,25,.5)'],
+ beast:['#101710','#18221a','#1f2b20','#33452f','#eaf1e3','#a5b59b','#4caf50','#ffb341','#243324',MI,'rgba(30,90,35,.5)'],
+ sky:['#060920','#0d1336','#121a46','#22306a','#e6ecff','#9aa6d6','#7c3aed','#22d3ee','#1a2352',CP,'rgba(6,9,46,.74)'],
+ fog:['#121416','#1c1f22','#24272a','#4d483d','#ece6da','#a7a293','#c2312f','#f4c542','#2c2f31',TR,'rgba(48,54,60,.66)']
 };
 const SHEET=['daily2','book','online','guild','tmenu','store','evshop','krt','sp','profile','aq','cosshop'];
 const ic=(p,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;

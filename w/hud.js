@@ -11,15 +11,15 @@ const LSg=(k,d)=>{try{return window.LS?LS.get(k,d):d}catch(e){return d}};
 // [bg, card, raised, line, ink, muted, accent, accent2, track, displayFont, radius, light?]
 const CH="'Charm','Itim',serif",TR="'Trirong','Itim',serif",CP="'Chakra Petch','Itim',sans-serif",MI="'Mitr','Itim',sans-serif",PX="'IBM Plex Sans Thai','Itim',sans-serif",KA="'Kanit','Itim',sans-serif";
 const T={
- murim:['#120f0d','#1d1814','#241d18','#3a2e24','#efe6d6','#a89a86','#c8402f','#d6a647','#2a221c',CH,14],
- xian:['#0f1a18','#16261f','#1c2f27','#2f4a3f','#eef3ea','#a3b8ad','#3f9c80','#e8dcb4','#213a30',CH,20],
+ murim:['#120f0d','#1d1814','#241d18','#3a2e24','#efe6d6','#a89a86','#d9452b','#f2c14e','#2a221c',CH,14],
+ xian:['#0f1a18','#16261f','#1c2f27','#2f4a3f','#eef3ea','#a3b8ad','#34c3a0','#bff3ff','#213a30',CH,20],
  god:['#14121a','#1e1b26','#262232','#4a4258','#f4efe2','#b3aac2','#b08a3a','#f2d78a','#2a2636',CH,18],
- mw:['#0e131c','#161d29','#1c2433','#2c3749','#e9eef6','#9ba7ba','#ef4444','#60a5fa','#222c3c',PX,16],
- soul:['#0c0b14','#15131f','#1c1929','#2e2742','#ece8f7','#a39cbd','#7c4ddb','#6ee7b7','#221e33',CH,10],
- loop:['#17120c','#211a12','#2a2117','#45372a','#f0e6d6','#b0a28c','#b3612c','#e3c48c','#2e2419',TR,8],
- beast:['#101710','#18221a','#1f2b20','#33452f','#eaf1e3','#a5b59b','#c9702a','#9cc56b','#243324',MI,22],
- sky:['#060920','#0d1336','#121a46','#22306a','#e6ecff','#9aa6d6','#7c3aed','#5ee0ff','#1a2352',CP,4],
- fog:['#121416','#1c1f22','#24272a','#4d483d','#ece6da','#a7a293','#2f7d74','#c9a15a','#2c2f31',TR,4],
+ mw:['#0e131c','#161d29','#1c2433','#2c3749','#e9eef6','#9ba7ba','#3b82f6','#ff4fa3','#222c3c',PX,16],
+ soul:['#0c0b14','#15131f','#1c1929','#2e2742','#ece8f7','#a39cbd','#9b5cff','#6ef7c0','#221e33',CH,10],
+ loop:['#17120c','#211a12','#2a2117','#45372a','#f0e6d6','#b0a28c','#f08a3c','#3fb6c9','#2e2419',TR,8],
+ beast:['#101710','#18221a','#1f2b20','#33452f','#eaf1e3','#a5b59b','#4caf50','#ffb341','#243324',MI,22],
+ sky:['#060920','#0d1336','#121a46','#22306a','#e6ecff','#9aa6d6','#7c3aed','#22d3ee','#1a2352',CP,4],
+ fog:['#121416','#1c1f22','#24272a','#4d483d','#ece6da','#a7a293','#c2312f','#f4c542','#2c2f31',TR,4],
  'mw-hunter':['#0e1222','#161b30','#1c2240','#2a3358','#e8ecff','#9aa3c8','#5b4ce0','#38bdf8','#1f2645',CP,10],
  'mw-hunterhi':['#120d06','#1c150b','#251c0f','#3d2f17','#fbf3e2','#b9a888','#b45309','#fbbf24','#2a2010',KA,8],
  'mw-under':['#0d0d10','#16161c','#1d1d25','#2c2c38','#f1eef5','#a8a3b6','#be185d','#22d3ee','#23232d',KA,6],

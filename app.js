@@ -41150,3 +41150,61 @@ try{(()=>{const st=document.createElement('style');st.textContent=`html body.mdl
 const _md=modal;modal=function(){const r=_md.apply(this,arguments);try{document.body.classList.add('mdl')}catch(e){}return r};for(const k in _md)try{modal[k]=_md[k]}catch(e){}
 const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);try{if(!modalOpen)document.body.classList.remove('mdl')}catch(e){}return r};for(const k in _cm)try{closeM[k]=_cm[k]}catch(e){}
 })()}catch(e){console.error('block305',e)}
+// ============================================================
+// BLOCK 306 🎨 หน้าแรก/ในเกม: สีของแต่ละโลกเด่นขึ้น + มีอนิเมชัน (ไม่แตะฉากหลัง)
+//  ใช้ตัวแปรเดิมของ /w/front.js (--fA สีหลัก · --fG สีรอง) และ /w/hud.js (--hA · --hG)
+// ============================================================
+try{(()=>{
+const B='html body.royal[data-front]';
+const css=document.createElement('style');css.id='frPop';css.textContent=`
+@keyframes frGlow{0%,100%{box-shadow:0 0 0 1px #0005,0 0 14px color-mix(in srgb,var(--fA) 35%,transparent)}50%{box-shadow:0 0 0 1px #0005,0 0 26px color-mix(in srgb,var(--fA) 60%,transparent)}}
+@keyframes frShine{0%{transform:translateX(-140%) skewX(-18deg)}55%,100%{transform:translateX(320%) skewX(-18deg)}}
+@keyframes frFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes frPopIn{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes frSwap{0%{transform:scale(.97);filter:brightness(1.35)}100%{transform:scale(1);filter:none}}
+@keyframes frTitleGlow{0%,100%{text-shadow:0 3px 0 rgba(0,0,0,.45),0 0 12px color-mix(in srgb,var(--fA) 30%,transparent)}50%{text-shadow:0 3px 0 rgba(0,0,0,.45),0 0 26px color-mix(in srgb,var(--fA) 65%,transparent)}}
+@keyframes frDot{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+${B} #title,${B} #frCont,${B} #tdTitle,${B} #frToday button,${B} #tDock .tgo,${B} #uxGo .uxBorn,${B} #frTopR button,${B} #tTop .tav,${B} #tDock .nav,${B} #frMode{transition:background .5s,border-color .5s,color .5s,box-shadow .5s}
+/* หัวเรื่อง + ป้ายชื่อโลก */
+${B} #title .big .gold{animation:frTitleGlow 3.6s ease-in-out infinite}
+#frWChip{display:none}
+${B} #frWChip{display:table;margin:0 auto 2px;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:.3px;background:var(--fA);color:#fff;box-shadow:0 0 14px color-mix(in srgb,var(--fA) 55%,transparent);text-shadow:0 1px 0 #0006;animation:frPopIn .45s ease-out both}
+/* การ์ดเล่นต่อ: ขอบ + แสงเรืองสีโลก หายใจช้าๆ */
+${B} #frCont{border:1.5px solid var(--fA)!important;background:linear-gradient(135deg,color-mix(in srgb,var(--fA) 24%,var(--card)),var(--card) 62%)!important;animation:frGlow 3.2s ease-in-out infinite}
+${B} #frCont .ic{background:var(--fA)!important;color:#fff!important;box-shadow:0 0 12px color-mix(in srgb,var(--fA) 60%,transparent)}
+${B} #frCont .ch{color:var(--fA)!important}
+/* วันนี้ทำอะไรดี */
+${B} #tdTitle{border:1px solid color-mix(in srgb,var(--fG) 50%,var(--line))!important;background:linear-gradient(135deg,color-mix(in srgb,var(--fG) 12%,var(--card)),var(--card) 70%)!important}
+${B} #tdTitle em.pxn{animation:frDot 1.6s ease-in-out infinite}
+/* ปุ่มทางลัด 4 ช่อง: สีประจำปุ่มเสมอ + ลอยเบาๆ */
+${B} #frToday button{--q:#f0883e;background:linear-gradient(160deg,color-mix(in srgb,var(--q) 20%,var(--card)),var(--card))!important;border:1px solid color-mix(in srgb,var(--q) 60%,transparent)!important;animation:frFloat 4s ease-in-out infinite}
+${B} #frToday button:nth-child(2){--q:#4fa3ff;animation-delay:-1s}${B} #frToday button:nth-child(3){--q:#a78bfa;animation-delay:-2s}${B} #frToday button:nth-child(4){--q:#f472b6;animation-delay:-3s}
+${B} #frToday button b{color:color-mix(in srgb,var(--q) 35%,#fff)!important}
+${B} #frToday button:active{transform:scale(.95)!important}
+${B} #frToday button.dot:after{background:#ff4a3a!important;animation:frDot 1.6s ease-in-out infinite}
+/* ปุ่มเกิด: ไล่สองสีของโลก + แสงวิ่งผ่าน */
+${B} #tDock .tgo,${B} #uxGo .uxBorn{background:linear-gradient(135deg,var(--fG),var(--fA))!important;border-color:color-mix(in srgb,var(--fA) 70%,#000)!important;box-shadow:0 4px 0 color-mix(in srgb,var(--fA) 45%,#000),0 0 22px color-mix(in srgb,var(--fA) 45%,transparent)!important;position:relative;overflow:hidden}
+${B} #tDock .tgo:after,${B} #uxGo .uxBorn:after{content:'';position:absolute;top:0;bottom:0;left:0;width:34%;background:linear-gradient(90deg,transparent,#ffffff59,transparent);animation:frShine 3.4s ease-in-out infinite;pointer-events:none}
+${B} #tDock .tgo:active,${B} #uxGo .uxBorn:active{transform:translateY(2px) scale(.99)}
+/* ปุ่มมุมบน · แถบล่าง · โหมด · การ์ดโลกที่เลือก */
+${B} #frTopR button,${B} #tTop .tav,${B} #frMode{border-color:color-mix(in srgb,var(--fA) 45%,var(--line))!important}
+${B} #tDock .nav{border:1px solid color-mix(in srgb,var(--fA) 50%,transparent)!important;box-shadow:0 -4px 18px color-mix(in srgb,var(--fA) 14%,transparent)!important}
+${B} #tDock .nav button.frOn{color:var(--fG)!important}
+${B} #wPick .wc.on{border-color:var(--fA)!important;box-shadow:0 0 0 2px var(--fA),0 0 22px color-mix(in srgb,var(--fA) 45%,transparent)!important}
+/* สลับโลก: ทุกอย่างกระพริบรับสีใหม่ */
+${B}.frSw #frCont,${B}.frSw #tdTitle,${B}.frSw #frToday,${B}.frSw #tDock .tgo,${B}.frSw #uxGo .uxBorn{animation:frSwap .5s ease-out}
+/* ในเกม: สีโลกที่ส่วนหัว ปุ่มเล่นต่อ และเหตุการณ์ใหญ่ */
+html body.royal[data-hud] #game>.box.top{border-color:color-mix(in srgb,var(--hA) 55%,var(--line))!important;box-shadow:0 0 0 1px #0004,0 6px 22px color-mix(in srgb,var(--hA) 18%,transparent)!important}
+html body.royal[data-hud] #game .crow #pauseBtn{background:linear-gradient(135deg,var(--hG),var(--hA))!important;border-color:color-mix(in srgb,var(--hA) 70%,#000)!important;box-shadow:0 4px 0 color-mix(in srgb,var(--hA) 45%,#000),0 0 18px color-mix(in srgb,var(--hA) 40%,transparent)!important}
+html body.royal[data-hud] #game .bub.myth,html body.royal[data-hud] #game .bub.epic{border-color:var(--hG)!important;box-shadow:0 0 16px color-mix(in srgb,var(--hG) 30%,transparent)!important}
+@media (prefers-reduced-motion:reduce){${B} *,${B} *:after,${B} #frWChip{animation:none!important}}
+html body.mdl #title *{animation-play-state:paused!important}
+`;document.head.appendChild(css);
+// ป้ายชื่อโลกเหนือหัวเรื่อง + เอฟเฟกต์ตอนสลับโลก
+let last='';
+function tick(){try{const b=document.body,k=b.dataset.front||'';const big=document.querySelector('#title .big');if(!big)return;
+ let c=document.getElementById('frWChip');if(!c){c=document.createElement('div');c.id='frWChip';big.parentNode.insertBefore(c,big)}
+ const on=document.querySelector('#wPick .wc.on b');const nm=on?on.textContent.trim():'';if(c.textContent!==nm){c.textContent=nm;c.style.animation='none';void c.offsetWidth;c.style.animation=''}
+ if(k&&k!==last){if(last){b.classList.add('frSw');setTimeout(()=>b.classList.remove('frSw'),520)}last=k}}catch(e){}}
+setInterval(tick,300);setTimeout(tick,800);
+})()}catch(e){console.error('block306',e)}
