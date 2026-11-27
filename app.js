@@ -41392,3 +41392,27 @@ setInterval(()=>{try{if(!S||!S.alive||!S.kalpa||!S.kalpa.pend||(S._xa&&S._xa.run
  if(typeof kcap==='function'&&S.age<kcap()){idle=0;return}
  const busy=modalOpen||choice._cur||document.querySelector('.kfx')||(typeof window._mgBusy==='function'&&window._mgBusy());idle=busy?0:idle+1;
  if(idle>=3){idle=0;try{kalpaGate()}catch(e){console.error('kGateFix',e)}}}catch(e){}},2000)})()}catch(e){console.error('block312',e)}
+
+// ============================================================
+// BLOCK 313: 🚚 ยุคปัจจุบัน → ห้องสีขาว (โหลด /w/fan.js) — โอกาสต่ำต่อปี ครั้งเดียวต่อชีวิต · หลบได้
+// ============================================================
+try{(()=>{
+const modern=()=>{try{return S&&S.alive&&S.mw&&!S.mw.fog&&!S.mw.sky&&!S.mw.fan&&!(S.beastMode&&!S.beastMode.human)&&!S.xian}catch(e){return false}};
+{const stub=function(c){return wNeed('mw',()=>wNeed('fan',()=>{if(window.wrStart===stub)throw new Error('wrStart missing');return window.wrStart(c)}))};if(!wIs('fan'))window.wrStart=stub}
+const SC=[['truck','🚚 รถบรรทุกเบรกแตก','ไฟหน้ารถบรรทุกสาดเข้าตา เสียงแตรดังยาว และมีเด็กคนหนึ่งยืนนิ่งอยู่กลางถนน','รถบรรทุกพุ่งชนขณะช่วยเด็ก'],
+ ['circle','🌀 วงเวทกลางห้อง','พื้นห้องเรืองแสงเป็นวงเวทสีทอง ตัวอักษรที่ไม่มีใครอ่านออกหมุนรอบเท้าคุณ เพื่อนๆ กรีดร้อง','ถูกวงเวทอัญเชิญดึงไป'],
+ ['hole','🕳️ ท่อระบายน้ำไร้ก้น','ฝาท่อระบายน้ำหายไปตอนฝนตก ข้างใต้มืดสนิทและได้ยินเสียงลมจากอีกโลก','ตกท่อระบายน้ำที่ไม่มีก้น'],
+ ['call','📱 สายเรียกเข้าตอนตีสาม','เบอร์ที่ไม่มีตัวเลข โทรเข้ามาซ้ำสามครั้ง หน้าจอสั่นเหมือนมีอะไรอยากออกมา','รับสายจากเบอร์ที่ไม่มีตัวเลข'],
+ ['noodle','🍜 มาม่าซองแปลก','ในซองมาม่าไม่มีเส้น มีแต่แผนที่ทองคำกับข้อความว่า "เทน้ำร้อนเพื่อเดินทาง"','เทน้ำร้อนใส่ซองมาม่าซองนั้น']];
+const carry=sc=>({n:S.name,g:S.gender,age:S.age,money:S.money,karma:S.karma,spouse:S.spouse,cause:sc[0]==='truck'?'hero':sc[0],why:sc[3]});
+const go=sc=>{try{keyAdd&&keyAdd(`${S.age} ปี — ${sc[3]}`)}catch(e){}try{window.wrStart(carry(sc))}catch(e){console.error('wrStart',e)}};
+function ask(){const sc=SC[Math.floor(Math.random()*SC.length)];
+ choice(sc[1],`${sc[2]} · <span class="tag2">นี่อาจเป็นจุดจบของชีวิตในโลกนี้ หรือจุดเริ่มต้นของอีกโลกหนึ่ง</span>`,[
+  {t:'🏃 หลบ!',s:'มีโอกาสรอด',f(){if(Math.random()<.45){log(`🏃 คุณหลบทันอย่างหวุดหวิด หัวใจเต้นแรงไปทั้งวัน ${sc[0]==='circle'?'วงเวทดับลง เหลือแค่รอยไหม้บนพื้น':''}`,'good');try{render();saveGame()}catch(e){}}else{log('🏃 ไม่ทัน…','bad');setTimeout(()=>go(sc),900)}}},
+  {t:sc[0]==='truck'?'🧒 พุ่งไปผลักเด็กออก':'✋ ยื่นมือเข้าไป',s:'ไปต่อที่ห้องสีขาว',f(){if(sc[0]==='truck')sc[0]='truck';go(sc)}}])}
+let lastA=-1,pend=0;
+setInterval(()=>{try{if(!modern()){lastA=-1;return}if(S.mw.wrT)return;
+ if(pend){if(!choice._cur&&!modalOpen){pend=0;S.mw.wrT=1;ask()}return}
+ if(S.age===lastA)return;const first=lastA<0;lastA=S.age;if(first)return;
+ if(S.age<15||S.age>75)return;const p=window._wrForce?1:.018;if(Math.random()<p)pend=1}catch(e){}},1500);
+})()}catch(e){console.error('block313',e)}

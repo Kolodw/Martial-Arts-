@@ -1007,9 +1007,9 @@ function fanBegin(RR){window._frS=1;try{closeM()}catch(e){}const w=RR.w,d=WD[w],
  setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();
   S.name=RR.name;S.gender=RR.g;S.age=d.a0;S.power=8;S.qi=0;S.money=d.g==='iso'?(w==='trash'?3:40):60;S.maxHp=70;S.hp=70;S.int=18;S.cha=18;S.fame=0;S.karma=0;S.xian=false;S.xt=0;S.faction=null;S.ownSect=null;S.custom=true;S.arts=[];S.sys=null;S.spouse=null;
   S.mw={y:0,sec:0,fame:0,adapt:100,qi:0,lin:0,linMet:0,native:1,rnd:1,cc:'th',uni:0,qlv:0,past:{n:S.name,realm:'',yr:1,how:'native',pow0:8},seen:{e1:1,e2:1,e3:1,e4:1,e5:1,e6:1,e7:1,e8:1,e9:1,e10:1,e11:1,e12:1,e13:1,e14:1,e15:1},q:[],fl:{},end:70,clk:0,hum:1,mon0:0,par:null,ast:{h:0,bike:0,car:0,ins:0,mort:0,mortY:0,save:0},lives:[]};
-  const all=fbItems(b),cb=combos(all),fx={};all.concat(cb.map(c=>({fx:c[3]}))).forEach(x=>{const o=fxP(x.fx);for(const k in o)if(typeof o[k]==='number')fx[k]=(fx[k]||0)+o[k]});
+  const all=fbItems(b).concat(b.wsk||[],b.wcur||[]),cb=combos(all),fx={};all.concat(cb.map(c=>({fx:c[3]}))).forEach(x=>{const o=fxP(x.fx);for(const k in o)if(typeof o[k]==='number')fx[k]=(fx[k]||0)+o[k]});
   const ek=fxP(b.el.fx).el,isR=EKEY[ek],K=S.mw.fan=newK(w,{el:isR?pick(Object.keys(EL)):ek,rare:isR?ek:null,sk:RR.sk,org:null,dark:0,rank:30,pow:8});
-  K.fx=fx;K.bt={org:b.org,race:b.race,el:b.el,mana:b.mana,omen:b.omen,mark:b.mark,tal:b.tal,curse:b.curse,fam:b.fam,item:b.item,sec:b.sec,cb:cb.map(c=>[c[2],c[3]])};
+  K.fx=fx;K.bt={org:b.org,race:b.race,el:b.el,mana:b.mana,omen:b.omen,mark:b.mark,tal:b.tal,curse:b.curse,fam:b.fam,item:b.item,sec:b.sec,cb:cb.map(c=>[c[2],c[3]]),wsk:b.wsk||[],wcur:b.wcur||[]};
   K.pw=Math.max(4,K.pw+(fx.pow||0));S.int=Math.max(1,S.int+(fx.int||0));S.cha=Math.max(1,S.cha+(fx.cha||0));K.mpM=Math.max(5,K.mpM+(fx.mp||0));K.mp=K.mpM;S.maxHp=Math.max(30,S.maxHp+(fx.hp||0));S.hp=S.maxHp;
   S.money=Math.max(0,S.money+(fx.gold||0));K.dark=cl(fx.dark||0,0,100);K.rep=fx.rep||0;K.clue=Math.min(2,Math.max(0,Math.round(fx.clue||0)));K.save=Math.round(fx.save||0);
   if(w==='hero'&&RR.sk==='sword')K.pw+=6;if(w==='hero'&&RR.sk==='shield')S.maxHp+=30;
@@ -1022,6 +1022,13 @@ function fanBegin(RR){window._frS=1;try{closeM()}catch(e){}const w=RR.w,d=WD[w],
   feed(`⚖️ คำสาป: ${b.curse.ic} ${E(b.curse.n)} · 🐾 ${E(b.fam.n)} · 🎁 ${E(b.item.n)}`);
   if(K.clue)feed(`🗝️ คุณเกิดมาพร้อมเบาะแสลับ ${K.clue}/3 จาก${E(b.sec.t>=3?b.sec.n:'ชะตาที่สุ่มได้')}`);
   cb.forEach(c=>say(`🔗 <b>คอมโบ ${c[2]}</b> — ${fxT(c[3])}`,'epic'));
+  if(RR.god){K.god=RR.god;const cr=RR.carry||{};K.earth=cr;
+   say(RR.top==='iso'?`⬜ คุณลืมตากลางวงเวทอัญเชิญ ยังจำรสชาติของ${pick(['ชานมไข่มุก','ข้าวมันไก่','มาม่าตอนตีสอง'])}ได้ชัด · ชีวิตก่อน: ${E(cr.n||'')} อายุ ${cr.age||'?'} ปี`:`⬜ วันเกิดปีที่ 12 ความทรงจำชาติก่อนไหลกลับมาทั้งหมด — ชื่อ ${E(cr.n||'')} อายุ ${cr.age||'?'} ปี ตายเพราะ${E(cr.why||'อุบัติเหตุ')}`,'myth',true);
+   if(b.wsk&&b.wsk.length)feed(`⬜ สกิลจาก${E(RR.god.n)}: ${b.wsk.map(x=>x.ic+' '+E(x.n)).join(' · ')}`);
+   if(b.wcur&&b.wcur.length)feed(`❓ คุณรู้สึกว่ามีบางอย่างติดมาด้วย ${b.wcur.length} อย่าง (ดูได้ใน 📊 สถานะโลก)`);
+   if(RR.god.out==='trash')say('🗑️ เทพรำคาญคุณจนโยนสกิลขยะให้ — แต่สกิลขยะในต่างโลกเคยกลายเป็นตำนานมาแล้ว','bad');
+   if(RR.god.fake)K.con.push({id:'god',t:'วิญญาณครึ่งหนึ่ง (สัญญากับ "เทพธิดา")',at:age()+R(8,14),paid:0});
+   if(RR.god.knew)K.clue=Math.min(2,K.clue+1)}
   sync();render();saveGame()}catch(e){console.error('fanBegin',e)}},700)}
 
 // =================== ฉาก ===================
@@ -1050,12 +1057,12 @@ function hud(K){const d=WD[K.w],m=Math.round(K.mp),mm=Math.round(K.mpM),B=K.bt||
  const lv=Math.max(1,Math.round(Math.pow(Math.max(1,K.pw)/6,.62))),hp=Math.max(0,Math.round(S.hp)),hm=Math.max(1,Math.round(S.maxHp)),bar=(c,ic,v,M,t)=>`<div class="fhB ${c}"><span>${ic}</span><div class="bar"><i style="width:${cl(v/M*100,0,100)}%"></i></div><span>${t}</span></div>`;
  const ch=[];if(B.race)ch.push(`<span>${B.race.ic} ${E(B.race.n)}</span>`);ch.push(`<span>${K.rare?RARE[K.rare][0]+' '+RARE[K.rare][1]:EL[K.el][0]+' '+EL[K.el][1]}</span>`);if(sk)ch.push(`<span>${sk}</span>`);
  (B.tal||[]).forEach(x=>ch.push(`<span class="${x.t>=5?'t5':x.t>=3?'t4':''}">${x.ic} ${E(x.n)}</span>`));if(B.curse)ch.push(`<span class="c">${B.curse.ic} ${E(B.curse.n)}</span>`);if(B.fam)ch.push(`<span>${B.fam.ic} ${E(B.fam.n)}</span>`);
- if(K.clue)ch.push(`<span class="k">🗝️ ${K.clue}/3</span>`);if(K.save>0)ch.push(`<span class="k">🪽 รอดตาย ×${K.save}</span>`);if(K.con.some(c=>!c.paid))ch.push('<span class="c">📜 สัญญาค้าง</span>');if(K.f.dragon)ch.push('<span class="t4">🐉 มังกรเงิน</span>');
+ if(B.wsk&&B.wsk.length)ch.push(`<span class="t4">⬜ สกิลจากเทพ ×${B.wsk.length}</span>`);if(K.clue)ch.push(`<span class="k">🗝️ ${K.clue}/3</span>`);if(K.save>0)ch.push(`<span class="k">🪽 รอดตาย ×${K.save}</span>`);if(K.con.some(c=>!c.paid))ch.push('<span class="c">📜 สัญญาค้าง</span>');if(K.f.dragon)ch.push('<span class="t4">🐉 มังกรเงิน</span>');
  return `<div class="fhT"><span>◆ STATUS · ${d.ic} ${d.n}</span><span>${d.sc}</span></div><div class="fhR">${E(S.name)}<em>Lv ${lv}</em><small>${st}</small></div>
  ${bar('hp','❤️',hp,hm,`${fmt(hp)}/${fmt(hm)}`)}${bar('mp','💠',m,mm,`${m}/${mm}`)}${K.dark>=10?bar('dk','🌑',K.dark,100,K.dark):''}
  <div class="fhS"><div><b>${fmt(Math.round(S.power||K.pw))}</b>พลัง</div><div><b>${fmt(S.int|0)}</b>ปัญญา</div><div><b>${fmt(S.cha|0)}</b>เสน่ห์</div><div><b>${K.rep}</b>ชื่อเสียง</div></div>
  <div class="fhC">${ch.join('')}</div>`}
-{const _py=passYear;passYear=function(){if(on()){try{fanYear()}catch(e){console.error('fanYear',e);S.age++;saveGame()}return}return _py.apply(this,arguments)}}
+{const _py=passYear;passYear=function(){if(window._wrOn)return;if(on()){try{fanYear()}catch(e){console.error('fanYear',e);S.age++;saveGame()}return}return _py.apply(this,arguments)}}
 {const _fo=focusOK;focusOK=function(k){if(on())return fList(FN()).some(f=>f[0]===k);if(/^fa_/.test(String(k)))return false;return _fo.apply(this,arguments)}}
 {const _af=autoFocus;autoFocus=function(){if(on()){const K=FN(),L=fList(K).map(f=>f[0]);if(S.hp<S.maxHp*.4)S.focus='fa_rest';else if(K.w==='trash'&&K.skL<5&&rnd()<.4)S.focus='fa_sk';else if(school(K)&&rnd()<.5)S.focus='fa_cls';else S.focus=pick(L.filter(x=>x!=='fa_rest'));return}return _af.apply(this,arguments)}}
 {const _lm=lifeMax;lifeMax=function(){if(on())return S.mw.end;return _lm.apply(this,arguments)}}
@@ -1065,7 +1072,7 @@ function hud(K){const d=WD[K.w],m=Math.round(K.mp),mm=Math.round(K.mpM),B=K.bt||
  {const gm=$('gMini');if(gm)gm.innerHTML=`🪙 ${fmt(S.money||0)} เหรียญทอง · 💠 ${Math.round(K.mp)}`}{const gr=$('gRealm');if(gr)gr.textContent=`${WD[K.w].ic} ${WD[K.w].n}`}
  }catch(e){console.error('fan render',e)}return r}}
 window.fanStat=function(){const K=FN();if(!K)return;const L=Object.values(K.npc).map(p=>`<div class="item"><b>${E(p.n)}</b> <span class="tag2">${E(p.role)}${p.alive?'':' · ✝️ หายไป/ตาย'}</span><div class="tag2">ความสัมพันธ์ ${p.aff}/100${p.mem.length?' · จำได้ว่า: '+E(p.mem.slice(-1)[0][1]):''}</div></div>`).join('');
- const B=K.bt||{},it=(lb,x)=>x?`<div class="it"><span class="ic">${x.ic}</span><div><b>${E(x.n)}</b> <span class="tag2">${lb} · ${TN[x.t]}</span><small>${E(x.d)}</small>${fxT(x.fx)?`<i>${fxT(x.fx)}</i>`:''}</div></div>`:'';const BH=B.race?`<div class="fnSt"><h4>🧬 ชะตาที่ติดตัวมา</h4>${it('ชาติกำเนิด',B.org)}${it('เผ่าพันธุ์',B.race)}${it('ธาตุ',B.el)}${it('มานา',B.mana)}${it('ลางตอนเกิด',B.omen)}${it('รอยบนร่าง',B.mark)}${(B.tal||[]).map(x=>it('พรสวรรค์',x)).join('')}${it('คำสาป',B.curse)}${it('ภูตพันธสัญญา',B.fam)}${it('ของติดตัว',B.item)}${it('ความลับ',B.sec)}${(B.cb||[]).map(c=>`<div class="it"><span class="ic">🔗</span><div><b>${c[0]}</b><i>${fxT(c[1])}</i></div></div>`).join('')}</div>`:'';modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📊 ${WD[K.w].ic} ${WD[K.w].n}</h3><p class="tag2">เบาะแสลับ ${K.clue}/3 · ชื่อเสียง ${K.rep} · ความมืด ${K.dark} · อายุขัยราว ${K.endY} ปี</p>${K.con.filter(c=>!c.paid).map(c=>`<div class="item">📜 สัญญาค้าง: ${E(c.t||'ความช่วยเหลือหนึ่งครั้ง')} · ทวงราวอายุ ${c.at}</div>`).join('')}${BH}<h4 style="margin:12px 0 4px">ผู้คนที่จำคุณได้</h4>${L}`,'fanstat')};
+ const B=K.bt||{},it=(lb,x)=>x?`<div class="it"><span class="ic">${x.ic}</span><div><b>${E(x.n)}</b> <span class="tag2">${lb} · ${TN[x.t]}</span><small>${E(x.d)}</small>${fxT(x.fx)?`<i>${fxT(x.fx)}</i>`:''}</div></div>`:'';const BH=B.race?`<div class="fnSt"><h4>🧬 ชะตาที่ติดตัวมา</h4>${it('ชาติกำเนิด',B.org)}${it('เผ่าพันธุ์',B.race)}${it('ธาตุ',B.el)}${it('มานา',B.mana)}${it('ลางตอนเกิด',B.omen)}${it('รอยบนร่าง',B.mark)}${(B.tal||[]).map(x=>it('พรสวรรค์',x)).join('')}${it('คำสาป',B.curse)}${it('ภูตพันธสัญญา',B.fam)}${it('ของติดตัว',B.item)}${it('ความลับ',B.sec)}${(B.wsk||[]).map(x=>it('สกิลจากเทพ',x)).join('')}${(B.wcur||[]).map(x=>it('❓ ของแถมที่เทพแอบใส่',x)).join('')}${(B.cb||[]).map(c=>`<div class="it"><span class="ic">🔗</span><div><b>${c[0]}</b><i>${fxT(c[1])}</i></div></div>`).join('')}</div>`:'';modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📊 ${WD[K.w].ic} ${WD[K.w].n}</h3><p class="tag2">เบาะแสลับ ${K.clue}/3 · ชื่อเสียง ${K.rep} · ความมืด ${K.dark} · อายุขัยราว ${K.endY} ปี</p>${K.con.filter(c=>!c.paid).map(c=>`<div class="item">📜 สัญญาค้าง: ${E(c.t||'ความช่วยเหลือหนึ่งครั้ง')} · ทวงราวอายุ ${c.at}</div>`).join('')}${BH}<h4 style="margin:12px 0 4px">ผู้คนที่จำคุณได้</h4>${L}`,'fanstat')};
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const gd=$('modal').querySelector('.mgrid');if(gd&&!gd.querySelector('[data-fa]')){const d=document.createElement('div');d.style.cssText='grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px';d.setAttribute('data-fa',1);
  d.innerHTML=`<button class="opt" onclick="fanStat()">📊 สถานะโลก<small>ผู้คน สัญญา เบาะแส</small></button><button class="opt" onclick="fanEnds()">📜 ฉากจบ<small>ที่ปลดล็อกแล้ว</small></button>${isIso(FN())?'<button class="opt" onclick="fanCls()">🎒 รายชื่อห้อง<small>เพื่อน 29 คนที่ถูกอัญเชิญมาด้วย</small></button>':''}${isAca(FN())?'<button class="opt" onclick="fanSchool()">🏫 โรงเรียน<small>คะแนนหอ ชมรม อาจารย์</small></button>':''}`;gd.prepend(d)}}}catch(e){}return r}}
 
@@ -1450,8 +1457,226 @@ FOK.noble.splice(4,0,['fa_club','🎭','กิจกรรมชมรม',K=>sc
  }catch(e){console.error('x2year',e)}
  if(QU.length)flush()}}
 
+
+// ####################################################################
+// ภาค 3: ⬜ ห้องสีขาว — ตายในยุคปัจจุบัน/ถูกอัญเชิญ → เจอเทพ → เลือกสกิลจาก 10,000+ แบบ → ไปต่างโลกหรือเกิดใหม่
+//   เทพ 6 แบบ · ความอดทนของเทพ · ต่อรอง/ติดสินบน · เทพขี้เกียจให้หมด หรือเรื่องมากจนได้สกิลขยะ · เทพเจ้าเล่ห์ → แก้แค้นเทพ
+// ####################################################################
+const WCORE=[['🔥','เปลวไฟ','pow:6 over:.05',40],['❄️','น้ำแข็ง','pow:5 hp:10',40],['⚡','สายฟ้า','ring:.08 pow:4',45],['🗡️','ดาบ','fight:.08 pow:3',40],['🏹','ธนู','fight:.06 ring:.05',40],['🛡️','โล่','hp:30',35],['👊','หมัด','pow:7',35],['🌪️','พายุ','pow:5 ring:.05',45],['🪨','ผิวหิน','hp:40',35],['🩸','ดูดเลือด','heal:.06 dark:4',50],
+ ['💠','มานา','mp:30',40],['🔮','มองอนาคต','ring:.1 read:.05',55],['🌀','เทเลพอร์ต','luck:.05',60],['⏳','หยุดเวลา','ring:.12 rune:.05',70],['📜','อ่านรูน','rune:.12',40],['💀','ปลุกศพ','pow:5 dark:8',55],['✨','รักษา','heal:.07',45],['🌙','เวทกลางคืน','mp:15 read:.05',40],['🧪','ปรุงยา','heal:.04 inc:10',35],['👁️','ประเมิน','read:.08 rune:.04',40],
+ ['💬','เจรจา','read:.1',40],['💖','เสน่ห์','cha:10 love:.08',45],['🎭','ปลอมตัว','read:.08 dark:2',40],['👑','บารมี','rep:10 cha:4',50],['🐾','คุยกับสัตว์','ev:.05 luck:.02',30],['🎵','เพลงสะกดใจ','read:.06 cha:4',40],
+ ['💰','หาเงิน','inc:25',45],['🍳','ทำอาหาร','heal:.03 inc:10',30],['🎒','กระเป๋ามิติ','inc:15 luck:.03',50],['🍀','โชค','luck:.06',50],['🧭','ไม่หลงทาง','rune:.06',25],['🌿','ปลูกพืช','heal:.03 inc:8',25],['🔨','สร้างของ','inc:18',35],['🕵️','ซ่อนตัว','read:.06',35],['📚','เรียนเร็ว','exam:8 int:6',40],['❤️','อายุยืน','life:12',55],
+ ['🐈','แมว','luck:.03 cha:2',25],['🍜','บะหมี่','heal:.02',15],['📱','สมาร์ตโฟน','int:5 ev:.04',35],['🧻','กระดาษทิชชู่','hp:3',10]];
+const WPRE=[['ขั้นต้น',.6,.5,''],['ขั้นสูง',1.4,1.5,''],['เทพ',2.2,2.6,''],['ขี้เกียจ',2,1.1,''],['ต้องสาป',2.4,.8,'dark:8'],['จิ๋ว',.4,.3,''],['ยักษ์',1.8,1.8,'cha:-3'],['สองเท่า',2,2.2,''],['ย้อนกลับ',1.2,.9,'luck:-.02'],['เงียบงัน',1.1,1,'read:.03'],['บ้าคลั่ง',1.9,1.3,'dark:5'],['ศักดิ์สิทธิ์',1.5,1.6,'rep:3'],['มือสอง',.8,.5,''],
+ ['ทองคำ',1.3,1.4,'inc:10'],['นิรันดร์',1.7,2,'life:5'],['ครึ่งๆ กลางๆ',.5,.4,''],['ลับ',1.3,1.3,'ev:.02'],['ร้อนแรง',1.3,1.2,'pow:2'],['เยือกเย็น',1.2,1.1,'over:.05'],['ขี้อาย',1.6,.9,'cha:-2'],['ราคาถูก',.9,.4,''],['โบราณ',1.5,1.5,'rune:.03'],['ไร้เทียมทาน',2.6,3,''],['หลอกลวง',1.4,.7,'read:.04 dark:3'],['ธรรมดา',1,1,'']];
+const WMOD=[['ไม่มีเงื่อนไข',1,1.3],['ทำงานเฉพาะวันจันทร์',.5,.4],['ใช้ได้วันละครั้ง',.8,.8],['ต้องตะโกนชื่อสกิลทุกครั้งที่ใช้',1,.7],['แรงขึ้นตอนหิว',1.1,.9],['ศัตรูได้ผลด้วยครึ่งหนึ่ง',.7,.6],['แต่ทำให้ผมร่วงทีละเส้น',1.1,.7],['ทำงานเฉพาะตอนมีคนดู',.9,.75],['แรงขึ้นทุกปีที่ผ่านไป',1.3,1.4],['ทำงานเฉพาะกลางคืน',.9,.8]];
+const WSP=pl(`🧊|เปิดตู้เย็นแล้วมีของเซเว่น|ทุกตู้เย็นในต่างโลกมีข้าวกล่องรอคุณหนึ่งกล่อง|4|heal:.06 inc:15 cha:3
+💾|บันทึกเกม 1 ครั้ง|ตายครั้งแรกแล้วตื่นขึ้นมาใหม่ในเช้าวันเดิม|5|save:2
+🐈|แมวทุกตัวเชื่อฟัง|แต่คนในเมืองเริ่มนินทาว่าคุณเป็นแม่มด|3|luck:.06 read:.05 rep:-3
+🧾|ใบเสร็จทุกร้านในโลก|คืนของได้ทุกอย่าง แม้แต่ดาบที่ใช้ฟันมังกรไปแล้ว|3|inc:30
+♾️|อมตะ|ตายไม่ได้ แต่ทุกคนที่คุณรักจะแก่และตายต่อหน้า|6|save:8 life:120 love:-.3 dark:10
+🔍|ค้นหาในอินเทอร์เน็ต|วันละ 3 คำค้น สัญญาณ 4G ตกบ่อยในป่า|4|int:12 rune:.12 exam:10
+🗣️|เข้าใจทุกภาษา|รวมถึงภาษาที่ต้นไม้ใช้ด่าคุณ|3|read:.12 ev:.03
+📦|ไอเทมบ็อกซ์ไร้ขีดจำกัด|เก็บได้ทุกอย่าง ยกเว้นความทรงจำ|4|inc:35 luck:.04
+📊|ดูหน้าต่างสถานะคนอื่น|เห็นตัวเลขทุกคน รวมถึงตัวเลข "วันตาย"|4|read:.15 dark:3
+🧒|หน้าเด็กตลอดกาล|อายุ 60 ก็ยังโดนถามว่ามากับผู้ปกครองไหม|2|life:20 cha:4
+🎰|เกลือในกาชา|ทุกการสุ่มของคุณออกของดี ยกเว้นเรื่องความรัก|4|luck:.12 love:-.08
+🐉|เลี้ยงมังกรตั้งแต่ไข่|ไข่มังกรอยู่ในกระเป๋าตั้งแต่วันแรก|4|pow:12 fight:.06
+⚔️|ดาบที่เลือกเจ้าของ|ดาบในตำนานจะหลุดจากหินเมื่อคุณเดินผ่าน|5|fight:.18 pow:10
+👶|เกิดใหม่ในตระกูลร่ำรวย|เริ่มชีวิตบนกองเงิน|3|gold:1500 rep:5
+😴|ไม่ต้องนอน|มีเวลามากกว่าคนอื่นวันละแปดชั่วโมง|3|exam:8 int:6 inc:10
+💸|เงินไม่มีวันหมด|กระเป๋าเงินมีเหรียญเพิ่มเองทุกเช้า|5|inc:90
+💘|รู้ว่าใครแอบชอบ|ตัวเลขลอยเหนือหัวทุกคน|2|love:.2 read:.05
+💍|ห้ามตายก่อนแต่งงาน|เทพจะไม่ปล่อยให้คุณตายจนกว่าจะได้แต่ง|3|save:2 love:.1
+🍳|สูตรอาหารจากโลกเดิมครบทุกสูตร|ราเมง ส้มตำ ข้าวขาหมู ในหัวครบ|3|inc:25 heal:.03
+🎮|ความรู้เกมทุกเกมที่เคยเล่น|โลกนี้เหมือนเกมที่คุณเคยเล่นจบ… เกือบทุกอย่าง|4|ring:.08 rune:.08 read:.05
+🪞|ร่างแยกหนึ่งร่าง|อีกตัวหนึ่งของคุณทำงานแทนได้ แต่มันเริ่มมีความคิดเอง|4|inc:30 fight:.06 dark:3
+🧲|ดึงดูดเหตุการณ์สนุก|ชีวิตไม่น่าเบื่ออีกต่อไป ไม่ว่าคุณจะอยากหรือไม่|2|ev:.2
+⭐|ผู้ถูกเลือกโดยคำทำนาย|ทั้งโลกรอคุณอยู่แล้ว กดดันมาก|4|rep:15 clue:1
+🦸|ร่างกายนักกีฬาโอลิมปิก|วิ่งเร็ว กระโดดสูง ไม่เคยเจ็บกล้ามเนื้อ|3|hp:40 pow:6
+🧠|ไอคิว 300|คิดเร็วจนพูดตามไม่ทัน|4|int:20 exam:15 rune:.08
+🌈|ทุกเวทธาตุ|ไฟ น้ำ ลม ดิน แสง เงา ใช้ได้หมด แต่ไม่เก่งสักอย่าง|3|mp:25 pow:4
+👼|เทวดาประจำตัว|มีเสียงเตือนในหัวทุกครั้งที่กำลังจะตัดสินใจผิด|4|save:1 read:.08
+🧙|อาจารย์ในหัว|จอมเวทแก่ขี้บ่นอาศัยอยู่ในหัวคุณ สอนเวทให้ทุกคืน|4|mp:30 rune:.1
+🏠|บ้านพกพา|กางเต็นท์แล้วข้างในเป็นคอนโดสองห้องนอน|3|heal:.06 inc:10
+🌍|แผนที่ทั้งโลก|เห็นทุกดันเจี้ยน ทุกสมบัติ ทุกทางลับ|4|luck:.08 inc:20
+🔊|เสียงพากย์ในหัว|มีคนพากย์ชีวิตคุณเหมือนกีฬา น่ารำคาญแต่ช่วยได้|2|ring:.06 ev:.05
+🍀|โชคดีมหาศาล|ทุกอย่างพลาดคุณไปนิดเดียว ทั้งลูกศรและความรัก|5|luck:.15 save:1 love:-.05
+👑|เกิดเป็นเจ้าชาย/เจ้าหญิง|ลำดับที่ 7 ในการสืบราชสมบัติ|4|rep:15 gold:800 dark:3
+🕰️|ย้อนเวลาได้ 10 วินาที|วันละครั้ง ปวดหัวทุกครั้ง|5|save:2 ring:.12
+💪|แข็งแรงเท่าหมี|และกินเท่าหมีด้วย|2|pow:8 hp:30 inc:-5
+🎨|วาดอะไรก็เป็นจริง|แต่คุณวาดรูปไม่เก่งเลย|4|luck:.06 ev:.06
+📡|วิทยุรับคลื่นจากโลกเดิม|ฟังข่าวจากบ้านได้ทุกคืน คิดถึงบ้านหนักกว่าเดิม|2|int:4 heal:-.01
+🧤|แตะแล้วรู้ประวัติสิ่งของ|รู้ว่ามีดเล่มนี้เคยฆ่าใคร|3|read:.1 clue:0
+😇|ทุกคนไว้ใจตั้งแต่แรกเห็น|รวมถึงคนที่ควรระวังคุณ|3|cha:12 read:.06
+🐣|ไข่ฟีนิกซ์|ฟักตอนคุณตายครั้งแรก แล้วพาคุณกลับมา|4|save:1 heal:.04
+💼|ประสบการณ์ทำงานออฟฟิศ 10 ปี|รายงาน ประชุม ตารางงาน ระบบราชการต่างโลกแพ้คุณหมด|2|int:6 inc:15 rep:3`);
+const WTRASH=pl(`🍚|นับเม็ดข้าวได้แม่นยำ|ข้าวหนึ่งจานมี 2,847 เม็ด รู้แล้วยังไงต่อ|0|int:1
+🧦|เปลี่ยนสีถุงเท้า|เฉพาะถุงเท้าที่ใส่อยู่ และเฉพาะสีเทา|0|cha:1
+🌱|ได้ยินเสียงหญ้าโต|ดังมาก นอนไม่หลับ|0|heal:-.01
+🥄|งอช้อนด้วยใจ|ใช้เวลาสามชั่วโมงต่อช้อน|0|
+🐌|เดินช้าลงตามใจ|ไม่มีใครขอให้เร็วขึ้นได้|0|
+🪥|แปรงฟันได้สะอาดกว่าคนทั่วไป|หมอฟันต่างโลกตกงาน|0|cha:1
+📏|รู้ความยาวทุกอย่างเป็นเซนติเมตร|ไม่มีใครในโลกนี้ใช้เซนติเมตร|0|int:1
+🦗|เรียกจิ้งหรีดได้หนึ่งตัว|ตัวเดิมทุกครั้ง มันเริ่มรำคาญคุณ|0|
+🧊|ทำน้ำแข็งก้อนเล็กเท่าเม็ดถั่ว|วันละก้อน|0|
+😐|หน้านิ่งตอนโกหก|แต่หูแดงทุกครั้ง|0|read:.01
+🫧|เป่าฟองสบู่ได้ใหญ่มาก|ไม่มีประโยชน์ในการต่อสู้|0|cha:1
+🔦|นิ้วเรืองแสงอ่อนๆ|อ่านหนังสือในที่มืดได้ ถ้าตั้งใจมาก|0|`);
+// สร้างสกิลจากรหัส 0–9999 (25 × 40 × 10) + สกิลพิเศษ 10000+
+function wSkill(id){if(id>=10000){const s=WSP[id-10000];return s?Object.assign({id,cost:[25,45,70,100,140,190,260][s.t]},s):null}
+ const p=WPRE[Math.floor(id/400)%25],c=WCORE[Math.floor(id/10)%40],m=WMOD[id%10];if(!p||!c||!m)return null;const sc=p[1]*m[1];
+ const t=sc<.45?0:sc<.9?1:sc<1.45?2:sc<2?3:sc<2.6?4:sc<3.2?5:6;const fx=[];
+ String(c[2]).split(' ').forEach(tk=>{const [k,v]=tk.split(':');const n=+v;if(!isNaN(n))fx.push(k+':'+(Math.abs(n)<1?Math.round(n*sc*.8*100)/100:Math.round(n*sc*.8)))});if(p[3])fx.push(p[3]);
+ return{id,ic:c[0],n:`${c[1]}${p[0]==='ธรรมดา'?'':p[0]}`,d:m[0],t,fx:fx.join(' '),cost:Math.max(5,Math.round(c[3]*p[2]*m[2]/5)*5)}}
+const WN=10000+WSP.length;
+// ---- เทพ 6 แบบ ----
+const GODS={
+ lazy:{n:'เทพธิดาเลซี่ฟลอร่า',tag:'😪 ขี้เกียจ · กำลังพักเที่ยง',dr:{re:9,add:7,rm:6},allP:.6,timer:180,bribe:'coffee',
+  L:{hi:'"อ้าว… มาตอนพักเที่ยงพอดี เลือกเร็วๆ นะ ฉันให้เวลาสามนาที"',add:['"อันนั้นเหรอ ได้ๆ"','"เอาไปเลย"','"อืม"'],rare:'"ตาถึงนี่… เอาไปเถอะ ขี้เกียจเถียง"',forb:'"แน่ใจนะ? อันนี้มันมีอะไรแนบมาด้วยนะ… ช่างเถอะ"',rm:'"คืนก็ได้ แต่ฉันไม่ไปเก็บให้นะ"',re:['"สุ่มอีกแล้วเหรอ…"','"เธอนี่จุกจิกจัง"','"ข้าวเย็นหมดแล้ว"'],many:'"นี่ฉันเป็นเทพนะ ไม่ใช่บุฟเฟต์"',low:'"อีกอันเดียวพอนะ ฉันจะไปกินข้าว"',nOK:'"โอเคๆ ให้เพิ่มก็ได้ แค่เงียบๆ หน่อย"',nNo:'"ไม่ ต่อรองคือการทำงาน ฉันไม่ทำงานตอนพัก"',bOK:'"กาแฟเย็น? …เธอนี่เข้าใจโลก"',bNo:'"เงินมนุษย์ใช้ที่นี่ไม่ได้หรอก แต่ขอบใจ"',all:'"…รู้อะไรไหม เอาไปหมดเลย ทั้งตะกร้า ทั้งการ์ดบนโต๊ะ ฉันจะไปนอนแล้ว"',trash:'"พอ! เรื่องมากเหลือเกิน เอานี่ไป สกิลที่เหลือในลิ้นชัก บาย"',go:'"ไปดีนะ อย่ากลับมาตอนพักเที่ยงอีก"',inst:'"ไม่อยากคุย ไม่อยากเลือก นี่ ห้าอัน สุ่มเอา ไปได้แล้ว"'}},
+ ot:{n:'เทพธิดาแผนกอัญเชิญ ชั้น 7',tag:'💼 ทำ OT · คิวที่ 4,812 ของวันนี้',dr:{re:5,add:5,rm:9},allP:.2,bribe:'coffee',
+  L:{hi:'"สวัสดีค่ะ แผนกอัญเชิญ ชั้น 7 กรุณาเลือกสกิลตามแบบฟอร์ม ไม่เกินโควตาแต้มนะคะ"',add:['"บันทึกแล้วค่ะ"','"ปั๊มตราเรียบร้อย"','"ถัดไปค่ะ"'],rare:'"สกิลระดับนี้ต้องให้หัวหน้าเซ็น… เดี๋ยวเซ็นแทนให้ค่ะ"',forb:'"สกิลต้องห้ามต้องแนบเอกสาร 12 ฉบับนะคะ… ช่างเถอะ ดึกแล้ว"',rm:'"ยกเลิกต้องกรอกฟอร์มใหม่ทั้งหมดค่ะ"',re:['"ขอสุ่มใหม่ ฟอร์ม B-7 นะคะ"','"คิวข้างหลังรออยู่นะคะ"'],many:'"เกินโควตามาตรฐานแล้วค่ะ ต้องทำเรื่องขออนุมัติพิเศษ"',low:'"ระบบจะปิดในอีกไม่กี่นาทีนะคะ"',nOK:'"…ก็ได้ค่ะ ถือว่าเป็นกรณีพิเศษ"',nNo:'"ระเบียบคือระเบียบค่ะ"',bOK:'"กาแฟ… กาแฟจริงๆ… ขอบคุณค่ะ เพิ่มแต้มให้แบบไม่ต้องบันทึกนะคะ"',bNo:'"การติดสินบนเจ้าหน้าที่ผิดระเบียบข้อ 44 ค่ะ"',all:'"ระบบล่ม! …เอาไปทั้งหมดเลยค่ะ ไม่มีใครตรวจสอบได้แล้ว"',trash:'"แบบฟอร์มของคุณกรอกไม่ครบค่ะ ระบบจัดสรรสกิลมาตรฐานให้อัตโนมัติ"',go:'"ขอบคุณที่ใช้บริการแผนกอัญเชิญค่ะ"'}},
+ old:{n:'พระเจ้าเฒ่าโอลด์เมียร์',tag:'👴 ขี้บ่น · สร้างโลกมาเจ็ดใบแล้ว',dr:{re:7,add:6,rm:4},allP:.3,bribe:'none',
+  L:{hi:'"มาอีกแล้วหรือ… สมัยข้าหนุ่มๆ ผู้กล้าขอแค่ดาบเล่มเดียว"',add:['"เฮอะ เอาไป"','"สกิลแบบนี้สมัยก่อนไม่มีหรอก"','"เด็กสมัยนี้…"'],rare:'"รู้ไหมว่าข้าต้องใช้เวลาสร้างอันนี้กี่พันปี"',forb:'"อันนี้… ข้าเคยให้คนหนึ่งไป เขาร้องไห้ทุกคืนหลังจากนั้น"',rm:'"เปลี่ยนใจไปมาเหมือนลมฤดูฝน"',re:['"ไม่พอใจอีกแล้ว?"','"ข้าแก่แล้วนะ"'],many:'"ตะกร้าเธอหนักกว่าภาระที่ข้าแบกมาทั้งชีวิต"',low:'"ข้าเริ่มเหนื่อยแล้วนะ เด็กน้อย"',nOK:'"ฮึ… กล้าดี ข้าชอบ เอาเพิ่มไป"',nNo:'"เถียงคนแก่ระวังจะโดนสาป"',bOK:'"…"',bNo:'"ทองคำ? ข้าเป็นคนสร้างทองคำ"',all:'"พอที! เอาไปหมด! ข้าจะไปนอนสักพันปี!"',trash:'"เด็กเรื่องมาก! เอานี่ไป ให้รู้ว่าความโลภมีราคา"',go:'"ไปเถอะ… ใช้ชีวิตให้ดีกว่าที่ข้าทำ"'}},
+ sorry:{n:'เทพหนุ่มเลออน',tag:'🙇 ส่งคุณมาตายผิดคน',dr:{re:2,add:3,rm:2},allP:.7,bribe:'none',
+  L:{hi:'"ขอโทษครับ! รถคันนั้นต้องชนคนข้างๆ คุณ ผมดูชื่อผิดบรรทัด ผมชดเชยให้เต็มที่เลยครับ"',add:['"ได้เลยครับ!"','"ไม่เป็นไรครับ เอาไปเลย"','"สมควรแล้วครับ"'],rare:'"อันนี้หายากมาก… แต่ผมผิดเองครับ"',forb:'"แน่ใจนะครับ? ผมไม่อยากทำพลาดซ้ำสอง"',rm:'"ได้ครับ คืนแต้มให้เต็มเลย"',re:['"สุ่มได้ไม่จำกัดครับ"','"เลือกให้พอใจนะครับ"'],many:'"เอ่อ… หัวหน้าผมจะว่าไหมนะ"',low:'"หัวหน้าโทรตามแล้วครับ… ขออีกนิดเดียว"',nOK:'"ได้ครับ! เพิ่มให้อีก!"',nNo:'"ผมให้เท่านี้จริงๆ ครับ ไม่งั้นผมโดนไล่ออก"',bOK:'"ไม่ต้องให้อะไรผมเลยครับ ผมผิดเอง… แต่ขอบคุณครับ"',bNo:'"ไม่ต้องครับ"',all:'"เอาไปทั้งหมดเลยครับ! ผมรู้สึกผิดเกินไป!"',trash:'"ขอโทษครับ หัวหน้าสั่งระงับ ผมให้ได้แค่นี้…"',go:'"ขอให้ชีวิตใหม่ดีกว่าเดิมนะครับ ขอโทษอีกครั้ง"'}},
+ fake:{n:'"เทพธิดา" โรสมารี',tag:'💗 ใจดีเกินไป',dr:{re:0,add:1,rm:0},allP:1,bribe:'any',
+  L:{hi:'"ยินดีต้อนรับจ้ะ ที่รัก เอาอะไรก็ได้เลย ไม่ต้องจ่ายตอนนี้"',add:['"ดีจัง~"','"เอาเพิ่มสิจ๊ะ"','"ไม่ต้องห่วงเรื่องแต้มหรอก"'],rare:'"เธอนี่ตาถึงจริงๆ"',forb:'"อันนี้ฉันชอบที่สุดเลย…"',rm:'"แน่ใจเหรอ? เธอจะเสียใจนะ"',re:['"ดูได้เรื่อยๆ จ้ะ"'],many:'"มากเท่าไหร่ก็ได้ ยิ่งมาก ยิ่งดี~"',low:'"…"',nOK:'"แน่นอนจ้ะ"',nNo:'"แน่นอนจ้ะ"',bOK:'"เก็บเงินไว้เถอะ ฉันขอแค่… อย่างอื่นทีหลัง"',bNo:'"ไม่ต้องจ้ะ"',all:'"เอาไปหมดเลยจ้ะ ฉันจะไปเก็บค่าตอบแทนทีหลัง~"',trash:'',go:'"แล้วเจอกันนะจ๊ะ อีกไม่กี่ปี"'}},
+ scheme:{n:'เทพีออเรลิส ผู้ประทานพร',tag:'🙂 ใจดีที่สุดในสวรรค์',dr:{re:1,add:2,rm:1},allP:1,bribe:'none',
+  L:{hi:'"เจ้าผู้น่าสงสาร… ไม่ต้องกลัว ข้าจะมอบพลังให้เจ้าทำสิ่งที่ยิ่งใหญ่"',add:['"ดีมาก"','"ข้าเชื่อในตัวเจ้า"','"หมากตัวที่ 30… เอ่อ เจ้าน่ะ ฉลาดมาก"'],rare:'"ใช่แล้ว เจ้าต้องแข็งแกร่ง"',forb:'"เจ้าเหมาะกับมันที่สุด"',rm:'"ตามใจเจ้า"',re:['"เลือกให้ดี"'],many:'"ยิ่งแข็งแกร่ง ยิ่งดี"',low:'"…"',nOK:'"แน่นอน ข้าต้องการให้เจ้าแข็งแกร่ง"',nNo:'"แน่นอน"',bOK:'"ข้าไม่ต้องการสิ่งใด นอกจากให้เจ้าทำตามที่ข้าบอกในวันหนึ่ง"',bNo:'"เก็บไว้เถิด"',all:'"เอาไปทั้งหมด เจ้าจะเป็นหมากที่… เป็นผู้กล้าที่ดีที่สุด"',trash:'',go:'"ไปเถิด ทำให้ข้าภูมิใจ"',know:'"…เจ้า? ทำไมเจ้าถึงจำ… ไม่ เจ้าต้องจำผิดแน่"'}}};
+let WR=null;try{Object.defineProperty(window,'_WR',{get:()=>WR,configurable:true})}catch(e){}
+const wrGodPick=()=>{let H={};try{H=LS.get('murim_fangod',{})||{}}catch(e){}const P=[['lazy',22],['ot',20],['old',18],['sorry',16],['fake',9],['scheme',H.killed?0:15]];let s=P.reduce((a,x)=>a+x[1],0)*rnd();for(const x of P){s-=x[1];if(s<=0)return x[0]}return'lazy'};
+const wrPts=c=>{let p=100+Math.round((+c.karma||0)/2)+Math.min(80,Math.round(Math.log10(1+Math.max(0,+c.money||0))*12))+Math.min(40,Math.round((c.age||20)/2));if(c.cause==='hero')p+=60;return cl(p,60,420)};
+function wrDraw3(){const L=[],q=(WR.q||'').trim();let tries=0;while(L.length<3&&tries<4000){tries++;const id=rnd()<.06?10000+R(0,WSP.length-1):R(0,9999);const s=wSkill(id);if(!s||L.some(x=>x.id===id)||WR.bask.some(x=>x.id===id))continue;if(q&&!(s.n+s.d).includes(q))continue;L.push(s)}while(L.length<3){const s=wSkill(R(0,9999));L.push(s)}WR.cards=L}
+const wrLine=(k)=>{const g=GODS[WR.god].L[k];WR.say=Array.isArray(g)?pick(g):g;return WR.say};
+function wrPat(d){WR.pat=Math.max(0,WR.pat-d);if(WR.pat<=0&&!WR.done)setTimeout(wrOut,500)}
+function wrOut(){if(WR.done)return;const G=GODS[WR.god];WR.done=1;clearInterval(WR.tmr);
+ if(rnd()<G.allP){wrLine('all');const extra=[];for(let i=0;i<3;i++)extra.push(wSkill(R(0,9999)));WR.bask=WR.bask.concat(WR.cards,extra);WR.out='all';if(WR.god==='fake')WR.hid=WR.hid.concat(shuf(BD.curse.filter(c=>c.t>=2)).slice(0,2))}
+ else{wrLine('trash');WR.hid=WR.hid.slice(0,2);WR.bask=shuf(WTRASH).slice(0,3).map(x=>Object.assign({cost:0},x));WR.out='trash'}
+ wrRender();setTimeout(()=>wrGo(true),2200)}
+function wrCss(){if(document.getElementById('wrBcss'))return;const st=document.createElement('style');st.id='wrBcss';st.textContent=`
+#wrB{position:fixed;inset:0;z-index:9000;overflow-y:auto;font-family:inherit;color:#2a2438;background:radial-gradient(ellipse at 50% 30%,#fff 0%,#f4f1ea 55%,#e6e1d6 100%);display:none}#wrB.on{display:block}
+#wrB .in{max-width:400px;margin:0 auto;padding:14px 14px 130px;position:relative}#wrB .dust{position:absolute;width:3px;height:3px;background:#d9c58a;border-radius:50%;opacity:.6;animation:wrF 6s ease-in-out infinite}@keyframes wrF{50%{transform:translateY(-14px)}}
+#wrB .top{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.2px;color:#a49a86}#wrB .stage{display:flex;flex-direction:column;align-items:center;margin-top:4px}#wrB canvas{image-rendering:pixelated;animation:wrF 4s ease-in-out infinite}
+#wrB .name{font-weight:700;font-size:19px;margin-top:2px}#wrB .tag{font-size:12px;color:#8a7f6a}#wrB .pat{display:flex;align-items:center;gap:8px;width:100%;margin:8px 0 0;font-size:12px}#wrB .pat .bar{flex:1;height:10px;border-radius:5px;background:#e3ddcf;overflow:hidden;box-shadow:inset 0 1px 2px #0002}#wrB .pat .bar i{display:block;height:100%;background:linear-gradient(90deg,#f2994a,#f2c94c 40%,#7bd389);transition:width .4s}
+#wrB .bub{position:relative;margin:12px 0 0;background:#fff;border:2px solid #2a2438;border-radius:16px;padding:10px 13px;font-size:14px;line-height:1.5;box-shadow:4px 4px 0 #2a243822;min-height:50px}#wrB .bub:before{content:'';position:absolute;top:-10px;left:50%;margin-left:-8px;border:8px solid transparent;border-bottom-color:#2a2438;border-top:0}#wrB .bub.pop{animation:wrP .25s}@keyframes wrP{0%{transform:scale(.96)}}
+#wrB .pts{display:flex;justify-content:space-between;align-items:center;margin:12px 0 6px;font-size:13px}#wrB .pts b{font-size:16px;color:#b8860b}
+#wrB .srch{display:flex;gap:6px}#wrB .srch input{flex:1;min-width:0;border:1.5px solid #cfc7b5;border-radius:12px;padding:8px 11px;font:inherit;font-size:16px;background:#fffdf8;color:#2a2438}#wrB .srch button{border:1.5px solid #cfc7b5;background:#fffdf8;border-radius:12px;padding:0 10px;font:inherit;color:#2a2438}
+#wrB .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 8px}#wrB .cd{position:relative;background:#fff;border:2px solid var(--c);border-radius:14px;padding:9px 6px 8px;text-align:center;box-shadow:0 4px 0 var(--c),0 8px 18px #0001;min-height:176px;display:flex;flex-direction:column;cursor:pointer;color:#2a2438;font:inherit}
+#wrB .cd:active{transform:translateY(3px);box-shadow:0 1px 0 var(--c)}#wrB .cd .r{font-size:9.5px;font-weight:700;color:#fff;background:var(--c);border-radius:8px;padding:1px 7px;align-self:center}#wrB .cd .ic{font-size:28px;margin:6px 0 2px}#wrB .cd .n{font-weight:700;font-size:12.5px;line-height:1.3}#wrB .cd .d{font-size:10.5px;color:#7a705c;line-height:1.35;margin-top:4px;flex:1}#wrB .cd .fx{font-size:9.5px;color:#2f8a4a;margin-top:3px}#wrB .cd .cost{font-size:11.5px;color:#b8860b;font-weight:700;margin-top:4px}#wrB .cd.no{opacity:.45}
+#wrB .bask{display:flex;flex-wrap:wrap;gap:5px;font-size:11.5px;margin:6px 0}#wrB .bask span{background:#2a2438;color:#fff;border-radius:9px;padding:3px 8px;cursor:pointer}#wrB .bask span.x{background:#c0392b}#wrB .bask small{color:#8a7f6a}
+#wrB .bar2{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#f2eee6 35%);display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;max-width:400px;margin:0 auto}
+#wrB .bar2 button{min-height:52px;border-radius:15px;border:2px solid #2a2438;background:#fff;font:inherit;font-weight:700;font-size:14px;box-shadow:0 3px 0 #2a2438;color:#2a2438}#wrB .bar2 .go{background:#2a2438;color:#fff8e1}#wrB .bar2 button:disabled{opacity:.4}
+#wrB .know{width:100%;margin-top:8px;border:2px dashed #6a3a8a;background:#f6efff;color:#4a2a6a;border-radius:12px;padding:8px;font:inherit;font-weight:700}
+@media(min-width:900px){#wrB .in{max-width:1100px;display:grid;grid-template-columns:400px 1fr;gap:36px;padding:34px 40px}#wrB .L{position:sticky;top:30px;align-self:start}#wrB .R{padding-top:36px}#wrB .cd{min-height:200px}#wrB .bar2{position:static;max-width:none;background:none;padding:0;margin-top:14px}}`;document.head.appendChild(st)}
+function deity(c,t){const x=c.getContext('2d'),P=c.width/28;x.clearRect(0,0,c.width,c.height);x.imageSmoothingEnabled=false;const r=(a,b,w,h,col,al)=>{x.globalAlpha=al==null?1:al;x.fillStyle=col;x.fillRect(Math.round(a*P),Math.round(b*P),Math.ceil(w*P),Math.ceil(h*P));x.globalAlpha=1};
+ const C={lazy:{hair:'#f6d38a',robe:'#ffffff',trim:'#f2c94c',skin:'#ffe3cf',eye:'sleepy'},ot:{hair:'#3a3550',robe:'#e8ecf4',trim:'#4a6fa5',skin:'#ffe3cf',eye:'glass'},old:{hair:'#f4f4f4',robe:'#f6efdc',trim:'#c9a54a',skin:'#f2d2b6',eye:'old'},sorry:{hair:'#8a5a3a',robe:'#fff7f0',trim:'#e8a0a0',skin:'#ffe3cf',eye:'sorry'},fake:{hair:'#2a1a3a',robe:'#fff4fa',trim:'#d4708f',skin:'#fde6e6',eye:'smile'},scheme:{hair:'#f0e6ff',robe:'#ffffff',trim:'#f2c94c',skin:'#ffe8d8',eye:'kind'}}[t];
+ if(t==='scheme'){for(let i=0;i<3;i++){r(1+i,10+i*3,6,1,'#5a4a7a',.18);r(21-i,10+i*3,6,1,'#5a4a7a',.18)}}
+ if(t==='fake'){r(9,0,2,3,'#3a1a2a',.25);r(17,0,2,3,'#3a1a2a',.25);r(5,24,3,8,'#3a1a2a',.2)}
+ [[3,30,10,3],[8,29,12,4],[16,30,9,3]].forEach(a=>r(...a,'#fff'));r(4,32,22,1,'#e3dccb');
+ if(t!=='ot'&&t!=='old'){r(2,12,5,9,'#fff');r(1,14,2,6,'#eee8da');r(21,12,5,9,'#fff');r(25,14,2,6,'#eee8da');r(3,13,3,1,'#e7dfcc');r(22,13,3,1,'#e7dfcc')}
+ const hc=t==='fake'?'#e8b4c8':'#f2c94c';r(10,1,8,1,hc);r(9,2,1,1,hc);r(18,2,1,1,hc);
+ r(9,4,10,4,C.hair);r(8,6,2,t==='old'?4:9,C.hair);r(18,6,2,t==='old'?4:10,C.hair);
+ if(t==='lazy'){r(11,3,2,1,C.hair);r(16,3,3,1,C.hair);r(19,8,1,1,C.hair);r(7,9,1,1,C.hair)}if(t==='ot'){r(9,4,10,2,C.hair);r(17,3,3,3,C.hair)}
+ r(10,6,8,7,C.skin);const e=C.eye;
+ if(e==='sleepy'){r(11,9,2,1,'#2a2438');r(15,9,2,1,'#2a2438');r(11,8,2,1,'#e9c3a8');r(15,8,2,1,'#e9c3a8');r(13,11,2,1,'#c06060')}
+ else if(e==='glass'){r(10,8,3,2,'#2a2438');r(15,8,3,2,'#2a2438');r(11,9,1,1,'#bcd');r(16,9,1,1,'#bcd');r(13,8,2,1,'#2a2438');r(13,11,2,1,'#a05050')}
+ else if(e==='old'){r(11,8,2,1,'#2a2438');r(15,8,2,1,'#2a2438');r(10,7,3,1,'#fff');r(15,7,3,1,'#fff');r(10,10,8,6,'#f4f4f4');r(11,16,6,3,'#f4f4f4');r(12,18,4,2,'#ececec')}
+ else if(e==='sorry'){r(11,9,2,1,'#2a2438');r(15,9,2,1,'#2a2438');r(10,8,2,1,'#5a3a2a');r(16,8,2,1,'#5a3a2a');r(13,11,2,1,'#a05050');r(19,6,1,2,'#7ac8ff')}
+ else if(e==='smile'){r(11,9,2,1,'#2a2438');r(15,9,2,1,'#2a2438');r(12,11,4,1,'#c04a6a');r(11,10,1,1,'#f4a6b8',.7);r(16,10,1,1,'#f4a6b8',.7)}
+ else{r(11,9,2,1,'#2a2438');r(15,9,2,1,'#2a2438');r(13,11,2,1,'#c07070');r(11,10,1,1,'#f4b6a8',.6);r(16,10,1,1,'#f4b6a8',.6)}
+ r(9,13,10,13,C.robe);r(8,15,1,10,C.robe);r(19,15,1,10,C.robe);r(13,13,2,13,C.trim,.5);r(9,25,10,1,C.trim);
+ if(t==='ot'){r(13,14,2,6,'#c0392b');r(3,22,22,2,'#8a6a4a');r(4,24,1,6,'#6a4a2a');r(23,24,1,6,'#6a4a2a');r(4,17,6,5,'#f8f8f8');r(5,16,6,1,'#eee');r(18,19,3,3,'#6a3a2a')}
+ if(t==='lazy'){r(20,17,3,4,'#7a4a2a');r(23,18,1,2,'#7a4a2a');r(20,16,3,1,'#fff',.6);r(5,20,5,3,'#ffd6e0')}
+ if(t==='old'){r(22,6,1,24,'#8a6a3a');r(21,5,3,2,'#c9a54a')}if(t==='sorry'){r(6,15,3,2,C.skin);r(19,15,3,2,C.skin)}if(t==='scheme'){r(6,16,3,2,C.skin);r(5,14,2,2,'#f2c94c')}if(t==='fake'){r(18,16,4,2,C.skin);r(21,13,2,3,'#d4708f')}
+ r(8,23,2,2,C.skin);r(18,23,2,2,C.skin);
+ if(WR&&WR.pat<35&&t!=='fake'&&t!=='scheme'){r(18,4,2,1,'#e74c3c');r(19,3,1,3,'#e74c3c')}}
+const TCOL=['#9aa0a6','#2f8a4a','#2d7dd2','#8e44ad','#e67e22','#d81b60','#c0392b'];
+function wrRender(){const el=document.getElementById('wrB');if(!el||!WR)return;const G=GODS[WR.god],q=WR.q||'';
+ const timeLeft=WR.end?Math.max(0,Math.round((WR.end-Date.now())/1000)):0;
+ el.innerHTML=`<div class="in"><div class="L"><div class="top"><span>◇ ห้องสีขาว · ระหว่างโลก</span><span>${G.timer?`⏱️ ${Math.floor(timeLeft/60)}:${String(timeLeft%60).padStart(2,'0')}`:''}</span></div>
+ <div class="stage"><canvas id="wrG" width="168" height="200"></canvas><div class="name">✨ ${G.n}</div><div class="tag">${G.tag}</div>
+ ${WR.god==='fake'||WR.god==='scheme'?'':`<div class="pat">😊<div class="bar"><i style="width:${WR.pat}%"></i></div>💢</div>`}
+ <div class="bub pop">${WR.say||''}</div>${WR.canKnow&&!WR.knew?`<button class="know" onclick="wrKnow()">👁️ "ข้าจำแกได้"</button>`:''}</div></div>
+ <div class="R"><div class="pts"><span>🪙 แต้มวาสนาจากชีวิตก่อน</span><b>${WR.pts} / ${WR.max}</b></div>
+ <div class="srch"><input id="wrQ" value="${E(q)}" placeholder="ค้นหาสกิล เช่น ไฟ แมว เงิน" onkeydown="if(event.key==='Enter')wrSearch()"><button onclick="wrSearch()">🔍</button><button onclick="wrRe()">🎲 3 ใบใหม่</button></div>
+ <div class="tag2" style="font-size:11px;color:#8a7f6a;margin-top:4px">สกิลทั้งหมด ${fmt(WN)} แบบ · แตะการ์ดเพื่อหยิบใส่ตะกร้า · แตะในตะกร้าเพื่อคืน</div>
+ <div class="cards">${WR.cards.map((s,i)=>`<button class="cd ${s.cost>WR.pts||WR.done?'no':''}" style="--c:${TCOL[s.t]}" onclick="wrPick(${i})"><span class="r">${TN[s.t]}</span><div class="ic">${s.ic}</div><div class="n">${E(s.n)}</div><div class="d">${E(s.d)}</div><div class="fx">${fxT(s.fx)}</div><div class="cost">${s.cost} แต้ม</div></button>`).join('')}</div>
+ <div class="bask">${WR.bask.length?WR.bask.map((s,j)=>`<span onclick="wrDrop(${j})">${s.ic} ${E(s.n)}</span>`).join(''):'<small>ตะกร้ายังว่าง</small>'}${WR.hid.length?`<span class="x">❓ ของแถมที่${WR.god==='fake'?'เธอ':'เทพ'}แอบใส่ ×${WR.hid.length}</span>`:''}</div>
+ <div class="bar2"><button onclick="wrNego()" ${WR.done?'disabled':''}>🎭 ต่อรอง</button><button onclick="wrBribe()" ${WR.done||WR.bribed?'disabled':''}>🙏 ติดสินบน</button><button class="go" onclick="wrGo()">ไปเกิด ▶</button></div></div></div>`;
+ for(let i=0;i<20;i++){const d=document.createElement('div');d.className='dust';d.style.left=(i*53%100)+'%';d.style.top=(i*37%80)+'%';d.style.animationDelay=(i%6)+'s';el.firstElementChild.appendChild(d)}
+ try{deity(document.getElementById('wrG'),WR.god)}catch(e){}}
+window.wrSearch=()=>{if(!WR||WR.done)return;const i=document.getElementById('wrQ');WR.q=i?i.value.trim().slice(0,20):'';wrDraw3();wrPat(GODS[WR.god].dr.re*.5);wrLine('re');wrRender()};
+window.wrRe=()=>{if(!WR||WR.done)return;WR.rer++;wrDraw3();wrPat(GODS[WR.god].dr.re*(1+WR.rer*.08));wrLine(WR.pat<30?'low':'re');wrRender()};
+window.wrPick=i=>{if(!WR||WR.done||WR.dest)return;const s=WR.cards[i];if(!s)return;if(s.cost>WR.pts){WR.say='"แต้มไม่พอนะ"';return wrRender()}
+ WR.pts-=s.cost;WR.bask.push(s);const G=GODS[WR.god],n=WR.bask.length;
+ if(n>5&&WR.god!=='sorry'&&rnd()<(WR.god==='fake'?.8:.5))WR.hid.push(pick(BD.curse.filter(c=>c.t<=(WR.god==='old'?4:3))));
+ wrLine(s.t>=6?'forb':s.t>=4?'rare':n>=5?'many':'add');if(WR.god==='old'&&rnd()<.25)WR.hid.push(pick(BD.curse.filter(c=>c.t<=1)));
+ WR.cards[i]=wSkill(R(0,9999));wrPat(G.dr.add*(1+n*.35));if(n>=12&&WR.god!=='fake'&&WR.god!=='scheme'&&!WR.done){WR.pat=0;setTimeout(wrOut,400)}
+ try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}wrRender()};
+window.wrDrop=j=>{if(!WR||WR.done)return;const s=WR.bask.splice(j,1)[0];if(!s)return;WR.pts=Math.min(WR.max,WR.pts+Math.round(s.cost*.8));wrLine('rm');wrPat(GODS[WR.god].dr.rm);wrRender()};
+window.wrNego=()=>{if(!WR||WR.done)return;const G=GODS[WR.god];if(WR.god==='fake'||WR.god==='scheme'){WR.pts+=60;WR.max+=60;wrLine('nOK');return wrRender()}
+ const el=document.getElementById('wrB');el.classList.remove('on');mgRead(`ต่อรองกับ${G.n}`,G.n,sc=>{el.classList.add('on');const ok=sc>=(WR.god==='old'?.7:WR.god==='ot'?.65:.55);if(ok){const g=Math.round(30+sc*50);WR.pts+=g;WR.max+=g;wrLine('nOK');wrPat(4)}else{wrLine('nNo');wrPat(WR.god==='sorry'?8:26)}wrRender()})};
+window.wrBribe=()=>{if(!WR||WR.done||WR.bribed)return;const G=GODS[WR.god],m=Math.max(0,+WR.carry.money||0);WR.bribed=1;
+ if(G.bribe==='coffee'){const g=60+Math.min(60,Math.round(Math.log10(1+m)*8));WR.pts+=g;WR.max+=g;WR.pat=Math.min(100,WR.pat+20);wrLine('bOK');WR.say+=` <span style="color:#b8860b">(+${g} แต้ม · ใช้เงินจากชีวิตก่อนซื้อกาแฟ)</span>`}
+ else if(G.bribe==='any'){WR.pts+=80;WR.max+=80;wrLine('bOK');WR.hid.push(pick(BD.curse.filter(c=>c.t>=2)))}
+ else if(WR.god==='old'){wrLine('bNo');wrPat(18)}else{wrLine('bOK');WR.pts+=20;WR.max+=20}wrRender()};
+window.wrKnow=()=>{if(!WR)return;WR.knew=1;wrLine('know');WR.say+=' <i style="color:#6a3a8a">(คุณเห็นเงาหลายแขนข้างหลังเธอชัดเจน ครั้งนี้คุณไม่ลืม)</i>';WR.pts+=40;WR.max+=40;wrRender()};
+window.wrStart=function(carry){wrCss();window._wrOn=1;try{auto=false}catch(e){}try{choice._cur=null;if(choice._q)choice._q.length=0}catch(e){}let el=document.getElementById('wrB');if(!el){el=document.createElement('div');el.id='wrB';document.body.appendChild(el)}
+ let H={};try{H=LS.get('murim_fangod',{})||{}}catch(e){}const god=carry&&carry.god||wrGodPick();const G=GODS[god],p=wrPts(carry||{});
+ WR={god,pts:p,max:p,pat:100,cards:[],bask:[],hid:[],q:'',rer:0,carry:carry||{},done:0,canKnow:god==='scheme'&&H.met&&!H.killed};
+ wrDraw3();wrLine('hi');if(god==='lazy'&&rnd()<.06){wrLine('inst');WR.bask=[0,1,2,3,4].map(()=>wSkill(R(0,9999)));WR.done=1;WR.out='inst';setTimeout(()=>wrGo(true),2600)}
+ if(G.timer){WR.end=Date.now()+G.timer*1000;WR.tmr=setInterval(()=>{if(!WR||WR.done){clearInterval(WR&&WR.tmr);return}if(Date.now()>=WR.end){WR.pat=0;wrOut()}else{const t=document.querySelector('#wrB .top span:last-child');if(t){const s=Math.max(0,Math.round((WR.end-Date.now())/1000));t.textContent=`⏱️ ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}}},1000)}
+ try{closeM()}catch(e){}el.classList.add('on');wrRender();try{sfx('magic')}catch(e){}};
+function wrGo(forced){if(!WR)return;if(!forced&&!WR.bask.length&&!confirmNoSkill())return;const out=WR.out;clearInterval(WR.tmr);WR.done=1;WR.dest=1;const el=document.getElementById('wrB');if(!el)return;
+ const D=[[out==='trash'?'trash':'hero','⚔️','ถูกอัญเชิญไปต่างโลก','ร่างเดิม ชื่อเดิม เริ่มที่อายุ 16 กลางวงเวทของอาณาจักรอัลเวิร์น'],['magic','🔮','เกิดใหม่ในโลกเวทมนตร์','เกิดเป็นทารก ความทรงจำชาติก่อนกลับมาตอนอายุ 12'],['noble','🏰','เกิดใหม่ในโลกแห่งอะคาเดมี่','เกิดเป็นเด็กทุน ความทรงจำกลับมาตอนอายุ 12']];
+ const R=el.querySelector('.R');if(R)R.innerHTML=`<div class="pts"><span>🌍 จะไปที่ไหน?</span><b>${WR.bask.length} สกิล${WR.hid.length?` +❓${WR.hid.length}`:''}</b></div>${D.map(d=>`<button class="cd" style="--c:#2a2438;min-height:0;width:100%;flex-direction:row;gap:12px;align-items:center;text-align:left;margin-bottom:10px" onclick="wrBirth('${d[0]}')"><div class="ic" style="margin:0;font-size:34px">${d[1]}</div><div><div class="n" style="font-size:15px">${d[2]}</div><div class="d">${d[3]}</div></div></button>`).join('')}<div class="bask">${WR.bask.map(s=>`<span>${s.ic} ${E(s.n)}</span>`).join('')}</div>`;
+ WR.say=GODS[WR.god].L.go;const b=el.querySelector('.bub');if(b)b.innerHTML=WR.say}
+window.wrGo=()=>wrGo(false);
+function confirmNoSkill(){WR.say='"ไม่เอาสักอันเลยเหรอ? กดอีกครั้งถ้าแน่ใจ"';if(WR.noSk){return true}WR.noSk=1;wrRender();return false}
+function wrRollB(top){const L=BD['org_'+top]||BD.org_iso;const b={org:wPickB(L),race:top==='iso'?BD.race[0]:wPickB(BD.race),el:wPickB(BD.el),mana:wPickB(BD.mana),omen:wPickB(BD.omen),mark:wPickB(BD.mark),tal:[],curse:wPickB(BD.curse),fam:wPickB(BD.fam),item:wPickB(BD.item),sec:wPickB(BD.sec)};for(let i=0;i<3;i++)b.tal.push(wPickB(BD.tal,b.tal.map(x=>x.n)));return b}
+window.wrBirth=w=>wrBirth(w);
+function wrBirth(w){if(!WR)return;window._wrOn=0;try{document.getElementById('wrB').classList.remove('on')}catch(e){}const c=WR.carry||{},top=w==='hero'||w==='trash'?'iso':w;const b=wrRollB(top);
+ b.wsk=WR.bask.map(s=>({ic:s.ic,n:s.n,d:s.d,t:s.t,fx:s.fx}));b.wcur=WR.hid.slice();
+ const g=c.g||(rnd()<.5?'ชาย':'หญิง');const RR={top,w,g,name:top==='iso'?(c.n||nm()):nm(g==='หญิง'?'f':'m'),b,sk:w==='hero'||w==='trash'?pick(SK[w])[0]:null,hair:pick(HAIR),skin:pick(SKIN),seed:R(1,99999),god:{k:WR.god,n:GODS[WR.god].n,scheme:WR.god==='scheme'?1:0,fake:WR.god==='fake'?1:0,knew:WR.knew?1:0,out:WR.out||''},carry:c};
+ try{if(WR.god==='scheme'){const H=LS.get('murim_fangod',{})||{};H.met=(H.met|0)+1;LS.set('murim_fangod',H)}}catch(e){}
+ WR=null;fanBegin(RR)}
+// ---- หลังเกิด: เทพตามมาในชีวิต ----
+for(const w of ['hero','trash','magic','noble'])Object.assign(ENDS[w],{godfree:['⚔️','เทพตาย คุณเป็นอิสระ','ล้มเทพที่ใช้คุณเป็นหมาก แล้วใช้ชีวิตแบบไม่มีสกิลจากใคร'],godthrone:['👑','บัลลังก์ที่ว่าง','ฆ่าเทพแล้วนั่งแทน'],godeal:['⛓️','ข้อเสนอของเทพ','รับข้อเสนอกลางศึก แลกกับความจริงที่ต้องแบกไปตลอด'],godpawn:['🤝','หมากทุกตัวเป็นอิสระ','ปลดปล่อยทุกคนที่ถูกอัญเชิญมาเป็นหมาก'],godrule:['🗝️','กฎข้อใหม่ของสวรรค์','เขียนกฎที่ไม่มีเทพองค์ไหนอัญเชิญใครได้อีก',1]});
+const gk=K=>(K.god&&K.god.gk)|0;const gkAdd=(K,t)=>{K.god.gk=gk(K)+1;return ` · ⚔️ อาวุธฆ่าเทพ ${K.god.gk}/3${t?' ('+t+')':''}`};
+const GST=[
+ K=>C('⛪ โบสถ์ที่ไม่เคยมีมาก่อน',`โบสถ์ของ "${E(K.god.n)}" ผุดขึ้นในเมืองที่คุณเพิ่งผ่านไป รูปปั้นในโบสถ์มีหน้าเหมือนเทพที่ห้องสีขาว และที่ฐานรูปปั้นมีชื่อเมืองทุกเมืองที่คุณเคยชนะศึก`,[O('🔍 สืบว่าใครสร้าง',()=>{K.god.sus=1;feed('🔍 นักบวชบอกว่าทุกครั้งที่ "ผู้ได้รับพร" ชนะ ศรัทธาจะไหลไปหาเทพี — คุณคือผู้ได้รับพรคนนั้น'+(K.clue<3?clue(K,'ทุกชัยชนะของคุณเลี้ยงเทพีออเรลิส'):''))},'',.6),O('🙏 สวดมนต์ขอบคุณ',()=>{K.pw+=capOf(K)*.08;feed('🙏 พลังไหลเข้าตัวคุณ อุ่นเกินไปนิด เหมือนมีคนลูบหัวสุนัข')},'',.4)]),
+ K=>C('🧓 ผู้กล้าที่ถูกทิ้ง',`ชายแก่ขาเป๋ขายของในตลาดเรียกชื่อคุณถูก "เจ้าก็ได้สกิลจากเธอเหมือนกันสินะ ข้าคือหมากตัวที่ 29 พอข้าแก่ เธอก็ปิดสกิลข้าทั้งหมดในคืนเดียว"`,[O('🤝 ชวนมาเป็นพวก',()=>{feed('🤝 เขาหัวเราะทั้งน้ำตา "รอคนพูดประโยคนี้มาสามสิบปี" เขารู้ทางไปวิหารลับ'+gkAdd(K,'หมากที่ถูกทิ้ง'))},'',.6),O('💰 ให้เงินแล้วเดินจาก',()=>feed('💰 เขารับเงิน แล้วพูดตามหลังว่า "เจ้าจะเป็นข้าในอีกสามสิบปี"'+money(-50)),'',.4)]),
+ K=>C('🌙 คำสั่งในความฝัน',`เทพีมาเข้าฝัน ยิ้มเหมือนวันแรก "ข้าต้องการให้เจ้า${isIso(K)?'ฆ่าราชาปีศาจภายในปีนี้':'เผาหอสมุดต้องห้าม'} ทำแล้วข้าจะให้สกิลเพิ่มอีกสามอย่าง"`,[O('✅ ทำตาม',()=>{K.pw+=capOf(K)*.25;feed('✅ คุณได้พลังเพิ่ม และรู้สึกเหมือนเชือกที่ผูกคอแน่นขึ้นอีกเส้น'+dark(12))},'',.4),O('❌ ขัดคำสั่ง',()=>{K.pw*=.8;S.maxHp=Math.round(S.maxHp*.9);say('⛓️ คืนนั้นสกิลที่เทพีให้ดับไปทีละอย่างเหมือนเทียน · พลังลดลง แต่ครั้งแรกในชีวิตใหม่ คุณรู้สึกว่าตัวเองเป็นเจ้าของร่างนี้','bad',true);feed(gkAdd(K,'เจตจำนงของตัวเอง'))},'สกิลจะถูกปิดบางส่วน',.6)]),
+ K=>C('😪 เทพธิดาที่ไม่ชอบหน้าเธอ',`เทพธิดาขี้เกียจที่เคยเห็นในตำราโผล่มาที่ร้านกาแฟข้างทาง "เธอเป็นหมากของออเรลิสสินะ ฉันเกลียดยัยนั่น เพราะมันชอบแย่งคิวพักเที่ยง… อยากรู้ชื่อจริงของมันไหม"`,[O('☕ เลี้ยงกาแฟแลกชื่อ',()=>{feed('☕ เธอเขียนชื่อจริงของเทพีลงบนกระดาษเช็ดปาก ตัวอักษรร้อนจนกระดาษไหม้'+gkAdd(K,'ชื่อจริงของเทพ')+(K.clue<3?clue(K,'ชื่อจริงของออเรลิส'):''))},'',.7),O('🙅 ไม่ไว้ใจเทพองค์ไหนอีก',()=>feed('🙅 เธอยักไหล่ "ฉลาดดี" แล้วกินเค้กของคุณ'),'',.3)]),
+ K=>C('🔥 ศรัทธาที่ขโมยกลับ',`โบสถ์ของเทพีเต็มไปด้วยคนที่สวดขอให้ "ผู้ได้รับพร" ปกป้อง ทุกคำสวดคือพลังของเธอ`,[O('📢 บอกความจริงกับทุกคน',()=>mgRead('เทศนาความจริงหน้าโบสถ์','ฝูงชนผู้ศรัทธา',sc=>{if(sc>.55)feed('📢 คนครึ่งเมืองเลิกสวด รูปปั้นเทพีร้าวกลางอก'+rep(5)+gkAdd(K,'ศรัทธาที่หายไป'));else feed('📢 ฝูงชนขว้างหินใส่คุณ'+hurt(.2)+rep(-5))}),'มินิเกม',.6),O('🔥 เผาโบสถ์ตอนกลางคืน',()=>feed('🔥 รูปปั้นละลาย คนเมืองนี้เกลียดคุณ แต่เทพีกรีดร้องในหัวคุณทั้งคืน'+dark(15)+gkAdd(K,'วิหารที่มอดไหม้')),'',.4)])];
+function godFinal(K){K.god.fin=(K.god.fin|0)+1;const pawnsOk=isIso(K)?(X2(K).cls||[]).filter(c=>!/dead|lost|home/.test(c.st)).length>=10||gk(K)>=5:gk(K)>=4;
+ C('⬜ ห้องสีขาวอีกครั้ง',`คุณเดินกลับเข้าห้องสีขาวด้วยเท้าตัวเอง เทพี${E(K.god.n.replace('เทพี',''))}ไม่ยิ้มแล้ว "หมากไม่ควรเดินเองได้" · อาวุธฆ่าเทพ ${gk(K)}/3`,[
+  O('⚔️ สู้',()=>{let tot=0;mgDuel('ดวลกับเทพี',K.god.n,a=>{tot+=a;mgRead('จับคำโกหกของเทพ',K.god.n,b=>{tot+=b;mgRune('ถอดรูนชื่อจริงของเทพ',6,c=>{tot+=c;const sc=tot/3+gk(K)*.06;if(sc<.5){S.hp=Math.max(1,Math.round(S.maxHp*.2));say('⬜ เทพีโยนคุณกลับลงไปในโลก "อีกสักพันปีค่อยกลับมา" · ยังไม่จบ','bad',true);K.god.at=age()+3;return}
+   const o=[O('⚔️ ปลิดชีพเทพ แล้วเดินออกไป',()=>godEnd(K,'godfree','ดาบของคุณแทงทะลุแสง เทพีสลายเป็นฝุ่นทอง สกิลทุกอย่างที่เธอให้หายไปพร้อมกัน คุณเดินออกจากห้องสีขาวด้วยร่างกายธรรมดาๆ และรู้สึกเบาที่สุดในชีวิต','ใช้ชีวิตที่เหลือแบบไม่มีสกิลจากเทพองค์ไหน'),'',.4),
+    O('👑 นั่งลงบนบัลลังก์ของเธอ',()=>godEnd(K,'godthrone','บัลลังก์ยังอุ่น เบื้องล่างคุณมีห้องสีขาวอีกพันห้อง แต่ละห้องมีคนตายรออยู่ คุณต้องตัดสินใจว่าจะอัญเชิญใครต่อ','กลายเป็นเทพองค์ใหม่ผู้ประทานพร'),'',.2)];
+   if(pawnsOk)o.push(O('🤝 ปลดปล่อยหมากทุกตัว',()=>godEnd(K,'godpawn','คุณกระชากเส้นด้ายที่ผูกหมากทุกตัวไว้กับนิ้วเทพี ทั่วทั้งทวีป ผู้ถูกอัญเชิญทุกคนรู้สึกว่าอะไรบางอย่างหลุดออกจากคอ หลายคนร้องไห้โดยไม่รู้ว่าทำไม','ใช้ชีวิตที่เหลือกับเพื่อนที่เป็นอิสระทุกคน'),'',.3));
+   if(K.clue>=3)o.push(O('🗝️ เขียนกฎข้อใหม่ลงในคัมภีร์สวรรค์',()=>godEnd(K,'godrule','คุณใช้ชื่อจริงของเทพีเป็นหมึก เขียนกฎข้อเดียว: "ห้ามอัญเชิญผู้ใดโดยไม่ยินยอม" ห้องสีขาวทุกห้องดับไฟพร้อมกัน และในโลกเดิม รถบรรทุกคันหนึ่งเบรกทันพอดี','เขียนกฎใหม่ของสวรรค์ แล้วกลับไปใช้ชีวิตที่ไม่มีใครควบคุม'),'🗝️ ฉากจบลับ',.1));
+   C('⬜ เทพีคุกเข่า','แสงรอบตัวเธอแตกเป็นเสี่ยงๆ เธอเงยหน้ามองคุณเป็นครั้งแรกเหมือนมองคน ไม่ใช่หมาก',o)})})})},'มินิเกม 3 ด่าน',.6),
+  O('⛓️ ฟังข้อเสนอของเธอ',()=>C('⛓️ ข้อเสนอของเทพ','"วางดาบลง ข้าจะส่งเจ้ากลับโลกเดิม ไปเกิดในบ้านเดิม แม่เดิม และเจ้าจะไม่ต้องจำอะไรเลย"',[O('✅ รับข้อเสนอ',()=>godEnd(K,'godeal','คุณลืมตาบนเตียงในบ้านเดิม แม่เรียกให้ลงมากินข้าว ทุกอย่างปกติ ยกเว้นบางคืนที่คุณฝันถึงห้องสีขาว และรู้ว่ามีคนกำลังถูกอัญเชิญแทนคุณ','กลับไปใช้ชีวิตในโลกเดิม โดยรู้ว่าวงจรยังไม่จบ'),'',.4),O('❌ ปฏิเสธ แล้วยกดาบขึ้น',()=>godFinal(K),'',.6)]),'',.4)])}
+function godEnd(K,k,t,c){try{const H=LS.get('murim_fangod',{})||{};if(k!=='godeal')H.killed=(H.killed|0)+1;LS.set('murim_fangod',H)}catch(e){}ending(K,k,t,c)}
+const CAMEO={lazy:K=>C('😪 เทพธิดาขี้เกียจแวะมา',`${E(K.god.n)}นั่งอยู่ที่ร้านข้างทาง สวมแว่นดำปลอมตัว "อย่าบอกใครนะว่าฉันโดดงาน… สกิลที่ให้ไปใช้ดีไหม"`,[O('☕ เลี้ยงกาแฟ',()=>{K.save=(K.save|0)+1;feed('☕ เธอดื่มรวดเดียวแล้วแตะหน้าผากคุณ "ของแถม ห้ามบอกหัวหน้า" · รอดตาย +1')},'',.6),O('📢 ฟ้องสวรรค์ว่าเทพโดดงาน',()=>feed('📢 ฟ้าผ่าลงข้างตัวคุณหนึ่งที แล้วเงียบไป'+hurt(.1)),'',.4)]),
+ ot:K=>C('💼 ตรวจสอบการใช้สกิลประจำปี',`เทพธิดาแผนกอัญเชิญถือแฟ้มหนาเตอะ "สวัสดีค่ะ มาตรวจสอบการใช้สกิลตามระเบียบ ขอเอกสารยืนยันการทำความดี 12 ฉบับค่ะ"`,[O('📑 กรอกแบบฟอร์มให้ครบ',()=>mgRune('กรอกแบบฟอร์มตรวจสอบ',5,sc=>feed(sc>.6?'📑 ผ่านการตรวจสอบ ได้ตราประทับ "ผู้ถูกอัญเชิญดีเด่น"'+rep(5)+money(200):'📑 กรอกผิดช่อง ถูกปรับ'+money(-150))),'มินิเกม',.6),O('☕ ยื่นกาแฟให้',()=>feed('☕ "…ถือว่าผ่านค่ะ" เธอปั๊มตราโดยไม่เปิดแฟ้ม'),'',.4)]),
+ old:K=>C('👴 พระเจ้าเฒ่าบ่นในความฝัน','พระเจ้าเฒ่าโผล่มาในความฝันพร้อมไม้เท้า "ข้าดูเจ้ามาตลอด ใช้สกิลไม่คุ้มเลยสักอย่าง สมัยข้า…"',[O('👂 นั่งฟังจนจบ',()=>{S.int=(S.int||0)+10;feed('👂 เขาบ่นสามชั่วโมง แต่แทรกความรู้ที่ไม่มีในตำราไว้ทุกห้านาที')},'',.6),O('😴 หลับในฝันซ้อน',()=>feed('😴 เขาโกรธจนฝนตกทั้งเมืองสามวัน'),'',.4)]),
+ sorry:K=>C('🙇 เทพหนุ่มกลับมาอีกครั้ง','"ขอโทษอีกครั้งครับ! ผมเพิ่งเจอว่าให้สกิลขาดไปหนึ่งอย่าง" เขายื่นกล่องของขวัญมาให้',[O('🎁 รับไว้',()=>{const s=wSkill(R(0,9999));K.bt.wsk=(K.bt.wsk||[]).concat([{ic:s.ic,n:s.n,d:s.d,t:s.t,fx:s.fx}]);const o=fxP(s.fx);for(const k in o)if(typeof o[k]==='number')K.fx[k]=(K.fx[k]||0)+o[k];if(o.pow)K.pw+=o.pow;if(o.mp){K.mpM+=o.mp}feed(`🎁 ได้สกิลใหม่: ${s.ic} <b>${E(s.n)}</b> — ${E(s.d)}`)},'',.7),O('🙂 บอกว่าไม่เป็นไร',()=>{S.karma=(+S.karma||0)+10;feed('🙂 เขาร้องไห้ "คุณเป็นคนดีที่สุดที่ผมเคยฆ่าผิดเลยครับ"')},'',.3)])};
+{const _cd2=conDue;conDue=function(K,c){if(c.id!=='god')return _cd2.apply(this,arguments);c.paid=1;C('💗 "เทพธิดา" มาทวงสัญญา',`โรสมารีปรากฏตัวพร้อมเขาสีดำที่ไม่ซ่อนแล้ว และหางที่ปลายเป็นหัวใจ "ถึงเวลาจ่ายแล้วจ้ะที่รัก สกิลทั้งหมดที่ให้ไป ฉันขอวิญญาณครึ่งหนึ่งเป็นค่าตอบแทน"`,[
+ O('⚔️ สู้กับปีศาจ',()=>duel('ปีศาจโรสมารี',Math.round(S.power*1.2),w=>{if(w){say('⚔️ เธอสลายเป็นกลีบกุหลาบดำ สัญญาขาดลง สกิลยังอยู่ครบ','epic',true);rep(10)}else{K.pw*=.6;say('⚔️ คุณแพ้ เธอดึงวิญญาณครึ่งหนึ่งออกไป · พลังเหลือ 60%','bad',true)}}),'ต่อสู้',.4),
+ O('🧠 หาช่องโหว่ในสัญญา',()=>mgRead('อ่านสัญญาปีศาจ','โรสมารี',sc=>{if(sc>.65)say('🧠 สัญญาเขียนว่า "วิญญาณครึ่งหนึ่งของผู้ทำสัญญา" แต่คุณเกิดใหม่แล้ว วิญญาณนี้ไม่ใช่ของคนที่เซ็น เธอกรีดร้องแล้วหายไป','epic',true);else{K.pw*=.7;feed('🧠 ไม่มีช่องโหว่ เธอเอาไปส่วนหนึ่ง'+dark(10))}}),'มินิเกม',.4),
+ O('💔 ยอมจ่าย',()=>{K.endY=Math.max(age()+2,Math.round(K.endY*.7));say('💔 คุณรู้สึกเย็นวาบไปทั้งตัว · อายุขัยหายไปเกือบหนึ่งในสาม','bad',true)},'',.2)])}}
+{const _fy2=fanYear;fanYear=function(){const K=FN(),a0=S.age;_fy2.apply(this,arguments);if(!K||!K.god||!S.alive||S.age===a0||K.end)return;
+ try{const g=K.god,y=age()-WD[K.w].a0;let ev=null;
+  if(g.scheme){g.st=g.st|0;if(g.at==null)g.at=age()+(g.knew?1:R(3,5));
+   if(age()>=g.at){if(g.st<GST.length){const i=g.st++;ev=()=>GST[i](K);g.at=age()+R(2,4)}else if(gk(K)>=3||age()>=WD[K.w].a0+40){ev=()=>godFinal(K);g.at=age()+99}}}
+  else if(!g.cam&&CAMEO[g.k]&&y>=5&&rnd()<.15){g.cam=1;ev=()=>CAMEO[g.k](K)}
+  if(ev&&QU.length<=1){queue(ev);flush()}}catch(e){console.error('godYear',e)}}}
+
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}
 try{const st=document.createElement('style');st.textContent='body.fanW #hintBar{display:none!important}';document.head.appendChild(st)}catch(e){}
-window._fan={mgDungeon,mgPotion,mgDuel,mgDance,mgNames,evCal,evClubPick,evQuest,evKnow,evReunion,FN,BD,WD,ENDS,arcStep,randEv,fanYear,ending};
+window._fan={wSkill,godFinal,GST,mgDungeon,mgPotion,mgDuel,mgDance,mgNames,evCal,evClubPick,evQuest,evKnow,evReunion,FN,BD,WD,ENDS,arcStep,randEv,fanYear,ending};
 })();try{wReady('fan')}catch(e){}
