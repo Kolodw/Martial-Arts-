@@ -20,13 +20,15 @@ const gold=v=>`${fmt(Math.round(v))} เหรียญทอง`;
 const WD={
  hero:{ic:'🛡️',n:'ถูกอัญเชิญเป็นผู้กล้า',g:'iso',a0:16,end:[64,80],d:'คุณกับเพื่อนร่วมห้องอีก 29 คนตื่นมากลางวงเวทในวิหารหินสีขาว นักบวชร้องไห้ด้วยความดีใจ ราชาบอกว่าโลกนี้ต้องการผู้กล้าไปปราบราชาปีศาจ',sc:'⛪ อาณาจักรอัลเวิร์น'},
  trash:{ic:'🗑️',n:'สกิลขยะ',g:'iso',a0:16,end:[60,78],d:'คุณถูกอัญเชิญพร้อมคนอื่น แต่แผ่นประเมินขึ้นสกิลของคุณว่า「เก็บของ」 ราชาหัวเราะ ทหารลากคุณไปทิ้งนอกกำแพงพร้อมเหรียญทองแดงสามเหรียญ',sc:'🏚️ สลัมนอกกำแพง'},
+ lost:{ic:'🌲',n:'หลงมิติ',g:'iso',a0:16,end:[62,80],d:'ระหว่างคาบเรียน พื้นห้องเรืองแสง เพื่อนทั้งห้องหายไปในวงเวท แต่คุณลืมตามาคนเดียวในที่ที่ไม่มีใครรู้ว่าคุณถูกอัญเชิญมา',sc:'🌲 ที่ไหนสักแห่งในทวีป'},
  magic:{ic:'🔮',n:'โลกเวทมนตร์',g:'aca',a0:12,end:[70,96],d:'จดหมายตอบรับมาพร้อมนกฮูกที่มีตาสามดวง วิทยาลัยเวทอาร์คาเนียรับนักเรียนปีละหกสิบคน และทุกปีจะมีคนไม่ได้กลับบ้าน',sc:'🏰 วิทยาลัยอาร์คาเนีย'},
  noble:{ic:'🏰',n:'โลกแห่งอะคาเดมี่',g:'aca',a0:12,end:[62,84],d:'สถาบันหลวงเซนต์ลูเมียรับเฉพาะลูกขุนนาง ปีนี้มีข้อยกเว้นหนึ่งคน คือคุณ เด็กทุนจากหมู่บ้านที่ไม่มีใครรู้จัก',sc:'🏛️ สถาบันหลวงเซนต์ลูเมีย'}};
 const EL={fire:['🔥','ไฟ'],water:['💧','น้ำ'],wind:['🌪️','ลม'],earth:['🪨','ดิน'],light:['✨','แสง'],shadow:['🌑','เงา']};
 const RARE={time:['⏳','เวลา','ย้อนจังหวะได้ครั้งละไม่กี่วินาที แต่อายุขัยหายทุกครั้งที่ใช้'],space:['🌀','มิติ','พับระยะทาง เปิดประตูไปที่ที่เคยเห็น'],death:['💀','ความตาย','ได้ยินเสียงคนตาย และคนตายได้ยินคุณ']};
 const SK={ // สกิลติดตัว (ต่างโลก)
  hero:[['sword','⚔️','ดาบศักดิ์สิทธิ์','ฟันทุกอย่างที่มีความชั่วร้าย'],['shield','🛡️','โล่แห่งพันธสัญญา','รับแทนเพื่อนได้ครั้งละหนึ่งคน'],['appraise','🔍','ประเมินขั้นสูง','เห็นค่าสถานะและความลับของทุกคน'],['charm','💗','เสน่ห์ผู้กล้า','ทุกคนอยากช่วยคุณ ทั้งที่ไม่รู้ว่าทำไม']],
- trash:[['pick','🧺','เก็บของ','เก็บของได้ทุกอย่างที่มือจับได้'],['wait','⌛','รอ','ยิ่งรอนาน ผลยิ่งแรง'],['copy','📋','จดจำ','จำได้ทุกอย่างที่เห็นครั้งเดียว'],['taste','👅','ชิม','ชิมแล้วรู้ว่าสิ่งนั้นทำมาจากอะไร']]};
+ trash:[['pick','🧺','เก็บของ','เก็บของได้ทุกอย่างที่มือจับได้'],['wait','⌛','รอ','ยิ่งรอนาน ผลยิ่งแรง'],['copy','📋','จดจำ','จำได้ทุกอย่างที่เห็นครั้งเดียว'],['taste','👅','ชิม','ชิมแล้วรู้ว่าสิ่งนั้นทำมาจากอะไร']],
+ lost:[['rift','🌀','ก้าวข้ามมิติ','วาร์ปได้ระยะสั้น'],['beast','🐾','ภาษาสัตว์','คุยกับสัตว์และมอนสเตอร์ได้'],['heal','🌿','มือเยียวยา','รักษาบาดแผลได้'],['sense','👁️','ตาทะลวงหมอก','มองเห็นสิ่งที่ซ่อนอยู่'],['nap','😴','หลับได้ทุกที่','หลับสนิทได้ในทุกสถานการณ์',1],['salt','🧂','เสกเกลือ','เสกเกลือได้วันละหนึ่งช้อน',1],['dir','🧭','รู้ทิศเหนือ','รู้เสมอว่าทิศเหนืออยู่ทางไหน',1],['shine','✨','ตัวเรืองแสง','ตัวเรืองแสงอ่อนๆ ตอนกลางคืน',1]]};
 // สกิลขยะ: ชื่อจริงเมื่อโต (ระดับ 1→5)
 const TRUE_SK={pick:['เก็บของ','เก็บของในระยะสายตา','เก็บพลังจากศพ','เก็บสกิลของคนอื่น','เก็บโลก'],wait:['รอ','รอเวลาที่เหมาะ','สะสมเวลา','หยุดเวลารอบตัว','รอให้โลกเปลี่ยน'],copy:['จดจำ','จดจำท่า','จดจำเวท','จดจำชีวิต','จดจำทุกสิ่งที่เคยมีอยู่'],taste:['ชิม','ชิมพิษ','ชิมเวท','ชิมวิญญาณ','กลืนทุกสิ่ง']};
 const ORG={ // ชาติกำเนิดของสายอะคาเดมี่
@@ -40,7 +42,7 @@ const TH=['ภูมิ','มิว','เจได','ฟ้าใส','ต้น
 // =================== สถานะ ===================
 function newK(w,o){const K={v:1,w,yr:1,mp:30,mpM:30,el:o.el,rare:o.rare||null,sk:o.sk||null,skL:1,org:o.org||null,rep:0,dark:o.dark||0,rank:o.rank||30,grade:0,yrS:0,grad:0,clue:0,f:{},npc:{},later:[],con:[],arc:0,arcAt:age()+1,end:null,pw:o.pow||8,ends:{}};
  const P=(id,role,g)=>{K.npc[id]={n:nm(g),role,aff:R(30,55),alive:1,mem:[]}};
- if(w==='hero'||w==='trash'){K.npc.rival={n:pick(TH),role:'เพื่อนร่วมห้องที่ได้สกิลดีกว่า',aff:40,alive:1,mem:[]};K.npc.pal={n:pick(TH.filter(x=>x!==K.npc.rival.n)),role:'เพื่อนสนิทจากโลกเดิม',aff:70,alive:1,mem:[]};P('king','ราชาแห่งอัลเวิร์น','m');P('priest','นักบวชผู้อัญเชิญ','f');P('demon','ราชาปีศาจ','m');K.home=100}
+ if(w==='hero'||w==='trash'||w==='lost'){K.npc.rival={n:pick(TH),role:'เพื่อนร่วมห้องที่ได้สกิลดีกว่า',aff:40,alive:1,mem:[]};K.npc.pal={n:pick(TH.filter(x=>x!==K.npc.rival.n)),role:'เพื่อนสนิทจากโลกเดิม',aff:70,alive:1,mem:[]};P('king','ราชาแห่งอัลเวิร์น','m');P('priest','นักบวชผู้อัญเชิญ','f');P('demon','ราชาปีศาจ','m');K.home=100}
  if(w==='trash'){P('fence','พ่อค้าของโจรในสลัม','m');P('kid','เด็กขโมยที่ตามคุณ',null)}
  if(w==='magic'){P('rival','คู่แข่งประจำรุ่น',null);P('mentor','อาจารย์ที่เวทมืดลือกันว่าเคยฆ่าคน','f');P('pal','เพื่อนร่วมห้องพักที่กลัวทุกอย่าง',null);P('head','อธิการบดีที่ไม่เคยมีใครเห็นหน้า','m')}
  if(w==='noble'){P('prince','องค์ชายรัชทายาท','m');P('lady','ธิดาดยุกผู้เป็นคู่หมั้นขององค์ชาย','f');P('rival','ลูกเคานต์ที่เกลียดเด็กทุน','m');P('maid','สาวใช้ประจำหอที่รู้ทุกเรื่อง','f');P('shadow','ชายสวมหน้ากากในงานเลี้ยง','m')}
@@ -112,6 +114,7 @@ const grade=s=>s>=.85?'สมบูรณ์แบบ':s>=.6?'ดี':s>=.35?'�
 const ENDS={
  hero:{home:['🏠','กลับบ้าน','ทำลายราชาปีศาจแล้วใช้วงเวทกลับโลกเดิม'],throne:['👑','ผู้กล้าบนบัลลังก์','ยึดอาณาจักรที่หลอกใช้คุณ'],peace:['🕊️','สันติภาพที่ไม่มีใครเชื่อ','จับมือกับราชาปีศาจ'],betray:['🗡️','มีดจากข้างหลัง','ตายด้วยมือเพื่อนร่วมห้อง'],newking:['😈','ราชาปีศาจองค์ใหม่','สวมมงกุฎของคนที่คุณถูกส่งมาฆ่า'],loop:['🌀','ผู้อัญเชิญคนแรก','???',1]},
  trash:{legend:['🌟','ตำนานจากกองขยะ','สกิลที่ทุกคนหัวเราะ กลายเป็นสกิลที่ทุกคนกลัว'],revenge:['🔥','ราชาเถ้าถ่าน','กลับไปเผาวังที่เคยทิ้งคุณ'],quiet:['🍞','ร้านขนมปังหน้าประตูเมือง','เลือกชีวิตเล็กๆ ที่ไม่มีใครมาทิ้งได้อีก'],eaten:['🕳️','ถูกสกิลกลืน','สกิลโตเร็วกว่าตัวคุณ'],god:['♾️','สิ่งที่ถูกเก็บไว้','???',1]},
+ lost:{unsum:['🌟','ผู้กล้าที่ไม่มีใครอัญเชิญ','ปกป้องคนในพื้นที่ด้วยตัวเอง'],native:['🏡','ตำนานพื้นเมือง','อยู่กับคนที่รับคุณไว้'],class30:['🎒','ผู้กล้าคนที่ 30','กลับไปรวมกับเพื่อนทั้งห้อง'],lhome:['🚪','กลับบ้านด้วยตัวเอง','หาวงเวทกลับโลกเดิมเอง'],chosen:['🌀','ปลายทางที่ถูกเลือก','???',1]},
  magic:{arch:['🎓','จอมเวทสูงสุด','ขึ้นเป็นอธิการบดีคนใหม่'],hedge:['🌿','แม่มดชายป่า','ถูกไล่ออก แต่หมู่บ้านทั้งหมู่บ้านรักคุณ'],lich:['☠️','ผู้ไม่ยอมตาย','แลกความเป็นคนกับเวลาไม่สิ้นสุด'],maze:['🌫️','ชื่อบนกำแพงเขาวงกต','หนึ่งในคนที่ไม่ได้กลับบ้าน'],heart:['❤️‍🔥','หัวใจของวิทยาลัย','???',1]},
  noble:{crown:['💍','คู่ชีวิตของรัชทายาท','แต่งเข้าราชวงศ์'],savior:['🛡️','ผู้ช่วยแผ่นดิน','เปิดโปงแผนลอบสังหาร'],exec:['⚖️','แท่นประหาร','ถูกใส่ร้ายจนจบชีวิตกลางลาน'],shadow:['🎭','ผู้ปกครองในเงา','ไม่มีใครรู้ว่าใครคุมอาณาจักรจริงๆ'],mask:['🃏','หน้ากากใบสุดท้าย','???',1]}};
 function endRec(K,k){try{const L=LS.get('murim_fanend',{})||{};L[K.w+':'+k]=(L[K.w+':'+k]|0)+1;LS.set('murim_fanend',L)}catch(e){}}
@@ -126,6 +129,7 @@ const school=K=>(K.w==='magic'||K.w==='noble')&&!K.grad&&!K.f.expelled;
 const FOK={
  hero:[['fa_sw','⚔️','ฝึกดาบกับอัศวิน'],['fa_mg','✨','เรียนเวทกับนักบวช'],['fa_hunt','🐺','ออกล่ามอนสเตอร์'],['fa_truth','🕯️','สืบความลับของวัง'],['fa_pal','🫂','อยู่กับเพื่อนร่วมโลก'],['fa_rest','🍵','พักผ่อน']],
  trash:[['fa_job','🧺','รับจ้างในสลัม'],['fa_sk','🗑️','ฝึกสกิลขยะ'],['fa_hunt','🐀','ล่ามอนสเตอร์อ่อนๆ'],['fa_guild','📜','รับเควสกิลด์',K=>K.f.guild],['fa_spy','👂','ตามข่าวคนที่ทิ้งคุณ'],['fa_rest','🍵','พักผ่อน']],
+ lost:[['fa_surv','🏕️','เอาตัวรอด'],['fa_lsk','🌀','ทดลองสกิล'],['fa_hunt','🏹','ล่าสัตว์ป่า'],['fa_help','🤝','ช่วยคนในพื้นที่'],['fa_guild','📜','รับเควสกิลด์',K=>K.f.guild],['fa_rest','🍵','พักผ่อน']],
  magic:[['fa_cls','📚','เข้าเรียน',school],['fa_lib','📖','ขลุกห้องสมุด',school],['fa_prac','✴️','ฝึกเวทในหอคอย'],['fa_soc','☕','คบเพื่อนในหอ',school],['fa_forb','🚪','แอบเข้าเขตต้องห้าม',school],['fa_res','⚗️','วิจัยเวท',K=>!school(K)],['fa_work','💼','รับงานจอมเวท',K=>!school(K)],['fa_hunt','🐉','ล่าสัตว์เวท',K=>!school(K)],['fa_rest','🍵','พักผ่อน']],
  noble:[['fa_cls','📚','เข้าเรียน',school],['fa_ball','💃','งานเลี้ยงและสังคม'],['fa_fence','🤺','ฝึกดาบและมารยาท'],['fa_inv','🕵️','สืบเรื่องลับในวัง'],['fa_ally','🤝','สร้างพันธมิตร'],['fa_court','🏛️','ทำงานราชสำนัก',K=>!school(K)],['fa_rest','🍵','พักผ่อน']]};
 const fList=K=>FOK[K.w].filter(f=>!f[3]||f[3](K));
@@ -165,7 +169,7 @@ function fanYear(){const K=FN();if(K.end&&K.endC){S.deathCause=K.endC;try{checkD
  if(age()>=K.arcAt&&!K.end&&K.arcQ!==K.arc+':'+age()){K.arcQ=K.arc+':'+age();const st=K.arc;queue(()=>arcStep(K,st))}
  if(rnd()<.55+fxv('ev')&&!K.end&&QU.length<1)queue(()=>randEv(K));
  if(!S.spouse&&age()>=18&&rnd()<Math.max(.02,.14+fxv('love'))&&QU.length<2)queue(()=>evLove(K));
- if((K.w==='hero'||K.w==='trash')&&rnd()<.08&&!K.f.homeAsk)queue(()=>evHomesick(K));
+ if((K.w==='hero'||K.w==='trash'||K.w==='lost')&&rnd()<.08&&!K.f.homeAsk)queue(()=>evHomesick(K));
  sync();try{render()}catch(e){}checkDeath();saveGame();if(QU.length)flush()}
 
 // =================== สอบปลายปี (อะคาเดมี่) ===================
@@ -320,6 +324,45 @@ const ARC={
    if(K.clue>=3)o.push(O('🃏 สวมหน้ากากของเขา',()=>ending(K,'mask','ชายสวมหน้ากากยื่นหน้ากากให้คุณ ใต้หน้ากากเขาคือคุณในอีกชีวิตหนึ่ง ที่เลือกทุกทางต่างจากคุณ คุณสวมมันแล้วยืนบนระเบียงรอเด็กทุนคนต่อไป','กลายเป็นชายสวมหน้ากากที่ยื่นข้อเสนอให้เด็กทุนทุกรุ่น'),'🗝️ ฉากจบลับ',.1));
    xFin(K,o);if(!o.length)o.push(O('🍵 ใช้ชีวิตต่อไป',()=>{K.arcAt=age()+R(4,6);feed('🍵 คุณรับราชการอย่างเงียบๆ อีกหลายปี')},'',.5));
    C('👑 ชะตาในราชสำนัก',t,o)}]};
+// ---------- 🌲 หลงมิติ (โลกย่อยที่ 3 ของต่างโลก) ----------
+const LSP={forest:['🌲','ป่าลึกที่ต้นไม้สูงเท่าตึก','เอลฟ์นักล่าสาวตาสีเขียว',['beast','sense','dir']],desert:['🏜️','กลางทะเลทรายแก้วที่ร้อนจนเห็นภาพลวง','กองคาราวานพ่อค้าขี้งก',['dir','salt','sense']],village:['🌾','กองฟางในยุ้งข้าวของหมู่บ้านชาวนา','ครอบครัวชาวนาที่มีลูกเจ็ดคน',['heal','nap','salt']],prison:['⛓️','ในคุกใต้ดินของโจรภูเขา','จอมโจรเฒ่าห้องขังข้างๆ',['rift','shine','sense']],abyss:['🌑','กลางดินแดนปีศาจใต้ฟ้าสีม่วง','เด็กปีศาจตัวน้อยที่หลงทางเหมือนกัน',['beast','shine','heal']],dragon:['🐉','บนหลังมังกรที่กำลังบินอยู่กลางเมฆ','มังกรแก่ขี้บ่นที่ไม่รู้ว่ามีคนขี่อยู่',['rift','nap','beast']]};
+const lsp=K=>LSP[K.f.sp]||LSP.forest,lsk=K=>(SK.lost.find(s=>s[0]===K.sk)||SK.lost[0]),lsyn=K=>lsp(K)[3].includes(K.sk);
+ARC.lost=[
+ K=>{if(!K.f.sp)K.f.sp=pick(Object.keys(LSP));const P=lsp(K),s=lsk(K);C(`${P[0]} ลืมตาคนเดียว`,`คาบเรียนคณิตศาสตร์ พื้นห้องเรืองแสง เพื่อนทั้งห้องหายไปในวงเวท แต่คุณลืมตามา<b>${P[1]}</b> ไม่มีใคร ไม่มีราชา ไม่มีแผ่นประเมิน มีแค่ตัวหนังสือลอยในหัว: 「สกิล: ${s[1]} ${s[2]}」${s[4]?' (ฟังดูไม่ค่อยมีประโยชน์…)':''}`,[
+  O('🏕️ หาที่หลบภัยก่อน',()=>{heal(.3);feed(`🏕️ คุณเอาตัวรอดคืนแรกได้${lsyn(K)?` — สกิล「${s[2]}」ช่วยไว้มากกว่าที่คิด`:''}`);if(lsyn(K)){K.pw+=capOf(K)*.1;K.f.syn=1}nextArc(K)},'',.4),
+  O(`${s[1]} ลองใช้สกิลทันที`,()=>mgHold(`ลองใช้สกิล「${s[2]}」ครั้งแรก`,sc=>{if(sc>=.5||lsyn(K)){K.skL++;K.f.syn=lsyn(K)?1:0;feed(`${s[1]} สกิลทำงาน! ${s[4]?'มันกากจริงๆ แต่':'มันแรงกว่าที่คิด และ'}ที่นี่มันมีประโยชน์อย่างไม่น่าเชื่อ`)}else feed(`${s[1]} ไม่มีอะไรเกิดขึ้น… หรืออาจยังไม่ถึงเวลา`);nextArc(K)}),'มินิเกม',.35),
+  O('📢 ตะโกนเรียกเพื่อน',()=>{feed('📢 ไม่มีใครตอบ มีแต่เสียงสะท้อน… และเสียงอะไรบางอย่างที่ได้ยินคุณ'+hurt(.15));K.f.lonely=1;nextArc(K)},'',.25)])},
+ K=>{const P=lsp(K);C(`🤝 คนแรกที่เจอ`,`<b>${P[2]}</b>เจอคุณในสภาพมอมแมม พูดภาษาที่คุณฟังออกอย่างประหลาด`,[
+  O('🙏 ขอความช่วยเหลือ',()=>{K.f.adopt=1;K.f.home2=P[2];feed(`🙏 ${P[2]}พาคุณกลับไปที่พัก ให้กิน ให้นอน ไม่ถามอะไรเลย · คุณมีที่ให้กลับแล้ว`);nextArc(K)},'',.45),
+  O('🎭 โกหกว่าเป็นคนท้องถิ่น',()=>mgRead('แกล้งเป็นคนพื้นเมือง',P[2],sc=>{if(sc>=.55){K.f.native=1;feed('🎭 ไม่มีใครสงสัยเลย คุณได้ชื่อใหม่ในภาษาของโลกนี้')}else{K.f.adopt=1;feed('🎭 โกหกไม่เนียน แต่เขาก็ยังพาคุณไปด้วย หัวเราะใส่สำเนียงคุณทั้งทาง')}nextArc(K)}),'มินิเกม',.3),
+  O('🏃 หนี ไม่ไว้ใจใคร',()=>{K.pw+=capOf(K)*.08;K.f.lonely=1;feed('🏃 คุณใช้ชีวิตคนเดียวหนึ่งปีเต็ม แข็งแกร่งขึ้น แต่เงียบลง');nextArc(K)},'',.25)])},
+ K=>{const s=lsk(K);C(`${s[1]} ความลับของสกิล「${s[2]}」`,`หลังทดลองมาทั้งปี คุณสังเกตว่าสกิลทำอะไรได้มากกว่าที่ตัวหนังสือบอก`,[
+  O('🔬 ทดลองต่อจนเข้าใจ (มินิเกม)',()=>mgRune(`ไขความลับของสกิล「${s[2]}」`,5,sc=>{if(sc>=.55){K.skL+=2;K.pw+=capOf(K)*.15;feed(`🔬 ${s[4]?'สกิลกากกลายเป็นสกิลที่ไม่มีใครในโลกนี้มี':'สกิลวิวัฒนาการขึ้นอีกขั้น'} · ${pick(['ตอนนี้มันใช้กับคนอื่นได้ด้วย','มันทะลุเวทป้องกันได้','มันทำงานแม้ตอนหลับ'])}`)}else{K.skL++;feed('🔬 เข้าใจเพิ่มขึ้นนิดหน่อย')}nextArc(K)}),'มินิเกม',.6),
+  O('🙈 ไม่ยุ่งกับมัน ใช้ชีวิตปกติ',()=>{heal(.5);feed('🙈 คุณเลือกใช้ชีวิตแบบคนธรรมดา');nextArc(K)},'',.4)])},
+ K=>C('📰 ข่าวจากเมืองหลวง',`พ่อค้าเร่เล่าว่าราชาอัญเชิญผู้กล้า 29 คนจากต่างโลก ชื่อแปลกๆ อย่าง ${E(npc(K,'rival').n)} กับ ${E(npc(K,'pal').n)} … 29 คน ไม่ใช่ 30`,[
+  O('🏰 เดินทางไปเมืองหลวง',()=>{K.f.go=1;feed('🏰 คุณออกเดินทางไกลที่สุดในชีวิต');nextArc(K,1)},'',.4),
+  O('🌲 อยู่ที่นี่ต่อ เพื่อนคงสบายดี',()=>{K.f.stay=1;feed('🌲 คุณมองไปทางเมืองหลวงนาน แล้วกลับไปทำงานต่อ');nextArc(K)},'',.35),
+  O('🎭 ไปแบบปลอมตัว แอบดูก่อน',()=>{K.f.go=1;K.f.spy=1;feed('🎭 คุณใส่ผ้าคลุมของคนพื้นเมือง');nextArc(K,1)},'',.25)]),
+ K=>{heroTr(K);const r=npc(K,'rival'),p=npc(K,'pal'),rt=trOf(K,'rival'),pt=trOf(K,'pal');K.f.met=1;
+  C(K.f.go?'🎒 เจอเพื่อนร่วมห้องอีกครั้ง':'🎒 เพื่อนร่วมห้องผ่านมาที่นี่',`${K.f.go?'ที่ลานฝึกของวัง':'กองทัพผู้กล้าเดินทัพผ่านพอดี'} คุณเห็น <b>${E(r.n)}</b> (${rt[1]} ${rt[2]}) กับ <b>${E(p.n)}</b> (${pt[1]} ${pt[2]})${K.f.spy?' — พวกเขายังไม่เห็นคุณ':''}`,[
+   O('🙋 ทักทาย "จำกันได้ไหม"',()=>{const sf=/selfish|power|narc|fake|schemer/.test(rt[0]);feed(`🙋 ${E(p.n)}${/kind|naive|coward/.test(pt[0])?'ร้องไห้แล้ววิ่งมากอด':'เบิกตากว้าง'} ส่วน${E(r.n)}${sf?' ยิ้มแข็งๆ "นายไม่ได้ผ่านการประเมินนี่ จะมาแย่งตำแหน่งหรือไง"':' ตบไหล่แรงๆ "นึกว่าตายไปแล้ว!"'}`);aff(K,'pal',15);if(sf){aff(K,'rival',-15);K.f.threat=1}nextArc(K)},'',.4),
+   O('🤝 ขอเข้ากลุ่มผู้กล้า',()=>{K.f.join=1;feed(`🤝 ราชาตรวจคุณแล้วรับเข้ากลุ่มในฐานะ "ผู้กล้าคนที่ 30 ที่มาสาย"${/selfish|spoiled|narc/.test(rt[0])?` — ${E(r.n)}ไม่พอใจที่ต้องแบ่งรางวัลเพิ่ม`:''}`);nextArc(K)},'',.3),
+   O('🤫 ไม่เปิดเผยตัว',()=>{K.f.native=1;feed('🤫 คุณมองพวกเขาเดินผ่านไป ไม่มีใครรู้ว่าคุณอยู่ตรงนี้');nextArc(K)},'',.3)])},
+ K=>C('🌀 วงเวทผิดพลาด… หรือจงใจ',`${K.f.join?'นักบวชผู้อัญเชิญ':'หมอผีชราในหมู่บ้าน'}มองคุณนาน "วงเวทอัญเชิญไม่เคยพลาด ถ้ามันส่งเจ้ามาที่อื่น แปลว่ามีใครบางคนเปลี่ยนปลายทาง"`,[
+  O('🔍 สืบหาว่าใคร (มินิเกม)',()=>mgRune('ถอดรหัสวงเวทที่ถูกแก้',6,sc=>{if(sc>=.55)feed(clue(K,pick(['มีคนแก้ปลายทางวงเวทก่อนอัญเชิญหนึ่งวัน','ลายมือที่แก้วงเวทเหมือนลายมือคุณ','ปลายทางของคุณถูกเลือกไว้ตั้งแต่ร้อยปีก่อน'])));else feed('🔍 ร่องรอยเลือนหายไปก่อนจะอ่านออก');nextArc(K)}),'มินิเกม',.6),
+  O('🤷 ไม่สนใจ ฉันชอบที่นี่',()=>{K.f.adopt=1;feed('🤷 บางคำถามไม่ต้องรู้คำตอบก็ได้');nextArc(K)},'',.4)]),
+ K=>C('🔥 บ้านที่สองถูกโจมตี',`กองทัพปีศาจบุก${K.f.sp==='abyss'?'ชายแดนดินแดนปีศาจที่คุณอาศัยอยู่':'ที่ที่คุณเรียกว่าบ้านในโลกนี้'} ในเวลาเดียวกันวังก็เรียกผู้กล้าทุกคนไปป้องกันเมืองหลวง`,[
+  O(`🏡 ปกป้องบ้าน${K.f.home2?'ของ'+K.f.home2:''}`,()=>duel('แม่ทัพปีศาจ',Math.round(threat(K)*1.15),w=>{if(w){K.f.hero2=1;K.rep+=20;feed('🏡 คุณปกป้องคนที่ช่วยคุณไว้ได้ทุกคน ชาวบ้านเรียกคุณว่า "ผู้กล้าที่ไม่มีใครอัญเชิญ"')}else feed('🏡 บ้านพัง แต่ทุกคนรอด'+hurt(.35));nextArc(K)}),'ต่อสู้',.5),
+  O('🏰 ไปช่วยเพื่อนที่เมืองหลวง',()=>{K.f.join=1;aff(K,'pal',10);feed('🏰 คุณสู้เคียงข้างเพื่อนร่วมห้องเป็นครั้งแรก'+rep(10));nextArc(K)},'',.3),
+  O('🗣️ เจรจากับแม่ทัพปีศาจ',()=>mgRead('เจรจาให้กองทัพปีศาจถอย','แม่ทัพปีศาจ',sc=>{if(sc>=.55){K.f.peace=(K.f.peace|0)+2;feed('🗣️ แม่ทัพปีศาจถอยทัพ "เจ้าไม่เหมือนผู้กล้าพวกนั้น"')}else feed('🗣️ ไม่สำเร็จ'+hurt(.25));nextArc(K)}),'',.2)]),
+ K=>{const o=[];
+  if(K.f.hero2||K.rep>=40)o.push(O('🌟 เป็นผู้กล้าที่ไม่มีใครอัญเชิญ',()=>ending(K,'unsum','ไม่มีราชาแต่งตั้ง ไม่มีลูกแก้วสว่างจ้า แต่ทุกหมู่บ้านในทวีปรู้จักชื่อคุณ ผู้กล้าตัวจริงที่ไม่มีใครอัญเชิญ','จากไปในฐานะผู้กล้าที่ไม่มีใครอัญเชิญ'),'',.3));
+  if(K.f.adopt||K.f.native||K.f.stay)o.push(O(`🏡 ใช้ชีวิตกับ${K.f.home2||'คนที่นี่'}ต่อไป`,()=>ending(K,'native',`คุณเลือกอยู่${lsp(K)[1].replace(/^(กลาง|ใน|บน)/,'ใน')}กับคนที่รับคุณไว้ตั้งแต่วันแรก เรื่องเล่าของคนแปลกหน้าจากฟ้ากลายเป็นตำนานพื้นเมือง`,'แก่ตายในบ้านหลังที่สองท่ามกลางคนที่รัก'),'',.3));
+  if(K.f.join)o.push(O('🎒 กลับไปรวมกับเพื่อนทั้งห้อง',()=>ending(K,'class30','ผู้กล้า 30 คนครบห้องเป็นครั้งแรก คุณยืนแถวหลังสุดเหมือนตอนอยู่โรงเรียน แต่ครั้งนี้ทุกคนหันมามองคุณ','จากไปพร้อมเพื่อนครบทั้งห้อง'),'',.3));
+  o.push(O('🚪 หาทางกลับโลกเดิมด้วยตัวเอง',()=>ending(K,'lhome','คุณพบวงเวทเก่าในซากปรักหักพัง ไม่มีนักบวช ไม่มีราชา มีแค่คุณกับสกิลที่ทุกคนเคยหัวเราะ… วงเวทเรืองแสง','กลับบ้านไปพร้อมเรื่องเล่าที่ไม่มีใครเชื่อ'),'',.15));
+  if(K.clue>=3)o.push(O('🌀 ไปยังปลายทางที่วงเวทเลือกไว้',()=>ending(K,'chosen','ปลายทางสุดท้ายคือหอคอยร้างที่มีบันทึกเขียนด้วยลายมือคุณเอง วงเวทไม่ได้พลาด มันส่งคุณมาที่ที่ต้องมา เพื่อเป็นคนเฝ้าวงเวทอัญเชิญรุ่นต่อไป ไม่ให้ใครถูกพรากจากห้องเรียนอีก','เฝ้าวงเวทอัญเชิญไปจนวันสุดท้าย'),'🗝️ ฉากจบลับ',.1));
+  xFin(K,o);C('🌄 ทางแยกสุดท้าย',`หลายปีผ่านไปตั้งแต่วันที่ลืมตาคนเดียว${lsp(K)[1].replace(/^(กลาง|ใน|บน)/,'ใน')} ถึงเวลาตัดสินใจว่าชีวิตนี้จะจบที่ไหน`,o)}];
+
 
 // =================== เหตุการณ์สุ่ม (ประกอบจากชิ้นส่วน ไม่ซ้ำ) ===================
 const PLACE=['ตลาดใต้สะพานหิน','โรงเตี๊ยมหมูป่าหัวเราะ','ซากวิหารเทพที่ถูกลืม','ทางแยกที่มีต้นไม้แขวนกระดิ่ง','ท่าเรือที่ไม่มีเรือ','ป่าที่ต้นไม้หันหน้าตามคน'];
@@ -929,10 +972,10 @@ const TOP=[['iso','⚔️','ต่างโลก','ถูกอัญเชิ�
 const HAIR=['#1f1a17','#3a2a1e','#5b3a24','#c9b27a','#e8e8f0','#6a2a2a','#2a3550','#7a5aa8'],SKIN=['#f1c9a0','#e0ac69','#c68642','#8d5524','#f5d5b8'];
 const orgL=()=>BD['org_'+FB.top];
 function fbRoll(first){if(!first){if(FB.left<=0)return;FB.left--}
- if(FB.top==='iso')FB.w=rnd()<.7?'hero':'trash';else FB.w=FB.top;
+ if(FB.top==='iso'){const r=window._isoForce?({hero:0,trash:.6,lost:.9})[window._isoForce]:rnd();FB.w=r<.55?'hero':r<.8?'trash':'lost';FB.sp=FB.w==='lost'?pick(['forest','desert','village','prison','abyss','dragon']):null}else FB.w=FB.top;
  const b={};b.org=wPickB(orgL());b.race=wPickB(BD.race);b.el=wPickB(BD.el);b.mana=wPickB(BD.mana);b.omen=wPickB(BD.omen);b.mark=wPickB(BD.mark);
  b.tal=[];for(let i=0;i<3;i++)b.tal.push(wPickB(BD.tal,b.tal.map(x=>x.n)));b.curse=wPickB(BD.curse);b.fam=wPickB(BD.fam);b.item=wPickB(BD.item);b.sec=wPickB(BD.sec);FB.b=b;
- FB.sk=FB.w==='hero'||FB.w==='trash'?pick(SK[FB.w])[0]:null;
+ FB.sk=FB.w==='hero'||FB.w==='trash'||FB.w==='lost'?pick(SK[FB.w])[0]:null;
  if(first||!FB.edited){FB.g=FB.g||(rnd()<.5?'ชาย':'หญิง');FB.name=FB.top==='iso'?pick(TH)+' '+pick(['ใจดี','ศรีสุข','รักไทย','มั่นคง','แสงทอง','บุญมา','สายสุวรรณ','ทองดี']):nm(FB.g==='หญิง'?'f':'m')}
  FB.hair=pick(HAIR);FB.skin=pick(SKIN);FB.seed=R(1,99999);fbDraw()}
 const fbItems=b=>[b.org,b.race,b.el,b.mana,b.omen,b.mark,...b.tal,b.curse,b.fam,b.item,b.sec];
@@ -980,7 +1023,7 @@ function fbDraw(){const el=fbEl(),W=wNow(),b=FB.b,d=WD[FB.w];
   <div class="fgG">${['ชาย','หญิง'].map(g=>`<button class="${FB.g===g?'on':''}" onclick="fanG('${g}')">${g==='ชาย'?'♂':'♀'} ${g}</button>`).join('')}<button onclick="fanLook()">🎲 สุ่มหน้าตา</button></div>
   <div class="fgG" style="margin-top:4px">${TOP.map(t=>`<button class="${t[0]===FB.top?'on':''}" onclick="fanW('${t[0]}')">${t[1]} ${t[2]}</button>`).join('')}</div></div></div></div>
  <div class="fgTr" style="margin-top:8px">
-  ${FB.top==='iso'?`<div class="trait r${FB.w==='trash'?2:0} show" data-rv="${FB.w==='trash'?2:0}"><div><div class="k">📜 ผลประเมินตอนอัญเชิญ</div><div class="v t${FB.w==='trash'?2:0}">${d.ic} ${FB.w==='hero'?'ผู้กล้า':'สกิลขยะ'}</div><div class="d">${FB.w==='hero'?'ลูกแก้วสว่างจ้า วังเลี้ยงดูอย่างดี ... ในตอนแรก':'ราชาหัวเราะ ทหารลากคุณไปทิ้งนอกกำแพง แต่สกิลนี้โตได้'}${sk?`<span class="fnFx">${sk[1]} สกิล「${sk[2]}」 — ${sk[3]}</span>`:''}</div></div><span class="o t${FB.w==='trash'?2:0}">${FB.w==='hero'?'1 ใน 1.4':'1 ใน 3.3'}</span></div>`:''}
+  ${FB.top==='iso'?`<div class="trait r${FB.w==='trash'?2:FB.w==='lost'?1:0} show" data-rv="${FB.w==='trash'?2:FB.w==='lost'?1:0}"><div><div class="k">${FB.w==='lost'?'📍 จุดที่ลืมตา':'📜 ผลประเมินตอนอัญเชิญ'}</div><div class="v t${FB.w==='trash'?2:FB.w==='lost'?1:0}">${d.ic} ${FB.w==='hero'?'ผู้กล้า':FB.w==='lost'?'หลงมิติ':'สกิลขยะ'}</div><div class="d">${FB.w==='hero'?'ลูกแก้วสว่างจ้า วังเลี้ยงดูอย่างดี ... ในตอนแรก':FB.w==='lost'?'เพื่อนทั้งห้องไปโผล่ที่วัง แต่คุณลืมตา'+(({forest:'กลางป่าลึก',desert:'กลางทะเลทราย',village:'ในยุ้งข้าวหมู่บ้านชาวนา',prison:'ในคุกโจรภูเขา',abyss:'กลางดินแดนปีศาจ',dragon:'บนหลังมังกรที่กำลังบิน'})[FB.sp]||'ที่ไหนสักแห่ง')+' คนเดียว ไม่มีใครประเมินสกิลให้':'ราชาหัวเราะ ทหารลากคุณไปทิ้งนอกกำแพง แต่สกิลนี้โตได้'}${sk?`<span class="fnFx">${sk[1]} สกิล「${sk[2]}」 — ${sk[3]}</span>`:''}</div></div><span class="o t${FB.w==='trash'?2:0}">${FB.w==='hero'?'1 ใน 1.4':'1 ใน 3.3'}</span></div>`:''}
   ${fbRow('🏠',W.o,b.org,orgL())}${fbRow('🧬','เผ่าพันธุ์',b.race,BD.race)}${fbRow('✨','ธาตุ',b.el,BD.el)}${fbRow('💠','ปริมาณมานา',b.mana,BD.mana)}${fbRow('🔮','ลางตอนเกิด',b.omen,BD.omen)}${fbRow('🎨','รอยบนร่าง',b.mark,BD.mark)}</div>
  <div class="fnH" style="color:#ffd37a"><span>🌟 พรสวรรค์</span><small>3 ช่อง · มีผลในมินิเกมและเหตุการณ์</small></div>
  <div class="fgTr">${b.tal.map((x,i)=>fbRow('🌟','พรสวรรค์ '+(i+1),x,BD.tal)).join('')}</div>
@@ -996,7 +1039,7 @@ window.fanG=g=>{if(!FB)return;FB.g=g;if(!FB.edited&&FB.top!=='iso')FB.name=nm(g=
 window.fanLook=()=>{if(!FB)return;FB.hair=pick(HAIR);FB.skin=pick(SKIN);FB.seed=R(1,99999);fbPaint()};
 window.fanRe=()=>{if(!FB||FB.left<=0)return;try{sfx('click')}catch(e){}fbRoll(false)};
 window.fanGo=()=>{if(!FB)return;try{const i=document.getElementById('fanNm');if(i)window.fanNm(i.value)}catch(e){}const RR=JSON.parse(JSON.stringify(FB));FB=null;try{const e=document.getElementById('fnB');if(e)e.classList.remove('on')}catch(e){}fanBegin(RR)};
-window.fanStart=function(w){window._frS=1;try{closeM()}catch(e){}const tot=Math.max(3,(window.vipTot&&window.vipTot())|0);const tp=w==='hero'||w==='trash'||w==='iso'?'iso':w==='aca'||w==='noble'?'noble':w==='magic'?'magic':'iso';FB={top:tp,w:tp,left:(typeof CFG!=='undefined'&&CFG.chm==1)?0:tot,edited:0};fbRoll(true)};
+window.fanStart=function(w){window._frS=1;try{closeM()}catch(e){}const tot=Math.max(3,(window.vipTot&&window.vipTot())|0);const tp=w==='hero'||w==='trash'||w==='lost'||w==='iso'?'iso':w==='aca'||w==='noble'?'noble':w==='magic'?'magic':'iso';FB={top:tp,w:tp,left:(typeof CFG!=='undefined'&&CFG.chm==1)?0:tot,edited:0};fbRoll(true)};
 try{if(window.rrx)window.rrx.reg({id:'fan',
  host(){const e=document.getElementById('fnB');const b=e&&e.classList.contains('on')&&FB?e.querySelector('.fgBar'):null;return b&&b.firstElementChild},
  left(){return FB?FB.left|0:0},spend(){if(FB)FB.left=Math.max(0,FB.left-1)},
@@ -1032,7 +1075,7 @@ function fanBegin(RR){window._frS=1;try{closeM()}catch(e){}const w=RR.w,d=WD[w],
   sync();render();saveGame()}catch(e){console.error('fanBegin',e)}},700)}
 
 // =================== ฉาก ===================
-const SKY={hero:['#2a1d4a','#b85a6a','#f0b070'],trash:['#1a1a22','#3a3340','#6a5a4a'],magic:['#0c0a24','#2a2060','#5a48a0'],noble:['#1a1430','#5a3a6a','#d8a070']};
+const SKY={lost:['#0f2a1c','#2f6a44','#a8d07a'],hero:['#2a1d4a','#b85a6a','#f0b070'],trash:['#1a1a22','#3a3340','#6a5a4a'],magic:['#0c0a24','#2a2060','#5a48a0'],noble:['#1a1430','#5a3a6a','#d8a070']};
 function drawFan(ctx){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;const K=FN(),f=frame||0,c=SKY[K.w];
  const R2=(x,y,w,h,col,a)=>{if(a!=null)ctx.globalAlpha=a;ctx.fillStyle=col;ctx.fillRect(x,y,w,h);ctx.globalAlpha=1};
  for(let i=0;i<SH;i++)R2(0,i,SW,1,i<SH*.35?c[0]:i<SH*.6?c[1]:c[2],1);
@@ -1050,9 +1093,9 @@ function drawFan(ctx){g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,
 {const _sc=sceneCap;sceneCap=function(t){try{if(on()){const K=FN();return `${WD[K.w].sc}${K.grad&&WD[K.w].g==='aca'?' · หลังจบการศึกษา':''}`}}catch(e){}return _sc.apply(this,arguments)}}
 
 // =================== เชื่อมกับเกม (ชั้นนอกสุด) ===================
-const FCOL={hero:'#6ad8ff',trash:'#9ad86a',magic:'#c39bff',noble:'#ffd37a'};
+const FCOL={lost:'#7ae0a0',hero:'#6ad8ff',trash:'#9ad86a',magic:'#c39bff',noble:'#ffd37a'};
 function hud(K){const d=WD[K.w],m=Math.round(K.mp),mm=Math.round(K.mpM),B=K.bt||{};
- const sk=K.sk?(K.w==='trash'?`🗑️ ${TRUE_SK[K.sk][K.skL-1]} Lv${K.skL}`:`${SK.hero.find(x=>x[0]===K.sk)[1]} ${SK.hero.find(x=>x[0]===K.sk)[2]}`):'';
+ const sk=K.sk?(K.w==='lost'?(()=>{const x=SK.lost.find(y=>y[0]===K.sk)||SK.lost[0];return `${x[1]} ${x[2]} Lv${K.skL}`})():K.w==='trash'?`🗑️ ${TRUE_SK[K.sk][K.skL-1]} Lv${K.skL}`:`${SK.hero.find(x=>x[0]===K.sk)[1]} ${SK.hero.find(x=>x[0]===K.sk)[2]}`):'';
  const st=d.g==='aca'?(K.f.expelled?'ถูกไล่ออก':K.grad?'จบการศึกษา':`ปี ${Math.max(1,age()-d.a0)} · อันดับ ${K.rank}/60`):(K.w==='hero'?`อันดับผู้กล้า ${K.rank}/30`:K.f.guild?'นักผจญภัยกิลด์':'คนในสลัม');
  const lv=Math.max(1,Math.round(Math.pow(Math.max(1,K.pw)/6,.62))),hp=Math.max(0,Math.round(S.hp)),hm=Math.max(1,Math.round(S.maxHp)),bar=(c,ic,v,M,t)=>`<div class="fhB ${c}"><span>${ic}</span><div class="bar"><i style="width:${cl(v/M*100,0,100)}%"></i></div><span>${t}</span></div>`;
  const ch=[];if(B.race)ch.push(`<span>${B.race.ic} ${E(B.race.n)}</span>`);ch.push(`<span>${K.rare?RARE[K.rare][0]+' '+RARE[K.rare][1]:EL[K.el][0]+' '+EL[K.el][1]}</span>`);if(sk)ch.push(`<span>${sk}</span>`);
@@ -1081,7 +1124,7 @@ window.fanStat=function(){const K=FN();if(!K)return;const L=Object.values(K.npc)
 //   ฝั่งปีศาจ · ปฏิทินโรงเรียน · ชมรม 8 · อาจารย์ 6 ความลับ · ข่าวลือ · คะแนนหอ · ฝ่ายการเมือง · ชาติก่อน · บทหลักมีทางแยก · ฉากจบใหม่
 // ####################################################################
 const X2=K=>{if(!K.x2){K.x2={sn:{},av:{},hp:null,club:null,cs:0,cp:0,tch:null,fac:null,cls:null,know:[],gr:0,gp:0,food:0,cal:{},echo:0}}return K.x2};
-const isIso=K=>K.w==='hero'||K.w==='trash',isAca=K=>K.w==='magic'||K.w==='noble';
+const isIso=K=>K.w==='hero'||K.w==='trash'||K.w==='lost',isAca=K=>K.w==='magic'||K.w==='noble';
 const SEEN=()=>{try{return LS.get('murim_fanseen',{})||{}}catch(e){return{}}};
 const markSeen=(K,id)=>{X2(K).sn[id]=1;try{const s=SEEN();s[id]=(s[id]|0)+1;LS.set('murim_fanseen',s)}catch(e){}};
 // เลือกเหตุการณ์: ไม่ซ้ำในชีวิตเดียว · ชอบเหตุการณ์ที่ไม่เคยเจอเลยในทุกชีวิตก่อน (น้ำหนัก 3 เท่า)
@@ -1364,7 +1407,7 @@ function cmpEv(K){for(let i=0;i<6;i++){const p=pick(CMP.pl),w=pick(CMP.who),r=pi
 // =================== 👻 ชาติก่อน ===================
 function pastRec(K){if(K.pastRec)return;K.pastRec=1;try{const L=LS.get('murim_fanpast',[])||[];L.push({n:S.name,w:K.w,k:K.end||'',a:age()});LS.set('murim_fanpast',L.slice(-8))}catch(e){}}
 function evEcho(K){const X=X2(K);X.echo=1;let L=[];try{L=LS.get('murim_fanpast',[])||[]}catch(e){}const p=L[L.length-1];if(!p||p.n===S.name)return;const en=ENDS[p.w]&&ENDS[p.w][p.k];const how=en?`${en[0]} ${en[1]}`:'จากไปโดยไม่มีใครบันทึกว่าอย่างไร';
- const T=isAca(K)&&(p.w==='hero'||p.w==='trash')?`ในตำราประวัติศาสตร์บทผู้กล้าจากต่างโลก มีชื่อ <b>${E(p.n)}</b> พร้อมภาพวาดที่หน้าตาเหมือนคุณ ใต้ภาพเขียนว่า「${how}」`
+ const T=isAca(K)&&(p.w==='hero'||p.w==='trash'||p.w==='lost')?`ในตำราประวัติศาสตร์บทผู้กล้าจากต่างโลก มีชื่อ <b>${E(p.n)}</b> พร้อมภาพวาดที่หน้าตาเหมือนคุณ ใต้ภาพเขียนว่า「${how}」`
   :isIso(K)&&isAca({w:p.w})?`นักกวีในโรงเตี๊ยมร้องเพลงเรื่อง <b>${E(p.n)}</b> แห่ง${WD[p.w].sc} ที่${how} ทุกคำในเพลงคุณร้องตามได้ ทั้งที่ไม่เคยได้ยิน`
   :`คุณเจอ${pick(['หลุมศพเก่า','ภาพวาดในโบสถ์','ดาบที่สลักชื่อ'])}ของ <b>${E(p.n)}</b> ผู้${how} มือคุณสั่นตอนแตะมัน`;
  C('👻 ความทรงจำที่ไม่ใช่ของคุณ',T,[O('✋ แตะมันอีกครั้ง',()=>{K.pw+=capOf(K)*.1;feed('✋ ภาพชีวิตก่อนไหลเข้ามา ฝีมือบางส่วนกลับมาหาคุณ'+(K.clue<3&&rnd()<.35?clue(K,'คุณเคยมีชีวิตในทวีปนี้มาก่อน'):''))},'',.6),O('🚶 ปล่อยไว้ตรงนั้น',()=>feed('🚶 บางชีวิตควรจบในที่ของมัน'),'',.4)])}
@@ -1642,7 +1685,7 @@ function wrBirth(w){if(!WR)return;window._wrOn=0;try{document.getElementById('wr
  try{if(WR.god==='scheme'){const H=LS.get('murim_fangod',{})||{};H.met=(H.met|0)+1;LS.set('murim_fangod',H)}}catch(e){}
  WR=null;fanBegin(RR)}
 // ---- หลังเกิด: เทพตามมาในชีวิต ----
-for(const w of ['hero','trash','magic','noble'])Object.assign(ENDS[w],{godfree:['⚔️','เทพตาย คุณเป็นอิสระ','ล้มเทพที่ใช้คุณเป็นหมาก แล้วใช้ชีวิตแบบไม่มีสกิลจากใคร'],godthrone:['👑','บัลลังก์ที่ว่าง','ฆ่าเทพแล้วนั่งแทน'],godeal:['⛓️','ข้อเสนอของเทพ','รับข้อเสนอกลางศึก แลกกับความจริงที่ต้องแบกไปตลอด'],godpawn:['🤝','หมากทุกตัวเป็นอิสระ','ปลดปล่อยทุกคนที่ถูกอัญเชิญมาเป็นหมาก'],godrule:['🗝️','กฎข้อใหม่ของสวรรค์','เขียนกฎที่ไม่มีเทพองค์ไหนอัญเชิญใครได้อีก',1]});
+for(const w of ['hero','trash','lost','magic','noble'])Object.assign(ENDS[w],{godfree:['⚔️','เทพตาย คุณเป็นอิสระ','ล้มเทพที่ใช้คุณเป็นหมาก แล้วใช้ชีวิตแบบไม่มีสกิลจากใคร'],godthrone:['👑','บัลลังก์ที่ว่าง','ฆ่าเทพแล้วนั่งแทน'],godeal:['⛓️','ข้อเสนอของเทพ','รับข้อเสนอกลางศึก แลกกับความจริงที่ต้องแบกไปตลอด'],godpawn:['🤝','หมากทุกตัวเป็นอิสระ','ปลดปล่อยทุกคนที่ถูกอัญเชิญมาเป็นหมาก'],godrule:['🗝️','กฎข้อใหม่ของสวรรค์','เขียนกฎที่ไม่มีเทพองค์ไหนอัญเชิญใครได้อีก',1]});
 const gk=K=>(K.god&&K.god.gk)|0;const gkAdd=(K,t)=>{K.god.gk=gk(K)+1;return ` · ⚔️ อาวุธฆ่าเทพ ${K.god.gk}/3${t?' ('+t+')':''}`};
 const GST=[
  K=>C('⛪ โบสถ์ที่ไม่เคยมีมาก่อน',`โบสถ์ของ "${E(K.god.n)}" ผุดขึ้นในเมืองที่คุณเพิ่งผ่านไป รูปปั้นในโบสถ์มีหน้าเหมือนเทพที่ห้องสีขาว และที่ฐานรูปปั้นมีชื่อเมืองทุกเมืองที่คุณเคยชนะศึก`,[O('🔍 สืบว่าใครสร้าง',()=>{K.god.sus=1;feed('🔍 นักบวชบอกว่าทุกครั้งที่ "ผู้ได้รับพร" ชนะ ศรัทธาจะไหลไปหาเทพี — คุณคือผู้ได้รับพรคนนั้น'+(K.clue<3?clue(K,'ทุกชัยชนะของคุณเลี้ยงเทพีออเรลิส'):''))},'',.6),O('🙏 สวดมนต์ขอบคุณ',()=>{K.pw+=capOf(K)*.08;feed('🙏 พลังไหลเข้าตัวคุณ อุ่นเกินไปนิด เหมือนมีคนลูบหัวสุนัข')},'',.4)]),
@@ -2265,7 +2308,7 @@ window._fan5={QU,fl:()=>FL,MV,MS,mvAssign,mgMash,mgHold,mgCombo,mgCups,rgEv,rgSh
 // ภาค 6: ชะตาพิเศษของต่างโลก + อะคาเดมี่ · ดันเจี้ยนเลือกทาง · หน้าต่างระบบ
 // ####################################################################
 const MVX={};
-const MVXW={iso:['hero','trash'],noble:['noble']};
+const MVXW={iso:['hero','trash','lost'],noble:['noble']};
 // ---------- 🕷️ วิญญาณมอนสเตอร์ ----------
 const MONB={spider:['🕷️','แมงมุม',{meat:['🕷️','ราชินีแมงมุมพันตา'],magic:['🕸️','อารัคเนจอมเวท'],poison:['☠️','แมงมุมพิษนรก']}],slime:['🟢','สไลม์',{meat:['🟥','สไลม์กลืนกองทัพ'],magic:['🔷','สไลม์ราชันผลึก'],poison:['🟣','สไลม์พิษที่ทุกคนกลัว']}],bone:['💀','โครงกระดูก',{meat:['🦴','อัศวินกระดูกยักษ์'],magic:['👑','ลิชจักรพรรดิ'],poison:['⚰️','ราชาแห่งหลุมศพ']}]};
 const MDIET={meat:['🍖','กินเนื้อมอนสเตอร์'],magic:['💠','กินแกนเวท'],poison:['🧪','กินพิษ']};
@@ -2578,7 +2621,7 @@ function mvxAssign(K){if(K.w==='magic'||K.mvx!==undefined)return;const L=Object.
  if(!K.sysw){const on=rnd()<.2||window._sysForce;K.sysw={on:on?1:0,done:0,fail:0};if(on)say('⬜ <b>[ระบบ] ยินดีต้อนรับ ผู้เล่น</b> — หน้าต่างโปร่งแสงลอยอยู่ตรงหน้าคุณ ไม่มีใครเห็นนอกจากคุณ','myth',true)}
  if(!k)return;MS(K);MVX[k].birth(K);recalcE(K);say(`${MVX[k].ic} <b>ชะตาพิเศษ: ${MVX[k].n}</b> — ${MVX[k].d}`,'myth',true)}
 {const _fb=fanBegin;fanBegin=function(RR){_fb.apply(this,arguments);setTimeout(()=>{try{const K=FN();if(K){if(K.w==='magic'&&!K.sysw){const on=rnd()<.2||window._sysForce;K.sysw={on:on?1:0,done:0,fail:0};if(on)say('⬜ <b>[ระบบ] ยินดีต้อนรับ ผู้เล่น</b> — หน้าต่างโปร่งแสงลอยอยู่ตรงหน้าคุณ ไม่มีใครเห็นนอกจากคุณ','myth',true)}mvxAssign(K)}sync();render();saveGame()}catch(e){console.error('mvx',e)}},1600)}}
-for(const w of ['hero','trash','magic','noble'])FOK[w].push(['fa_deep','🕳️','ดำดันเจี้ยน',K=>!school(K)&&age()>=15]);
+for(const w of ['hero','trash','lost','magic','noble'])FOK[w].push(['fa_deep','🕳️','ดำดันเจี้ยน',K=>!school(K)&&age()>=15]);
 FOK.hero.push(['fa_cook','🍳','เปิดครัว',K=>K.mvx==='cook'],['fa_dgn','🏰','ขยายดันเจี้ยน',K=>K.mvx==='dungeon']);FOK.trash.push(['fa_cook','🍳','เปิดครัว',K=>K.mvx==='cook'],['fa_dgn','🏰','ขยายดันเจี้ยน',K=>K.mvx==='dungeon']);
 {const _df=doFocus;doFocus=function(K){const f=S.focus;if(f==='fa_deep'){feed('🕳️ คุณเตรียมเชือก คบเพลิง และขนมปังสามก้อน แล้วลงดันเจี้ยน');queue(()=>dunMap(K,pick(['ถ้ำเสียงกระซิบ','สุสานราชาไร้ชื่อ','เหมืองที่ถูกทิ้ง','หอคอยกลับหัว','ห้องใต้ดินของแม่มด']),R(5,8)));return}
  if(f==='fa_cook'){const m=MS(K);feed(`🍳 เปิดครัว${pick(['ข้างประตูเมือง','ในตรอกนักผจญภัย','บนเรือ','หน้ากิลด์'])} คนต่อคิวยาว${money(R(30,90)*(1+(m.star|0)*.3))}`);return}
@@ -2743,7 +2786,7 @@ window.fanBook=function(tab){const b=BK(),A=achG(),E2=(()=>{try{return LS.get('m
 // ---------- hooks ภาค 7 ----------
 {const _rc=recalcE;recalcE=function(K){const o=_rc(K);try{for(const r of X7(K).rules)if(RULE[r]&&RULE[r][3])fxAdd(o,RULE[r][3])}catch(e){}return o}}
 function birth7(K){const X=X7(K);if(X.b7)return;X.b7=1;const P=window._fdlPend;
- if(P&&Date.now()-P.t<30*60e3&&(P.fw==='iso'?(K.w==='hero'||K.w==='trash'):K.w===P.fw)){window._fdlPend=null;window._mvForce=null;K.daily=P.k;X.rules=P.I.rules.slice();X.nar=P.I.nar;money(P.I.gold);setTimeout(()=>{try{P.go(K)}catch(e){console.error('fdl go',e)}},300)}
+ if(P&&Date.now()-P.t<30*60e3&&(P.fw==='iso'?(K.w==='hero'||K.w==='trash'||K.w==='lost'):K.w===P.fw)){window._fdlPend=null;window._mvForce=null;K.daily=P.k;X.rules=P.I.rules.slice();X.nar=P.I.nar;money(P.I.gold);setTimeout(()=>{try{P.go(K)}catch(e){console.error('fdl go',e)}},300)}
  else{X.rules=rulePick(K);X.nar=pick(Object.keys(NARR))}
  for(const r of X.rules)bkAdd('rule',r);bkAdd('narr',X.nar);if(K.mv)bkAdd('var',K.mv);if(K.mvx)bkAdd('var',K.mvx);
  say(`🌍 <b>กฎของโลกนี้</b> — ${X.rules.map(r=>`${RULE[r][0]} ${RULE[r][1]} <span class="tag2">(${RULE[r][2]})</span>`).join(' · ')}<br>${NARR[X.nar][0]} <i>ผู้เล่าเรื่องชีวิตนี้: ${NARR[X.nar][1]}</i>`,'epic');
@@ -2917,7 +2960,7 @@ window.fanCardShare=()=>{try{window._fcCv.toBlob(b=>{const f=new File([b],'1inan
 {const _el=evLeg;evLeg=function(K){fxBig('fw',1.5);return _el.apply(this,arguments)}}
 {const _en=ending;ending=function(K,k){if(K&&K.end)return _en.apply(this,arguments);try{const e=ENDS[K.w]&&ENDS[K.w][k];if(e&&e[3])setTimeout(()=>fxBig('confetti',1.8),400)}catch(x){}const r=_en.apply(this,arguments);try{setTimeout(()=>{try{say('📸 <b>บันทึกชีวิตนี้เป็นการ์ดแชร์ได้</b> — เปิดเมนู → 📸 การ์ดชีวิต','epic')}catch(e){}},1200)}catch(x){}return r}}
 {const _fb=fanBegin;fanBegin=function(RR){_fb.apply(this,arguments);setTimeout(()=>{try{const K=FN();if(K&&K.dlord===undefined){if(window._dkForce||rnd()<.05){K.dlord=1;K.mv=null;K.mvx=null;dkStart(K);sync();render()}else K.dlord=0}}catch(e){console.error('dk',e)}},1300)}}
-for(const w of ['hero','trash','magic','noble'])FOK[w].push(['fa_dk','👑','ปกครองอาณาจักรปีศาจ',K=>!!K.dlord]);
+for(const w of ['hero','trash','lost','magic','noble'])FOK[w].push(['fa_dk','👑','ปกครองอาณาจักรปีศาจ',K=>!!K.dlord]);
 {const _df=doFocus;doFocus=function(K){if(S.focus==='fa_dk'&&K.dlord){const D=DK_(K),a=R(150,400);D.army+=a;feed(`👑 คุณบริหารอาณาจักรปีศาจ${D.al>=30?' สร้างถนนและโรงเรียน':D.al<=-30?' เกณฑ์ทหารทุกหมู่บ้าน':''} · กองทัพ +${a}${money(R(80,200))}`);return}return _df(K)}}
 {const _x=xFin;xFin=function(K,o){_x(K,o);try{if(K.dlord)dkFin(K,o);rlFin(K,o)}catch(e){console.error('p8 fin',e)}}}
 {const _fy=fanYear;fanYear=function(){const K=FN();const a0=S.age;_fy.apply(this,arguments);if(!K||!S.alive||S.age===a0||K.end)return;
@@ -2933,6 +2976,39 @@ for(const w of ['hero','trash','magic','noble'])FOK[w].push(['fa_dk','👑','ป
 window.fanDk=function(){const K=FN(),D=K&&DK_(K);if(!D)return;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👑 อาณาจักรปีศาจ</h3><div class="item"><b>${alT(D.al)}</b><div class="tag2">ค่าความดี/ชั่ว ${D.al} · กองทัพ ${fmt(D.army)} · ผู้กล้าที่มาแล้ว ${D.wv} รุ่น</div></div><h4 style="margin:8px 0 4px">แม่ทัพทั้งสี่</h4>${D.g.map(g=>`<div class="item" style="${g.alive?'':'opacity:.45'}">${g.ic} <b>${g.n}</b> <span class="tag2">${g.alive?'ภักดี '+g.loy:'✝️ ไม่อยู่แล้ว'} · ${g.t}</span></div>`).join('')}`,'fandk')};
 {const _hd=hud;hud=function(K){let h=_hd(K);try{const c=[],X=X8(K);if(K.dlord){const D=DK_(K);c.push(`<span class="t5">👑 จอมมารกลับชาติ</span><span class="t4">${alT(D.al)} · 👹 ${fmt(D.army)}</span>`)}if(X.rl)c.push(`<span>👑 ครองแคว้น ${Object.keys(RF).map(k=>RF[k][0]+X.rl.f[k]).join(' ')}</span>`);if(X.dr&&!X.dr.done)c.push(`<span>🐲 เตรียมล่ามังกร ${Object.keys(X.dr.p).length}/4</span>`);if(X.champ)c.push('<span>🏆 จ้าวแห่งทวีป</span>');if(c.length)h=h.replace('<div class="fhC">','<div class="fhC">'+c.join(''))}catch(e){}return h}}
 window._fan8={X8,dkStart,DKEV,dkWave,evTour,tourRound,evRuleOffer,DEC,evCoup,evDragonWake,evDragonPrep,evDragonRaid,fanCard};
+
+
+// ####################################################################
+// ภาค 9: นิสัยผู้กล้า + หลงมิติ (ระบบเสริม)
+// ####################################################################
+// =================== 🎭 นิสัยผู้กล้า (เพื่อนร่วมห้องที่ถูกอัญเชิญ) ===================
+const HTR=[['selfish','😤','เห็นแก่ตัว'],['kind','😇','คนดี'],['spoiled','👑','เอาแต่ใจ'],['coward','😨','ขี้ขลาด'],['power','🔥','บ้าอำนาจ'],['narc','🪞','หลงตัวเอง'],['hothead','💢','ใจร้อน'],['schemer','🦊','เจ้าเล่ห์'],['lazy','😪','ขี้เกียจ'],['naive','🥺','ซื่อจนน่าห่วง'],['fake','🎭','ดีแต่ต่อหน้า']];
+const htr=k=>HTR.find(x=>x[0]===k)||HTR[1];
+function heroTr(K){if(!isIso(K))return;try{const X=X2(K);if(!X.cls)clsInit(K);const rv=K.npc.rival,pl=K.npc.pal;if(rv&&!rv.tr)rv.tr=pick(['selfish','power','narc','schemer','hothead','fake','kind']);if(pl&&!pl.tr)pl.tr=pick(['kind','naive','coward','lazy','kind','spoiled']);
+ for(const c of X.cls||[]){if(!c.tr)c.tr=c.id==='rival'?rv.tr:c.id==='pal'?pl.tr:pick(HTR)[0]}}catch(e){}}
+const trOf=(K,id)=>htr((K.npc[id]&&K.npc[id].tr)||'kind');
+const HTE={
+ selfish:(K,c)=>C(`😤 ${E(c.n)}ทิ้งคุณไว้ในดันเจี้ยน`,`ตอนกับดักทำงาน ${E(c.n)} (${c.sk}) คว้าหีบสมบัติแล้ววิ่งหนีออกไปคนเดียว ปล่อยให้คุณสู้กับมอนสเตอร์ทั้งรัง`,[O('⚔️ ตามไปทวงคืน',()=>duel(c.n,Math.round(threat(K)*.95),w=>feed(w?`⚔️ ${E(c.n)}คืนสมบัติครึ่งหนึ่ง พร้อมคำขอโทษที่ฟังไม่จริงใจ`+money(R(150,300)):`⚔️ ${E(c.n)}เก่งกว่าที่คิด`+hurt(.2)))),O('📢 แฉต่อหน้าผู้กล้าทุกคน',()=>{c.bad=1;feed(`📢 ${E(c.n)}ถูกทุกคนมองแรง เขาจดชื่อคุณไว้ในใจ`+rep(4))}),O('🤷 ช่างมัน คนแบบนี้มีทุกโลก',()=>feed('🤷 คุณรอดออกมาได้ และเลิกคาดหวังอะไรจากเขา'+hurt(.1)))]),
+ kind:(K,c)=>C(`😇 ${E(c.n)}แบ่งเสบียงมื้อสุดท้าย`,`ระหว่างเดินทัพ ${E(c.n)}เอาขนมปังชิ้นสุดท้ายให้เด็กในหมู่บ้านที่ถูกเผา ทั้งที่ตัวเองไม่ได้กินมาสองวัน`,[O('🍞 แบ่งของคุณให้เขา',()=>{c.aff=(c.aff|0)+20;S.karma=(+S.karma||0)+8;feed(`🍞 ${E(c.n)}ยิ้มกว้าง "นายก็เหมือนเดิมเลยนะ" · เขาจะจำเรื่องนี้`)}),O('🗣️ เตือนว่าโลกนี้ไม่ใจดีขนาดนั้น',()=>feed(`🗣️ ${E(c.n)}ตอบว่า "ถ้าเราไม่ใจดี ก็จะไม่มีใครใจดีเลย"`)),O('😑 ปล่อยเขาไป',()=>feed('😑 คืนนั้นเขาเป็นลม คุณแบกเขากลับค่าย'))]),
+ spoiled:(K,c)=>C(`👑 ${E(c.n)}เรียกร้องวังส่วนตัว`,`${E(c.n)}ประกาศต่อหน้าราชาว่า "ถ้าไม่ได้วังส่วนตัว คนรับใช้สิบคน กับรถม้าสีชมพู ฉันจะไม่สู้!" ราชาหันมามองคุณเหมือนขอความช่วยเหลือ`,[O('🙄 พูดให้เขาสงบ (มินิเกม)',()=>mgRead(`ปลอบ${c.n}ที่กำลังงอแง`,c.n,sc=>feed(sc>=.55?`🙄 ${E(c.n)}ยอมลดเหลือรถม้าสีชมพูคันเดียว ราชาขอบคุณคุณ`+rep(5):`🙄 ${E(c.n)}ร้องไห้เสียงดังจนราชายอมทุกอย่าง`))),O('😂 หัวเราะใส่',()=>{c.bad=1;feed(`😂 ${E(c.n)}ไม่คุยกับคุณอีกสามปี`)}),O('💡 เสนอให้ราชาเอาไปแลกเป็นงานพิเศษ',()=>feed(`💡 ${E(c.n)}ได้วัง แต่ต้องล้างดันเจี้ยนสิบแห่งก่อน ทุกคนพอใจยกเว้นเขา`+money(100)))]),
+ coward:(K,c)=>C(`😨 ${E(c.n)}หนีกลางศึก`,`ตอนมังกรเพลิงโผล่มา ${E(c.n)}ทิ้งตำแหน่งแล้ววิ่งหนี แนวป้องกันฝั่งซ้ายพังทันที`,[O('🛡️ อุดช่องแทน',()=>duel('มังกรเพลิงหนุ่ม',Math.round(threat(K)*1.05),w=>feed(w?'🛡️ คุณกันแนวไว้ได้จนจบศึก'+rep(8):'🛡️ แนวพัง แต่ทุกคนถอยทัน'+hurt(.3)))),O('🫂 ตามไปคุยกับเขาหลังศึก',()=>{c.aff=(c.aff|0)+15;feed(`🫂 ${E(c.n)}ร้องไห้ "ฉันแค่อยากกลับบ้าน" คุณนั่งอยู่ข้างเขาจนเช้า`)}),O('📜 รายงานราชา',()=>{c.st='lost';c.t='ถูกปลดจากผู้กล้าเพราะหนีทัพ';feed(`📜 ${E(c.n)}ถูกปลด และหายตัวไปจากวัง`+dark(5))})]),
+ power:(K,c)=>C(`🔥 ${E(c.n)}ตั้งตัวเป็นหัวหน้า`,`${E(c.n)}ประกาศว่าผู้กล้าทุกคนต้องฟังคำสั่งเขา ใครไม่ฟังจะไม่ได้ส่วนแบ่ง ครึ่งห้องยอมตาม`,[O('✋ ไม่ยอม',()=>duel(c.n,Math.round(threat(K)*1.1),w=>{if(w){feed(`✋ ${E(c.n)}แพ้ต่อหน้าทุกคน อำนาจของเขาหายไปในวินาทีนั้น`+rep(8))}else{c.bad=1;feed(`✋ คุณแพ้ ${E(c.n)}ตัดส่วนแบ่งของคุณทั้งปี`+money(-150))}}),'ต่อสู้'),O('🤝 ยอมตามแต่แอบรวมพวก',()=>{K.f.coup=(K.f.coup|0);feed('🤝 คุณมีพวกครึ่งห้องในมือโดยที่เขาไม่รู้');c.bad=1}),O('🙂 ยอมรับ ขอแค่อย่ายุ่งกัน',()=>feed('🙂 เขาปล่อยคุณไว้ อย่างน้อยก็ตอนนี้'))]),
+ narc:(K,c)=>C(`🪞 ${E(c.n)}จ้างกวีแต่งเพลงสรรเสริญตัวเอง`,`ทั้งเมืองได้ยินเพลง "${E(c.n)}ผู้งดงามกว่าดวงจันทร์" วันละสิบรอบ ในเพลงบอกว่าเขาล้มมังกรคนเดียว (จริงๆ คุณช่วย)`,[O('🎤 จ้างกวีแต่งเพลงความจริงแข่ง',()=>{money(-100);feed('🎤 เพลงของคุณติดหูกว่า ทั้งเมืองร้องตาม'+rep(10));c.bad=1}),O('😂 ปล่อย ขำดี',()=>feed('😂 คุณร้องเพลงของเขาตามไปด้วยทุกเช้า')),O('🪞 ชมเขาจนเคลิ้ม แล้วขอยืมของ',()=>feed(`🪞 ${E(c.n)}ยกดาบสำรองให้คุณยืมด้วยความยินดี`+lootDrop(K,2,c.n)))]),
+ hothead:(K,c)=>C(`💢 ${E(c.n)}ต่อยขุนนางกลางงานเลี้ยง`,`ขุนนางพูดดูถูกคนจากต่างโลก ${E(c.n)}ต่อยเขาจนฟันหลุดสองซี่ ทหารกำลังจะจับเขา`,[O('🛡️ เข้าไปช่วยแก้ต่าง (มินิเกม)',()=>mgRead('แก้ต่างให้เพื่อนต่อหน้าราชา','ราชา',sc=>{if(sc>=.55){c.aff=(c.aff|0)+20;feed(`🛡️ ราชายกโทษให้ ${E(c.n)}ตบหลังคุณแรงจนไอ "นายนี่ใช้ได้!"`)}else feed(`🛡️ ${E(c.n)}ถูกขังสามวัน คุณถูกขังด้วยหนึ่งวัน`)})),O('👊 ต่อยขุนนางอีกคน',()=>{K.rep-=8;c.aff=(c.aff|0)+30;feed(`👊 ตอนนี้มีขุนนางฟันหลุดสองคน ${E(c.n)}หัวเราะจนน้ำตาไหลในคุก`)}),O('🚶 ทำเป็นไม่รู้จัก',()=>{c.bad=1;feed(`🚶 ${E(c.n)}มองคุณตอนถูกลากออกไป`)})]),
+ schemer:(K,c)=>C(`🦊 ${E(c.n)}มีแผนลับ`,`${E(c.n)}กระซิบ "คลังหลวงมีสมบัติที่ราชาไม่บอกเรา คืนนี้ไปเอามาแบ่งกัน ห้าสิบห้าสิบ"`,[O('💰 ร่วมแผน',()=>{if(rnd()<.55){feed('💰 สำเร็จ แต่ส่วนแบ่งของคุณเบากว่าที่ตกลงไว้นิดหน่อย…'+money(R(300,700))+dark(6))}else{feed(`💰 ทหารจับได้ ${E(c.n)}หนีทัน คุณไม่ทัน`+hurt(.25)+rep(-10))}}),O('📜 เอาแผนไปบอกราชา',()=>{c.bad=1;feed(`📜 ราชาให้รางวัลคุณ ${E(c.n)}ยิ้มให้คุณในวันรุ่งขึ้นเหมือนไม่มีอะไรเกิดขึ้น ซึ่งน่ากลัวกว่า`+money(200))}),O('🙅 ปฏิเสธ',()=>feed('🙅 เขาไหวไหล่ "ตามใจ" แล้วไปชวนคนอื่น'))]),
+ lazy:(K,c)=>C(`😪 ${E(c.n)}นอนกลางวันทุกวัน`,`ราชาจะลงโทษ${E(c.n)}เพราะไม่ไปฝึกมาสามเดือน เขาขอให้คุณช่วยแก้ตัวให้`,[O('🗣️ แก้ตัวให้',()=>{c.aff=(c.aff|0)+15;feed(`🗣️ คุณบอกราชาว่าเขากำลัง "ฝึกสมาธิขั้นสูง" ราชาเชื่อ ${E(c.n)}หลับต่อ`)}),O('💪 ลากไปฝึกด้วยกัน',()=>{c.aff=(c.aff|0)+5;K.pw+=capOf(K)*.04;feed(`💪 ${E(c.n)}บ่นทั้งวัน แต่กลับเก่งขึ้นจนตกใจ จริงๆ เขามีพรสวรรค์`)}),O('🤷 ไม่ยุ่ง',()=>feed(`🤷 ${E(c.n)}ถูกส่งไปเฝ้าป้อมชายแดน… และนอนต่อที่นั่น`))]),
+ naive:(K,c)=>C(`🥺 ${E(c.n)}ถูกหลอก`,`${E(c.n)}เอาดาบศักดิ์สิทธิ์ไปแลกกับ "ถั่ววิเศษ" จากพ่อค้าเร่ ถั่วนั้นเป็นถั่วลิสงธรรมดา`,[O('🏃 ตามไปเอาดาบคืน',()=>duel('พ่อค้าเร่ที่จริงๆ เป็นโจร',Math.round(threat(K)*.85),w=>{if(w){c.aff=(c.aff|0)+25;feed(`🏃 ได้ดาบคืน ${E(c.n)}กอดคุณแน่นจนหายใจไม่ออก`)}else feed('🏃 โจรหนีไปได้'+hurt(.15))})),O('🌱 ลองปลูกถั่วดูก่อน',()=>{if(rnd()<.15)feed('🌱 …ถั่วโตเป็นต้นไม้ยักษ์จริงๆ! บนยอดมีหีบสมบัติ'+lootDrop(K,4,'ต้นถั่ว'));else feed('🌱 ได้ถั่วลิสงเต็มสวน อร่อยดี')}),O('📚 สอนเขาเรื่องโลกนี้',()=>{c.aff=(c.aff|0)+10;feed(`📚 ${E(c.n)}จดทุกคำ เขาโดนหลอกน้อยลงครึ่งหนึ่ง`)})]),
+ fake:(K,c)=>C(`🎭 ${E(c.n)}สองหน้า`,`${E(c.n)}ยิ้มให้คุณทุกเช้า แต่คืนนี้คุณได้ยินเขาเล่าเรื่องเสียๆ หายๆ ของคุณให้ราชาฟัง`,[O('🗣️ เผชิญหน้าตรงๆ',()=>mgRead(`จับโกหก${c.n}`,c.n,sc=>{if(sc>=.55){feed(`🗣️ ${E(c.n)}จนมุม ยอมรับว่าอิจฉาคุณมาตั้งแต่อยู่โรงเรียน`);c.aff=(c.aff|0)+5}else{c.bad=1;feed(`🗣️ ${E(c.n)}ร้องไห้ต่อหน้าทุกคนว่าคุณใส่ร้าย ทุกคนเชื่อเขา`+rep(-6))}})),O('🎭 เล่นเกมเดียวกันกลับ',()=>{K.dark+=5;c.bad=1;feed('🎭 คุณยิ้มให้เขาทุกเช้าเหมือนกัน สงครามเย็นเริ่มขึ้น')}),O('🤐 เก็บไว้ในใจ',()=>feed('🤐 คุณเลิกเล่าเรื่องสำคัญให้เขาฟัง'))])};
+function evHeroTr(K){heroTr(K);const X=X2(K),L=(X.cls||[]).filter(c=>c.st==='ok'&&c.tr&&!(X.trSeen||{})[c.n]);if(!L.length)return;const c=pick(L);X.trSeen=X.trSeen||{};X.trSeen[c.n]=1;(HTE[c.tr]||HTE.kind)(K,c)}
+{const _fb=fanBegin;fanBegin=function(RR){_fb.apply(this,arguments);try{const K=FN();if(K&&K.w==='lost'){K.f.sp=(RR&&RR.sp)||K.f.sp||pick(Object.keys(LSP))}if(K)heroTr(K)}catch(e){}}}
+{const _df=doFocus;doFocus=function(K){const f=S.focus;
+ if(K.w==='lost'&&f==='fa_surv'){const P=lsp(K);heal(.25);K.pw+=K.pw<capOf(K)?(capOf(K)-K.pw)*.1:R(1,2);feed(`🏕️ เอาตัวรอด${P[1].replace(/^(กลาง|ใน|บน)/,'ใน')} ${pick(['สร้างที่พักใหม่','หาแหล่งน้ำลับ','ทำกับดักจับสัตว์','เรียนรู้พืชที่กินได้'])}${lsyn(K)?' · สกิลของคุณช่วยได้มาก':''}`);if(rnd()<.2)feed(lootDrop(K,R(0,2),'ป่า').replace(/^ · /,''));return}
+ if(K.w==='lost'&&f==='fa_lsk'){const s=lsk(K);K.skx=(K.skx|0)+R(10,18);if(K.skx>=40+K.skL*15&&K.skL<8){K.skx=0;K.skL++;K.pw+=capOf(K)*.08;feed(`${s[1]} สกิล「${s[2]}」ระดับ ${K.skL} — ${pick(['ใช้ได้ไกลขึ้น','ใช้กับคนอื่นได้แล้ว','มีผลข้างเคียงแปลกๆ ที่มีประโยชน์','แรงขึ้นจนตัวเองตกใจ'])}`)}else feed(`${s[1]} ทดลองสกิล「${s[2]}」${pick(['กับก้อนหิน','กับนก','กับตัวเองตอนหลับ','กับอาหารเย็น'])} · ${K.skx}/${40+K.skL*15}`);return}
+ if(K.w==='lost'&&f==='fa_help'){K.rep+=R(2,5);S.karma=(+S.karma||0)+3;feed(`🤝 ช่วย${pick(['ซ่อมหลังคา','ตามหาเด็กหาย','ไล่หมาป่า','เก็บเกี่ยว','รักษาคนป่วย'])}ให้คนในพื้นที่${money(R(10,40))}`);return}
+ return _df(K)}}
+{const _fy=fanYear;fanYear=function(){const K=FN();const a0=S.age;_fy.apply(this,arguments);if(!K||!S.alive||S.age===a0||K.end)return;try{if(isIso(K)&&(K.w!=='lost'||K.f.met)&&age()>=17&&QU.length<=1&&rnd()<.18){queue(()=>evHeroTr(K));if(!FL)flush()}}catch(e){console.error('p9 year',e)}}}
+{const _fc=window.fanCls;window.fanCls=function(){const K=FN();try{heroTr(K)}catch(e){}_fc.apply(this,arguments);try{const X=X2(K),m=$('modal');m.querySelectorAll('.item').forEach((el,i)=>{const c=X.cls[i];if(c&&c.tr){const t=htr(c.tr),b=el.querySelector('b');if(b&&!el.querySelector('.htr'))b.insertAdjacentHTML('afterend',` <span class="tag2 htr">${t[1]} ${t[2]}</span>`)}})}catch(e){}}}
+window._fan9={LSP,heroTr,evHeroTr,HTE,HTR,trOf};
 
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}
