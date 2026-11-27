@@ -11,7 +11,7 @@ const FT=()=>window._fate||null;
 // ชื่อโลก ↔ รหัสภาพใน /worlds.png
 const WN={murim:['ยุทธภพ','w0','⚔️'],xian:['โลกเทพเซียน','w1','☁️'],god:['โลกเทพ','w3','🌟'],beast:['สัตว์อสูร','w2','🐾'],hell:['โหมดนรก','h','🔥'],short:['ชีวิตสั้น','s','⏳'],junk:['รากขยะ','j','🗑️'],rg:['ผู้ย้อนกาล','rg','🔁'],soul:['ทวีปจิตวิญญาณยุทธ์','l','⭕'],sky:['ทะลุฟ้าดารา','k','🌠'],
  m_normal:['ยุคปัจจุบัน','mn','🏙️'],m_hunter:['ฮันเตอร์','n','🌀'],m_under:['ใต้ดิน','u','🌃'],m_ghost:['ผีไทย','o','👻'],m_loop:['วนลูป','p','🔁'],m_zombie:['ซอมบี้','z','🧟'],m_tower:['หอคอย','t','🗼'],m_game:['ระบบเกม','e','🎮'],m_gatewon:['เกตชนะ','q','💀'],m_doom:['วันสิ้นโลก','y','☄️']};
-const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa'];
+const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa','f'];
 const wk=()=>{try{return FT()?FT().WK():''}catch(e){return''}};
 const css=document.createElement('style');css.textContent=`
 .gdB{font-size:14px}.gdB .gdHd{display:flex;align-items:center;gap:10px;margin-bottom:6px}.gdB .gdIc{font-size:34px;line-height:1}.gdB .gdNm{font-size:18px;font-weight:800}
@@ -327,7 +327,7 @@ if(typeof endGame==='function'){const _eg=endGame;endGame=function(){try{if(S)sn
   setTimeout(nudge,4000)}catch(e){console.error('meta next',e)}},60)}catch(e){}return r}}
 
 // ---------- การ์ดเรื่องสั้นแนวตั้ง 1080×1920 ----------
-let IMG=null;const img=()=>IMG?Promise.resolve(IMG):new Promise(ok=>{const i=new Image();i.onload=()=>{IMG=i;ok(i)};i.onerror=()=>ok(null);i.src='/worlds.png?v=3'});
+let IMG=null;const img=()=>IMG?Promise.resolve(IMG):new Promise(ok=>{const i=new Image();i.onload=()=>{IMG=i;ok(i)};i.onerror=()=>ok(null);i.src='/worlds.png?v=4'});
 const SEG=(()=>{try{return new Intl.Segmenter('th',{granularity:'word'})}catch(e){return null}})();
 function wrap(g,t,maxW){const out=[];let line='';const parts=SEG?[...SEG.segment(t)].map(x=>x.segment):[...t];for(const ch of parts){const tl=line+ch;if(g.measureText(tl).width>maxW&&line){out.push(line);line=ch.trim()?ch:''}else line=tl}if(line)out.push(line);return out}
 function pick5(K){const L=K.filter(x=>x&&x.length>6&&!/📖|ครั้งแรก|คู่มือ|กด ⭕|ปณิธาน/.test(x));if(L.length<=5)return L;const o=[];for(let i=0;i<5;i++)o.push(L[Math.round(i*(L.length-1)/4)]);return o}

@@ -274,5 +274,41 @@ S.fa=(g,f)=>{g.sky(['#2a1a4a','#6a3a6a','#c4626a','#f0a070','#ffd090'],0,44);g.s
  for(const x of [28,66]){g.rect(x,40,1,8,'#3a2a2a');g.rect(x-1,38,3,2,'#ffd27a');g.glow(x,39,4,'#ffd27a',.35)}
  g.person(34,58,'#3c3489','#f0c8a0');g.person(60,58,'#a32d2d','#3a2418');g.rect(33,52,4,1,'#ffffff');
  for(let i=0;i<6;i++){const x=Math.floor(g.R()*W),y=20+Math.floor(g.R()*24);g.px(x,y+((i+f)%2),'#ffe0a0')}};
-window.WSCN={W,H,S,P,order:['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa']};
+
+// 🌉 นครม่านหมอก: คืนหมอกยุคไอน้ำ · หอนาฬิกา · บ้านหลังคาชัน ปล่องควัน · สะพานหินโค้งข้ามคลอง · ตะเกียงแก๊ส · เรือเหาะ
+S.f=(g,f)=>{g.sky(['#0a121c','#18283a','#34505e','#6a8288'],0,44);g.stars(14,['#dfe8f0','#a8c0d0'],22);g.twinkle(4,'#ffffff',20,f);
+ g.glow(85,10,10,'#e8f0f0',.3);g.circ(85,10,5,'#eef2ea');g.circ(87,9,4,'#18283a');
+ // เรือเหาะ
+ const ax=f?19:18;g.ell(ax,8,7,2,'#8a6a3a');g.rect(ax-6,8,12,1,'#5a4424');g.px(ax-3,7,'#b8925a');g.px(ax+1,7,'#b8925a');g.rect(ax-2,11,4,2,'#3a2a18');g.px(ax-1,11,'#ffd27a');g.px(ax+7,7,'#5a4424');g.px(ax+8,8+(f?0:1),'#5a4424');
+ // ภูเขาในหมอก
+ g.ridge(30,5,.07,'#4a626c',3);g.alpha(.35,()=>g.rect(0,26,W,10,'#8aa0a6'));
+ // บ้านแถวหลังคาชัน (ผนังเทาอมฟ้า หลังคาน้ำตาลเข้ม)
+ const HS=[[0,31,12,'#3a4a58'],[11,27,10,'#33424f'],[20,33,9,'#40505e'],[28,25,11,'#2e3c48'],[45,30,10,'#3a4a58'],[71,26,11,'#33424f'],[81,31,15,'#40505e']];
+ for(const [x,y,w,c] of HS){g.rect(x,y,w,48-y,c);g.rect(x,y,1,48-y,'#52646f');const pk=Math.ceil(w/2);for(let j=0;j<pk;j++){const ww=Math.min(w,j*2+2);g.rect(x+Math.floor((w-ww)/2),y-pk+j,ww,1,j===pk-1?'#3a2e2a':'#2a2020')}
+  g.rect(x+w-3,y-pk-2,2,pk,'#1e1a1a');g.px(x+w-3,y-pk-2,'#5a4a40');
+  for(let yy=y+2;yy<46;yy+=4)for(let xx=x+2;xx<x+w-1;xx+=3)g.rect(xx,yy,1,2,g.R()<.6?(g.R()<.8?'#ffc860':'#ffe8a0'):'#1e2832')}
+ // ควันเป็นก้อนลอยขึ้น
+ g.alpha(.45,()=>{for(const [x,y,w] of HS){const cx=x+w-2,cy=y-Math.ceil(w/2)-3;for(let k=0;k<3;k++)g.ell(cx+k+((k+f)%2),cy-k*3,1+k,1+(k>0?1:0),'#b8c4c8')}});
+ // หอนาฬิกา (หน้าสุด)
+ const TC='#232e3a',TD='#18202a';g.rect(56,12,10,36,TC);g.rect(65,12,1,36,TD);g.rect(55,11,12,2,'#3a4654');for(let j=0;j<6;j++){const ww=Math.min(12,j*2+2);g.rect(61-ww/2,5+j,ww,1,'#2a2020')}g.rect(60,1,2,4,'#2a2020');g.px(61,0,'#c8a46a');
+ g.circ(61,17,3,'#f6e2a0');g.ring(61,17,3,3,'#c8a46a');g.rect(61,15,1,2,'#3a2a10');g.rect(61,17,2-(f?1:0)+1,1,'#3a2a10');g.glow(61,17,7,'#ffd890',.3);
+ for(const y of [24,30,36,42])g.rect(60,y,2,3,(y/6+f)%3?'#ffd27a':'#18202a');
+ // คลอง
+ g.rect(0,48,W,16,'#0c1620');for(let y=50;y<64;y+=3)for(let x=(y*7)%9;x<W;x+=9)g.rect(x+(f?1:0),y,3,1,'#1c2e3c');
+ g.rect(0,46,W,2,'#4a5058');g.rect(0,46,W,1,'#6a7078');
+ // สะพานหินโค้ง
+ const bx=22,bw=30,ST='#6a7078',SD='#4a5058';g.rect(bx,38,bw,10,ST);g.rect(bx,38,bw,1,'#8a9098');for(let x=bx+1;x<bx+bw;x+=3)g.rect(x,35,1,3,'#8a9098');g.rect(bx,35,bw,1,'#8a9098');
+ for(let y=40;y<48;y+=2)for(let x=bx+((y/2)%2?0:2);x<bx+bw;x+=4)g.rect(x,y,3,1,SD);
+ for(let i=0;i<bw-8;i++){const t=(i-(bw-8)/2)/((bw-8)/2),h=Math.round(7*Math.sqrt(Math.max(0,1-t*t)));g.rect(bx+4+i,48-h,1,h,'#0c1620')}
+ g.alpha(.5,()=>{for(let i=0;i<bw;i++)g.px(bx+i,49+((i+f)%3),ST)});
+ // ตะเกียงแก๊ส
+ for(const [x,y] of [[bx+1,28],[bx+bw-2,28],[8,38],[74,38],[90,38]]){g.rect(x,y+3,1,(y===28?7:8),'#14161a');g.rect(x-1,y,3,3,'#2a2420');g.px(x,y+1,'#ffe08a');g.glow(x,y+1,5,'#ffcf6a',.45);
+  if(y!==28)g.alpha(.4,()=>{for(let k=0;k<4;k++)g.rect(x-1+((k+f)%2),50+k*3,2,1,'#ffc860')})}
+ // คนเดินบนสะพาน
+ g.person(38,35,'#2a2a3a','#e0c8a0');g.rect(37,29,3,1,'#14141c');g.rect(38,27,1,2,'#14141c');
+ // หมอกเลื่อน 2 ชั้น
+ g.alpha(.25,()=>{for(let x=-8;x<W+8;x+=16)g.ell(x+(f?5:0),42,10,2,'#d0dade')});
+ g.alpha(.2,()=>{for(let x=0;x<W+10;x+=22)g.ell(x-(f?5:0),52,13,2,'#dce4e8')});
+};
+window.WSCN={W,H,S,P,order:['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa','f']};
 })();

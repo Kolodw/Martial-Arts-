@@ -37119,7 +37119,7 @@ wSlot('late96',["openNovels","nvOpenBook","openLifeView"]);
 //   การ์ดเลือกโลกหน้าแรก · ปุ่มเลือกทำเนียบ · แบนเนอร์ทำเนียบ · สมุดโลก · หน้าต่างแนะนำโลกครั้งแรก · กล่องจบชีวิต
 // ============================================================
 try{(()=>{
-const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa'],N=ORD.length,URL0='/worlds.png?v=3';
+const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa','f'],N=ORD.length,URL0='/worlds.png?v=4';
 const yp=id=>{const i=ORD.indexOf(id);return i<0?null:(i/(N-1)*100).toFixed(4)+'%'};
 // ภาพย่อเต็มเฟรม (3:2)
 window.wimTh=function(id,cls){const y=yp(id);if(y==null)return'';return`<span class="wim ${cls||''}" style="--y:${y}" role="img"></span>`};
@@ -41038,7 +41038,8 @@ try{setTimeout(()=>{try{wLoad('legend').catch(()=>{})}catch(e){}},3600)}catch(e)
 try{setTimeout(()=>{try{wLoad('bond').catch(()=>{})}catch(e){}},4000)}catch(e){} /* 👥 ผูกชะตาเพื่อน · 🔮 ทายชะตา · 🌍 ยุคประจำสัปดาห์ · 🎧 ฟังนิยาย · 📸 ภาพประกอบนิยาย (/w/bond.js) */
 try{setTimeout(()=>{try{wLoad('pet').catch(()=>{})}catch(e){}},4200)}catch(e){} /* 🐾 สัตว์คู่ใจข้ามชาติ (/w/pet.js) */
 try{setTimeout(()=>{try{wLoad('div').catch(()=>{})}catch(e){}},4400)}catch(e){} 
-try{setTimeout(()=>{try{wLoad('fogb').catch(()=>{})}catch(e){}},2600)}catch(e){} /* 🌉 ทำเนียบนครม่านหมอก: ธีม · กรอบ/ฉายารางวัล · แอดมินสุ่มเอง (/w/fogb.js) */ /* 💔 ขอหย่า/เลิกกัน ทุกโลก (/w/div.js) */
+try{setTimeout(()=>{try{wLoad('fogb').catch(()=>{})}catch(e){}},2600)}catch(e){}
+try{setTimeout(()=>{try{wLoad('bdhud').catch(()=>{})}catch(e){}},2800)}catch(e){} /* 🏆 แผ่นเลือกทำเนียบแบบ HUD (/w/bdhud.js) */ /* 🌉 ทำเนียบนครม่านหมอก: ธีม · กรอบ/ฉายารางวัล · แอดมินสุ่มเอง (/w/fogb.js) */ /* 💔 ขอหย่า/เลิกกัน ทุกโลก (/w/div.js) */
 // ============================================================
 // BLOCK 302 📱 โครงหน้าจอมือถือใหม่ (ux2): หัวกระชับ · ป้ายรวมเป็นอันเดียว · เลื่อนอ่านแล้วหัว/ฉากหด · ปุ่มเล่นมีวงแหวนเดือน + กดค้างเลือกความเร็ว
 // ใช้เฉพาะจอแคบ · ปิดได้ที่ ☰ เมนู → "หน้าจอแบบเดิม" (LS murim_uxold)
@@ -41383,13 +41384,13 @@ const FW3=[['iso','⚔️','ต่างโลก','ถูกอัญเชิ�
 const FWX={iso:{wy:'fi',tg:['เริ่มอายุ 16','ผู้กล้า / สกิลขยะ'],d:'ถูกอัญเชิญมาพร้อมเพื่อนทั้งห้อง ลูกแก้วจะบอกว่าคุณคือผู้กล้า หรือคนที่วังโยนทิ้ง'},
  magic:{wy:'fm',tg:['เริ่มอายุ 12','วิทยาลัยเวท'],d:'วิทยาลัยเวทบนเกาะลอยฟ้า ทุกปีมีนักเรียนหายไป และห้องที่ 13 ไม่มีประตู'},
  noble:{wy:'fa',tg:['เริ่มอายุ 12','การเมืองขุนนาง'],d:'เด็กทุนคนเดียวในสถาบันลูกขุนนาง ทุกงานเลี้ยงคือการเมือง'}};
-const WORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa'];
+const WORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa','f'];
 const wyOf=id=>(WORD.indexOf(id)/(WORD.length-1)*100).toFixed(4)+'%';
 let fsel=null;try{fsel=LS.get('murim_fansel',null)}catch(e){}if(!FW3.some(w=>w[0]===fsel))fsel='iso';
 const css=document.createElement('style');css.textContent=`#wPick.fanOn .wcFb{display:none!important}
 #wPick .wcF3{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:6px 13% 8px 2px;margin:0 -2px}#wPick .wcF3::-webkit-scrollbar{display:none}
 #wPick .fwc{position:relative;flex:0 0 74%;max-width:300px;min-height:168px;scroll-snap-align:center;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;padding:12px 13px 11px;border-radius:18px;border:3px solid var(--a);background:#1b1430;color:#fff;overflow:hidden;cursor:pointer;text-align:left;transition:transform .2s,opacity .2s,box-shadow .2s;opacity:.7;transform:scale(.95)}
-#wPick .fwc::before{content:'';position:absolute;left:0;top:0;width:100%;aspect-ratio:3/2;min-height:100%;z-index:0;background:url(/worlds.png?v=3) 0 var(--wy)/200% ${WORD.length*100}% no-repeat;image-rendering:pixelated;animation:fwcA 1.3s steps(1) infinite}
+#wPick .fwc::before{content:'';position:absolute;left:0;top:0;width:100%;aspect-ratio:3/2;min-height:100%;z-index:0;background:url(/worlds.png?v=4) 0 var(--wy)/200% ${WORD.length*100}% no-repeat;image-rendering:pixelated;animation:fwcA 1.3s steps(1) infinite}
 #wPick .fwc::after{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#0000 0%,#0003 34%,#000b 70%,#000e);pointer-events:none}
 @keyframes fwcA{0%{background-position:0 var(--wy)}50%{background-position:100% var(--wy)}}
 #wPick .fwc>*{position:relative;z-index:1}
