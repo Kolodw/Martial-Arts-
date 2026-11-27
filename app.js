@@ -41493,7 +41493,7 @@ window.fanBornMenu=function(w){window._fanLk=null;window._fanCs=null;const k=w==
  <button class="opt" onclick="closeM();window.fanStart('${k}')">🎲 สุ่ม ให้ฟ้าลิขิต<small>สุ่มชะตา พรสวรรค์ เผ่าพันธุ์ หน้าตา${k==='iso'?' โลกย่อย และอายุตอนถูกอัญเชิญ':''} · ดูผลแล้วกดเกิดใหม่ได้ 5 ครั้ง (ผู้สนับสนุนได้มากกว่า) · ล็อกชะตาได้</small></button>
  <button class="opt" onclick="closeM();window._fanFL(()=>window.fanDesign('${k}'))">🎨 ออกแบบหน้าตา ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ สีผม สีผิว และชื่อเอง แล้วไปหน้าสุ่มกำเนิด สุ่มใหม่/ล็อกชะตาได้</small></button>
  <button class="opt" onclick="closeM();window._fanFL(()=>window.fanCustom('${k}'))">✍️ สร้างเอง<small>เลือก${k==='iso'?'โลกย่อย อายุ จุดเกิด':'ชะตาพิเศษ'} และกฎแปลกของโลกเอง · สุ่มใหม่ได้ 5 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ปลดความสำเร็จ และไม่นับชะตาประจำวัน</span></small></button>
- <button class="opt" disabled style="opacity:.55;cursor:default">🐾 เกิดเป็นสัตว์ / มอนสเตอร์<small>เกิดเป็นสไลม์ หมาป่า มังกร และสัตว์อสูรอีกมากมาย · <b style="color:#ffd54a">เร็วๆ นี้</b></small></button>`,'fanbm')};
+ ${k==='iso'?'':'<!--'}<button class="opt" disabled style="opacity:.55;cursor:default">🐾 เกิดเป็นสัตว์ / มอนสเตอร์<small>เกิดเป็นสไลม์ หมาป่า มังกร และสัตว์อสูรอีกมากมาย · <b style="color:#ffd54a">เร็วๆ นี้</b></small></button>${k==='iso'?'':'-->'}`,'fanbm')};
 })()}catch(e){console.error('block315',e)}
 // BLOCK 315b: ป้ายอายุเริ่มต้นบนการ์ดโลกแฟนตาซีให้ตรงกับระบบใหม่ (ทารก / สุ่ม 0–16)
 try{(()=>{const MP={'เริ่มอายุ 16':'อายุสุ่ม 0–16','เริ่มอายุ 12':'เกิดเป็นทารก','ผู้กล้า / สกิลขยะ':'ผู้กล้า / สกิลขยะ / หลงมิติ'};
