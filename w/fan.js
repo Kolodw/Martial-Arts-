@@ -1932,7 +1932,7 @@ window._fan4={X3,recalcE,lootDrop,meetMon,evTravel,evRegion,evBoss,evClass,evPro
 // ####################################################################
 const mgWatch=(id,f)=>{const iv=setInterval(()=>{if(!document.getElementById(id)){clearInterval(iv);f()}},600)};
 // ---- มินิเกม 9) กดรัว ----
-function mgMash(title,cb,N0){cb=mgW(cb,'fight');if(auto)return cb(autoSc());const N=N0||32;let n=0,t0=0,done=0,tm=null;
+function mgMash(title,cb,N0){cb=mgW(cb,'fight');if(auto)return cb(autoSc());const N=N0||26;let n=0,t0=0,done=0,tm=null;
  const fin=()=>{if(done)return;done=1;clearInterval(tm);setTimeout(()=>{closeM();cb(cl(n/N,0,1))},500)};
  window._fms=()=>{if(done)return;if(!t0){t0=Date.now();tm=setInterval(()=>{const l=5-(Date.now()-t0)/1000,e=document.getElementById('fmsT');if(!e){clearInterval(tm);if(!done){done=1;cb(cl(n/N,0,1))}return}e.textContent=`⏱️ ${Math.max(0,l).toFixed(1)} วิ`;if(l<=0)fin()},100)}n++;const b=document.getElementById('fmsB'),m=document.getElementById('fmsM');if(b)b.style.width=cl(n/N*100,0,100)+'%';if(m){m.style.transform=`scale(${1+Math.min(1.2,n/N)})`;m.textContent=n>=N?'🔥':n>N*.6?'💪':'✊'}try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}};
  modal(`<div class="fmg"><h3>💪 ${title}</h3><div class="tg">กดรัวให้ได้ ${N} ครั้งใน 5 วินาที · เวลาเริ่มนับเมื่อกดครั้งแรก</div><div style="text-align:center;font-size:44px;height:90px;line-height:90px"><span id="fmsM" style="display:inline-block;transition:transform .08s">✊</span></div><div class="fmgT" style="height:14px"><i id="fmsB" style="display:block;height:100%;width:0;background:linear-gradient(90deg,#f39c12,#e74c3c);border-radius:8px"></i></div><div class="fmgLog" id="fmsT">⏱️ 5.0 วิ</div><div class="fmgB"><button onpointerdown="_fms()" style="min-width:200px;font-size:20px;touch-action:manipulation">👊 รัว!</button></div></div>`,'fanmg');mgWatch('fmsM',()=>{if(!done){done=1;clearInterval(tm);cb(cl(n/N,0,1))}})}
@@ -1993,7 +1993,7 @@ MV.muscle={ic:'💪',n:'ไร้มานา ใช้กล้ามแทน'
   O('🔥 ลงแข่งทุกด่าน',()=>{let t=0;mgMash('ด่าน 1: ยกหินเวท',a=>{t+=a;mgHold('ด่าน 2: ปีนหอคอย (ชาร์จแรงกระโดด)',b=>{t+=b;mgDuel('ด่าน 3: ดวลแชมป์',`แชมป์ปีก่อน`,c=>{t+=c;if(t/3>=.6){MS(K).champ=1;MS(K).mus+=30;say('🏆 <b>คุณชนะการคัดเลือก!</b> ไม่มีใครเห็นคุณร่ายเวทเลยสักครั้ง แต่ไม่มีใครกล้าถาม','epic',true);K.yrS+=30}else feed('🏆 ตกรอบ แต่สถิติยกหินของคุณยังไม่มีใครทำลายได้')})})})},'มินิเกม 3 ด่าน',.6),
   O('🙅 ไม่ลง กลัวความลับหลุด',()=>feed('🙅 คุณนั่งดูอยู่บนอัฒจันทร์ กินขนมปังไปสิบก้อน'),'',.4)])],
  [24,K=>C('🌋 เวทต้องห้ามถล่มเมือง','จอมเวทนอกรีตปลุกเวทต้องห้าม ลูกอุกกาบาตเวทขนาดเท่าภูเขาร่วงลงมาที่เมืองหลวง ไม่มีเวทป้องกันใดรับไหว',[
-  O('👊 ต่อยมัน',()=>mgMash('ต่อยอุกกาบาตเวท!!!',sc=>{const m=MS(K);const ok=sc*.6+Math.min(1,m.mus/250)*.4;if(ok>=.55){m.fist=1;say('👊 <b>คุณต่อยอุกกาบาตเวทแตกกลางฟ้า</b> เศษหินร่วงลงมาเป็นฝนดาวตก ทั้งเมืองรู้ความจริงในวันนั้น — ผู้ช่วยเมืองไม่มีมานาแม้แต่หยดเดียว','myth',true);m.sus=100;m.out=1;K.rep+=30}else{say('👊 หมัดของคุณทำให้มันเฉียงไปตกนอกเมือง แขนขวาหักทั้งแขน','bad',true);S.hp=Math.max(1,Math.round(S.maxHp*.2))}},40),'มินิเกม',.7),
+  O('👊 ต่อยมัน',()=>mgMash('ต่อยอุกกาบาตเวท!!!',sc=>{const m=MS(K);const ok=sc*.6+Math.min(1,m.mus/250)*.4;if(ok>=.55){m.fist=1;say('👊 <b>คุณต่อยอุกกาบาตเวทแตกกลางฟ้า</b> เศษหินร่วงลงมาเป็นฝนดาวตก ทั้งเมืองรู้ความจริงในวันนั้น — ผู้ช่วยเมืองไม่มีมานาแม้แต่หยดเดียว','myth',true);m.sus=100;m.out=1;K.rep+=30}else{say('👊 หมัดของคุณทำให้มันเฉียงไปตกนอกเมือง แขนขวาหักทั้งแขน','bad',true);S.hp=Math.max(1,Math.round(S.maxHp*.2))}},34),'มินิเกม',.7),
   O('🏃 อพยพชาวเมือง',()=>feed('🏃 คุณแบกคนออกจากเมืองได้ทีละสิบคน รวมสองพันคน'+rep(15)),'',.3)])]],
  yr:K=>{const m=MS(K);m.sus=cl(m.sus,0,100);if(m.sus>=100&&!m.out&&!m.hunt){m.hunt=1;return()=>C('🔥 ความลับหลุด','ทั้งวิทยาลัยรู้แล้วว่าคุณไม่มีมานา หน่วยกำจัดมาถึงประตูหอพักตอนเที่ยงคืน',[
   O('👊 สู้ทั้งหน่วย',()=>duel('หน่วยกำจัดคนไร้มานา',Math.round(threat(K)*1.3),w=>{if(w){m.out=1;say('👊 หน่วยกำจัดทั้งหน่วยแตกพ่าย คุณยืนกลางลานวิทยาลัย ไม่มีใครกล้าไล่คุณอีก','epic',true)}else ending(K,'mus_hunt','คุณหนีออกจากวิทยาลัยและถูกไล่ล่าไปจนสุดขอบทวีป ที่นั่นคุณสร้างกระท่อมและฝึกกล้ามจนวันสุดท้าย','ถูกไล่ล่าจนสุดขอบโลก')}),'ต่อสู้',.6),
@@ -2777,6 +2777,162 @@ window._fanDl=function(c,k,beginFn,back){const fw=c.w.slice(1),I=dailyInfo(k,fw)
   const m=D.mx||(D.mx={});m.age=Math.max(m.age||0,S.age);m.money=Math.max(m.money||0,S.money||0);m.pow=Math.max(m.pow||0,S.power||0);m.fame=Math.max(m.fame||0,K.rep||0);
   const e=(D.fev||[]).find(x=>!x.d&&S.age>=x.a);if(e&&S.alive&&!K.end){e.d=1;queue(()=>genEv(K,mulberry(e.s)));if(!FL)flush()}}catch(e){console.error('fdl yr',e)}}}
 window._fan7={X7,genEv,evLeg,evCq,evRum,npcLife,achCheck,genSave,genOffer,dailyInfo,birth7,RULE,LEG,ACH,plantCq,plantRum,dejaVu};
+
+
+// ####################################################################
+// ภาค 8: จอมมารกลับชาติ (ดี/ชั่ว) · ทัวร์นาเมนต์ · ปกครองแคว้น · ล่ามังกร · การ์ดแชร์ · เอฟเฟกต์
+// ####################################################################
+const X8=K=>K.x8||(K.x8={});
+const fxBig=(k,sc)=>{try{if(window.pxFx)window.pxFx(k,innerWidth/2,innerHeight*.42,sc||1.4)}catch(e){}};
+const regEnd=(L,ws)=>{for(const w of ws||Object.keys(ENDS))for(const e of L)ENDS[w][e[0]]=[e[1],e[2],e[3]].concat(e[4]?[1]:[])};
+// ---------- 😈 จอมมารกลับชาติ ----------
+const DKG=[['🐺','แม่ทัพหมาป่าโกรห์','อยากบุกมนุษย์ทุกวัน'],['🧛','ราชินีแวมไพร์เซราฟีน','สนใจแค่ความงามและอำนาจ'],['💀','ลิชผู้ภักดีมอร์ต','ภักดีจนน่ากลัว'],['🐉','มังกรดำนอคทิส','ขี้เกียจ ขอแค่ได้นอน']];
+const DK_=K=>X8(K).dk;
+const alT=a=>a>=50?'😇 จอมมารผู้ใจดี':a>=15?'🙂 ค่อนข้างดี':a>-15?'⚖️ กลางๆ':a>-50?'😈 ค่อนข้างชั่ว':'👿 จอมมารผู้โหดร้าย';
+function dkAl(K,d){const D=DK_(K);D.al=cl(D.al+d,-100,100);return ` · ${d>0?'😇':'😈'} ${d>0?'+':''}${d} (${alT(D.al)})`}
+function dkGen(K,i,d){const g=DK_(K).g[i];g.loy=cl(g.loy+d,0,100);return ` · ${g.ic} ภักดี ${d>0?'+':''}${d}`}
+function dkStart(K){const X=X8(K);X.dk={al:0,army:1000,g:DKG.map(g=>({ic:g[0],n:g[1],t:g[2],loy:R(45,70),alive:1})),wv:0,nx:age()+R(3,5),sn:{}};K.pw+=capOf(K)*.4;K.mpM+=30;S.maxHp+=60;S.hp=S.maxHp;recalcE(K);
+ fxBig('fw',1.6);say(`👑 <b>คุณคือจอมมารที่กลับชาติมาเกิด</b> — ความทรงจำห้าร้อยปีไหลกลับมาในคืนพระจันทร์สีแดง ปีศาจทั้งทวีปรู้สึกได้ทันที แม่ทัพทั้งสี่กำลังเดินทางมาหาคุณ<br><span class="tag2">ชาตินี้จะเป็นจอมมารแบบไหน ขึ้นกับคุณเอง</span>`,'myth',true)}
+const DKEV=[
+ K=>C('🏰 แม่ทัพทั้งสี่มาถึง','แม่ทัพทั้งสี่คุกเข่าต่อหน้าคุณ "ฝ่าบาท ห้าร้อยปีที่ผ่านมา มนุษย์ยึดดินแดนเราไปครึ่งหนึ่ง จะสั่งอย่างไร"',[
+  O('⚔️ เตรียมทัพ บุกมนุษย์',()=>feed('⚔️ โกรห์หอนลั่นด้วยความดีใจ'+dkAl(K,-15)+dkGen(K,0,15)+((DK_(K).army+=500),'')),'',.35),
+  O('🕊️ ประกาศว่าจะไม่มีสงครามอีก',()=>feed('🕊️ ห้องโถงเงียบกริบ มีแค่นอคทิสที่ยิ้มแล้วกลับไปนอน'+dkAl(K,18)+dkGen(K,0,-15)+dkGen(K,3,10)),'',.35),
+  O('🤫 ซ่อนตัวตนไปก่อน ใช้ชีวิตเป็นมนุษย์',()=>feed('🤫 แม่ทัพทั้งสี่แปลงร่างเป็นคนรับใช้ในบ้านคุณ เพื่อนบ้านสงสัยว่าทำไมคนสวนตัวใหญ่ขนาดนั้น'+dkGen(K,2,10)),'',.3)]),
+ K=>C('🍖 ปีศาจหิวโหย','ฤดูหนาวนี้ปีศาจชั้นล่างอดอยาก พวกมันขออนุญาตบุกปล้นหมู่บ้านมนุษย์ชายแดน',[
+  O('😈 อนุญาต',()=>feed('😈 หมู่บ้านสามแห่งหายไป ปีศาจอิ่มทั้งฤดู'+money(800)+dkAl(K,-20)+((DK_(K).army+=300),'')),'',.3),
+  O('🌾 ปฏิรูปไร่ปีศาจ (มินิเกม)',()=>mgHold('เพาะปลูกบนดินแดนปีศาจให้ได้ผล',sc=>feed(sc>=.55?'🌾 ข้าวสาลีสีม่วงขึ้นเต็มทุ่ง ปีศาจได้กินอิ่มโดยไม่ต้องปล้นใคร'+dkAl(K,15):'🌾 ผลผลิตได้ครึ่งเดียว ปีศาจบางกลุ่มแอบไปปล้นอยู่ดี'+dkAl(K,-5))),'มินิเกม',.4),
+  O('💰 แบ่งคลังสมบัติให้',()=>feed(money(-Math.min(S.money||0,600))+' 💰 ปีศาจไม่เคยมีจอมมารที่ยอมจ่ายเงินให้มาก่อน'+dkAl(K,10)+dkGen(K,1,-10)),'',.3)]),
+ K=>C('🤝 ทูตมนุษย์มาเจรจา','ทูตมนุษย์ตัวสั่นยื่นสาส์นจากราชา ขอสงบศึกสิบปี แลกกับดินแดนชายแดนครึ่งหนึ่ง',[
+  O('🗣️ เจรจาให้ได้มากกว่านี้ (มินิเกม)',()=>mgRead('ต่อรองกับทูตมนุษย์','ทูตมนุษย์',sc=>feed(sc>=.55?'🗣️ ได้ดินแดนคืนทั้งหมดโดยไม่เสียเลือด ทูตกลับไปพร้อมความเคารพ'+dkAl(K,8)+((DK_(K).dom=(DK_(K).dom|0)+20),''):'🗣️ เจรจาล้มเหลว ทูตหนีกลับ'+dkAl(K,-3))),'มินิเกม',.4),
+  O('✍️ เซ็นสัญญาตามที่ขอ',()=>feed('✍️ สิบปีแห่งสันติ แม่ทัพบางคนไม่พอใจ'+dkAl(K,12)+dkGen(K,0,-10)),'',.3),
+  O('🩸 ส่งหัวทูตกลับไป',()=>feed('🩸 ทั้งทวีปรู้ว่าจอมมารกลับมาแล้ว'+dkAl(K,-25)+dkGen(K,0,15)),'',.3)]),
+ K=>{const D=DK_(K),L=D.g.filter(g=>g.alive).sort((a,b)=>a.loy-b.loy),g=L[0];if(!g)return;const i=D.g.indexOf(g);
+  C(`🗡️ ${g.ic} ${g.n}คิดกบฏ`,`สายลับรายงานว่า${g.n} (ภักดี ${g.loy}) กำลังรวบรวมกองกำลังเพื่อชิงบัลลังก์`,[
+   O('⚔️ ดวลต่อหน้าทั้งกองทัพ',()=>mgDuel(`ดวลกับ${g.n}`,g.n,sc=>{if(sc>=.55){g.loy=90;feed(`⚔️ ${g.n}คุกเข่า "ข้าลืมไปว่าทำไมท่านถึงเป็นจอมมาร"`+dkAl(K,-3))}else{g.alive=0;D.army=Math.round(D.army*.7);say(`⚔️ ${g.n}พาทหารสามส่วนออกไปตั้งอาณาจักรของตัวเอง`,'bad')}}),'มินิเกม',.4),
+   O('🫂 ถามว่าต้องการอะไร',()=>{g.loy+=R(15,35);feed(`🫂 ${g.n}บอกว่า "${g.t}" คุณให้ในสิ่งที่ให้ได้`+dkAl(K,6))},'',.35),
+   O('💀 กำจัดก่อนลงมือ',()=>{g.alive=0;feed(`💀 ${g.n}หายไปในคืนเดียว แม่ทัพที่เหลือภักดีขึ้น… ด้วยความกลัว`+dkAl(K,-18));D.g.forEach(x=>{if(x.alive)x.loy+=10})},'',.25)])},
+ K=>C('👸 เจ้าหญิงตัวประกัน','ราชามนุษย์ส่งลูกสาวมาเป็นตัวประกันเพื่อสันติ เธอเดินเข้าปราสาทปีศาจโดยไม่สั่นเลยสักนิด',[
+  O('🌹 ปฏิบัติต่อเธออย่างแขกเกียรติยศ',()=>{X8(K).prin=1;feed('🌹 เธอสอนแม่ทัพหมาป่าเล่นหมากรุก และเริ่มอ่านหนังสือในห้องสมุดของคุณทุกคืน'+dkAl(K,10))},'',.4),
+  O('⛓️ ขังไว้ในหอคอย',()=>feed('⛓️ คืนนั้นเธอร้องเพลงจากหอคอย ทั้งปราสาทได้ยิน'+dkAl(K,-10)),'',.3),
+  O('🏇 ส่งกลับไปพร้อมจดหมาย "ข้าไม่ต้องการตัวประกัน"',()=>feed('🏇 ราชามนุษย์อ่านจดหมายซ้ำสามรอบ'+dkAl(K,15)),'',.3)]),
+ K=>C('🏙️ เมืองหลวงปีศาจ','ถึงเวลาสร้างเมืองหลวงใหม่ ปีศาจรอคำสั่งว่าจะสร้างอะไรเป็นอย่างแรก',[
+  O('🏫 โรงเรียนสำหรับลูกปีศาจ',()=>feed('🏫 รุ่นแรกมีนักเรียนสองพันตัว ครูคนแรกคือลิชมอร์ต'+dkAl(K,15)+dkGen(K,2,10))),
+  O('🏟️ สนามประลองทาสมนุษย์',()=>feed('🏟️ เสียงโห่ร้องดังทุกคืน'+money(1000)+dkAl(K,-20)+dkGen(K,1,10))),
+  O('🛒 ตลาดเปิดให้มนุษย์มาค้าขาย',()=>feed('🛒 พ่อค้ามนุษย์กล้าๆ กลุ่มแรกกลับไปพร้อมกำไรสามเท่า ข่าวลือเริ่มเปลี่ยน'+money(500)+dkAl(K,10)))]),
+ K=>C('⚡ เทพลงมาตำหนิ',`เทพองค์หนึ่งลอยอยู่เหนือปราสาท "จอมมารมีหน้าที่เป็นปีศาจร้าย เพื่อให้มนุษย์มีศัตรูร่วมกัน เจ้ากำลังทำลายสมดุล"`,[
+  O('😈 "งั้นข้าจะทำลายมันให้หมด"',()=>duel('เทพผู้รักษาสมดุล',Math.round(threat(K)*1.25),w=>feed(w?'😈 เทพถอยกลับขึ้นฟ้าพร้อมปีกที่หัก'+dkAl(K,-10)+pw(capOf(K)*.1):'😈 สายฟ้าฟาดลงกลางปราสาท'+hurt(.4))),'ต่อสู้',.4),
+  O('🗣️ "สมดุลแบบนั้นไม่ใช่สิ่งที่ข้าเลือก"',()=>{if(K.clue<3)feed(clue(K,'บทจอมมารถูกเทพเขียนไว้ตั้งแต่แรก'));feed('🗣️ เทพมองคุณนาน แล้วหายไปโดยไม่พูดอะไร'+dkAl(K,10))},'',.6)]),
+ K=>C('📜 ความทรงจำชาติก่อน','ในฝัน คุณเห็นวันที่ถูกฆ่าเมื่อห้าร้อยปีก่อน คนที่ปักดาบลงอกไม่ใช่ผู้กล้า แต่เป็นแม่ทัพคนหนึ่งของคุณเอง',[
+  O('🔍 สืบว่าใคร (มินิเกม)',()=>mgRune('ต่อความทรงจำชาติก่อน',5,sc=>{const D=DK_(K),g=pick(D.g.filter(x=>x.alive))||D.g[0];if(sc>=.55){X8(K).trait=g.n;feed(`🔍 คนนั้นคือ${g.n} — แต่ชาตินี้เขายังไม่รู้ว่าคุณจำได้`)}else feed('🔍 ความทรงจำพร่าเลือน ใบหน้านั้นหายไป')}),'มินิเกม',.5),
+  O('🌫️ ช่างมัน ชาตินี้คือชาตินี้',()=>feed('🌫️ คุณตื่นมาด้วยความรู้สึกเบาสบายอย่างประหลาด'+dkAl(K,5)),'',.5)])];
+function dkWave(K){const D=DK_(K);D.wv++;let past=null;try{const A=LS.get('murim_fanarch',null);past=A&&A.last&&D.wv===2?A.last.n:null}catch(e){}
+ const hn=past||nm(rnd()<.5?'m':'f');C(`⚔️ ผู้กล้ารุ่นที่ ${D.wv} มาถึง`,`วงเวทอัญเชิญส่งผู้กล้าคนใหม่มาจากต่างโลก <b>${E(hn)}</b>${past?' — หน้าตาเหมือนคุณในชาติก่อนไม่มีผิด… หรือนี่คือคุณจริงๆ':''} กำลังเดินทัพมาที่ปราสาท · กองทัพปีศาจ ${fmt(D.army)}`,[
+  O('⚔️ สู้ด้วยตัวเอง',()=>duel(hn,Math.round(threat(K)*(1+D.wv*.12)),w=>{if(w){feed(`⚔️ ผู้กล้า${E(hn)}ล้มลง`+(D.al>=30?' คุณไว้ชีวิตแล้วส่งกลับโลกเดิม'+dkAl(K,5):' ร่างของเขาถูกแขวนหน้าประตูเมือง'+dkAl(K,-8))+pw(capOf(K)*.05));if(past)X8(K).pastWin=1}else if(K.save>0){K.save--;feed('⚔️ คุณเกือบตาย แต่รอดมาได้ · รอดตาย -1'+hurt(.5))}else ending(K,'dk_slain',`ผู้กล้า${E(hn)}ปักดาบลงกลางบัลลังก์ ${D.al>=30?'ก่อนสิ้นใจ คุณบอกเขาว่า "ดูแลปีศาจที่ไม่ได้ทำผิดด้วย" เขาสัญญา':'ทั้งทวีปเฉลิมฉลองเจ็ดวันเจ็ดคืน'}`,'ถูกผู้กล้าสังหารบนบัลลังก์จอมมาร')}),'ต่อสู้',.45),
+  O('🪤 วางกับดักทั้งปราสาท (มินิเกม)',()=>mgCups('ซ่อนห้องบัลลังก์จริงจากผู้กล้า',sc=>feed(sc>=.5?`🪤 ผู้กล้า${E(hn)}หลงในปราสาทสามเดือนแล้วออกไปเอง`:'🪤 ผู้กล้าเจอทางเข้า กองทัพเสียหายหนัก'+((D.army=Math.round(D.army*.8)),'')),'🚪'),'มินิเกม',.3),
+  O('🍵 เชิญมาดื่มชาคุยกัน',()=>mgRead('คุยกับผู้กล้าให้เข้าใจ',hn,sc=>{if(sc>=.55&&D.al>=0){X8(K).heroF=(X8(K).heroF|0)+1;feed(`🍵 ผู้กล้า${E(hn)}วางดาบลง "ข้าถูกหลอกมาตลอดสินะ" เขาอยู่เป็นที่ปรึกษาของคุณ`+dkAl(K,10))}else feed(`🍵 ผู้กล้าสาดชาใส่หน้าคุณแล้วชักดาบ`+hurt(.25))}),'',.25)])}
+const DKE=[['dk_kind','😇','จอมมารผู้ใจดี','เป็นจอมมารสายดีจนจบ'],['dk_tyrant','👿','จอมมารผู้พิชิตทวีป','เป็นจอมมารสายชั่วจนจบ'],['dk_slain','⚔️','ล้มบนบัลลังก์','ถูกผู้กล้าสังหาร'],['dk_retire','🧁','จอมมารเกษียณ','ทิ้งบัลลังก์ไปใช้ชีวิตธรรมดา'],['dk_friend','🤝','จอมมารที่ผู้กล้าเรียกว่าเพื่อน','สายดีมาก + ผู้กล้าเป็นมิตร + แม่ทัพภักดีทุกคน',1],['dk_void','🌑','ฟ้ามืดตลอดกาล','สายชั่วสุดขั้ว + ชนะผู้กล้าที่เป็นตัวคุณชาติก่อน',1]];
+regEnd(DKE);
+function dkFin(K,o){const D=DK_(K);if(!D)return;const loyal=D.g.every(g=>!g.alive||g.loy>=70);
+ if(D.al>=40)o.push(O('😇 ปกครองแบบจอมมารผู้ใจดีจนวันสุดท้าย',()=>ending(K,'dk_kind','ปีศาจกับมนุษย์ค้าขายกันข้ามพรมแดน เด็กปีศาจไปโรงเรียน ส่วนเด็กมนุษย์เล่านิทานเรื่องจอมมารที่ไม่เคยกินใคร','สวรรคตบนบัลลังก์ท่ามกลางปีศาจที่ร้องไห้ทั้งอาณาจักร'),'',.3));
+ if(D.al<=-40)o.push(O('👿 พิชิตทวีปให้สิ้นซาก',()=>ending(K,'dk_tyrant',`กองทัพปีศาจ ${fmt(D.army)} ตนเดินทัพข้ามทวีป ราชาทุกองค์คุกเข่า โลกนี้เป็นของคุณ และไม่มีใครกล้าพูดชื่อคุณดังๆ อีก`,'ครองทวีปในฐานะจอมมารผู้โหดร้ายจนสิ้นอายุขัย'),'',.3));
+ o.push(O('🧁 ทิ้งบัลลังก์ เปิดร้านขนม',()=>ending(K,'dk_retire','คุณยกบัลลังก์ให้แม่ทัพที่ภักดีที่สุด แล้วเปิดร้านขนมในเมืองมนุษย์ ลูกค้าไม่เคยรู้ว่าคนทำครัวซองต์อร่อยที่สุดในเมืองเคยเป็นจอมมาร','จากไปอย่างสงบหลังเตาอบ'),'',.2));
+ if(D.al>=70&&(X8(K).heroF|0)>=1&&loyal)o.push(O('🤝 จับมือผู้กล้าต่อหน้าทวีป',()=>ending(K,'dk_friend','ผู้กล้ากับจอมมารยืนจับมือกันกลางสนามรบสุดท้าย ทั้งสองกองทัพวางอาวุธพร้อมกัน วงเวทอัญเชิญถูกทำลาย จะไม่มีผู้กล้าหรือจอมมารรุ่นต่อไปอีก','จากไปในฐานะเพื่อนของผู้กล้า'),'🗝️ ฉากจบลับ',.1));
+ if(D.al<=-80&&X8(K).pastWin)o.push(O('🌑 ดับดวงอาทิตย์',()=>ending(K,'dk_void','คุณฆ่าผู้กล้าที่เป็นตัวเองในชาติก่อน แล้วยื่นมือขึ้นดับดวงอาทิตย์ ทวีปจมสู่ความมืดตลอดกาล มีแต่บัลลังก์ของคุณที่ส่องแสง','ยังไม่ตาย ยังนั่งอยู่บนบัลลังก์ในความมืด'),'🗝️ ฉากจบลับ',.1))}
+
+// ---------- 🏆 ทัวร์นาเมนต์ 8 คน ----------
+const TST=[['power','💪','สายพลัง'],['speed','⚡','สายความเร็ว'],['trick','🃏','สายเล่ห์กล'],['magic','🔮','สายเวท']];
+const TTAC=[['🛡️ ตั้งรับรอจังหวะ','power'],['⚡ บุกเร็วไม่ให้ตั้งตัว','magic'],['🧠 อ่านเกมไม่หลงกล','trick'],['🔥 ทุ่มสุดตัวตั้งแต่ต้น','speed']];
+const TFIN=['ฟันจันทร์เสี้ยวพันดวง','หมัดภูเขาถล่ม','ลูกไฟสีดำ','ร่างแยกเจ็ดเงา','เสียงกรีดร้องของมังกร','ดาบที่ไม่มีใครเห็น','คำสาปให้หัวเราะจนล้ม','ฝนเข็มน้ำแข็ง'];
+const TNM=['ราเซล "ไม่เคยแพ้"','ลูน่าดาบคู่','บรูโน่ยักษ์ใจดี','ไวเปอร์เงาพิษ','เซอร์ลาเวนเดอร์','ยายเมย์ผู้เกษียณ','เด็กชายนิรนาม','อัศวินในชุดเกราะว่างเปล่า','เจ้าหญิงปลอมตัว','นักบวชที่ต่อยแรงที่สุด','โจรสลัดขาไม้','จอมเวทเมาค้าง'];
+function evTour(K){const X=X8(K);X.tour=1;const foes=shuf(TNM).slice(0,7).map((n,i)=>({n,st:pick(TST),fin:pick(TFIN),p:.85+i*.06+rnd()*.15}));const B=shuf(foes).slice(0,3).sort((a,b)=>a.p-b.p);
+ const T={r:0,won:0,bet:0,B};X.tr=T;
+ C('🏆 ศึกชิงจ้าวแห่งทวีป','ประกาศรับสมัครนักสู้ 8 คนชิงตำแหน่ง "จ้าวแห่งทวีป" ผู้ชนะได้รางวัลจากราชาและชื่อที่ถูกจารึกไว้บนกำแพงสนาม · มีโต๊ะพนันข้างสนาม',[
+  O('⚔️ ลงสมัคร',()=>tourRound(K),'',.7),O('🍿 นั่งดูแล้วแทงพนัน',()=>{const w=pick(foes);const g=Math.min(S.money||0,200);feed(rnd()<.3?`🍿 คุณแทงข้าง${E(w.n)} และเขาชนะ!`+money(g*3):`🍿 คนที่คุณแทงตกรอบแรก`+money(-g))},'',.3)])}
+const TRN=['รอบ 8 คน','รอบรองชนะเลิศ','รอบชิงชนะเลิศ'];
+function tourRound(K){const T=X8(K).tr,f=T.B[T.r];if(!f)return;const hint=rnd()<.7?f.st:pick(TST);
+ const fight=(tac,thr)=>{const m=pick(['duel','combo','hold']),t=`${TRN[T.r]}: ปะทะ ${f.n}`;const cb=sc=>{let s=sc*.55+(tac===f.st[0]?.3:0)+cl(S.power/(threat(K)*f.p),0,1.5)*.25;if(thr)s=0;const win=s>=.62;
+   if(thr){money(R(600,1200));K.dark+=8;return feed(`💸 คุณแพ้ให้${E(f.n)}แบบเนียนสุดๆ เจ้ามือพนันยัดถุงทองให้หลังสนาม`)}
+   if(win){T.r++;T.won++;if(T.bet){money(T.bet*2);T.bet=0}feed(`🏆 ชนะ${E(f.n)}!${tac===f.st[0]?' อ่านทางเขาขาด':''} ${T.r>=3?'':'· ผ่านเข้ารอบต่อไป'}`);if(T.r>=3){X8(K).champ=1;fxBig('confetti',1.6);say(`🏆 <b>คุณคือจ้าวแห่งทวีป!</b> ชื่อคุณถูกสลักบนกำแพงสนามข้างแชมป์ร้อยปีก่อน${money(R(1500,3000))}${lootDrop(K,4,'ถ้วยรางวัล')}${rep(25)}`,'myth',true);X3(K).titles.push('จ้าวแห่งทวีป')}else queue(()=>tourRound(K))}
+   else{if(T.bet){T.bet=0}feed(`💥 แพ้ให้${E(f.n)}ด้วยท่า "${f.fin}" ${hurt(.3)} · จบที่${TRN[T.r]}`)}};
+  ({duel:()=>mgDuel(t,f.n,cb),combo:()=>mgCombo(t,cb),hold:()=>mgHold(t,cb)})[m]()};
+ const ops=TTAC.map(t=>O(t[0],()=>fight(t[1]),'',.22));
+ ops.push(O('💰 แทงพนันข้างตัวเอง 300 แล้วสู้แบบทุ่มสุดตัว',()=>{const g=Math.min(S.money||0,300);money(-g);T.bet=g;fight('speed')},'',.06));
+ if(T.r>=1)ops.push(O('🤫 รับเงินล้มมวย',()=>fight(null,1),'เจ้ามือแอบมาเสนอ',.06));
+ C(`🏆 ${TRN[T.r]} — ${E(f.n)}`,`คู่ต่อสู้: <b>${E(f.n)}</b> · ข่าวลือว่าเป็น${hint[1]} ${hint[2]} (ข่าวลือไม่ถูกเสมอไป) · ท่าไม้ตาย "${f.fin}"`,ops)}
+
+// ---------- 👑 ปกครองแคว้น ----------
+const RF={noble:['🎩','ขุนนาง'],church:['⛪','ศาสนจักร'],people:['🧑‍🌾','ประชาชน'],army:['⚔️','กองทัพ']};
+const RLf=(K,d)=>{const r=X8(K).rl;let t='';for(const k in d){r.f[k]=cl(r.f[k]+d[k],0,100);t+=` ${RF[k][0]}${d[k]>0?'+':''}${d[k]}`}return' ·'+t};
+const DEC=[
+ K=>C('📜 ราชโองการ: ภาษี','คลังหลวงร่อยหรอ ขุนนางเสนอขึ้นภาษี ประชาชนขอลด',[O('📈 ขึ้นภาษี',()=>feed('📈 คลังเต็ม'+money(1500)+RLf(K,{people:-15,noble:10}))),O('📉 ลดภาษี',()=>feed('📉 ประชาชนเฉลิมฉลอง'+money(-500)+RLf(K,{people:15,noble:-10}))),O('💎 เก็บภาษีวิหารแทน',()=>feed('💎 นักบวชโกรธจัด'+money(1000)+RLf(K,{church:-20,people:5})))]),
+ K=>C('⚖️ ศาลหลวง',`ลูกชายดยุก${pick(['ขี่ม้าชนเด็ก','เผาโรงนา','ขโมยมรดกน้องสาว'])} ประชาชนรอคำตัดสินของคุณ`,[O('⚖️ ลงโทษตามกฎหมาย',()=>feed('⚖️ ดยุกโกรธแค้น แต่ประชาชนเชื่อมั่นในศาล'+RLf(K,{people:15,noble:-15}))),O('🤝 ยอมความด้วยเงิน',()=>feed('🤝 ทุกอย่างเงียบลง… บนผิวน้ำ'+money(800)+RLf(K,{noble:10,people:-12}))),O('🧠 ตัดสินแบบที่ไม่มีใครคาด (มินิเกม)',()=>mgRead('หาทางตัดสินที่ทุกฝ่ายยอมรับ','ศาลหลวง',sc=>feed(sc>=.55?'🧠 ทุกฝ่ายพยักหน้า ทั้งที่ไม่มีใครได้ทุกอย่าง'+RLf(K,{people:8,noble:5,church:5}):'🧠 ไม่มีใครพอใจเลยสักฝ่าย'+RLf(K,{people:-5,noble:-5}))),'มินิเกม')]),
+ K=>C('⚔️ แคว้นข้างเคียงยั่วยุ','กองทัพแคว้นข้างเคียงตั้งค่ายประชิดชายแดน แม่ทัพขอบุกก่อน',[O('⚔️ บุก',()=>duel('แม่ทัพแคว้นข้างเคียง',Math.round(threat(K)*1.1),w=>feed(w?'⚔️ ได้ดินแดนเพิ่ม'+money(1000)+RLf(K,{army:15,people:-5}):'⚔️ แพ้ศึก'+RLf(K,{army:-15,people:-10}))),'ต่อสู้'),O('🕊️ ส่งทูตเจรจา',()=>feed('🕊️ สงบศึก กองทัพบ่นว่าไม่มีงานทำ'+RLf(K,{army:-10,people:8}))),O('🏰 สร้างกำแพงชายแดน',()=>feed('🏰 ใช้เงินมหาศาล แต่ทุกคนนอนหลับสบาย'+money(-1200)+RLf(K,{army:8,people:5})))]),
+ K=>C('⛪ ศาสนจักรขออำนาจ','สังฆราชขอให้ประกาศศาสนาเดียวทั้งแคว้น และให้วิหารคุมโรงเรียนทุกแห่ง',[O('✅ อนุมัติ',()=>feed('✅ วิหารยิ้มแย้ม คนต่างศาสนาเริ่มอพยพออก'+RLf(K,{church:20,people:-10}))),O('❌ ปฏิเสธ',()=>feed('❌ สังฆราชเทศน์โจมตีคุณทุกวันอาทิตย์'+RLf(K,{church:-20,people:5}))),O('🤝 แบ่งกันคนละครึ่ง',()=>feed('🤝 ไม่มีใครพอใจเต็มที่ ไม่มีใครโกรธเต็มที่'+RLf(K,{church:5,people:2})))]),
+ K=>C('🌾 ภัยแล้ง','ฝนไม่ตกสามเดือน ทุ่งนาแตกระแหง',[O('🍞 เปิดยุ้งฉางหลวง',()=>feed('🍞 ไม่มีใครอดตาย'+money(-800)+RLf(K,{people:15}))),O('⛪ ขอให้วิหารทำพิธีขอฝน',()=>feed(rnd()<.5?'⛪ ฝนตกในวันรุ่งขึ้น! วิหารได้หน้า'+RLf(K,{church:15,people:5}):'⛪ ฝนไม่ตก… ประชาชนหัวเราะเยาะนักบวช'+RLf(K,{church:-10,people:-5}))),O('🔮 ร่ายเวทเรียกฝนเอง (มินิเกม)',()=>mgHold('ร่ายเวทเรียกฝนทั้งแคว้น',sc=>feed(sc>=.55?'🔮 ฝนตกทั่วแคว้น ประชาชนเรียกคุณว่าผู้นำฝน'+RLf(K,{people:20,church:-5}):'🔮 ได้แค่ลูกเห็บก้อนเดียว'+RLf(K,{people:-5}))),'มินิเกม')]),
+ K=>C('🎩 ขุนนางขอที่ดิน','ขุนนางกลุ่มใหญ่ขอที่ดินหลวงเป็นรางวัลความภักดี',[O('🎁 ให้',()=>feed('🎁 ขุนนางภักดีขึ้น ชาวนาบางส่วนเสียที่ทำกิน'+RLf(K,{noble:18,people:-10}))),O('🧑‍🌾 แจกให้ชาวนาแทน',()=>feed('🧑‍🌾 ชาวนาเต้นรำทั้งคืน ขุนนางเริ่มประชุมลับ'+RLf(K,{people:18,noble:-18}))),O('🏦 ขายทอดตลาด',()=>feed('🏦 คนรวยได้ที่ดินไป คลังได้เงิน'+money(1500)+RLf(K,{noble:5,people:-5})))])];
+function evRuleOffer(K){const X=X8(K);X.rlAsk=1;C('👑 สภาเสนอบัลลังก์','ผู้ปกครองแคว้นสิ้นพระชนม์โดยไม่มีรัชทายาท สภาลงมติเสนอให้คุณครองแคว้น',[O('👑 รับตำแหน่ง',()=>{X.rl={f:{noble:50,church:50,people:50,army:50},y:0};fxBig('fw',1.4);say('👑 <b>คุณขึ้นครองแคว้น</b> — ทุกปีจะมีเรื่องให้ตัดสิน ระวังอย่าให้ฝ่ายไหนไม่พอใจจนถึงขั้นก่อรัฐประหาร','myth',true)},'',.6),O('🙅 ปฏิเสธ',()=>feed('🙅 คุณเลือกชีวิตที่ไม่ต้องใส่มงกุฎ'),'',.4)])}
+function evCoup(K,k){C(`🔥 รัฐประหาร: ${RF[k][0]} ${RF[k][1]}ก่อกบฏ`,`${RF[k][1]}ทนไม่ไหวอีกต่อไป กองกำลังล้อมวังแล้ว`,[
+ O('⚔️ สู้เพื่อบัลลังก์',()=>duel(`ผู้นำ${RF[k][1]}`,Math.round(threat(K)*1.3),w=>{if(w){X8(K).rl.f[k]=35;feed('⚔️ คุณปราบกบฏได้ แต่แผลนี้จะไม่หายง่ายๆ'+dark(5))}else ending(K,'rl_fall',`${RF[k][1]}บุกเข้าห้องบัลลังก์ คุณถูกปลดจากตำแหน่งและเนรเทศไปเกาะร้าง ประวัติศาสตร์บันทึกว่าคุณเป็นผู้ปกครองที่ไม่ฟังเสียง${RF[k][1]}`,'ถูกรัฐประหารและเนรเทศ')}),'ต่อสู้',.5),
+ O('🙏 ยอมรับข้อเรียกร้องทั้งหมด',()=>{const r=X8(K).rl;r.f[k]=60;for(const x in r.f)if(x!==k)r.f[x]=cl(r.f[x]-15,0,100);feed('🙏 วิกฤตผ่านไป แต่ฝ่ายอื่นมองว่าคุณอ่อนแอ')},'',.5)])}
+const RLE=[['rl_golden','🌟','ยุคทองของแคว้น','ทุกฝ่ายพอใจ 60 ขึ้นไป'],['rl_iron','⚔️','ผู้ปกครองกำปั้นเหล็ก','กองทัพหนุนหลัง แต่ประชาชนกลัว'],['rl_fair','⚖️','ผู้ปกครองที่พอใช้ได้','ครองแคว้นจนจบโดยไม่ถูกโค่น'],['rl_fall','🔥','ถูกรัฐประหาร','มีฝ่ายไม่พอใจจนก่อกบฏสำเร็จ']];
+regEnd(RLE);
+function rlFin(K,o){const r=X8(K).rl;if(!r)return;const f=r.f;if(Object.values(f).every(v=>v>=60))o.push(O('🌟 ส่งมอบแคว้นในยุคทอง',()=>ending(K,'rl_golden','ทุกฝ่ายในแคว้นร่วมงานศพคุณ ขุนนาง นักบวช ทหาร และชาวนายืนแถวเดียวกัน นักประวัติศาสตร์เรียกรัชสมัยของคุณว่ายุคทอง','สวรรคตในยุคทองที่ตัวเองสร้าง'),'',.3));
+ else if(f.army>=70&&f.people<45)o.push(O('⚔️ ปกครองด้วยกำปั้นเหล็กต่อไป',()=>ending(K,'rl_iron','แคว้นสงบเพราะความกลัว ไม่มีใครกล้าก่อกบฏ และไม่มีใครร้องไห้ในวันที่คุณจากไป','สวรรคตบนบัลลังก์ที่มีทหารล้อมรอบ'),'',.3));
+ else o.push(O('⚖️ ครองแคว้นจนวันสุดท้าย',()=>ending(K,'rl_fair','คุณไม่ใช่ผู้ปกครองที่ยิ่งใหญ่ที่สุด แต่แคว้นไม่ล่มสลายในมือคุณ ซึ่งในโลกนี้นับว่าหายาก','สวรรคตอย่างสงบ'),'',.25))}
+
+// ---------- 🐲 ศึกล่ามังกรหลายปี ----------
+const DRP=[['hunt','🏹','รวบรวมนักล่ามังกร',K=>cb=>mgRead('โน้มน้าวนักล่ามังกรในตำนานให้มาร่วม','นักล่าชราตาเดียว',cb)],['forge','🔨','ตีดาบสังหารมังกร',K=>cb=>mgHold('คุมไฟหลอมเหล็กดาวตก',cb)],['weak','📜','สืบหาจุดอ่อน',K=>cb=>mgRune('ถอดรหัสบันทึกนักล่ารุ่นก่อน',5,cb)],['scout','🗺️','สำรวจรังมังกร',K=>cb=>mgCups('หาเส้นทางลับเข้ารัง',cb,'🐉')]];
+function evDragonWake(K){const X=X8(K);X.dr={p:{},ok:0,st:age()};fxBig('poof',1.5);say(`🐲 <b>มังกรโบราณตื่นแล้ว</b> — ${pick(['มังกรเพลิงเวลกราธ','มังกรน้ำแข็งไอสเวิร์น','มังกรเงาโนคตูรา'])}เผาเมืองชายแดนไปสามเมือง ราชาประกาศว่าใครสังหารมันได้จะได้สิ่งที่ขอหนึ่งข้อ · ใช้เวลาเตรียมตัวไม่เกิน 5 ปี`,'myth',true)}
+function evDragonPrep(K){const X=X8(K),D=X.dr,L=DRP.filter(p=>!D.p[p[0]]);if(!L.length)return evDragonRaid(K);const p=pick(L);
+ C(`🐲 เตรียมล่ามังกร: ${p[1]} ${p[2]}`,`การเตรียมตัว ${Object.keys(D.p).length}/4 · ยิ่งเตรียมพร้อมยิ่งมีโอกาสรอด`,[O(`${p[1]} ลงมือ (มินิเกม)`,()=>p[3](K)(sc=>{D.p[p[0]]=1;if(sc>=.5){D.ok++;feed(`${p[1]} ${p[2]}สำเร็จ`)}else feed(`${p[1]} ${p[2]}ได้ผลไม่เต็มที่`)}),'',.8),O('⏭️ ข้ามไปก่อน',()=>{D.p[p[0]]=1;feed('⏭️ คุณข้ามขั้นนี้ไป หวังว่าจะไม่เสียใจ')},'',.2)])}
+function evDragonRaid(K){const X=X8(K),D=X.dr;D.done=1;const pa=X3(K).party.filter(p=>p.alive).length;
+ C('🐲 บุกรังมังกร',`ถึงเวลาแล้ว · เตรียมสำเร็จ ${D.ok}/4 · ปาร์ตี้ ${pa} คน`,[O('🔥 บุก (มินิเกม 2 ด่าน)',()=>{let t=0;mgCombo('หลบลมหายใจไฟ',a=>{t+=a;mgDuel('ปักดาบลงหัวใจมังกร','มังกรโบราณ',b=>{t+=b;const s=t/2*.5+D.ok*.1+pa*.05+cl(S.power/(capOf(K)*1.5),0,1)*.15;
+  if(s>=.6){X.dragon=1;fxBig('fw',1.8);say(`🐲 <b>คุณสังหารมังกรโบราณ!</b> ทั้งทวีปเรียกคุณว่าผู้สังหารมังกร${money(R(3000,6000))}${lootDrop(K,5,'มังกรโบราณ')}${rep(40)}`,'myth',true);X3(K).titles.push('ผู้สังหารมังกร')}
+  else if(s<.35&&!K.save)ending(K,'dr_ash','ลมหายใจสุดท้ายของมังกรกลืนคุณทั้งร่าง เหลือแต่ดาบที่ละลายครึ่งเล่มปักอยู่ในรัง นักล่ารุ่นต่อมาใช้มันเป็นเครื่องหมายว่าเคยมีคนกล้าพอ','ถูกไฟมังกรเผาเป็นเถ้า');
+  else{if(s<.35&&K.save)K.save--;say('🐲 มังกรหนีไปพร้อมแผลลึก คุณรอดมาได้อย่างหวุดหวิด'+hurt(.5),'bad',true)}})})},'',.8),O('🏃 ยอมแพ้ ไม่ไปแล้ว',()=>feed('🏃 มังกรยังคงเผาเมืองต่อไป คนเริ่มลืมว่าเคยมีคนรับปากไว้'+rep(-10)),'',.2)])}
+regEnd([['dr_ash','🔥','เถ้าในรังมังกร','ล่ามังกรล้มเหลวโดยไม่มีที่พึ่ง']]);
+
+// ---------- 📸 การ์ดสรุปชีวิต ----------
+function cardData(K){const X3_=X3(K),X7_=X7(K),e=K.end&&ENDS[K.w]&&ENDS[K.w][K.end],V=K.mv?MV[K.mv]:K.mvx?MVX[K.mvx]:null,D=DK_(K);
+ const hl=[];if(D)hl.push(`👑 จอมมาร · ${alT(D.al)}`);if(V)hl.push(`${V.ic} ${V.n}`);(X7_.rules||[]).forEach(r=>hl.push(`${RULE[r][0]} ${RULE[r][1]}`));Object.keys(X7_.leg||{}).slice(0,2).forEach(k=>{const l=LEG.find(x=>x[0]===k);if(l)hl.push(`💎 ${l[2]}`)});
+ if(X8(K).champ)hl.push('🏆 จ้าวแห่งทวีป');if(X8(K).dragon)hl.push('🐲 ผู้สังหารมังกร');if(X8(K).rl)hl.push('👑 เคยครองแคว้น');const bk=Object.keys(X3_.bk||{}).length;if(bk)hl.push(`👹 ล้มบอส ${bk} ตัว`);if(X3_.pet&&X3_.pet.st>=3)hl.push(`🐲 ${petForm(X3_.pet)[1]}`);if(X3_.base)hl.push(`${BASE[X3_.base][0]} ${BASE[X3_.base][1]}`);if(K.gen>1)hl.push(`🌳 ทายาทรุ่นที่ ${K.gen}`);
+ return{n:S.name,w:WD[K.w],age:age(),e,hl:hl.slice(0,8),gold:S.money|0,rep:K.rep|0}}
+window.fanCard=function(){const K=FN();if(!K)return;const d=cardData(K),cv=document.createElement('canvas');cv.width=720;cv.height=1000;const g=cv.getContext('2d');
+ const gr=g.createLinearGradient(0,0,0,1000);gr.addColorStop(0,'#2b1d55');gr.addColorStop(1,'#0d0a1f');g.fillStyle=gr;g.fillRect(0,0,720,1000);
+ for(let i=0;i<90;i++){g.fillStyle=`rgba(255,240,200,${Math.random()*.6})`;g.fillRect(Math.random()*720,Math.random()*1000,2,2)}
+ g.strokeStyle='#c9a24a';g.lineWidth=6;g.strokeRect(24,24,672,952);g.lineWidth=2;g.strokeRect(36,36,648,928);
+ g.textAlign='center';g.fillStyle='#ffd54a';g.font='bold 30px sans-serif';g.fillText('1 ใน นวนิยาย · บันทึกชีวิต',360,96);
+ g.font='64px sans-serif';g.fillText(d.w?d.w.ic:'✨',360,190);g.fillStyle='#fff';g.font='bold 46px sans-serif';g.fillText(String(d.n||'').slice(0,22),360,262);
+ g.fillStyle='#d9c9ff';g.font='26px sans-serif';g.fillText(`${d.w?d.w.n:''} · อายุ ${d.age} ปี`,360,306);
+ if(d.e){g.fillStyle='rgba(255,213,74,.12)';g.fillRect(70,336,580,120);g.fillStyle='#ffd54a';const et=`${d.e[0]} ${d.e[1]}`;let fs=34;do{g.font=`bold ${fs}px sans-serif`;fs-=2}while(g.measureText(et).width>560&&fs>18);g.fillText(et,360,388);g.fillStyle='#f3e7c8';g.font='22px sans-serif';g.fillText(d.e[3]?'🗝️ ฉากจบลับ':'ฉากจบ',360,430)}
+ g.textAlign='left';g.font='26px sans-serif';let y=d.e?510:380;for(const h of d.hl){g.fillStyle='#f6ecd4';g.fillText('• '+h.slice(0,30),90,y);y+=46}
+ g.textAlign='center';g.fillStyle='#bfb3e0';g.font='22px sans-serif';g.fillText(`🪙 ${fmt(d.gold)} · ⭐ ชื่อเสียง ${d.rep}`,360,900);g.fillStyle='#ffd54a';g.font='bold 24px sans-serif';g.fillText('www.1inanovel.com',360,940);
+ const url=cv.toDataURL('image/png');window._fcUrl=url;window._fcCv=cv;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📸 การ์ดชีวิต</h3><img src="${url}" style="width:100%;border-radius:10px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><button class="pbtn" onclick="fanCardDl()">⬇️ บันทึกรูป</button><button class="pbtn" onclick="fanCardShare()">📤 แชร์</button></div>`,'fancard')};
+window.fanCardDl=()=>{try{const a=document.createElement('a');a.href=window._fcUrl;a.download='1inanovel-life.png';document.body.appendChild(a);a.click();a.remove()}catch(e){}};
+window.fanCardShare=()=>{try{window._fcCv.toBlob(b=>{const f=new File([b],'1inanovel-life.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:'1 ใน นวนิยาย',text:'ชีวิตของฉันในโลกแฟนตาซี · www.1inanovel.com'}).catch(()=>{});else{fanCardDl();toast('บันทึกรูปแล้ว แชร์จากแกลเลอรีได้เลย')}})}catch(e){fanCardDl()}};
+
+// ---------- hooks ภาค 8 ----------
+{const _ld=lootDrop;lootDrop=function(K,t){const r=_ld.apply(this,arguments);try{if(t>=4)fxBig('burst',1.3)}catch(e){}return r}}
+{const _el=evLeg;evLeg=function(K){fxBig('fw',1.5);return _el.apply(this,arguments)}}
+{const _en=ending;ending=function(K,k){if(K&&K.end)return _en.apply(this,arguments);try{const e=ENDS[K.w]&&ENDS[K.w][k];if(e&&e[3])setTimeout(()=>fxBig('confetti',1.8),400)}catch(x){}const r=_en.apply(this,arguments);try{setTimeout(()=>{try{say('📸 <b>บันทึกชีวิตนี้เป็นการ์ดแชร์ได้</b> — เปิดเมนู → 📸 การ์ดชีวิต','epic')}catch(e){}},1200)}catch(x){}return r}}
+{const _fb=fanBegin;fanBegin=function(RR){_fb.apply(this,arguments);setTimeout(()=>{try{const K=FN();if(K&&K.dlord===undefined){if(window._dkForce||rnd()<.05){K.dlord=1;K.mv=null;K.mvx=null;dkStart(K);sync();render()}else K.dlord=0}}catch(e){console.error('dk',e)}},1300)}}
+for(const w of ['hero','trash','magic','noble'])FOK[w].push(['fa_dk','👑','ปกครองอาณาจักรปีศาจ',K=>!!K.dlord]);
+{const _df=doFocus;doFocus=function(K){if(S.focus==='fa_dk'&&K.dlord){const D=DK_(K),a=R(150,400);D.army+=a;feed(`👑 คุณบริหารอาณาจักรปีศาจ${D.al>=30?' สร้างถนนและโรงเรียน':D.al<=-30?' เกณฑ์ทหารทุกหมู่บ้าน':''} · กองทัพ +${a}${money(R(80,200))}`);return}return _df(K)}}
+{const _x=xFin;xFin=function(K,o){_x(K,o);try{if(K.dlord)dkFin(K,o);rlFin(K,o)}catch(e){console.error('p8 fin',e)}}}
+{const _fy=fanYear;fanYear=function(){const K=FN();const a0=S.age;_fy.apply(this,arguments);if(!K||!S.alive||S.age===a0||K.end)return;
+ try{const X=X8(K),y=age(),sc=school(K);let pr=null;
+  if(K.dlord){const D=DK_(K);if(y>=D.nx){D.nx=y+R(4,7);pr=()=>dkWave(K)}else if(rnd()<.55){const L=DKEV.map((f,i)=>i).filter(i=>!D.sn[i]);if(L.length){const i=L[0]===0?0:pick(L);D.sn[i]=1;pr=()=>DKEV[i](K)}}}
+  if(!pr&&X.rl){const r=X.rl;r.y++;money(300);const bad=Object.keys(r.f).find(k=>r.f[k]<=10);if(bad)pr=()=>evCoup(K,bad);else if(rnd()<.75)pr=()=>pick(DEC)(K)}
+  if(!pr&&X.dr&&!X.dr.done){pr=y-X.dr.st>=5?()=>evDragonRaid(K):(rnd()<.8?()=>evDragonPrep(K):null)}
+  if(!pr&&!X.rlAsk&&y>=38&&(X3(K).base>=3||K.rep>=60)&&rnd()<.25)pr=()=>evRuleOffer(K);
+  if(!pr&&!X.dr&&y>=24&&y<=48&&rnd()<.05)pr=()=>evDragonWake(K);
+  if(!pr&&!X.tour&&!sc&&y>=16&&y<=35&&rnd()<.08)pr=()=>evTour(K);
+  if(pr&&QU.length<=2){queue(pr);if(!FL)flush()}}catch(e){console.error('p8 year',e)}}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(on()){const d=$('modal').querySelector('[data-fa4]');if(d&&!d.querySelector('[data-fa8]')){const b=document.createElement('button');b.className='opt';b.setAttribute('data-fa8',1);b.innerHTML='📸 การ์ดชีวิต<small>รูปสรุปชีวิตไว้แชร์</small>';b.onclick=()=>fanCard();d.appendChild(b);const K=FN();if(K&&K.dlord){const c=document.createElement('button');c.className='opt';c.setAttribute('data-fa8',1);c.innerHTML='👑 อาณาจักรปีศาจ<small>แม่ทัพ · กองทัพ</small>';c.onclick=()=>fanDk();d.appendChild(c)}}}}catch(e){}return r}}
+window.fanDk=function(){const K=FN(),D=K&&DK_(K);if(!D)return;modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👑 อาณาจักรปีศาจ</h3><div class="item"><b>${alT(D.al)}</b><div class="tag2">ค่าความดี/ชั่ว ${D.al} · กองทัพ ${fmt(D.army)} · ผู้กล้าที่มาแล้ว ${D.wv} รุ่น</div></div><h4 style="margin:8px 0 4px">แม่ทัพทั้งสี่</h4>${D.g.map(g=>`<div class="item" style="${g.alive?'':'opacity:.45'}">${g.ic} <b>${g.n}</b> <span class="tag2">${g.alive?'ภักดี '+g.loy:'✝️ ไม่อยู่แล้ว'} · ${g.t}</span></div>`).join('')}`,'fandk')};
+{const _hd=hud;hud=function(K){let h=_hd(K);try{const c=[],X=X8(K);if(K.dlord){const D=DK_(K);c.push(`<span class="t5">👑 จอมมารกลับชาติ</span><span class="t4">${alT(D.al)} · 👹 ${fmt(D.army)}</span>`)}if(X.rl)c.push(`<span>👑 ครองแคว้น ${Object.keys(RF).map(k=>RF[k][0]+X.rl.f[k]).join(' ')}</span>`);if(X.dr&&!X.dr.done)c.push(`<span>🐲 เตรียมล่ามังกร ${Object.keys(X.dr.p).length}/4</span>`);if(X.champ)c.push('<span>🏆 จ้าวแห่งทวีป</span>');if(c.length)h=h.replace('<div class="fhC">','<div class="fhC">'+c.join(''))}catch(e){}return h}}
+window._fan8={X8,dkStart,DKEV,dkWave,evTour,tourRound,evRuleOffer,DEC,evCoup,evDragonWake,evDragonPrep,evDragonRaid,fanCard};
 
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}
