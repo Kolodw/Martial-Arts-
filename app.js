@@ -41000,6 +41000,7 @@ if(typeof aiPick==='function'){const _ap=aiPick;aiPick=function(c){const i=_ap.a
 try{setTimeout(()=>{try{wLoad('legend').catch(()=>{})}catch(e){}},3600)}catch(e){} /* 🌌 ตำนานข้ามชาติ + 🎭 สไตล์ชีวิต + 🖼️ การ์ดตำนาน (/w/legend.js) */
 try{setTimeout(()=>{try{wLoad('bond').catch(()=>{})}catch(e){}},4000)}catch(e){} /* 👥 ผูกชะตาเพื่อน · 🔮 ทายชะตา · 🌍 ยุคประจำสัปดาห์ · 🎧 ฟังนิยาย · 📸 ภาพประกอบนิยาย (/w/bond.js) */
 try{setTimeout(()=>{try{wLoad('pet').catch(()=>{})}catch(e){}},4200)}catch(e){} /* 🐾 สัตว์คู่ใจข้ามชาติ (/w/pet.js) */
+try{setTimeout(()=>{try{wLoad('div').catch(()=>{})}catch(e){}},4400)}catch(e){} /* 💔 ขอหย่า/เลิกกัน ทุกโลก (/w/div.js) */
 // ============================================================
 // BLOCK 302 📱 โครงหน้าจอมือถือใหม่ (ux2): หัวกระชับ · ป้ายรวมเป็นอันเดียว · เลื่อนอ่านแล้วหัว/ฉากหด · ปุ่มเล่นมีวงแหวนเดือน + กดค้างเลือกความเร็ว
 // ใช้เฉพาะจอแคบ · ปิดได้ที่ ☰ เมนู → "หน้าจอแบบเดิม" (LS murim_uxold)
