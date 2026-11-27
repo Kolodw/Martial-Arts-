@@ -5387,11 +5387,11 @@ try{(()=>{
 const BL=[['g','⚔️ เส้นทางหลัก'],{id:'w0',ic:'⚔️',n:'ยุทธภพ',bw:0},{id:'w1',ic:'☁️',n:'โลกเทพเซียน',bw:1},{id:'w3',ic:'🌟',n:'โลกเทพ',bw:3},{id:'w2',ic:'🐾',n:'สัตว์อสูร',bw:2},
  ['g','🔥 โหมดท้าทาย'],{id:'h',ic:'🔥',n:'นรก'},{id:'s',ic:'⏳',n:'ชีวิตสั้น'},{id:'j',ic:'🗑️',n:'รากขยะ'},{id:'rg',ic:'🔁',n:'ผู้ย้อนกาล'},
  ['g','🌏 โลกใหม่'],{id:'l',ic:'⭕',n:'ทวีปจิตวิญญาณยุทธ์'},{id:'k',ic:'🌠',n:'ทะลุฟ้าดารา'},
- ['g','🏙️ ยุคปัจจุบัน'],{id:'n',ic:'🌀',n:'ฮันเตอร์'},{id:'u',ic:'🌃',n:'ใต้ดิน'},{id:'o',ic:'👻',n:'ผีไทย'},{id:'p',ic:'🔁',n:'วนลูป'},{id:'z',ic:'🧟',n:'ซอมบี้'},{id:'t',ic:'🗼',n:'หอคอย'},{id:'e',ic:'🎮',n:'ระบบเกม'},{id:'q',ic:'💀',n:'เกตชนะ'},{id:'y',ic:'☄️',n:'วันสิ้นโลก'},['g','🚪 เส้นทางพิเศษ'],{id:'v',ic:'🚪',n:'ผู้ข้ามโลก'}];
+ ['g','🏙️ ยุคปัจจุบัน'],{id:'n',ic:'🌀',n:'ฮันเตอร์'},{id:'u',ic:'🌃',n:'ใต้ดิน'},{id:'o',ic:'👻',n:'ผีไทย'},{id:'p',ic:'🔁',n:'วนลูป'},{id:'z',ic:'🧟',n:'ซอมบี้'},{id:'t',ic:'🗼',n:'หอคอย'},{id:'e',ic:'🎮',n:'ระบบเกม'},{id:'q',ic:'💀',n:'เกตชนะ'},{id:'y',ic:'☄️',n:'วันสิ้นโลก'},['g','🚪 เส้นทางพิเศษ'],{id:'v',ic:'🚪',n:'ผู้ข้ามโลก'},{id:'f',ic:'🌉',n:'นครม่านหมอก'}];
 const BI=BL.filter(x=>!Array.isArray(x));
 const myPu=()=>{try{return String(pid).replace(/[^a-z0-9]/g,'').slice(0,12)}catch(e){return''}};
 const wf=bw=>e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);
-const curId=()=>{try{const bw=openOnline._bw!=null?openOnline._bw:(S?(S.ch&&S.ch!=='normal'?4:S.beastMode?2:S.xt?3:S.xian?1:0):0);if(bw===4)return typeof chmSel==='function'?chmSel():'h';return'w'+bw}catch(e){return'w0'}};
+const curId=()=>{try{const bw=window.openOnline._bw!=null?window.openOnline._bw:(S?(S.ch&&S.ch!=='normal'?4:S.beastMode?2:S.xt?3:S.xian?1:0):0);if(bw===4)return typeof chmSel==='function'?chmSel():'h';return'w'+bw}catch(e){return'w0'}};
 // ---------- แคชผลทำเนียบ 1 นาที ----------
 const CA=new Map();
 {const _a=api;api=async function(a,b){if(a==='board'){const k=JSON.stringify(b||{});const c=CA.get(k);if(c&&Date.now()-c.t<60e3){window._bdLast=JSON.parse(c.v);return JSON.parse(c.v)}const r=await _a.apply(this,arguments);try{if(r&&(r.top||r.ctop)){CA.set(k,{t:Date.now(),v:JSON.stringify(r)});window._bdLast=r}}catch(e){}return r}return _a.apply(this,arguments)}}
@@ -5435,20 +5435,20 @@ const css=document.createElement('style');css.textContent=`
 function info(j,id){const me=myPu();if(!j)return{n:'',s:0,me:-1};if(id[0]==='w'){const L=(j.top||[]).filter(wf(+id.slice(1)));const f=L[0];return{n:f?f.n:'',s:f?f.s:0,me:L.findIndex(e=>e.pu&&e.pu===me),c:L.length}}
  if(id==='rg')return{n:'',s:0,me:-1,c:-1};const o=(j.chov||{})[id];return o?{n:o.n,s:o.s,me:o.me,c:o.c}:{n:'',s:0,me:-1,c:-1}}
 // ---------- แผ่นเลือกทำเนียบ ----------
-window.bdSheet=function(){const j=window._bdLast,cur=curId(),bp=openOnline._bp||'d';document.querySelectorAll('.bdSheetBg').forEach(x=>x.remove());
+window.bdSheet=function(){const j=window._bdLast,cur=curId(),bp=window.openOnline._bp||'d';document.querySelectorAll('.bdSheetBg').forEach(x=>x.remove());
  const bg=document.createElement('div');bg.className='bdSheetBg';bg.onclick=e=>{if(e.target===bg)bg.remove()};
  let h=`<div class="bdSheet"><div class="hd"></div><button class="bdOvBtn" onclick="bdGo('ov')">📊 ภาพรวมทุกทำเนียบ (${({d:'วันนี้',w:'สัปดาห์นี้',m:'เดือนนี้'})[bp]})</button>`;let open=false;
  BL.forEach(x=>{if(Array.isArray(x)){if(open)h+='</div>';h+=`<h4>${x[1]}</h4><div class="bdGrid">`;open=true;return}const I=info(j,x.id);
-  h+=`<button class="bdCell${x.id===cur&&openOnline._bv!=='ov'?' on':''}" onclick="bdGo('${x.id}')">${I.me>=0?`<span class="me">#${I.me+1}</span>`:''}<span class="i">${window.wimTh&&wimTh(x.id)||x.ic}</span><b>${x.n}</b><small>${x.id==='rg'?'ทำเนียบแยก':I.n?'🥇 '+esc(I.n):'ยังว่าง'}</small></button>`});
+  h+=`<button class="bdCell${x.id===cur&&window.openOnline._bv!=='ov'?' on':''}" onclick="bdGo('${x.id}')">${I.me>=0?`<span class="me">#${I.me+1}</span>`:''}<span class="i">${window.wimTh&&wimTh(x.id)||x.ic}</span><b>${x.n}</b><small>${x.id==='rg'?'ทำเนียบแยก':I.n?'🥇 '+esc(I.n):'ยังว่าง'}</small></button>`});
  h+='</div></div>';bg.innerHTML=h;document.body.appendChild(bg)};
 window.bdGo=function(id){document.querySelectorAll('.bdSheetBg').forEach(x=>x.remove());try{LS.set('murim_bdlast',id)}catch(e){}
- if(id==='ov'){openOnline._bv='ov';return openOnline('board')}openOnline._bv='list';
+ if(id==='ov'){window.openOnline._bv='ov';return openOnline('board')}window.openOnline._bv='list';
  if(id==='rg'){try{return openRgBoard()}catch(e){return}}
- if(id[0]==='w'){openOnline._bw=+id.slice(1)}else{openOnline._bw=4;openOnline._cm=id}openOnline('board')};
+ if(id[0]==='w'){window.openOnline._bw=+id.slice(1)}else{window.openOnline._bw=4;window.openOnline._cm=id}openOnline('board')};
 // ---------- จัดหน้าใหม่หลังวาด ----------
 let io=null;
 function restyle(){const m=$('modal');if(!m||m.dataset.k!=='online')return;const seg=m.querySelector('.onSeg');if(!seg||m.querySelector('.bdBar'))return;
- const j=window._bdLast,cur=curId(),It=BI.find(x=>x.id===cur)||BI[0],bv=openOnline._bv;
+ const j=window._bdLast,cur=curId(),It=BI.find(x=>x.id===cur)||BI[0],bv=window.openOnline._bv;
  m.querySelectorAll('.onStrip,.chmTabs').forEach(e=>e.classList.add('bdHide'));
  const bar=document.createElement('div');bar.className='bdBar';bar.innerHTML=`<button class="bdPick" onclick="bdSheet()">${bv==='ov'?'📊':It.ic} <span class="t">${bv==='ov'?'ภาพรวม':It.n}</span><span class="v">▾</span></button>`;seg.before(bar);bar.appendChild(seg);
  // รางวัล/กติกา → ปุ่ม ℹ️
@@ -5467,7 +5467,7 @@ function restyle(){const m=$('modal');if(!m||m.dataset.k!=='online')return;const
  if(mi>=0){const sc=(main[mi].querySelector('.px')||{}).textContent||'';bm.innerHTML=`🏅 อันดับของฉัน <b>#${mi+1}</b><span class="r">${esc(sc)}</span>`;bm.onclick=()=>{const r=main[mi];r.classList.remove('bdHide');r.scrollIntoView({behavior:'smooth',block:'center'})}}
  else{const last=main[main.length-1];const sc=last?(last.querySelector('.px')||{}).textContent||'':'';bm.innerHTML=main.length>=20?`🎯 ยังไม่ติด 20 อันดับ · อันดับ 20 ตอนนี้ <b>${esc(sc)}</b>`:`🎯 ยังไม่ติดอันดับ · ${main.length?`มีแค่ ${main.length} คน จบชีวิตตอนนี้ก็ติดได้เลย`:'ยังว่าง — เป็นคนแรกสิ'}`}
  m.appendChild(bm)}
-{const _oo=openOnline;openOnline=async function(tab){const t=tab||'chat';if(t==='board'&&openOnline._bv==null){try{const l=LS.get('murim_bdlast','ov');openOnline._bv=l==='ov'?'ov':'list'}catch(e){openOnline._bv='ov'}}
+{const _oo=openOnline;openOnline=async function(tab){const t=tab||'chat';if(t==='board'&&window.openOnline._bv==null){try{const l=LS.get('murim_bdlast','ov');window.openOnline._bv=l==='ov'?'ov':'list'}catch(e){window.openOnline._bv='ov'}}
  if(t==='board'){setTimeout(()=>{try{const m=$('modal');if(m&&m.dataset.k==='online'&&/กำลังโหลด…/.test(m.textContent)&&!m.querySelector('.bdSk')){const L=[...m.querySelectorAll('.tag2')].find(x=>x.textContent.trim()==='กำลังโหลด…');if(L)L.outerHTML='<div class="bdSk"></div><div class="bdSk"></div><div class="bdSk"></div>'}}catch(e){}},0)}
  const r=await _oo.apply(this,arguments);if(t==='board'&&!window._bdRg){try{restyle()}catch(e){console.error('bd115',e)}setTimeout(()=>{try{restyle()}catch(e){}},250)}return r}}
 // ทำเนียบผู้ย้อนกาล: ให้หน้าเดิมวาดเสร็จก่อน แล้วค่อยใส่ปุ่มเลือกทำเนียบแถวเดียว
