@@ -1005,7 +1005,7 @@ const COMBO=[[['แสงจันทร์'],['ลูกของรัตต�
 const combos=items=>{const N=new Set(items.map(x=>x.n));return COMBO.filter(c=>c[0].some(a=>N.has(a))&&c[1].some(b=>N.has(b)))};
 // ---- สถานะการสุ่ม ----
 let FB=null;
-const TOP=[['iso','⚔️','ต่างโลก','ถูกอัญเชิญข้ามโลก · เริ่มอายุ 16'],['magic','🔮','โลกเวทมนตร์','วิทยาลัยเวทอาร์คาเนีย · เริ่มอายุ 12'],['noble','🏰','โลกแห่งอะคาเดมี่','สถาบันหลวง การเมือง งานเลี้ยง · เริ่มอายุ 12']];
+const TOP=[['iso','⚔️','ต่างโลก','ถูกอัญเชิญข้ามโลก · อายุสุ่ม 0–16'],['magic','🔮','โลกเวทมนตร์','วิทยาลัยเวทอาร์คาเนีย · เกิดเป็นทารก'],['noble','🏰','โลกแห่งอะคาเดมี่','สถาบันหลวง การเมือง งานเลี้ยง · เกิดเป็นทารก']];
 const HAIR=['#1f1a17','#3a2a1e','#5b3a24','#c9b27a','#e8e8f0','#6a2a2a','#2a3550','#7a5aa8'],SKIN=['#f1c9a0','#e0ac69','#c68642','#8d5524','#f5d5b8'];
 const orgL=()=>BD['org_'+FB.top];
 function fbRoll(first){if(!first){if(FB.left<=0)return;FB.left--}
@@ -3184,6 +3184,39 @@ function fanGarb(x,y,o,pose){if(pose==='lie')return;const X=Math.round(x*3),Y=Ma
   if(!sit){Q(L-1,ly-1,IW+2,child?2:4,R);Q(L-1,ly-1+(child?1:3),IW+2,1,Tc);Q(L+IW-1,ly-1,2,child?2:4,Rd)}legs(Bt,shd(Bt,.35))}}
 {const _p0=person0;person0=function(x,y,o,pose){if(!o||!o._fst)return _p0.apply(this,arguments);const o2=Object.assign({},o,{trim:null,sash:null,wx:0,coat:null,coatL:null,plate:null,noSkirt:1,stripe:0,patch:0,jade:0,emblem:null,fur:null,belt:o.robe,ribbon:null});const r=_p0.call(this,x,y,o2,pose);try{fanGarb(x,y,o,pose)}catch(e){}return r}}
 
+
+
+// =================== 🐣 ออกแบบหน้าตา / สร้างเอง (ก่อนหน้าสุ่มกำเนิด) ===================
+let FDS=null;
+function fdsPaint(){try{const cv=document.getElementById('fdsCv');if(!cv)return;const c=cv.getContext('2d'),sg=g,sp=PS;g=c;PS=3;c.imageSmoothingEnabled=false;c.fillStyle='#1e1830';c.fillRect(0,0,96,120);c.setTransform(3,0,0,3,0,0);try{person(12,38,{robe:FDS.top==='magic'?'#3a2a7a':FDS.top==='noble'?'#5a3a6a':'#2a4a7a',trim:'#ffd37a',belt:'#00000055',hs:FDS.g==='หญิง'?3:4,mood:'happy',seed:FDS.seed,age:16,g:FDS.g,skin:FDS.skin,hair:FDS.hair},'stand')}finally{g=sg;PS=sp;c.setTransform(1,0,0,1,0,0)}}catch(e){}}
+window.fanDesign=function(w){FDS=FDS&&FDS.top===w?FDS:{top:w,g:rnd()<.5?'ชาย':'หญิง',hair:pick(HAIR),skin:pick(SKIN),seed:R(1,99999),name:''};
+ const sw=(L,k)=>L.map(c=>`<button onclick="fanDs('${k}','${c}')" style="width:30px;height:30px;border-radius:50%;background:${c};border:${FDS[k]===c?'3px solid #ffd54a':'2px solid #fff3'};margin:2px"></button>`).join('');
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🎨 ออกแบบหน้าตา</h3><div style="display:flex;gap:10px;align-items:center"><canvas id="fdsCv" width="96" height="120" style="border-radius:10px;image-rendering:pixelated;width:96px"></canvas><div style="flex:1"><div class="tag2">ชื่อ (เว้นว่าง = สุ่ม)</div><input id="fdsNm" maxlength="24" value="${E(FDS.name)}" oninput="fanDs('name',this.value,1)" style="width:100%;padding:6px;border-radius:8px;border:1px solid #fff3;background:#0006;color:#fff"><div style="display:flex;gap:6px;margin-top:6px"><button class="opt" style="flex:1;${FDS.g==='ชาย'?'border-color:#ffd54a':''}" onclick="fanDs('g','ชาย')">♂️ ชาย</button><button class="opt" style="flex:1;${FDS.g==='หญิง'?'border-color:#ffd54a':''}" onclick="fanDs('g','หญิง')">♀️ หญิง</button></div></div></div>
+ <div class="tag2" style="margin-top:8px">สีผม</div><div>${sw(HAIR,'hair')}</div><div class="tag2" style="margin-top:6px">สีผิว</div><div>${sw(SKIN,'skin')}</div>
+ <button class="opt" style="margin-top:6px" onclick="fanDs('seed',${R(1,99999)})">🔀 สุ่มทรงหน้าใหม่</button>
+ <button class="pbtn" style="width:100%;margin-top:8px" onclick="fanDsGo()">ไปหน้าสุ่มกำเนิด ▶</button>`,'fands');setTimeout(fdsPaint,30)};
+window.fanDs=(k,v,quiet)=>{if(!FDS)return;FDS[k]=k==='seed'?+v:v;if(quiet)return;fanDesign(FDS.top)};
+window.fanDsGo=()=>{const D=FDS;if(!D)return;try{const i=document.getElementById('fdsNm');if(i)D.name=i.value.trim()}catch(e){}window._fanLk={g:D.g,hair:D.hair,skin:D.skin,seed:D.seed,name:D.name};closeM();window.fanStart(D.top)};
+let FCS=null;
+window.fanCustom=function(w){FCS=FCS&&FCS.top===w?FCS:{top:w,w:w==='iso'?'hero':w,age:16,sp:'forest',v:'',rules:[]};const C=FCS;
+ const chip=(on,lbl,js)=>`<button class="opt" style="display:inline-block;width:auto;margin:0;padding:6px 10px;${on?'border-color:#ffd54a;background:#ffd54a22':''}" onclick="${js}">${lbl}</button>`;
+ const VL=w==='magic'?Object.keys(MV).map(k=>[k,MV[k].ic+' '+MV[k].n]):Object.keys(MVX).filter(k=>MVXW[MVX[k].w].includes(C.w)).map(k=>[k,MVX[k].ic+' '+MVX[k].n]);
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>✍️ สร้างชีวิตเอง</h3><div class="tag2" style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ปลดความสำเร็จ และไม่นับชะตาประจำวัน</div>
+ ${w==='iso'?`<h4 style="margin:8px 0 4px">โลกย่อย</h4><div style="display:flex;flex-wrap:wrap;gap:6px">${[['hero','🛡️ ผู้กล้า'],['trash','🗑️ สกิลขยะ'],['lost','🌲 หลงมิติ']].map(x=>chip(C.w===x[0],x[1],`fanCs('w','${x[0]}')`)).join('')}</div>
+ ${C.w==='lost'?`<h4 style="margin:8px 0 4px">จุดที่ลืมตา</h4><div style="display:flex;flex-wrap:wrap;gap:6px">${Object.keys(LSP).map(k=>chip(C.sp===k,LSP[k][0]+' '+LSP[k][1].slice(0,14),`fanCs('sp','${k}')`)).join('')}</div>`:''}
+ <h4 style="margin:8px 0 4px">อายุตอนถูกอัญเชิญ: <b>${C.age}</b> ปี</h4><input type="range" min="0" max="16" value="${C.age}" style="width:100%" oninput="fanCs('age',+this.value)">`:''}
+ <h4 style="margin:8px 0 4px">ชะตาพิเศษ</h4><div style="display:flex;flex-wrap:wrap;gap:6px">${chip(!C.v,'🎲 สุ่ม',"fanCs('v','')")}${chip(C.v==='none','➖ ไม่มี',"fanCs('v','none')")}${VL.map(x=>chip(C.v===x[0],x[1],`fanCs('v','${x[0]}')`)).join('')}</div>
+ <h4 style="margin:8px 0 4px">กฎแปลกของโลก (เลือกได้ 2) · ${C.rules.length?C.rules.length+' ข้อ':'สุ่ม'}</h4><div style="display:flex;flex-wrap:wrap;gap:6px">${Object.keys(RULE).map(k=>chip(C.rules.includes(k),RULE[k][0]+' '+RULE[k][1],`fanCs('r','${k}')`)).join('')}</div>
+ <button class="pbtn" style="width:100%;margin-top:10px" onclick="fanCsGo()">ไปหน้าสุ่มกำเนิด ▶</button>`,'fancs')};
+window.fanCs=(k,v)=>{const C=FCS;if(!C)return;if(k==='r'){const i=C.rules.indexOf(v);if(i>=0)C.rules.splice(i,1);else{C.rules.push(v);if(C.rules.length>2)C.rules.shift()}}else{C[k]=v;if(k==='w')C.v=''}if(k==='age'){const h=document.querySelector('#modal h4 b');if(h){h.textContent=v;return}}fanCustom(C.top)};
+window.fanCsGo=()=>{const C=FCS;if(!C)return;window._fanLk=null;window._fanCs=JSON.parse(JSON.stringify(C));closeM();window.fanStart(C.top)};
+{const _fr=fbRoll;fbRoll=function(first){const r=_fr.apply(this,arguments);try{const L=window._fanLk,C=window._fanCs;
+ if(L){FB.g=L.g;FB.hair=L.hair;FB.skin=L.skin;FB.seed=L.seed;if(L.name){FB.name=L.name;FB.edited=1}}
+ if(C&&FB.top===C.top){if(C.top==='iso'){FB.w=C.w;FB.sp=C.w==='lost'?C.sp:null;FB.age=C.age;FB.sk=pick(SK[FB.w])[0]}FB.cust=1}
+ if((L||C)&&first)fbDraw()}catch(e){console.error(e)}return r}}
+{const _fg=window.fanGo;window.fanGo=function(){const L=window._fanLk,C=window._fanCs;window._fanLk=null;if(C){window._fanCs=null;window._fanCsP=C;if(C.v){window._mvForce=C.v==='none'?'__none':C.v;setTimeout(()=>{window._mvForce=null},6000)}}return _fg.apply(this,arguments)}}
+{const _fb=fanBegin;fanBegin=function(RR){_fb.apply(this,arguments);setTimeout(()=>{try{const C=window._fanCsP,K=FN();if(!C||!K)return;window._fanCsP=null;K.cust=1;if(C.rules&&C.rules.length){const X=X7(K);X.rules=C.rules.slice();recalcE(K);feed('🌍 กฎของโลกตามที่คุณเลือก: '+X.rules.map(r=>RULE[r][0]+' '+RULE[r][1]).join(' · '))}feed('✍️ ชีวิตนี้สร้างเอง · ไม่ปลดความสำเร็จ');render()}catch(e){console.error(e)}},2300)}}
+{const _ac=achCheck;achCheck=function(K){if(K&&K.cust)return;return _ac.apply(this,arguments)}}
 
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}

@@ -41483,3 +41483,19 @@ window._dlExt={wn:{fiso:['⚔️','ต่างโลก'],fmagic:['🔮','โ�
  cfg(k,c,dow){if(window._dlFanForce)return{w:window._dlFanForce,ch:'normal'};if(k<F0)return null;const di=Math.floor(Date.parse(k+'T00:00:00Z')/864e5);if(dow===0||di%5!==0)return null;return{w:FW[Math.floor(di/5)%3],ch:'normal'}},
  start(c,k,beginFn,back){if(!FW.includes(c.w))return false;CFG.chm=0;CFG.xian=0;wNeed('mw',()=>wNeed('fan',()=>{try{window._fanDl(c,k,beginFn,back)}catch(e){console.error('fan daily',e);toast('เปิดโลกแฟนตาซีไม่สำเร็จ ลองใหม่อีกครั้ง')}}));return true}};
 })()}catch(e){console.error('block314',e)}
+// ============================================================
+// BLOCK 315: 🐣 เมนูเริ่มชีวิตใหม่ของโลกแฟนตาซี (สุ่ม / ออกแบบหน้าตา / สร้างเอง / สัตว์ เร็วๆ นี้) ก่อนไปหน้าสุ่มกำเนิด
+// ============================================================
+try{(()=>{const FL=f=>wNeed('mw',()=>wNeed('fan',f)),NM={iso:['⚔️','ต่างโลก'],magic:['🔮','โลกเวทมนตร์'],noble:['🏰','โลกแห่งอะคาเดมี่']};
+window._fanFL=FL;window.fanPlay=function(w){try{sfx('click')}catch(e){}window.fanBornMenu(w)};
+window.fanBornMenu=function(w){window._fanLk=null;window._fanCs=null;const k=w==='hero'||w==='trash'||w==='lost'?'iso':w==='aca'?'noble':w,n=NM[k]||NM.iso;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🐣 เริ่มชีวิตใหม่ <span class="tag2">${n[0]} ${n[1]}</span></h3>
+ <button class="opt" onclick="closeM();window.fanStart('${k}')">🎲 สุ่ม ให้ฟ้าลิขิต<small>สุ่มชะตา พรสวรรค์ เผ่าพันธุ์ หน้าตา${k==='iso'?' โลกย่อย และอายุตอนถูกอัญเชิญ':''} · ดูผลแล้วกดเกิดใหม่ได้ 5 ครั้ง (ผู้สนับสนุนได้มากกว่า) · ล็อกชะตาได้</small></button>
+ <button class="opt" onclick="closeM();window._fanFL(()=>window.fanDesign('${k}'))">🎨 ออกแบบหน้าตา ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ สีผม สีผิว และชื่อเอง แล้วไปหน้าสุ่มกำเนิด สุ่มใหม่/ล็อกชะตาได้</small></button>
+ <button class="opt" onclick="closeM();window._fanFL(()=>window.fanCustom('${k}'))">✍️ สร้างเอง<small>เลือก${k==='iso'?'โลกย่อย อายุ จุดเกิด':'ชะตาพิเศษ'} และกฎแปลกของโลกเอง · สุ่มใหม่ได้ 5 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ปลดความสำเร็จ และไม่นับชะตาประจำวัน</span></small></button>
+ <button class="opt" disabled style="opacity:.55;cursor:default">🐾 เกิดเป็นสัตว์ / มอนสเตอร์<small>เกิดเป็นสไลม์ หมาป่า มังกร และสัตว์อสูรอีกมากมาย · <b style="color:#ffd54a">เร็วๆ นี้</b></small></button>`,'fanbm')};
+})()}catch(e){console.error('block315',e)}
+// BLOCK 315b: ป้ายอายุเริ่มต้นบนการ์ดโลกแฟนตาซีให้ตรงกับระบบใหม่ (ทารก / สุ่ม 0–16)
+try{(()=>{const MP={'เริ่มอายุ 16':'อายุสุ่ม 0–16','เริ่มอายุ 12':'เกิดเป็นทารก','ผู้กล้า / สกิลขยะ':'ผู้กล้า / สกิลขยะ / หลงมิติ'};
+const fx=()=>{const P=document.getElementById('wPick');if(!P)return;P.querySelectorAll('.fwc .tg span').forEach(e=>{const t=MP[e.textContent.trim()];if(t)e.textContent=t})};
+new MutationObserver(()=>{if(document.getElementById('wPick'))fx()}).observe(document.body,{childList:true,subtree:true});})()}catch(e){console.error('block315b',e)}
