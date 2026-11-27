@@ -24037,7 +24037,7 @@ wSlot('late44',[]);
 const FB_URL='https://www.facebook.com/groups/2160641727993657/';
 const DC_URL='https://discord.gg/8qqFY26fr';
 function openFbGroup(){modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>👥 ชุมชนผู้เล่น</h3>
- <img src="/fb-banner.jpg" alt="1 ใน นวนิยาย" width="960" height="540" loading="lazy" style="display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;border:2px solid #17348a;box-shadow:0 3px 0 #17348a;background:#1a1a4a;margin-bottom:10px">
+ <img src="/fb-banner.jpg?v=2" alt="1 ใน นวนิยาย" width="960" height="540" loading="lazy" style="display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;border:2px solid #17348a;box-shadow:0 3px 0 #17348a;background:#1a1a4a;margin-bottom:10px">
  <div class="box" style="padding:12px;margin-bottom:10px"><p style="margin:0 0 6px">เจอบั๊ก มีไอเดีย หาเพื่อนเล่น หรืออยากคุยเรื่องเกม เข้ามาได้ทั้ง 2 ที่</p><p class="tag2" style="margin:0">💬 Discord คุยสด แจ้งบั๊กไว · 👥 เฟสบุ๊ก ข่าวอัปเดตและโพสต์รวม</p></div>
  <div class="cmty">
   <div class="cmc dc"><div class="cmh"><span class="cmi">💬</span><div><b>Discord</b><small>ห้องแชทสด · ห้องแจ้งบั๊ก · หาเพื่อนเล่น</small></div></div>
