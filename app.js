@@ -31101,7 +31101,7 @@ const GOALS={
 const GMAP={'m:normal':[['realm',4],['power'],['fame'],['kills']],'x:normal':[['realm',3],['power'],['age']],'m:hell':[['age'],['power']],'x:hell':[['age'],['power']],
  'm:short':[['fame'],['power'],['realm',3]],'x:short':[['fame'],['power']],'m:junk':[['realm',3],['power']],'x:regress':[['realm',5],['power']],'m:regress':[['realm',5],['power']],'m:soul':[['rings']],'mw:normal':[['money'],['follow']],'fog:normal':[['cases'],['fame'],['age']],'sky:normal':[['power'],['money'],['age']],'beast:normal':[['power'],['age'],['kills']]};
 // ---------- ชะตาของวัน ----------
-function cfgOf(k){const r=RN(k),dow=new Date(k+'T00:00:00Z').getUTCDay();let c;if(k>=ROT0){const di=Math.floor(Date.parse(k+'T00:00:00Z')/864e5);c=Object.assign({},dow===0?pickR(r,ROT):ROT[di%ROT.length])}else c=THEME[dow]?Object.assign({},THEME[dow]):Object.assign({},pickR(r,SUN));if(!CH_KEYS.includes(c.ch))c.ch='normal';
+function cfgOf(k){const r=RN(k),dow=new Date(k+'T00:00:00Z').getUTCDay();let c;if(k>=ROT0){const di=Math.floor(Date.parse(k+'T00:00:00Z')/864e5);c=Object.assign({},dow===0?pickR(r,ROT):ROT[di%ROT.length])}else c=THEME[dow]?Object.assign({},THEME[dow]):Object.assign({},pickR(r,SUN));try{const X=window._dlExt;if(X){if(X.wn)Object.assign(WN,X.wn);if(X.gmap)Object.assign(GMAP,X.gmap);const c2=X.cfg&&X.cfg(k,c,dow);if(c2)c=c2}}catch(e){}if(!CH_KEYS.includes(c.ch))c.ch='normal';
  const okR=RULES.filter(x=>x.ok(c));const r1=pickR(r,okR);c.rules=[r1.id];if(dow===0){const r2=pickR(r,okR.filter(x=>x.id!==r1.id&&!(x.id==='karmaU'&&r1.id==='karmaD')&&!(x.id==='karmaD'&&r1.id==='karmaU')&&!(x.id==='fast'&&r1.id==='slow')&&!(x.id==='slow'&&r1.id==='fast')&&!(x.id==='long'&&r1.id==='shortl')&&!(x.id==='shortl'&&r1.id==='long')&&!(x.id==='rich'&&r1.id==='broke')&&!(x.id==='broke'&&r1.id==='rich')));if(r2)c.rules.push(r2.id)}
  const gl=GMAP[c.w+':'+c.ch]||[['power']];const g=pickR(r,gl);c.goal=g[0];c.K=g[1]||0;
  const pool=PL(c.w);const idx=pool.map((_,i)=>i).sort(()=>r()-.5).slice(0,5);const lo={mw:24,fog:15,sky:14,beast:6}[c.w]||12,hi={mw:62,fog:58,sky:55,beast:60}[c.w]||58;const ages=idx.map(()=>lo+Math.floor(r()*(hi-lo))).sort((a,b)=>a-b);
@@ -31173,6 +31173,7 @@ function begin(c){if(!S)return;S.dl={k:c.k,r:c.rules,g:c.goal,K:c.K,ev:c.ev,w:c.
 const thD=k=>{try{const d=new Date(k+'T00:00:00Z');return d.toLocaleDateString('th-TH',{day:'numeric',month:'short',timeZone:'UTC'})}catch(e){return k}};
 let pend=null,prevC=null;
 window.dlStart=function(kk){const k=(typeof kk==='string'&&kk)||DK(),c=cfgOf(k);try{closeM()}catch(e){}prevC={chm:CFG.chm,xian:CFG.xian};
+ try{const X=window._dlExt;if(X&&X.start&&X.start(c,k,()=>begin(c),()=>{CFG.chm=prevC.chm;CFG.xian=prevC.xian}))return}catch(e){console.error('dl ext',e)}
  if(c.w==='mw'){if(typeof mwRandNative!=='function')return toast('ยุคปัจจุบันยังไม่เปิด');const o=Math.random;Math.random=mulberry(hashStr('dl2b:'+k));try{CFG.chm=0;mwRandNative(null)}finally{Math.random=o}
   let n=0;const w=()=>{if(S&&S.mw&&S.alive){setTimeout(()=>{begin(c);CFG.chm=prevC.chm;CFG.xian=prevC.xian},600);return}if(n++<40)setTimeout(w,200)};w();return}
  const wt=(ok,fn)=>{let n=0;const K0=ok();const f=()=>{const v=ok();if(v&&v!==K0&&S&&S.alive){setTimeout(()=>{try{fn()}catch(e){console.error(e)}},700);return}if(n++<60)setTimeout(f,200)};setTimeout(f,300)};
@@ -41454,3 +41455,12 @@ setInterval(()=>{try{if(!modern()){lastA=-1;return}if(S.mw.wrT)return;
  if(S.age===lastA)return;const first=lastA<0;lastA=S.age;if(first)return;
  if(S.age<15||S.age>75)return;const p=window._wrForce?1:.018;if(Math.random()<p)pend=1}catch(e){}},1500);
 })()}catch(e){console.error('block313',e)}
+// ============================================================
+// BLOCK 314: 📅 ชะตาประจำวัน — เพิ่มวันโลกแฟนตาซี (ต่างโลก / เวทมนตร์ / อะคาเดมี่) เข้ารอบสลับ ใช้กระดานอันดับเดิม
+// ============================================================
+try{(()=>{const F0='2026-11-28',FW=['fiso','fmagic','fnoble'];
+window._dlExt={wn:{fiso:['⚔️','ต่างโลก'],fmagic:['🔮','โลกเวทมนตร์'],fnoble:['🏰','โลกแห่งอะคาเดมี่']},
+ gmap:{'fiso:normal':[['power'],['age'],['money']],'fmagic:normal':[['power'],['age'],['fame']],'fnoble:normal':[['fame'],['money'],['age']]},
+ cfg(k,c,dow){if(window._dlFanForce)return{w:window._dlFanForce,ch:'normal'};if(k<F0)return null;const di=Math.floor(Date.parse(k+'T00:00:00Z')/864e5);if(dow===0||di%5!==0)return null;return{w:FW[Math.floor(di/5)%3],ch:'normal'}},
+ start(c,k,beginFn,back){if(!FW.includes(c.w))return false;CFG.chm=0;CFG.xian=0;wNeed('mw',()=>wNeed('fan',()=>{try{window._fanDl(c,k,beginFn,back)}catch(e){console.error('fan daily',e);toast('เปิดโลกแฟนตาซีไม่สำเร็จ ลองใหม่อีกครั้ง')}}));return true}};
+})()}catch(e){console.error('block314',e)}
