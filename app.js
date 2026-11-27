@@ -41352,3 +41352,13 @@ setInterval(fix,600);try{new MutationObserver(fix).observe(document.body,{childL
 // โลกที่ผู้เล่นมีเซฟแฟนตาซี: โหลดไฟล์ล่วงหน้าตอนว่าง
 setTimeout(()=>{try{for(const n of SLOTS){const d=readSave(n);if(d&&d.S&&d.S.mw&&d.S.mw.fan){wLoad('mw').then(()=>wLoad('fan')).catch(()=>{});break}}}catch(e){}},5000);
 })()}catch(e){console.error('block311',e)}
+
+// ============================================================
+// BLOCK 312: 🧯 กันตัวละครค้างที่ขอบกัลป์ — ถ้าถึงขอบกัลป์แล้ว (pend) แต่หน้าเลือก "ก้าวข้ามกัลป์ / ละสังขาร" หายไป
+//   (รีเฟรชกลางฉาก · หน้าต่างถูกปิด) ตัวละครจะไม่แก่ ไม่ตาย กดอะไรก็ไม่ไป → เปิดหน้าเลือกให้ใหม่เมื่อหน้าจอว่าง ~6 วิ
+// ============================================================
+try{(()=>{let idle=0;
+setInterval(()=>{try{if(!S||!S.alive||!S.kalpa||!S.kalpa.pend||(S._xa&&S._xa.run)||S.flags&&S.flags.kEnd){idle=0;return}
+ if(typeof kcap==='function'&&S.age<kcap()){idle=0;return}
+ const busy=modalOpen||choice._cur||document.querySelector('.kfx')||(typeof window._mgBusy==='function'&&window._mgBusy());idle=busy?0:idle+1;
+ if(idle>=3){idle=0;try{kalpaGate()}catch(e){console.error('kGateFix',e)}}}catch(e){}},2000)})()}catch(e){console.error('block312',e)}

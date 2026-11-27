@@ -66,7 +66,8 @@ function startFinal(){const x=S._xa={run:1,pair:0,sect:'',nem:'',gate:0};try{cho
  const steps=[];
  steps.push(nx=>C(L('🌌 ก่อนก้าวผ่านประตู','🌌 Before the Gate'),L('ประตูดินแดนเซียนแท้เปิดรออยู่ แต่ในใจยังมีบางอย่างที่ต้องปิดให้จบ<br><span class="tag2">บทสุดท้ายจะตัดสินว่าคุณได้ตอนจบแบบไหน และทิ้งอะไรไว้ให้ชีวิตถัดไป</span>','The gate to the true immortal realm awaits, but something in your heart still needs closing.<br><span class="tag2">This final chapter decides your ending and what you leave for your next life</span>'),[
   {t:L('📖 เริ่มบทสุดท้าย','📖 Begin the final chapter'),f(){nx()}},
-  {t:L('🌌 ไม่มีอะไรค้างแล้ว เดินผ่านไปเลย','🌌 Nothing left. Walk through'),s:L('ข้ามไปที่บันไดแสง','Skip to the stair of light'),f(){steps.splice(1,steps.length-3);nx()}}]));
+  {t:L('🌌 ไม่มีอะไรค้างแล้ว เดินผ่านไปเลย','🌌 Nothing left. Walk through'),s:L('ข้ามไปที่บันไดแสง','Skip to the stair of light'),f(){steps.splice(1,steps.length-3);nx()}},
+  {t:L('🏯 ยังไม่ไป อยู่ต่อในโลกนี้','🏯 Not yet. Stay in this world'),s:L('ปิดบทสุดท้ายไว้ก่อน กลับไปใช้ชีวิตต่อ','Close the final chapter for now and keep living'),f(){xaStay()}}]));
  if(S.spouse&&typeof S.spouse==='string')steps.push(nx=>C(L('💞 คนที่อยู่ข้างกายมาทั้งชีวิต','💞 The One Beside You'),L(`<b>${es(S.spouse)}</b> ยืนอยู่ที่ตีนบันได "เจ้าจะไปแล้วใช่ไหม"`,`<b>${es(S.spouse)}</b> stands at the foot of the stair. "You are leaving, aren't you?"`),[
   {t:L('🤝 จูงมือไปด้วยกัน','🤝 Take their hand and go together'),s:L('ฟ้าอาจไม่ยอม ต้องเดินบันไดให้ดีพอ','Heaven may refuse. You must climb well enough'),f(){x.pairTry=1;nx()}},
   {t:L('🫂 บอกลา แล้วไปคนเดียว','🫂 Say goodbye and go alone'),f(){kA(L(`บอกลา${S.spouse}ก่อนก้าวข้ามสามภพ`,`Said goodbye to ${S.spouse} before transcending`));say(L(`🫂 คุณกอด${es(S.spouse)}เป็นครั้งสุดท้าย "รอข้าในชาติหน้า"`,`🫂 You embrace ${es(S.spouse)} one last time. "Wait for me in the next life."`),'epic');nx()}}]));
@@ -83,6 +84,10 @@ function startFinal(){const x=S._xa={run:1,pair:0,sect:'',nem:'',gate:0};try{cho
  steps.push(()=>finale(x));
  let i=0;const nx=()=>{const f=steps[i++];if(f)setTimeout(()=>{try{f(nx)}catch(e){console.error('xa',e);nx()}},250)};nx()}
 
+function xaStay(){try{S._xa=null;S.deathCause=null;S.hp=Math.max(S.hp|0,Math.round((S.maxHp||100)*.6));S.flags.xaStay=S.age;say(L('🏯 คุณหันหลังให้ประตูดินแดนเซียนแท้ ยังมีบางอย่างในโลกนี้ที่อยากทำต่อ','🏯 You turn away from the gate. There is still something to do in this world.'),'epic');try{render();saveGame()}catch(e){}}catch(e){console.error('xaStay',e)}}
+window.xaStay=xaStay;
+// กันค้าง: ถ้าบทสุดท้ายถูกขัดจังหวะ (รีเฟรช ปิดหน้าต่าง มินิเกมหลุด) ตัวละครจะติดสถานะ run ตลอดไป — เปิดบทสุดท้ายใหม่ให้
+{let idle=0;setInterval(()=>{try{if(!(S&&S.alive&&S._xa&&S._xa.run)){idle=0;return}const busy=modalOpen||choice._cur||document.getElementById('xaEnd');idle=busy?0:idle+1;if(idle>=3){idle=0;startFinal()}}catch(e){}},2000)}
 function finale(x){const E=endOf(x);const B=LSg('murim_xaBook',{})||{};const fresh=!B[E.id];B[E.id]=(B[E.id]||0)+1;LSs('murim_xaBook',B);x.end=E.id;
  const age=S.ascAt!=null?S.ascAt:S.age;
  show(E,fresh,age,()=>legacy(x,E,()=>{
