@@ -17,7 +17,7 @@ const say=(t,k)=>{try{log(t,k||'')}catch(e){}};
 const key=t=>{try{keyAdd(t)}catch(e){}};
 const fx=o=>{try{if(o.joy)S.happy=Math.max(0,Math.min(100,(+S.happy||50)+o.joy));if(o.hp){S.maxHp=Math.max(10,(+S.maxHp||100)+o.hp);S.hp=Math.min(S.maxHp,Math.max(1,(+S.hp||1)+o.hp))}if(o.mon)S.money=Math.max(0,(+S.money||0)+o.mon);if(o.karma)S.karma=(+S.karma||0)+o.karma;if(o.fame)S.fame=(+S.fame||0)+o.fame;if(o.life)S.lifespan=(+S.lifespan||60)+o.life;if(o.pow)S.power=(+S.power||0)+o.pow;if(o.int)S.int=(+S.int||0)+o.int}catch(e){}};
 // โลกตอนนี้
-const wk=()=>{try{if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw&&S.mw.fog)return'fog';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.sv&&(CFG.chm===5||S.soul))return'soul';if(S.xian)return'xian';return'murim'}catch(e){return'murim'}};
+const wk=()=>{try{if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw&&S.mw.fan)return'fan';if(S.mw&&S.mw.fog)return'fog';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.sv&&(CFG.chm===5||S.soul))return'soul';if(S.xian)return'xian';return'murim'}catch(e){return'murim'}};
 const WN={murim:'ยุทธภพ',xian:'แดนเซียน',beast:'ป่าลึก',mw:'กรุงเทพฯ',sky:'นครกำแพง',fog:'นครม่านหมอก',soul:'ทวีปวิญญาณยุทธ์'};
 // คำตามโลก
 const V={

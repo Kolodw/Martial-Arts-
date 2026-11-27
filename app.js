@@ -41324,3 +41324,25 @@ setInterval(inject,700);setTimeout(inject,350);
 // เลือกการ์ด (เช่น สุ่มโลก) แล้วหมวดตาม
 {const _ws=window.wpSel;if(_ws)window.wpSel=function(k){const r=_ws.apply(this,arguments);try{const P=document.getElementById('wPick');if(P&&P._wc){const c=catOf(k);if(c!==cat)setCat(P,c)}}catch(e){}return r}}
 })()}catch(e){console.error('block310',e)}
+
+// ============================================================
+// BLOCK 311: 🔮 ทวีปแฟนตาซี เฟส 1 — ไฟล์โลก /w/fan.js · ผู้กล้า · สกิลขยะ · โรงเรียนเวท · โรงเรียนขุนนาง
+//   เปิดการ์ด 4 ใบในหมวดแฟนตาซีให้เล่นได้ · โหลด mw ก่อนเสมอ (ให้ตัวห่อของ fan อยู่ชั้นนอกกว่ายุคปัจจุบัน)
+// ============================================================
+try{(()=>{
+const FW={'ถูกอัญเชิญเป็นผู้กล้า':'hero','สกิลขยะ':'trash','โรงเรียนเวท':'magic','โรงเรียนขุนนาง':'noble'};
+const need=fn=>{try{return wNeed('mw',()=>wNeed('fan',fn))}catch(e){console.error('fan need',e)}};
+{const stub=function(w){return need(()=>{if(window.fanStart===stub)throw new Error('fanStart missing');return window.fanStart(w)})};if(!wIs('fan'))window.fanStart=stub}
+{const _lg=loadGame;loadGame=function(n){try{if(!wIs('fan')){const d=readSave(n||1);if(d&&d.S&&d.S.mw&&d.S.mw.fan){const a=arguments,t=this;return need(()=>loadGame.apply(t,a))}}}catch(e){}return _lg.apply(this,arguments)}}
+// ป้ายการ์ดเซฟ
+try{const _sv=svInfo;svInfo=function(d){const r=_sv.apply(this,arguments);try{const K=d&&d.S&&d.S.mw&&d.S.mw.fan;if(K&&r){const W={hero:'🛡️ ผู้กล้าต่างโลก',trash:'🗑️ สกิลขยะ',magic:'🔮 โรงเรียนเวท',noble:'👑 โรงเรียนขุนนาง'};r.w=W[K.w]||'🔮 แฟนตาซี';r.rl=K.end?'จบแล้ว':(K.grad?'จบการศึกษา':(K.w==='hero'?'อันดับ '+K.rank+'/30':K.w==='trash'?'สกิล Lv'+(K.skL|0):'อันดับรุ่น '+K.rank))}}catch(e){}return r}}catch(e){}
+// การ์ดในหมวดแฟนตาซี
+const css=document.createElement('style');css.textContent=`#wPick .wcFc.fanOk{opacity:1;cursor:pointer;border-color:var(--ca);background:linear-gradient(160deg,#ffffff10,#ffffff04);box-shadow:0 0 0 1px #ffffff10,0 6px 18px #0005;transition:transform .12s}
+#wPick .wcFc.fanOk:active{transform:scale(.97)}#wPick .wcFc.fanOk em{background:linear-gradient(90deg,var(--ca),var(--cb));color:#1a0f2a;border:0;font-weight:800;font-size:11px}`;document.head.appendChild(css);
+window.fanPlay=function(w){try{sfx('click')}catch(e){}window.fanStart(w)};
+const fix=()=>{try{const P=document.getElementById('wPick');if(!P)return;P.querySelectorAll('.wcFc:not(.fanOk)').forEach(c=>{const b=c.querySelector('b'),w=b&&FW[b.textContent.trim()];if(!w)return;c.classList.add('fanOk');const em=c.querySelector('em');if(em)em.textContent='▶ เล่นเลย';c.onclick=()=>window.fanPlay(w)});
+ P.querySelectorAll('.wcSoon').forEach(n=>{const t='🔮 เปิดแล้ว 4 โลก · ที่เหลือกำลังสร้าง แต่ละชีวิตมีหลายฉากจบ และฉากจบลับ 🗝️';if(n.textContent!==t)n.textContent=t});P.querySelectorAll('.wcT button[data-c="fan"] small').forEach(s=>{if(s.textContent!=='4 โลก · ใหม่')s.textContent='4 โลก · ใหม่'})}catch(e){}};
+setInterval(fix,600);
+// โลกที่ผู้เล่นมีเซฟแฟนตาซี: โหลดไฟล์ล่วงหน้าตอนว่าง
+setTimeout(()=>{try{for(const n of SLOTS){const d=readSave(n);if(d&&d.S&&d.S.mw&&d.S.mw.fan){wLoad('mw').then(()=>wLoad('fan')).catch(()=>{});break}}}catch(e){}},5000);
+})()}catch(e){console.error('block311',e)}

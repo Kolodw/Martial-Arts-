@@ -10,7 +10,7 @@
 try{(()=>{
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),rp=a=>a[Math.floor(Math.random()*a.length)],P=p=>Math.random()<p;
 const E=t=>{try{return esc(String(t))}catch(e){return String(t)}};
-function WK(){if(typeof S==='undefined'||!S)return'';try{if(S.beastMode&&!S.beastMode.human)return'';if(S.mw&&S.mw.fog)return'fog';if(S.mw&&S.mw.sky)return'mw';if(S.mw)return'mw';if(S.ch==='soul')return'soul';if(S.ch==='regress')return'rg';if(S.ch&&/^(hell|short|junk)$/.test(S.ch))return'';if(S.xt||(S.flags&&S.flags.eternal))return'god';if(S.xian)return'xian'}catch(e){}return'murim'}
+function WK(){if(typeof S==='undefined'||!S)return'';try{if(S.beastMode&&!S.beastMode.human)return'';if(S.mw&&S.mw.fan)return'fan';if(S.mw&&S.mw.fog)return'fog';if(S.mw&&S.mw.sky)return'mw';if(S.mw)return'mw';if(S.ch==='soul')return'soul';if(S.ch==='regress')return'rg';if(S.ch&&/^(hell|short|junk)$/.test(S.ch))return'';if(S.xt||(S.flags&&S.flags.eternal))return'god';if(S.xian)return'xian'}catch(e){}return'murim'}
 const FAM=w=>w==='mw'?'mw':w==='fog'?'fog':(w==='xian'||w==='god'||w==='soul')?'myst':'cls';
 const X=()=>{if(!S._ex)S._ex={q:[],seen:{},era:null,ly:-9};return S._ex};
 const tot=()=>{try{return total()}catch(e){return +S.power||100}};

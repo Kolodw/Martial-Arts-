@@ -44,7 +44,7 @@ const E=t=>{try{return esc(String(t))}catch(e){return String(t).replace(/[<>&"]/
 const rp=a=>a[Math.floor(Math.random()*a.length)];
 const G=()=>{let d=null;try{d=LS.get(KEY,null)}catch(e){}d=d&&typeof d==='object'?d:{};d.w=d.w&&typeof d.w==='object'?d.w:{};d.ink=Math.max(0,+d.ink||0);d.log=Array.isArray(d.log)?d.log:[];d.miss=d.miss|0;return d};
 const SV=d=>{try{LS.set(KEY,d)}catch(e){}};
-const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
 const nW=d=>Object.keys(d.w).filter(k=>WN[k]&&d.w[k]>0).length;
 
 // ---------------------------------------------------------------- 1) เก็บด้ายตอนจบ

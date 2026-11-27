@@ -13,7 +13,7 @@ const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const T_=f=>{try{return f()}catch(e){return null}};
 const R=(a,b)=>a+Math.random()*(b-a),RI=(a,b)=>Math.floor(R(a,b+1)),CH=a=>a[Math.floor(Math.random()*a.length)],P_=p=>Math.random()<p;
 const alive=()=>T_(()=>!!(S&&S.alive));
-const wk=()=>{if(typeof S==='undefined'||!S)return'murim';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S.beastMode)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
+const wk=()=>{if(typeof S==='undefined'||!S)return'murim';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fan)return'fan';if(M&&M.fog)return'fog';if(S.beastMode)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
 const WN={murim:'ยุทธภพ',xian:'โลกเซียน',god:'แดนเทพ',soul:'จิตวิญญาณยุทธ์',mw:'ยุคปัจจุบัน',sky:'ทะลุฟ้าดารา',fog:'นครม่านหมอก',beast:'สัตว์อสูร',loop:'ผู้ย้อนกาล'};
 const MOD=w=>['mw','sky','fog'].includes(w);
 const money=n=>T_(()=>fmtM(n))||String(Math.round(n));

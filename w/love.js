@@ -232,7 +232,7 @@ function yearly(){if(!ok())return;const lv=LV();
  lv.L=lv.L.filter(p=>p.st==='free');if(S.age%6===0)lv.L=lv.L.filter(p=>p.af>=20);
  try{haremYear()}catch(e){console.error('love harem',e)}}
 let lastK='';
-{const _p=passYear;passYear=function(){const me=S,a0=S&&S.age;const r=_p.apply(this,arguments);try{if(S&&S===me&&S.alive&&S.age!==a0){const k=S.age+':'+S.name;if(k!==lastK){lastK=k;yearly()}}}catch(e){console.error('love',e)}return r}}
+{const _p=passYear;passYear=function(){const me=S,a0=S&&S.age;const r=_p.apply(this,arguments);try{if(S&&S===me&&S.alive&&S.age!==a0&&!(S.mw&&S.mw.fan)){const k=S.age+':'+S.name;if(k!==lastK){lastK=k;yearly()}}}catch(e){console.error('love',e)}return r}}
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(ok()){const m=$('modal'),g=m.querySelector('.mgrid')||m;if(!m.querySelector('.lvM'))g.insertAdjacentHTML('afterbegin',`<button class="opt lvM" onclick="closeM();openLove()">${MW()?'💘 ชีวิตรัก':'🌸 สมุดคนงาม'}<small>${MW()?'จีบ · แอป · คืนนี้':'จีบ · ดูสถานะ · ตำหนักใน'}</small></button>`)}}catch(e){}return r}}
 window._love={mkP,fill,yearly,win,jealous,rivalHit,buy,pub,home,swipe,haremYear,LV};
 })();

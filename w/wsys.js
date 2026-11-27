@@ -242,7 +242,7 @@ function yearly(){if(!S||!S.alive)return;const w=W();
  const wh=where();const id=Object.keys(SYS).find(k=>SYS[k].w.includes(wh));if(!id)return;
  if(Math.random()<(window._wsRate||.05)){let n=0;const me=S;const go=()=>{if(S!==me||!S.alive||S.wsy)return;if(!free()){if(++n<60)setTimeout(go,900);return}offer(id)};setTimeout(go,900)}}
 let lastY='';
-{const _p=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_p.apply(this,arguments);try{if(S&&S===me&&S.alive&&S.age!==a0){const k=S.age+':'+S.name;if(k!==lastY){lastY=k;yearly()}}}catch(e){console.error('wsys',e)}return r}}
+{const _p=passYear;passYear=function(){const a0=S&&S.age,me=S;const r=_p.apply(this,arguments);try{if(S&&S===me&&S.alive&&S.age!==a0&&!(S.mw&&S.mw.fan)){const k=S.age+':'+S.name;if(k!==lastY){lastY=k;yearly()}}}catch(e){console.error('wsys',e)}return r}}
 // เมนู: ปุ่ม 📟 ระบบ
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const w=W();if(w&&SYS[w.id]){const m=$('modal'),g=m.querySelector('.mgrid')||m;if(!m.querySelector('.wsM'))g.insertAdjacentHTML('afterbegin',`<button class="opt wsM" onclick="closeM();openWsys()">📟 ระบบ<small>${SYS[w.id].n} · แต้ม ${w.pts|0}</small></button>`)}}catch(e){}return r}}
 window._wsys={SYS,holo,offer,yearly,pop,where,rival,shopOpen,storyTwist,starReview,ghostDebt,sponLive,aiPatch,aiRecall,TH};

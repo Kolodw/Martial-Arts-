@@ -213,7 +213,7 @@ function tick(){const R=RF();if(!R||R.done||R.stay&&false)return;if(R.ly===S.age
   O('เปิดใจ เล่าเรื่องโลกเดิมให้ฟัง','⚓ สมอโลกนี้ +1',()=>{R.b++;R.bn=nm;joy(5);log(`⚓ ${esc(nm)}ฟังทุกเรื่องโดยไม่หัวเราะ คุณเริ่มรู้สึกว่าที่นี่มีคนรอคุณกลับบ้าน${shockD(-6)}`,'good')}),
   O('รักษาระยะ','',()=>log(`🚶 คุณยิ้มให้แต่ไม่พูดอะไร ${esc(nm)}ไม่ได้มาอีก`,''))]);return}
  if(R.ys>=5&&!R.stay&&!R.done&&S.age-(R.dy||-99)>=4&&Math.random()<.16)door()}
-{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0)yearly()}catch(e){console.error('rift',e)}return r}}
+{const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0&&!(S.mw&&S.mw.fan))yearly()}catch(e){console.error('rift',e)}return r}}
 // mwYear อาจถูกเรียกตรงจากที่อื่น
 if(typeof mwYear==='function'){const _y=mwYear;mwYear=function(){const a0=S&&S.age;const r=_y.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0)yearly()}catch(e){console.error('rift mw',e)}return r}}
 let lastY=null;

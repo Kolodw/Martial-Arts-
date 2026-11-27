@@ -18,7 +18,7 @@ const PK='murim_path';
 const P=()=>{const p=LSG(PK,null)||{};p.p=Math.floor(+p.p||0);p.n=Math.floor(+p.n||0);if(p.p<0||p.p>100000)p.p=Math.min(160,p.n*3); /* เดิม |0 → แต้มเกิน 2,147 ล้านกลายเป็นติดลบ (ดาวเหนือนิรันดร์ให้แต้มตามจำนวนดาวที่เกินสถิติ) */p.got=p.got||{};p.dn=p.dn||{};return p};
 const SV=p=>LSS(PK,p);
 const alive=()=>!!(S&&S.alive);
-const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
 const WN={murim:'⚔️ ยุทธภพ',xian:'☁️ โลกเซียน',god:'🌟 แดนเทพ',mw:'🏙️ ยุคปัจจุบัน',fog:'🌫️ นครม่านหมอก',sky:'🌌 ทะลุฟ้าดารา',beast:'🐾 สัตว์อสูร',soul:'💠 จิตวิญญาณยุทธ์',loop:'🔁 ผู้ย้อนกาล'};
 
 // ---------- 1) ขั้นของเส้นทางชะตา ----------

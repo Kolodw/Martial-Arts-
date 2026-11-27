@@ -13,7 +13,7 @@ const T_=f=>{try{return f()}catch(e){return null}};
 const R=(a,b)=>a+Math.random()*(b-a),RI=(a,b)=>Math.floor(R(a,b+1)),CH=a=>a[Math.floor(Math.random()*a.length)],P_=p=>Math.random()<p;
 const hasS=()=>typeof S!=='undefined'&&!!S,alive=()=>hasS()&&!!S.alive;
 const say=(t,c,b)=>T_(()=>log(t,c||'',!!b));
-const wk=()=>{if(!hasS())return'murim';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
+const wk=()=>{if(!hasS())return'murim';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fan)return'fan';if(M&&M.fog)return'fog';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
 // ร่างตามโลก: [ไอคอน, ร่าง, เสียง/ท่าทาง, อายุขัยในร่างนี้]
 const FORM={murim:[['🐈','แมวจรขนส้ม','เอาหัวมาถูขาคุณ',16],['🐕','หมาดำหูตก','กระดิกหางจนตัวโยก',14],['🕊️','นกกระเรียนขาเจ็บ','กางปีกเต้นรำ',30]],
  xian:[['🦊','ลูกจิ้งจอกหางเดียว','ซุกตัวในแขนเสื้อ',300],['🐢','เต่าหยกตัวน้อย','ยื่นคอออกมามอง',800],['🐍','งูขาววิญญาณ','พันข้อมือเบาๆ',500]],

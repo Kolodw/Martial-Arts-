@@ -5090,7 +5090,7 @@ try{(()=>{const c=document.createElement('style');c.textContent=`
 (function(){const SL=globalThis.__wSlots['late93'];let goalInfo=SL.base.goalInfo;let render=SL.base.render;let adviceList=SL.base.adviceList;
 try{(()=>{
 const fnOk=n=>typeof window[n]==='function';
-const wk=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw&&S.mw.fog)return'fog';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
+const wk=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw&&S.mw.fan)return'fan';if(S.mw&&S.mw.fog)return'fog';if(S.mw&&S.mw.sky)return'sky';if(S.mw)return'mw';if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
 const P=(ic,l,c,n,h)=>({ic,l,c:+c||0,n:+n||0,h});
 // ---------- 1) เป้าหมายถัดไปตามโลก ----------
 if(typeof goalInfo==='function'){const _gi=goalInfo;goalInfo=function(){try{if(!S||!S.alive)return _gi.apply(this,arguments);const w=wk();
@@ -5254,7 +5254,7 @@ function duelInit(B,api,{me,foe,title}){const T=[['💢','ตั้งท่า�
  return{sc:()=>win/5,stop:()=>clearTimeout(tm)}}
 window._n10={duelInit};
 // ---------- ตัวช่วยเหตุการณ์ ----------
-const wid=()=>{try{if(!S||!S.alive)return'';if(S.beastMode&&!S.beastMode.human)return'';const M=S.mw;if(M&&M.fog)return'';if(M&&M.sky)return'sky';if(M)return'mw:'+(M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal'));if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
+const wid=()=>{try{if(!S||!S.alive)return'';if(S.beastMode&&!S.beastMode.human)return'';const M=S.mw;if(M&&(M.fog||M.fan))return'';if(M&&M.sky)return'sky';if(M)return'mw:'+(M.hw>0?'hunter':(M.wx&&M.wx.on?M.wx.id:'normal'));if(S.ch==='soul'&&S.sv)return'soul';return'murim'}catch(e){return''}};
 const mon=thb=>{try{const M=S.mw;const v=M&&typeof mwToB==='function'?mwToB(thb,M):thb;S.money=Math.max(0,(S.money||0)+v);return(v>=0?'+':'')+fmt(v)}catch(e){return''}};
 const fame=n=>{try{const M=S.mw;if(M){M.fame=Math.max(0,(M.fame||0)+n)}else S.fame=(S.fame||0)+n;return'ผู้ติดตาม/ชื่อเสียง +'+fmt(n)}catch(e){return''}};
 const hpd=f=>{const d=Math.round(S.maxHp*f);S.hp=cl(S.hp+d,1,S.maxHp);return(d>=0?'พลังชีวิต +':'พลังชีวิต ')+fmt(d)};

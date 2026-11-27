@@ -29,7 +29,7 @@ function mgo(id,o,cb){if(isAuto()||!window.mg2Play){setTimeout(()=>cb(.55,1),50)
 const ch3=(t,x,o)=>{try{choice(t,x,o)}catch(e){console.error('xl choice',e)}};
 const LSg=(k,d)=>{try{const v=LS.get(k,d);return v==null?d:v}catch(e){return d}},LSs=(k,v)=>{try{LS.set(k,v)}catch(e){}};
 // โลกที่กำลังเล่น
-const WK=()=>{try{if(!S||!S.alive)return'';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(M)return'mw';if(S.beastMode&&!S.beastMode.human)return S.ch==='soul'?'sbeast':'beast';if(S.ch==='soul')return'soul';if(S.xian||S.xt)return'xian';if(S.ch==='regress')return'rg';return'murim'}catch(e){return''}};
+const WK=()=>{try{if(!S||!S.alive)return'';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fan)return'fan';if(M&&M.fog)return'fog';if(M)return'mw';if(S.beastMode&&!S.beastMode.human)return S.ch==='soul'?'sbeast':'beast';if(S.ch==='soul')return'soul';if(S.xian||S.xt)return'xian';if(S.ch==='regress')return'rg';return'murim'}catch(e){return''}};
 const WNM={murim:['⚔️','ยุทธภพ','the Jianghu'],xian:['☁️','โลกเซียน','the Immortal Realm'],mw:['🏙️','ยุคปัจจุบัน','the Modern Era'],soul:['⭕','จิตวิญญาณยุทธ์','the Soul Continent'],sbeast:['⭕','ป่าวิญญาณ','the Spirit Forest'],beast:['🐾','ป่าอสูร','the Beast Forest'],sky:['🌠','ทะลุฟ้าดารา','Starbreak'],fog:['🌉','นครม่านหมอก','the Fog City'],rg:['🔁','ผู้ย้อนกาล','the Regressor\'s Loop']};
 const wName=w=>{const n=WNM[w]||WNM.murim;return n[0]+' '+L(n[1],n[2])};
 const wkNo=()=>Math.floor((Date.now()+7*3600e3-4*86400e3)/604800e3);

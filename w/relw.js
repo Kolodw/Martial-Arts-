@@ -13,7 +13,7 @@ const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const R=(a,b)=>a+Math.random()*(b-a),CH=a=>a[Math.floor(Math.random()*a.length)];
 const F=n=>{n=+n||0;return n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(Math.round(n))};
 const T_=f=>{try{return f()}catch(e){return null}};
-const wk=()=>{if(typeof S==='undefined'||!S)return null;const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';return null};
+const wk=()=>{if(typeof S==='undefined'||!S)return null;const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fan)return'fan';if(M&&M.fog)return'fog';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';return null};
 // ยุคปัจจุบัน: คนธรรมดาไม่มีพลังให้ปล่อย — ต้องตื่นพลัง (ฮันเตอร์) / ข้ามมิติมาพร้อมลมปราณ / มีวิชาติดตัว
 // ระดับพลัง: human = มนุษย์ที่ฝึกมา (นักสู้ใต้ดิน/นักมวย/ร่างกายแกร่ง) · super = เหนือมนุษย์ (ต่อยกำแพงทะลุ) · city = ถล่มเมืองได้ (ระบบ/ตื่นพลังขั้นสูง/ข้ามมิติ/วิชาขั้นสูง)
 const mwPow=()=>{try{const M=S.mw;if(!M||M.sky||M.fog)return{ok:1,cls:'city'};const H=M.H,aw=H&&H.aw&&H.aw!=='none'?H.aw:'',qi=+M.qi||0,A=(S.arts||[]).filter(a=>a&&a.n),arts=A.length,ar=Math.max(-1,...A.map(a=>a.r|0)),pw=+S.power||0,

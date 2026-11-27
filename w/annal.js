@@ -13,7 +13,7 @@ const E=t=>{try{return esc(String(t))}catch(e){return String(t).replace(/[<>&"]/
 const rp=a=>a[Math.floor(Math.random()*a.length)],rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),P=p=>Math.random()<p;
 const on=()=>{try{return typeof onlineOK==='undefined'||!!onlineOK}catch(e){return true}};
 const OFF=()=>{try{return !!LS.get('murim_castOff',0)}catch(e){return false}};
-const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
 const WN={murim:['⚔️','ยุทธภพ'],xian:['☁️','โลกเซียน'],god:['🌟','แดนเทพ'],soul:['🔮','จิตวิญญาณยุทธ์'],loop:['⏳','ผู้ย้อนกาล'],mw:['🏙️','ยุคปัจจุบัน'],sky:['🌌','ทะลุฟ้าดารา'],fog:['🌫️','นครม่านหมอก'],beast:['🐺','ป่าอสูร']};
 const PLACE={murim:['โรงเตี๊ยม','ลานกลางเมือง','สำนัก'],xian:['ศาลาผู้บำเพ็ญ','ยอดเขาวิญญาณ','นิกาย'],god:['ศาลาเมฆ','ลานวังสวรรค์','วังสวรรค์'],soul:['โรงเตี๊ยมชายแดน','ลานสถาบัน','สถาบัน'],loop:['โรงเตี๊ยม','ลานกลางเมือง','สำนัก'],
  mw:['คาเฟ่','สวนสาธารณะ','บริษัท'],sky:['บาร์ใต้กำแพง','ลานหน้ากำแพง','กิลด์'],fog:['ผับใต้โคมแก๊ส','จัตุรัสหอนาฬิกา','สมาคม'],beast:['ลำธาร','ทุ่งล่า','ฝูง']};

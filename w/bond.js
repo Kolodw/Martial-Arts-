@@ -15,7 +15,7 @@ const alive=()=>hasS()&&!!S.alive;
 const say=(t,c,b)=>T_(()=>log(t,c||'',!!b));
 const addv=(k,v)=>T_(()=>{S[k]=(S[k]||0)+v});
 const pn=()=>T_(()=>pname())||'ผู้เล่น';
-const wk=()=>{if(!hasS())return'murim';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S.beastMode)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
+const wk=()=>{if(!hasS())return'murim';const M=S.mw;if(M&&M.sky)return'sky';if(M&&M.fan)return'fan';if(M&&M.fog)return'fog';if(S.beastMode)return'beast';if(S.ch==='soul')return'soul';if(S.rg)return'loop';if(M)return'mw';if(S.xt)return'god';if(S.xian)return'xian';return'murim'};
 const WN={murim:'ยุทธภพ',xian:'โลกเซียน',god:'แดนเทพ',soul:'จิตวิญญาณยุทธ์',mw:'ยุคปัจจุบัน',sky:'ทะลุฟ้าดารา',fog:'นครม่านหมอก',beast:'สัตว์อสูร',loop:'ผู้ย้อนกาล'};
 const MOD=()=>['mw','sky','fog'].includes(wk());
 // ======================= 👥 ผูกชะตาเพื่อน =======================

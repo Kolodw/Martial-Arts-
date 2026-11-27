@@ -18,7 +18,7 @@ const rnd=Math.random,pick=a=>a[Math.floor(rnd()*a.length)],cl=(v,a,b)=>Math.max
 const O=(t,s,f)=>({t,s:s||'',f});
 const say=(t,c,big)=>{try{log(t,c||'',big)}catch(e){}};
 const isAuto=()=>{try{return !!auto}catch(e){return false}};
-const on=()=>{try{return !!(S&&S.alive&&!(window._sx&&window._sx.busy&&window._sx.busy())&&!(S.sv&&S.sv.gd&&S.sv.gd.on))}catch(e){return false}};
+const on=()=>{try{return !!(S&&S.alive&&!(S.mw&&S.mw.fan)&&!(window._sx&&window._sx.busy&&window._sx.busy())&&!(S.sv&&S.sv.gd&&S.sv.gd.on))}catch(e){return false}};
 const free=()=>!choice._cur&&!modalOpen&&!(typeof DU!=='undefined'&&DU)&&!(window._mgBusy&&window._mgBusy());
 const X=()=>{if(!S._xw)S._xw={cd:-9,v:null,ss:null,dd:null,pr:null,or:null,rk:null,sh:null,id:null,ev:{},k0:S.karma||0,f0:0};return S._xw};
 const hurt=p=>{S.hp=Math.max(1,S.hp-Math.round(S.maxHp*p))};
@@ -26,7 +26,7 @@ const pw=p=>{try{const g=pctPow(p);S.power+=g;return g}catch(e){return 0}};
 const nm=()=>{try{return typeof anyName==='function'?anyName(rnd()<.5?'ชาย':'หญิง'):pick(['หลิงเฟิง','ซูเหยียน'])}catch(e){return 'หลิงเฟิง'}};
 function mgo(id,o,cb){if(isAuto()||!window.mg2Play){setTimeout(()=>cb(.55,1),50);return}let d=0;const k=(sc,sk)=>{if(d)return;d=1;cb(sc,sk)};const ok=window.mg2Play(id,o||{},(sc,sk)=>k(sk?.45:sc,sk));if(!ok)k(.5,1)}
 // โลกปัจจุบัน (ละเอียดกว่า wk เดิม: แยกโลกย่อยยุคปัจจุบัน)
-function W(){try{if(S.beastMode&&!S.beastMode.human)return'beast';const M=S.mw;if(M){if(M.fog)return'fog';if(M.sky)return'sky';if(M.hw>0)return'hunter';if(M.wx&&M.wx.on&&M.wx.id)return M.wx.id;return'mw'}if(S.ch==='soul'||S.sv&&S.sv.aw)return'soul';if(S.flags&&S.flags.regress)return'loop';if(S.xian)return'xian'}catch(e){}return'murim'}
+function W(){try{if(S.beastMode&&!S.beastMode.human)return'beast';const M=S.mw;if(M){if(M.fan)return'fan';if(M.fog)return'fog';if(M.sky)return'sky';if(M.hw>0)return'hunter';if(M.wx&&M.wx.on&&M.wx.id)return M.wx.id;return'mw'}if(S.ch==='soul'||S.sv&&S.sv.aw)return'soul';if(S.flags&&S.flags.regress)return'loop';if(S.xian)return'xian'}catch(e){}return'murim'}
 const MODERN=w=>['mw','hunter','zombie','ghost','tower','game','doom','fog','sky'].includes(w);
 // คำตามโลก
 const VV={
