@@ -201,5 +201,78 @@ S.v=(g,f)=>{const {ctx}=g;
  g.rect(px+4,py-10,1,8,'#5cc8ff');g.px(px+4,py-12,'#bfefff');g.px(px+4,py-13,'#bfefff');g.rect(px+3,py-2,1,2,'#5cc8ff');g.alpha(.3,()=>g.rect(px+5,py-12,10,1,'#9fe0ff'))
  // เศษมิติลอยข้ามฝั่ง
  const sh=[[20,40],[30,22],[58,26],[70,40],[44,8],[86,46],[12,46]];sh.forEach(([x,y],i)=>{const dx=f?(i%2?1:-1):0,c=i%2?'#ffd86a':'#9fe8ff';g.px(x+dx,y,c);if(i%3===0){g.px(x+dx+1,y,c+'99');g.px(x+dx,y-1,c+'99')}})};
-window.WSCN={W,H,S,P,order:['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v']};
+
+// ---------- แฟนตาซี ----------
+// ⚔️ ต่างโลก: คืนจันทร์คู่ · วงเวทอัญเชิญบนลานหิน · ปราสาทบนเขา
+S.fi=(g,f)=>{g.sky(['#0c0820','#24164a','#4a2a72','#8a4a8a'],0,46);g.stars(26,['#ffffff','#ffd8f0','#c8b8ff'],34);g.twinkle(5,'#ffffff',30,f);
+ g.glow(70,13,13,'#fff0d0',.32);g.circ(70,13,7,'#f8ecc8');g.px(67,11,'#e0d0a8');g.px(72,15,'#e0d0a8');g.rect(68,10,2,1,'#e8dab4');
+ g.glow(84,24,7,'#a8d8ff',.35);g.circ(84,24,3,'#b8e0ff');g.px(83,23,'#ffffff');
+ g.ridge(40,7,.06,'#3a2258',2);
+ // ปราสาทบนเขา (สีอ่อนกว่าภูเขาให้เห็นรูปทรง)
+ g.peak(26,24,1.3,'#1d1134',null,'#170d2a');const C='#4a3478',CS='#3a2864',CT='#5e4690';
+ g.rect(17,20,18,12,C);g.rect(33,20,2,12,CS);g.rect(14,14,5,18,C);g.rect(33,14,5,18,CS);g.rect(23,9,6,13,C);g.rect(28,9,1,13,CS);
+ for(let i=0;i<3;i++){g.px(14+i*2,13,C);g.px(33+i*2,13,CS);g.px(23+i*2,8,C)}for(let i=0;i<5;i++)g.px(17+i*4,19,C);
+ g.rect(13,12,7,1,CT);g.rect(32,12,7,1,CT);g.rect(22,7,8,1,CT);
+ for(let j=0;j<4;j++){g.rect(14+j,8+j,5-j*2>0?5-j*2:1,1,'#2a1a48');g.rect(33+j,8+j,5-j*2>0?5-j*2:1,1,'#2a1a48')}
+ g.px(16,7,'#2a1a48');g.px(35,7,'#2a1a48');g.rect(26,2,1,5,'#2a1a48');g.rect(27,2+(f?1:0),4,2,'#e24b6a');g.px(31,3+(f?0:1),'#e24b6a');
+ for(const [x,y] of [[16,17],[35,17],[25,12],[19,24],[23,24],[29,24],[16,24],[35,24]])g.rect(x,y,1,2,'#ffd27a');g.rect(25,27,3,5,'#1a1030');g.px(26,26,'#1a1030');
+ g.ridge(48,4,.11,'#1a1030',4);for(let i=0;i<5;i++)g.pine(48+i*11+(i%2)*3,50,7+(i%3)*2,'#120a24','#0d071c');
+ // ลานหิน
+ g.rect(0,50,W,14,'#2a2438');for(let y=51;y<W;y+=4)for(let x=(y%8?0:4);x<W;x+=8)g.rect(x,y,1,1,'#3a3450');g.rect(0,50,W,1,'#4a4260');
+ // วงเวทอัญเชิญ
+ const cx=46,cy=56;g.glow(cx,cy-2,18,'#c890ff',.38);
+ g.ring(cx,cy,24,5,'#b98cff');g.ring(cx,cy,19,4,'#e8d8ff',2);g.ring(cx,cy,14,3,'#b98cff');
+ for(let i=0;i<10;i++){const a=(i/10+(f?.05:0))*Math.PI*2;g.px(Math.round(cx+Math.cos(a)*22),Math.round(cy+Math.sin(a)*4.6),'#ffffff')}
+ g.alpha(.22,()=>{for(let y=24;y<cy;y++){const w=10+Math.floor((y-24)/3);g.rect(cx-w,y,w*2,1,'#e8d0ff')}});
+ // ผู้ถูกอัญเชิญ + ดาบลอย
+ g.person(45,57,'#3a3a5a','#1a1020');g.rect(44,51,4,1,'#5a5a7a');
+ const sy=f?33:34;g.rect(56,sy,1,12,'#dfe6f2');g.px(56,sy-1,'#ffffff');g.rect(54,sy+9,5,1,'#e0a84a');g.rect(56,sy+10,1,3,'#8a5a1a');g.px(56,sy+13,'#ffd27a');g.glow(56,sy+5,5,'#ffe8a0',.3);
+ for(let i=0;i<9;i++){const x=Math.floor(g.R()*W),y=20+Math.floor(g.R()*30);g.px(x,y-((i+f)%3),(i+f)%2?'#e8d0ff':'#ffd27a')}};
+// 🔮 โลกเวทมนตร์: วิทยาลัยเวทบนเกาะลอยฟ้า · หอคอยดาราศาสตร์ · หนังสือบิน
+S.fm=(g,f)=>{g.sky(['#081a2e','#12304a','#1e5a6a','#3a8a8a'],0,52);g.stars(24,['#ffffff','#9fe1cb','#c8b8ff'],34);g.twinkle(5,'#e0fff4',30,f);
+ g.alpha(.18,()=>{for(let i=0;i<3;i++)g.ring(48,-6,30+i*9,22+i*7,['#5dcaa5','#7f77dd','#9fe1cb'][i],1)});
+ g.cloud(12,46,5,'#2a5a6a','#1e4a5a');g.cloud(86,44,6,'#2a5a6a','#1e4a5a');g.rect(0,50,W,14,'#163a4c');g.dith(0,47,W,5,'#2a5a6a',.5);
+ const isl=(x,y,w,top)=>{g.ell(x,y,w,2,'#4a9a6a');g.rect(x-w,y-1,w*2,1,'#6ac08a');for(let j=0;j<9;j++){const hw=Math.round(w*(1-j/9)*.95);g.rect(x-hw,y+1+j,hw*2,1,j<2?'#5a4a6a':j%3?'#3a3050':'#2e2644')}g.px(x,y+10,'#5dcaa5');g.glow(x,y+11,3,'#5dcaa5',.4)};
+ // เกาะหลัก + วิทยาลัย
+ const by=f?1:0;isl(48,40+by,22);
+ g.rect(32,26+by,32,14,'#d8d2ec');g.rect(32,26+by,32,1,'#ffffff');g.roof(32,22+by,32,'#3c3489',4);
+ for(let i=0;i<5;i++){g.rect(35+i*6,30+by,2,4,(i+f)%3?'#ffd27a':'#9fe1cb');g.px(35+i*6,29+by,'#3c3489')}g.rect(46,34+by,4,6,'#3c3489');g.px(47,35+by,'#ffd27a');
+ // หอคอย
+ g.rect(57,8+by,8,18,'#e8e3f7');g.rect(64,8+by,1,18,'#b8b0dc');g.rect(56,6+by,10,2,'#534ab7');for(let j=0;j<5;j++)g.rect(57+j,1+j+by,8-j*2,1,'#3c3489');g.px(61,0+by,'#ffd27a');
+ g.circ(61,12+by,2,'#9fe1cb');g.px(60,11+by,'#ffffff');g.glow(61,12+by,6,'#5dcaa5',.35);g.rect(59,18+by,4,3,'#ffd27a');
+ // เกาะเล็ก
+ isl(14,28-by,8);g.rect(11,22-by,6,6,'#e8e3f7');g.roof(11,19-by,6,'#534ab7',3);g.px(13,24-by,'#ffd27a');
+ isl(84,30+by,7);g.circ(84,25+by,2,'#7f77dd');g.rect(83,21+by,3,3,'#afa9ec');g.px(84,20+by,'#eeedfe');g.glow(84,23+by,5,'#afa9ec',.4);
+ // สะพานแสง
+ g.line(22,28-by,32,32+by,'#9fe1cb');g.line(65,30+by,77,30+by,'#9fe1cb');
+ // หนังสือบิน
+ const bk=(x,y,c)=>{g.rect(x,y,4,1,c);g.px(x-1,y-1,c);g.px(x+4,y-1,c);g.px(x+1,y,'#ffffff')};
+ bk(24,12+(f?1:0),'#ed93b1');bk(76,8+(f?0:1),'#fac775');bk(38,16+(f?0:1),'#9fe1cb');
+ for(let i=0;i<10;i++){const x=Math.floor(g.R()*W),y=14+Math.floor(g.R()*40);g.px(x,y-((i+f)%2),(i%2)?'#9fe1cb':'#c8b8ff')}};
+// 🏰 โลกแห่งอะคาเดมี่: สถาบันหลวงยามพลบค่ำ · หอนาฬิกา · ธงประจำหอ · บันไดหินอ่อน
+S.fa=(g,f)=>{g.sky(['#2a1a4a','#6a3a6a','#c4626a','#f0a070','#ffd090'],0,44);g.stars(12,['#ffffff','#ffe0f0'],16);
+ g.glow(80,36,12,'#ffe0a0',.4);g.circ(80,38,5,'#ffe8b0');
+ g.cloud(14,14,3,'#f0a0a0','#c47080');g.cloud(70,10,2,'#f0a0a0');
+ g.ridge(40,4,.08,'#7a3a5a',1);
+ // ปีกอาคาร
+ const ST='#e8d8c8',SH='#c8b4a8',RF='#3a2a5a',WN='#ffd27a';
+ g.rect(8,28,24,18,ST);g.rect(64,28,24,18,ST);g.rect(8,28,24,1,'#fff4e8');g.rect(64,28,24,1,'#fff4e8');g.rect(31,28,1,18,SH);g.rect(64,28,1,18,SH);
+ g.roof(8,24,24,RF,4);g.roof(64,24,24,RF,4);
+ for(let r=0;r<2;r++)for(let i=0;i<4;i++){const lit=(i+r+f)%3!==0;g.rect(11+i*5,31+r*7,2,4,lit?WN:'#4a3a5a');g.px(11+i*5,30+r*7,SH);g.rect(67+i*5,31+r*7,2,4,(i+r)%3!==1?WN:'#4a3a5a');g.px(67+i*5,30+r*7,SH)}
+ // อาคารกลาง + หอนาฬิกา
+ g.rect(32,22,32,24,'#f0e4d4');g.rect(32,22,32,1,'#fff8ee');g.roof(32,18,32,RF,4);
+ g.rect(40,9,16,13,'#f0e4d4');g.rect(55,9,1,13,SH);g.rect(39,8,18,1,RF);for(let j=0;j<7;j++)g.rect(40+j,7-j,16-j*2,1,RF);g.rect(48,-1,1,2,'#c8a040');g.px(48,-1,'#ffd27a');
+ g.circ(48,14,4,'#faeeda');g.ring(48,14,4,4,'#c8a040');g.rect(48,11,1,3,'#412402');g.rect(48,14,2+(f?0:1),1,'#412402');
+ for(let i=0;i<3;i++){g.rect(37+i*9,26,4,8,WN);g.ell(39+i*9,26,2,1,WN);g.px(39+i*9,29,'#c8a040')}
+ g.rect(44,36,8,10,'#5a3a2a');g.ell(48,36,4,2,'#5a3a2a');g.rect(47,37,2,9,'#3a2418');g.glow(48,40,6,'#ffd27a',.25);
+ // ธงประจำหอ (ม่วง / แดง / เขียว / น้ำเงิน)
+ const fl=(x,c)=>{g.rect(x,10,1,14,'#5a4a3a');g.rect(x+1,10,4,7-(f?1:0),c);g.px(x+2,17-(f?1:0),c);g.px(x+4,16+(f?0:1),c);g.px(x+2,12,'#ffd27a')};
+ fl(12,'#534ab7');fl(26,'#a32d2d');fl(66,'#27500a');fl(80,'#185fa5');
+ // บันได + สวน
+ g.rect(0,46,W,18,'#3a2a3a');for(let j=0;j<6;j++)g.rect(40-j*3,46+j*3,16+j*6,3,j%2?'#c8b4a8':'#d8c8bc');
+ for(const x of [4,20,74,90]){g.ell(x,44,4,4,'#2a5a3a');g.px(x-1,42,'#3a7a4a');g.rect(x,48,1,3,'#3a2418')}
+ for(const x of [28,66]){g.rect(x,40,1,8,'#3a2a2a');g.rect(x-1,38,3,2,'#ffd27a');g.glow(x,39,4,'#ffd27a',.35)}
+ g.person(34,58,'#3c3489','#f0c8a0');g.person(60,58,'#a32d2d','#3a2418');g.rect(33,52,4,1,'#ffffff');
+ for(let i=0;i<6;i++){const x=Math.floor(g.R()*W),y=20+Math.floor(g.R()*24);g.px(x,y+((i+f)%2),'#ffe0a0')}};
+window.WSCN={W,H,S,P,order:['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa']};
 })();

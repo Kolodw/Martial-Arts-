@@ -1373,7 +1373,7 @@ wSlot('mw33',["log","addFeed","mwRandNative","mwBroke","render","mwJobEv","mwYea
 (function(){const SL=globalThis.__wSlots['mwx144'];let lkBody=SL.base.lkBody;let crDraw=SL.base.crDraw;
 try{(()=>{
 const DK=()=>innerWidth>=1100;
-const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v'];
+const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa'];
 const yp=id=>{const i=ORD.indexOf(id);return i<0?null:(i/(ORD.length-1)*100).toFixed(4)+'%'};
 const onS=id=>{const e=document.getElementById(id);return !!(e&&e.classList.contains('on'))};
 function which(){try{const m=document.getElementById('modal');
@@ -1414,7 +1414,7 @@ addEventListener('resize',()=>{try{if(onS('create'))crDraw()}catch(e){}});
 const st=document.createElement('style');st.textContent=`
 #bdBg{display:none}
 @media (min-width:1100px){
-body.bdOn #bdBg{display:block;position:fixed;inset:-60px;z-index:-1;background:url(/worlds.png?v=2) 0 var(--y,0%)/200% 2100% no-repeat;image-rendering:pixelated;filter:blur(7px) brightness(.32) saturate(1.25);pointer-events:none}
+body.bdOn #bdBg{display:block;position:fixed;inset:-60px;z-index:-1;background:url(/worlds.png?v=3) 0 var(--y,0%)/200% 2400% no-repeat;image-rendering:pixelated;filter:blur(7px) brightness(.32) saturate(1.25);pointer-events:none}
 body.bdOn #bdBg:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 30%,#0b0910cc 85%)}
 /* ยุทธภพ/เซียน/จิตวิญญาณยุทธ์ */
 #birth.bdk{max-width:1320px;margin:0 auto}

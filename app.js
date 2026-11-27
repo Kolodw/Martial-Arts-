@@ -37082,7 +37082,7 @@ wSlot('late96',["openNovels","nvOpenBook","openLifeView"]);
 //   การ์ดเลือกโลกหน้าแรก · ปุ่มเลือกทำเนียบ · แบนเนอร์ทำเนียบ · สมุดโลก · หน้าต่างแนะนำโลกครั้งแรก · กล่องจบชีวิต
 // ============================================================
 try{(()=>{
-const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v'],N=ORD.length,URL0='/worlds.png?v=2';
+const ORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa'],N=ORD.length,URL0='/worlds.png?v=3';
 const yp=id=>{const i=ORD.indexOf(id);return i<0?null:(i/(N-1)*100).toFixed(4)+'%'};
 // ภาพย่อเต็มเฟรม (3:2)
 window.wimTh=function(id,cls){const y=yp(id);if(y==null)return'';return`<span class="wim ${cls||''}" style="--y:${y}" role="img"></span>`};
@@ -41338,16 +41338,44 @@ const need=fn=>{try{return wNeed('mw',()=>wNeed('fan',fn))}catch(e){console.erro
 try{const _sv=svInfo;svInfo=function(d){const r=_sv.apply(this,arguments);try{const K=d&&d.S&&d.S.mw&&d.S.mw.fan;if(K&&r){const W={hero:'⚔️ ต่างโลก · ผู้กล้า',trash:'⚔️ ต่างโลก · สกิลขยะ',magic:'🔮 โลกเวทมนตร์',noble:'🏰 โลกแห่งอะคาเดมี่'};r.w=W[K.w]||'🔮 แฟนตาซี';r.rl=K.end?'จบแล้ว':(K.grad?'จบการศึกษา':(K.w==='hero'?'อันดับ '+K.rank+'/30':K.w==='trash'?'สกิล Lv'+(K.skL|0):'อันดับรุ่น '+K.rank))}}catch(e){}return r}}catch(e){}
 // การ์ดในหมวดแฟนตาซี: 3 โลก ไม่มีหมวดย่อย (ต่างโลก · โลกเวทมนตร์ · โลกแห่งอะคาเดมี่)
 const FW3=[['iso','⚔️','ต่างโลก','ถูกอัญเชิญข้ามโลกพร้อมเพื่อนทั้งห้อง ลูกแก้วจะบอกว่าคุณเป็นผู้กล้า หรือคนที่วังโยนทิ้ง','#c48bff','#ff8ad8'],['magic','🔮','โลกเวทมนตร์','วิทยาลัยเวทที่ทุกปีมีนักเรียนหายไป ผนังหายใจได้ และห้องที่ 13 ไม่มีประตู','#7ab8ff','#b98cff'],['noble','🏰','โลกแห่งอะคาเดมี่','เด็กทุนคนเดียวในสถาบันลูกขุนนาง ทุกงานเลี้ยงคือการเมือง ทุกแก้วไวน์อาจมียาพิษ','#ffd37a','#ff9a6a']];
-const css=document.createElement('style');css.textContent=`#wPick.fanOn .wcFb{display:none!important}#wPick .wcF3{display:grid;grid-template-columns:1fr;gap:9px}
-#wPick .wcF3 button{display:flex;gap:12px;align-items:center;text-align:left;padding:13px;border-radius:15px;border:1.5px solid var(--a);background:linear-gradient(135deg,#ffffff12,#ffffff03);color:#fff;font:inherit;cursor:pointer;box-shadow:0 6px 18px #0005,inset 0 0 22px color-mix(in srgb,var(--a) 18%,transparent);transition:transform .12s}
-#wPick .wcF3 button:active{transform:scale(.97)}#wPick .wcF3 i{font-style:normal;font-size:30px;width:52px;height:52px;flex:none;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,var(--a),var(--b))}
-#wPick .wcF3 b{display:block;font-size:16px}#wPick .wcF3 small{display:block;font-size:12px;color:#d9cfee;line-height:1.4;margin-top:2px}#wPick .wcF3 em{flex:none;font-style:normal;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;background:linear-gradient(90deg,var(--a),var(--b));color:#1a0f2a}
-@media (min-width:900px){#wPick .wcF3{grid-template-columns:repeat(3,1fr)}#wPick .wcF3 button{flex-direction:column;text-align:center}}`;document.head.appendChild(css);
+// 🖼️ การ์ดแบบเดียวกับโลกอื่น: ฉากพิกเซลเต็มใบ (/worlds.png แถว fi/fm/fa) · แตะเพื่อเลือก · ปุ่มเกิดใหญ่ใต้การ์ด
+const FWX={iso:{wy:'fi',tg:['เริ่มอายุ 16','ผู้กล้า / สกิลขยะ'],d:'ถูกอัญเชิญมาพร้อมเพื่อนทั้งห้อง ลูกแก้วจะบอกว่าคุณคือผู้กล้า หรือคนที่วังโยนทิ้ง'},
+ magic:{wy:'fm',tg:['เริ่มอายุ 12','วิทยาลัยเวท'],d:'วิทยาลัยเวทบนเกาะลอยฟ้า ทุกปีมีนักเรียนหายไป และห้องที่ 13 ไม่มีประตู'},
+ noble:{wy:'fa',tg:['เริ่มอายุ 12','การเมืองขุนนาง'],d:'เด็กทุนคนเดียวในสถาบันลูกขุนนาง ทุกงานเลี้ยงคือการเมือง'}};
+const WORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa'];
+const wyOf=id=>(WORD.indexOf(id)/(WORD.length-1)*100).toFixed(4)+'%';
+let fsel=null;try{fsel=LS.get('murim_fansel',null)}catch(e){}if(!FW3.some(w=>w[0]===fsel))fsel='iso';
+const css=document.createElement('style');css.textContent=`#wPick.fanOn .wcFb{display:none!important}
+#wPick .wcF3{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:6px 13% 8px 2px;margin:0 -2px}#wPick .wcF3::-webkit-scrollbar{display:none}
+#wPick .fwc{position:relative;flex:0 0 74%;max-width:300px;min-height:168px;scroll-snap-align:center;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;padding:12px 13px 11px;border-radius:18px;border:3px solid var(--a);background:#1b1430;color:#fff;overflow:hidden;cursor:pointer;text-align:left;transition:transform .2s,opacity .2s,box-shadow .2s;opacity:.7;transform:scale(.95)}
+#wPick .fwc::before{content:'';position:absolute;left:0;top:0;width:100%;aspect-ratio:3/2;min-height:100%;z-index:0;background:url(/worlds.png?v=3) 0 var(--wy)/200% ${WORD.length*100}% no-repeat;image-rendering:pixelated;animation:fwcA 1.3s steps(1) infinite}
+#wPick .fwc::after{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#0000 0%,#0003 34%,#000b 70%,#000e);pointer-events:none}
+@keyframes fwcA{0%{background-position:0 var(--wy)}50%{background-position:100% var(--wy)}}
+#wPick .fwc>*{position:relative;z-index:1}
+#wPick .fwc.on{opacity:1;transform:translateY(-2px);box-shadow:0 0 0 2px var(--a),0 0 22px color-mix(in srgb,var(--a) 55%,transparent)}
+#wPick .fwc .ic{position:absolute;top:10px;left:12px;font-size:34px;line-height:1;filter:drop-shadow(0 3px 6px #0008)}
+#wPick .fwc b{font-size:19px;text-shadow:0 1px 3px #000,0 2px 8px #000a}
+#wPick .fwc small{font-size:11.5px;line-height:1.45;color:#f1eafc;text-shadow:0 1px 3px #000;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#wPick .fwc .tg{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}#wPick .fwc .tg span{font-size:10px;padding:2px 8px;border-radius:999px;background:#0007;border:1px solid #ffffff33}
+#wPick .fwc .tick{display:none;position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:999px;background:#fff3c8;color:#2a1a04;border:2px solid #2a1a04;font-size:12px;font-weight:900;box-shadow:0 2px 6px #0008}#wPick .fwc.on .tick{display:block}
+#wPick .fanGo{display:block;width:100%;margin:10px 0 2px;font:inherit;font-weight:900;font-size:22px;color:#1a0f2a;background:linear-gradient(135deg,var(--a),var(--b));border:3px solid color-mix(in srgb,var(--a) 60%,#000);border-radius:18px;padding:12px 10px 10px;box-shadow:0 4px 0 color-mix(in srgb,var(--a) 45%,#000),0 0 22px color-mix(in srgb,var(--a) 40%,transparent);cursor:pointer;position:relative;overflow:hidden}
+#wPick .fanGo small{display:block;font-size:12.5px;font-weight:700;opacity:.85;margin-top:3px}
+#wPick .fanGo:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--a) 45%,#000)}
+#wPick .fanGo:after{content:'';position:absolute;top:0;bottom:0;left:-40%;width:34%;background:linear-gradient(90deg,transparent,#ffffff66,transparent);animation:fwcSh 3.4s ease-in-out infinite;pointer-events:none}@keyframes fwcSh{0%,60%{left:-40%}100%{left:120%}}
+@media (min-width:900px){#wPick .wcF3{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible;padding:4px 2px}#wPick .fwc{max-width:none}}
+@media (prefers-reduced-motion:reduce){#wPick .fwc::before,#wPick .fanGo:after{animation:none}}`;document.head.appendChild(css);
 window.fanPlay=function(w){try{sfx('click')}catch(e){}window.fanStart(w)};
+const goH=()=>{const w=FW3.find(x=>x[0]===fsel)||FW3[0];return`🥚 เกิด<small>ใน ${w[1]} ${w[2]}</small>`};
+const paintSel=P=>{const w=FW3.find(x=>x[0]===fsel)||FW3[0];P.querySelectorAll('.fwc').forEach(c=>c.classList.toggle('on',c.dataset.f===fsel));const g=P.querySelector('.fanGo');if(g){g.style.setProperty('--a',w[4]);g.style.setProperty('--b',w[5]);g.innerHTML=goH()}};
+window.fanSel=function(k){const P=document.getElementById('wPick');if(!P)return;if(fsel===k){const c=P.querySelector(`.fwc[data-f="${k}"]`);if(c&&c.classList.contains('on'))return}fsel=k;try{LS.set('murim_fansel',k)}catch(e){}try{sfx('click')}catch(e){}paintSel(P);try{const c=P.querySelector(`.fwc[data-f="${k}"]`),sc=c&&c.parentElement;if(c&&sc&&sc.scrollWidth>sc.clientWidth)sc.scrollTo({left:c.offsetLeft-(sc.clientWidth-c.offsetWidth)/2,behavior:'smooth'})}catch(e){}};
 const fix=()=>{try{const P=document.getElementById('wPick');if(!P)return;
- const g=P.querySelector('.wcFg');if(g&&!g.classList.contains('wcF3')){g.className='wcFg wcF3';g.innerHTML=FW3.map(w=>`<button style="--a:${w[4]};--b:${w[5]}" onclick="fanPlay('${w[0]}')"><i>${w[1]}</i><span style="flex:1;min-width:0"><b>${w[2]}</b><small>${w[3]}</small></span><em>▶ เล่น</em></button>`).join('')}
+ const g=P.querySelector('.wcFg');if(g&&!g.classList.contains('wcF3')){g.className='wcFg wcF3';
+  g.innerHTML=FW3.map(w=>{const x=FWX[w[0]];return`<div class="fwc" data-f="${w[0]}" style="--a:${w[4]};--b:${w[5]};--wy:${wyOf(x.wy)}" onclick="fanSel('${w[0]}')"><span class="ic">${w[1]}</span><span class="tick">✓ เลือกแล้ว</span><b>${w[2]}</b><small>${x.d}</small><span class="tg">${x.tg.map(t=>`<span>${t}</span>`).join('')}</span></div>`}).join('');
+  g.insertAdjacentHTML('afterend',`<button class="fanGo" onclick="fanPlay(window._fanSelK())">${goH()}</button>`);paintSel(P);
+  setTimeout(()=>{try{const c=P.querySelector('.fwc.on');if(c&&g.scrollWidth>g.clientWidth)g.scrollLeft=c.offsetLeft-(g.clientWidth-c.offsetWidth)/2}catch(e){}},60)}
  P.querySelectorAll('.wcSoon').forEach(n=>{const t='🔮 แต่ละชีวิตมีหลายฉากจบ และมีฉากจบลับ 🗝️ ที่ต้องเก็บเบาะแสให้ครบ';if(n.textContent!==t)n.textContent=t});
  P.querySelectorAll('.wcT button[data-c="fan"] small').forEach(s=>{if(s.textContent!=='3 โลก · ใหม่')s.textContent='3 โลก · ใหม่'})}catch(e){}};
+window._fanSelK=()=>fsel||'iso';
 setInterval(fix,600);try{new MutationObserver(fix).observe(document.body,{childList:true,subtree:true})}catch(e){}
 // โลกที่ผู้เล่นมีเซฟแฟนตาซี: โหลดไฟล์ล่วงหน้าตอนว่าง
 setTimeout(()=>{try{for(const n of SLOTS){const d=readSave(n);if(d&&d.S&&d.S.mw&&d.S.mw.fan){wLoad('mw').then(()=>wLoad('fan')).catch(()=>{});break}}}catch(e){}},5000);
