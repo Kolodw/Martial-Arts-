@@ -41126,11 +41126,12 @@ const WL=/ศัตรู|แค้น|ไล่ล่า|ตามรอย|ศ
 const gap=n=>5+3*Math.min(Math.max(n-1,0),3);// 5,8,11,14 ปี
 window._nrBlock=function(title,opts){try{if(typeof S==='undefined'||!S||!S.alive)return false;if(!Array.isArray(opts)||opts.length<2)return false;const k=NK(title);if(!k||WL.test(k))return false;
  S._nr=S._nr||{};const r=S._nr[k],a=S.age|0;if(!r)return false;const d=a-r.a;if(d<1)return false;
- if(r.sp===a)return true;if(r.sp===a-1)return false;// ถามซ้ำทุกปี = เรื่องราวที่รอผู้เล่นอยู่ ไม่กัน
- const b=(r.n>=3&&d<18)||d<gap(r.n);if(b)r.sp=a;return b}catch(e){return false}};
-{const _c=choice;choice=function(title,text,opts){try{if(window._nrBlock(title,opts)){window._nrS=(window._nrS|0)+1;return}
- if(typeof S!=='undefined'&&S&&Array.isArray(opts)&&opts.length>=2){const k=NK(title);if(k){S._nr=S._nr||{};const r=S._nr[k]||{n:0,a:-99};if(r.a!==(S.age|0)){r.n++;r.a=S.age|0}S._nr[k]=r;const ks=Object.keys(S._nr);if(ks.length>400)delete S._nr[ks[0]]}}}catch(e){}
- return _c.apply(this,arguments)};for(const k in _c)try{choice[k]=_c[k]}catch(e){}window.choice=choice}
+ if(r.sp===a)return true;const st=r.sp===a-1?(r.sc|0)+1:0;if(st>=2){r.sc=0;r.sp=null;return false}// ถูกถามซ้ำติดกัน 3 ปี = เรื่องราวที่รอผู้เล่นอยู่ ไม่กัน
+ const b=(r.n>=3&&d<18)||d<gap(r.n);if(b){r.sp=a;r.sc=st}return b}catch(e){return false}};
+{const _c=choice;choice=function(title,text,opts){try{if(window._nrBlock(title,opts)){window._nrS=(window._nrS|0)+1;return}}catch(e){}
+ const r=_c.apply(this,arguments);
+ try{if(typeof S!=='undefined'&&S&&Array.isArray(opts)&&opts.length>=2&&choice._cur&&NK(choice._cur.title)===NK(title)){const k=NK(title);if(k){S._nr=S._nr||{};const q=S._nr[k]||{n:0,a:-99};if(q.a!==(S.age|0)){q.n++;q.a=S.age|0}S._nr[k]=q;const ks=Object.keys(S._nr);if(ks.length>400)delete S._nr[ks[0]]}}}catch(e){}
+ return r};for(const k in _c)try{choice[k]=_c[k]}catch(e){}window.choice=choice}
 // กองสุ่มหลัก: ถ้าเรื่องที่สุ่มได้ถูกกันซ้ำ สุ่มใหม่ได้อีก 2 ครั้ง (เรื่องเดิมติดคูลดาวน์แล้ว จะไม่ออกซ้ำ)
 if(typeof randomEvent==='function'){const _r=randomEvent;randomEvent=function(){let r;for(let i=0;i<3;i++){window._nrS=0;r=_r.apply(this,arguments);try{if(!window._nrS||choice._cur||modalOpen)break}catch(e){break}}window._nrS=0;return r};for(const k in _r)try{randomEvent[k]=_r[k]}catch(e){}window.randomEvent=randomEvent}
 // บันทึกซ้ำ: ข้อความเดิม (ตัวเลขต่างได้) ไม่ขึ้นซ้ำภายใน 3 ปี กลุ่มที่ถี่เป็นพิเศษพักนานกว่า
@@ -41139,3 +41140,5 @@ const LG=[[/^👘 ปลดล็อกชุดใหม่/,5],[/^📋 /,4],[/
 {const _l=log;log=function(t,c,key){try{if(typeof S!=='undefined'&&S&&S.alive&&!key&&c!=='myth'&&c!=='epic'&&typeof t==='string'&&(S.age|0)>=3){let k=LK(t);if(k.length>=6){S._lr=S._lr||{};const a=S.age|0,p=S._lr[k];let w=3,k2=k;for(const[re,n]of LG)if(re.test(k)){w=n;k2='g:'+re.source;break}k=k2;
   if(p!=null&&a>p&&a-p<w)return;if(p==null||a>p){S._lr[k]=a;const ks=Object.keys(S._lr);if(ks.length>500)delete S._lr[ks[0]]}}}}catch(e){}return _l.apply(this,arguments)};for(const k in _l)try{log[k]=_l[k]}catch(e){}window.log=log}
 })()}catch(e){console.error('block305',e)}
+// ============ BLOCK 306: 🎭 เรื่องใหม่ทุกโลก (โหลด /w/evx.js) ============
+try{setTimeout(()=>{try{wLoad('evx').catch(()=>setTimeout(()=>wLoad('evx').catch(()=>{}),6000))}catch(e){}},5200)}catch(e){console.error('block306',e)}
