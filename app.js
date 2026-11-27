@@ -41335,14 +41335,20 @@ const need=fn=>{try{return wNeed('mw',()=>wNeed('fan',fn))}catch(e){console.erro
 {const stub=function(w){return need(()=>{if(window.fanStart===stub)throw new Error('fanStart missing');return window.fanStart(w)})};if(!wIs('fan'))window.fanStart=stub}
 {const _lg=loadGame;loadGame=function(n){try{if(!wIs('fan')){const d=readSave(n||1);if(d&&d.S&&d.S.mw&&d.S.mw.fan){const a=arguments,t=this;return need(()=>loadGame.apply(t,a))}}}catch(e){}return _lg.apply(this,arguments)}}
 // ป้ายการ์ดเซฟ
-try{const _sv=svInfo;svInfo=function(d){const r=_sv.apply(this,arguments);try{const K=d&&d.S&&d.S.mw&&d.S.mw.fan;if(K&&r){const W={hero:'🛡️ ผู้กล้าต่างโลก',trash:'🗑️ สกิลขยะ',magic:'🔮 โรงเรียนเวท',noble:'👑 โรงเรียนขุนนาง'};r.w=W[K.w]||'🔮 แฟนตาซี';r.rl=K.end?'จบแล้ว':(K.grad?'จบการศึกษา':(K.w==='hero'?'อันดับ '+K.rank+'/30':K.w==='trash'?'สกิล Lv'+(K.skL|0):'อันดับรุ่น '+K.rank))}}catch(e){}return r}}catch(e){}
-// การ์ดในหมวดแฟนตาซี
-const css=document.createElement('style');css.textContent=`#wPick .wcFc.fanOk{opacity:1;cursor:pointer;border-color:var(--ca);background:linear-gradient(160deg,#ffffff10,#ffffff04);box-shadow:0 0 0 1px #ffffff10,0 6px 18px #0005;transition:transform .12s}
-#wPick .wcFc.fanOk:active{transform:scale(.97)}#wPick .wcFc.fanOk em{background:linear-gradient(90deg,var(--ca),var(--cb));color:#1a0f2a;border:0;font-weight:800;font-size:11px}`;document.head.appendChild(css);
+try{const _sv=svInfo;svInfo=function(d){const r=_sv.apply(this,arguments);try{const K=d&&d.S&&d.S.mw&&d.S.mw.fan;if(K&&r){const W={hero:'⚔️ ต่างโลก · ผู้กล้า',trash:'⚔️ ต่างโลก · สกิลขยะ',magic:'🔮 โลกเวทมนตร์',noble:'🏰 โลกแห่งอะคาเดมี่'};r.w=W[K.w]||'🔮 แฟนตาซี';r.rl=K.end?'จบแล้ว':(K.grad?'จบการศึกษา':(K.w==='hero'?'อันดับ '+K.rank+'/30':K.w==='trash'?'สกิล Lv'+(K.skL|0):'อันดับรุ่น '+K.rank))}}catch(e){}return r}}catch(e){}
+// การ์ดในหมวดแฟนตาซี: 3 โลก ไม่มีหมวดย่อย (ต่างโลก · โลกเวทมนตร์ · โลกแห่งอะคาเดมี่)
+const FW3=[['iso','⚔️','ต่างโลก','ถูกอัญเชิญข้ามโลกพร้อมเพื่อนทั้งห้อง ลูกแก้วจะบอกว่าคุณเป็นผู้กล้า หรือคนที่วังโยนทิ้ง','#c48bff','#ff8ad8'],['magic','🔮','โลกเวทมนตร์','วิทยาลัยเวทที่ทุกปีมีนักเรียนหายไป ผนังหายใจได้ และห้องที่ 13 ไม่มีประตู','#7ab8ff','#b98cff'],['noble','🏰','โลกแห่งอะคาเดมี่','เด็กทุนคนเดียวในสถาบันลูกขุนนาง ทุกงานเลี้ยงคือการเมือง ทุกแก้วไวน์อาจมียาพิษ','#ffd37a','#ff9a6a']];
+const css=document.createElement('style');css.textContent=`#wPick.fanOn .wcFb{display:none!important}#wPick .wcF3{display:grid;grid-template-columns:1fr;gap:9px}
+#wPick .wcF3 button{display:flex;gap:12px;align-items:center;text-align:left;padding:13px;border-radius:15px;border:1.5px solid var(--a);background:linear-gradient(135deg,#ffffff12,#ffffff03);color:#fff;font:inherit;cursor:pointer;box-shadow:0 6px 18px #0005,inset 0 0 22px color-mix(in srgb,var(--a) 18%,transparent);transition:transform .12s}
+#wPick .wcF3 button:active{transform:scale(.97)}#wPick .wcF3 i{font-style:normal;font-size:30px;width:52px;height:52px;flex:none;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,var(--a),var(--b))}
+#wPick .wcF3 b{display:block;font-size:16px}#wPick .wcF3 small{display:block;font-size:12px;color:#d9cfee;line-height:1.4;margin-top:2px}#wPick .wcF3 em{flex:none;font-style:normal;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;background:linear-gradient(90deg,var(--a),var(--b));color:#1a0f2a}
+@media (min-width:900px){#wPick .wcF3{grid-template-columns:repeat(3,1fr)}#wPick .wcF3 button{flex-direction:column;text-align:center}}`;document.head.appendChild(css);
 window.fanPlay=function(w){try{sfx('click')}catch(e){}window.fanStart(w)};
-const fix=()=>{try{const P=document.getElementById('wPick');if(!P)return;P.querySelectorAll('.wcFc:not(.fanOk)').forEach(c=>{const b=c.querySelector('b'),w=b&&FW[b.textContent.trim()];if(!w)return;c.classList.add('fanOk');const em=c.querySelector('em');if(em)em.textContent='▶ เล่นเลย';c.onclick=()=>window.fanPlay(w)});
- P.querySelectorAll('.wcSoon').forEach(n=>{const t='🔮 เปิดแล้ว 4 โลก · ที่เหลือกำลังสร้าง แต่ละชีวิตมีหลายฉากจบ และฉากจบลับ 🗝️';if(n.textContent!==t)n.textContent=t});P.querySelectorAll('.wcT button[data-c="fan"] small').forEach(s=>{if(s.textContent!=='4 โลก · ใหม่')s.textContent='4 โลก · ใหม่'})}catch(e){}};
-setInterval(fix,600);
+const fix=()=>{try{const P=document.getElementById('wPick');if(!P)return;
+ const g=P.querySelector('.wcFg');if(g&&!g.classList.contains('wcF3')){g.className='wcFg wcF3';g.innerHTML=FW3.map(w=>`<button style="--a:${w[4]};--b:${w[5]}" onclick="fanPlay('${w[0]}')"><i>${w[1]}</i><span style="flex:1;min-width:0"><b>${w[2]}</b><small>${w[3]}</small></span><em>▶ เล่น</em></button>`).join('')}
+ P.querySelectorAll('.wcSoon').forEach(n=>{const t='🔮 แต่ละชีวิตมีหลายฉากจบ และมีฉากจบลับ 🗝️ ที่ต้องเก็บเบาะแสให้ครบ';if(n.textContent!==t)n.textContent=t});
+ P.querySelectorAll('.wcT button[data-c="fan"] small').forEach(s=>{if(s.textContent!=='3 โลก · ใหม่')s.textContent='3 โลก · ใหม่'})}catch(e){}};
+setInterval(fix,600);try{new MutationObserver(fix).observe(document.body,{childList:true,subtree:true})}catch(e){}
 // โลกที่ผู้เล่นมีเซฟแฟนตาซี: โหลดไฟล์ล่วงหน้าตอนว่าง
 setTimeout(()=>{try{for(const n of SLOTS){const d=readSave(n);if(d&&d.S&&d.S.mw&&d.S.mw.fan){wLoad('mw').then(()=>wLoad('fan')).catch(()=>{});break}}}catch(e){}},5000);
 })()}catch(e){console.error('block311',e)}

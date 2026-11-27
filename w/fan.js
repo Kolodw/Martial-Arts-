@@ -20,8 +20,8 @@ const gold=v=>`${fmt(Math.round(v))} เหรียญทอง`;
 const WD={
  hero:{ic:'🛡️',n:'ถูกอัญเชิญเป็นผู้กล้า',g:'iso',a0:16,end:[64,80],d:'คุณกับเพื่อนร่วมห้องอีก 29 คนตื่นมากลางวงเวทในวิหารหินสีขาว นักบวชร้องไห้ด้วยความดีใจ ราชาบอกว่าโลกนี้ต้องการผู้กล้าไปปราบราชาปีศาจ',sc:'⛪ อาณาจักรอัลเวิร์น'},
  trash:{ic:'🗑️',n:'สกิลขยะ',g:'iso',a0:16,end:[60,78],d:'คุณถูกอัญเชิญพร้อมคนอื่น แต่แผ่นประเมินขึ้นสกิลของคุณว่า「เก็บของ」 ราชาหัวเราะ ทหารลากคุณไปทิ้งนอกกำแพงพร้อมเหรียญทองแดงสามเหรียญ',sc:'🏚️ สลัมนอกกำแพง'},
- magic:{ic:'🔮',n:'โรงเรียนเวท',g:'aca',a0:12,end:[70,96],d:'จดหมายตอบรับมาพร้อมนกฮูกที่มีตาสามดวง วิทยาลัยเวทอาร์คาเนียรับนักเรียนปีละหกสิบคน และทุกปีจะมีคนไม่ได้กลับบ้าน',sc:'🏰 วิทยาลัยอาร์คาเนีย'},
- noble:{ic:'👑',n:'โรงเรียนขุนนาง',g:'aca',a0:12,end:[62,84],d:'สถาบันหลวงเซนต์ลูเมียรับเฉพาะลูกขุนนาง ปีนี้มีข้อยกเว้นหนึ่งคน คือคุณ เด็กทุนจากหมู่บ้านที่ไม่มีใครรู้จัก',sc:'🏛️ สถาบันหลวงเซนต์ลูเมีย'}};
+ magic:{ic:'🔮',n:'โลกเวทมนตร์',g:'aca',a0:12,end:[70,96],d:'จดหมายตอบรับมาพร้อมนกฮูกที่มีตาสามดวง วิทยาลัยเวทอาร์คาเนียรับนักเรียนปีละหกสิบคน และทุกปีจะมีคนไม่ได้กลับบ้าน',sc:'🏰 วิทยาลัยอาร์คาเนีย'},
+ noble:{ic:'🏰',n:'โลกแห่งอะคาเดมี่',g:'aca',a0:12,end:[62,84],d:'สถาบันหลวงเซนต์ลูเมียรับเฉพาะลูกขุนนาง ปีนี้มีข้อยกเว้นหนึ่งคน คือคุณ เด็กทุนจากหมู่บ้านที่ไม่มีใครรู้จัก',sc:'🏛️ สถาบันหลวงเซนต์ลูเมีย'}};
 const EL={fire:['🔥','ไฟ'],water:['💧','น้ำ'],wind:['🌪️','ลม'],earth:['🪨','ดิน'],light:['✨','แสง'],shadow:['🌑','เงา']};
 const RARE={time:['⏳','เวลา','ย้อนจังหวะได้ครั้งละไม่กี่วินาที แต่อายุขัยหายทุกครั้งที่ใช้'],space:['🌀','มิติ','พับระยะทาง เปิดประตูไปที่ที่เคยเห็น'],death:['💀','ความตาย','ได้ยินเสียงคนตาย และคนตายได้ยินคุณ']};
 const SK={ // สกิลติดตัว (ต่างโลก)
@@ -393,10 +393,11 @@ function evHomesick(K){K.f.homeAsk=1;C('🏠 คิดถึงบ้าน',`�
 // =================== หน้าเกิด ===================
 let FB=null;
 const ORGW={magic:[34,20,14,22,10],noble:[40,18,22,14,6]};
-function fbRoll(first){if(!first){if(FB.left<=0)return;FB.left--}const w=FB.w;
+const TOP=[['iso','⚔️','ต่างโลก','ถูกอัญเชิญข้ามโลก · เริ่มอายุ 16'],['magic','🔮','โลกเวทมนตร์','วิทยาลัยเวทอาร์คาเนีย · เริ่มอายุ 12'],['noble','🏰','โลกแห่งอะคาเดมี่','สถาบันหลวง การเมือง งานเลี้ยง · เริ่มอายุ 12']];
+function fbRoll(first){if(!first){if(FB.left<=0)return;FB.left--}if(FB.top==='iso'){FB.w=rnd()<.7?'hero':'trash'}const w=FB.w;
  FB.el=pick(Object.keys(EL));FB.rare=rnd()<.05?pick(Object.keys(RARE)):null;
  if(WD[w].g==='iso'){FB.sk=pick(SK[w])[0];FB.org=null}else{const L=ORG[w],W=ORGW[w]||L.map(()=>1);let t=W.slice(0,L.length).reduce((a,b)=>a+b,0)*rnd(),i=0;for(;i<L.length-1;i++){t-=W[i]||1;if(t<=0)break}FB.org=L[i][0];FB.sk=null}
- if(first||!FB.edited){FB.g=rnd()<.5?'ชาย':'หญิง';FB.name=w==='hero'||w==='trash'?pick(TH)+' '+pick(['ใจดี','ศรีสุข','รักไทย','มั่นคง','แสงทอง','บุญมา']):nm(FB.g==='หญิง'?'f':'m')}
+ if(first||!FB.edited||!FB.name){if(first||!FB.edited)FB.g=rnd()<.5?'ชาย':'หญิง';FB.name=w==='hero'||w==='trash'?pick(TH)+' '+pick(['ใจดี','ศรีสุข','รักไทย','มั่นคง','แสงทอง','บุญมา']):nm(FB.g==='หญิง'?'f':'m')}
  fbDraw()}
 const fbCss=()=>{if(document.getElementById('fanBcss'))return;const st=document.createElement('style');st.id='fanBcss';st.textContent=`
 .fanB h3{margin:0 0 4px}.fanB .fbW{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}
@@ -416,8 +417,9 @@ const fbCss=()=>{if(document.getElementById('fanBcss'))return;const st=document.
 function fbDraw(){fbCss();const w=FB.w,d=WD[w],e=EL[FB.el],r=FB.rare&&RARE[FB.rare];
  const sk=FB.sk?SK[w].find(x=>x[0]===FB.sk):null,og=FB.org?ORG[w].find(x=>x[0]===FB.org):null;
  const bon=og?Object.entries(og[3]).map(([k,v])=>({int:`ปัญญา +${v}`,gold:`เงิน +${v}`,mp:`มานา +${v}`,dark:`ความมืด +${v}`,pow:`พลัง +${v}`,rank:`อันดับเริ่มดีขึ้น ${-v}`,luck:'โชคดีในเขาวงกต',secret:'มีความลับติดตัว'}[k]||k)).join(' · '):'';
- modal(`<div class="fanB"><button class="xbtn" onclick="closeM()">✕</button><h3>🔮 ทวีปแฟนตาซี</h3><div class="tag2">เลือกโลกย่อย แล้วสุ่มชะตา</div>
- <div class="fbW">${Object.keys(WD).map(k=>`<button class="${k===w?'on':''}" onclick="fanW('${k}')"><b>${WD[k].ic} ${WD[k].n}</b>${WD[k].g==='iso'?'⚔️ ต่างโลก':'🏰 อะคาเดมี่'} · เริ่มอายุ ${WD[k].a0}</button>`).join('')}</div>
+ modal(`<div class="fanB"><button class="xbtn" onclick="closeM()">✕</button><h3>🔮 ทวีปแฟนตาซี</h3><div class="tag2">เลือกโลก แล้วสุ่มชะตา</div>
+ <div class="fbW" style="grid-template-columns:1fr">${TOP.map(t=>`<button class="${t[0]===FB.top?'on':''}" onclick="fanW('${t[0]}')"><b>${t[1]} ${t[2]}</b>${t[3]}</button>`).join('')}</div>
+ ${FB.top==='iso'?`<div class="fbT${w==='trash'?' rare':''}"><div class="ic">${d.ic}</div><div><b>ผลประเมินตอนถูกอัญเชิญ: ${w==='hero'?'ผู้กล้า':'สกิลขยะ'}</b><small>${w==='hero'?'1 ใน 1.4 · ได้สกิลดี วังเลี้ยงดู':'1 ใน 3.3 · สกิลที่ทุกคนหัวเราะ ถูกทิ้งนอกกำแพง แต่มันโตได้'}</small></div></div>`:''}
  <div class="fbD">${d.d}</div>
  <div style="margin-top:8px"><div class="tag2">ชื่อ</div><input id="fanNm" maxlength="24" value="${E(FB.name)}" onchange="fanNm(this.value)"><div class="fbG">${['ชาย','หญิง'].map(g=>`<button class="${FB.g===g?'on':''}" onclick="fanG('${g}')">${g==='ชาย'?'♂':'♀'} ${g}</button>`).join('')}</div></div>
  <div class="fbT"><div class="ic">${e[0]}</div><div><b>ธาตุ${e[1]}</b><small>ธาตุประจำตัว · เวทธาตุนี้แรงที่สุด</small></div></div>
@@ -425,12 +427,12 @@ function fbDraw(){fbCss();const w=FB.w,d=WD[w],e=EL[FB.el],r=FB.rare&&RARE[FB.ra
  ${sk?`<div class="fbT"><div class="ic">${sk[1]}</div><div><b>สกิล: ${sk[2]}</b><small>${sk[3]}</small></div></div>`:''}
  ${og?`<div class="fbT"><div class="ic">${og[1]}</div><div><b>${og[2]}</b><small>${bon}</small></div></div>`:''}
  <div class="fbBar"><button class="gbtn" ${FB.left<=0?'disabled':''} onclick="fanRe()">🎲 สุ่มใหม่ (${FB.left})</button><button class="pbtn" onclick="fanGo()">เริ่มชีวิต ▶</button></div></div>`,'fanb')}
-window.fanW=k=>{if(!WD[k]||!FB)return;FB.w=k;FB.edited=0;fbRoll(true)};
+window.fanW=k=>{if(!FB)return;k=k==='hero'||k==='trash'?'iso':k==='aca'?'noble':k;if(!TOP.some(t=>t[0]===k))return;FB.top=k;FB.w=k==='iso'?'hero':k;FB.edited=0;fbRoll(true)};
 window.fanNm=v=>{v=String(v||'').trim().slice(0,24);if(v&&FB){FB.name=v;FB.edited=1}};
 window.fanG=g=>{if(!FB)return;FB.g=g;if(!FB.edited&&WD[FB.w].g==='aca')FB.name=nm(g==='หญิง'?'f':'m');fbDraw()};
 window.fanRe=()=>{if(!FB||FB.left<=0)return;try{sfx('click')}catch(e){}fbRoll(false)};
 window.fanGo=()=>{if(!FB)return;try{const i=document.getElementById('fanNm');if(i)window.fanNm(i.value)}catch(e){}const RR=Object.assign({},FB);FB=null;fanBegin(RR)};
-window.fanStart=function(w){window._frS=1;try{closeM()}catch(e){}const tot=Math.max(3,(window.vipTot&&window.vipTot())|0);FB={w:WD[w]?w:'hero',left:(typeof CFG!=='undefined'&&CFG.chm==1)?0:tot,edited:0};fbRoll(true)};
+window.fanStart=function(w){window._frS=1;try{closeM()}catch(e){}const tot=Math.max(3,(window.vipTot&&window.vipTot())|0);const tp=w==='hero'||w==='trash'||w==='iso'?'iso':w==='aca'||w==='noble'?'noble':w==='magic'?'magic':'iso';FB={top:tp,w:tp==='iso'?'hero':tp,left:(typeof CFG!=='undefined'&&CFG.chm==1)?0:tot,edited:0};fbRoll(true)};
 function fanBegin(RR){window._frS=1;try{closeM()}catch(e){}const w=RR.w,d=WD[w];
  try{CFG.xian=0;CFG.mw=0;if((CFG.chm|0)>=2)CFG.chm=0;crForce={g:RR.g==='หญิง'?1:0};goBirth();doRoll(true);startLife()}catch(e){console.error(e);return}
  setTimeout(()=>{try{if(choice._cur)choice._cur=null;if(modalOpen)closeM();
