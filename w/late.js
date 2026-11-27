@@ -6370,7 +6370,7 @@ window.rrx.reg({id:'mw',
 // ---- ท่อน late107 (เดิมอยู่ app.js บรรทัด 45280) · ห่อ: - ----
 (function(){const SL=globalThis.__wSlots['late107'];
 try{(()=>{
-const HOSTS=['#birth','#fgB','#skB','#brB','#mwB'];
+const HOSTS=['#birth','#fgB','#skB','#brB','#mwB','#fnB'];
 const RM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
 const GC=['#c9d2dc','#5fb0ff','#b48cff','#ffcf4a','#ff5ad8'],BADC='#ff4a4a';
 const LBL=['','หายาก','หายากมาก','ตำนาน','เหนือตำนาน'];
@@ -6395,12 +6395,14 @@ const TH={murim:{p:['#ffd45a','#1a1208','#e8b54a'],nar:['วันที่เ�
  sky:{p:['#5ff2ff','#ff8a3d','#ffffff'],nar:['สัญญาณจากวงโคจรพุ่งตรงลงมาที่ห้องคลอด','เครื่องวัดพลังทั้งโรงพยาบาลขึ้นเลขเกินสเกล','กำแพงเหล็กทั้งเมืองสว่างวาบหนึ่งครั้งตอนเจ้าหายใจแรก'],bg:'radial-gradient(circle at 50% 45%,#0c3440,#03080c 70%)'},
  beast:{p:['#ff7a3a','#ffd040','#ffffff'],nar:['ป่าทั้งผืนเงียบลง สัตว์ทุกตัวก้มหัว','จันทร์เต็มดวงกลายเป็นสีเลือดในคืนที่เจ้าลืมตา','เสียงคำรามแรกของเจ้าทำให้นกทั้งภูเขาบินหนี'],bg:'radial-gradient(circle at 50% 45%,#3a1a0a,#0a0503 70%)'},
  mw:{p:['#8fd0ff','#ffffff','#ffd45a'],nar:['ข่าวด่วน: เด็กที่เกิดคืนนี้ทำให้ระบบทั่วประเทศล่มสามวินาที','ไฟทั้งตึกกะพริบพร้อมกันตอนเจ้าร้องไห้ครั้งแรก','มือถือทุกเครื่องในโรงพยาบาลสั่นพร้อมกันหนึ่งครั้ง'],bg:'radial-gradient(circle at 50% 45%,#1a2a44,#04070c 70%)'}};
-const KG=[['ดาบ','กระบี่'],['พิษ','แมลง','งู','แมงป่อง'],['หมัด','ฝ่ามือ','กายา','กระดูก','เหล็ก'],['มาร','อธรรม','ปีศาจ'],['หมอ','สมุนไพร','โอสถ','รักษา'],['เพลง','ดนตรี','พิณ','ขลุ่ย'],['ธนู','เกาทัณฑ์'],['ไฟ','เพลิง','เถ้า','ควัน'],['น้ำแข็ง','หิมะ','เยือกแข็ง'],['วายุ','เบากาย','ลมกรด'],['สวรรค์','เซียน','สายฟ้า'],['พ่อค้า','การค้า','ร่ำรวย','เหรียญ'],['ขุนนาง','ราชวงศ์','จักรพรรดิ','ตระกูลใหญ่'],['พุทธ','วัด','เส้าหลิน','ธรรมะ'],['เต๋า','อู่ตัง'],['ประตู','กุญแจ','กลอน','ธรณี'],['เฟือง','หุ่น','ช่างกล'],['โกหก','ลิ้น','ข่าวลือ','เท็จ'],['หนี้','บาดแผล'],['ระฆัง','เงียบ'],['ฝัน','หลับ'],['ท่าเรือ','คลอง','แม่น้ำ'],['โบสถ์','สวด','ศรัทธา','รุ่งอรุณ'],['ศาล','คดี','เสมียน','ผู้พิพากษา'],['กำพร้า','โรงทาน'],['มังกร'],['หมาป่า'],['จิ้งจอก'],['ดาว','ดารา','อวกาศ'],['กลายพันธุ์','ยีน'],['นักล่า']];
+try{LBW.fan=['','หายาก','วิเศษ','ตำนาน','เทพนิยาย'];BADW.fan='🩸 คำสาป';CMPW.fan=d=>`ต่อให้ทวีปนี้มีคนถูกอัญเชิญหรือถือกำเนิดทุกวินาที ก็ต้องรออีกราว ${d} กว่าจะมีชะตาแบบคุณอีกสักคน`;RECW.fan='🏆 ชะตาดีที่สุดที่คุณเคยได้ในทวีปแฟนตาซี!';LOWW.fan=['ชะตาธรรมดา แต่ตำนานส่วนใหญ่ก็เริ่มจากคนธรรมดา','ไม่มีพรวิเศษ ไม่มีคำสาปใหญ่ ทางข้างหน้ายังว่างให้เขียน'];FROMW.fan='ชะตานี้มาจาก';SYNW.fan='✦ เข้าทาง';
+ TH.fan={p:['#d9b8ff','#ffd37a','#ffffff'],nar:['วงเวทอัญเชิญสว่างจนนักบวชทุกคนต้องหลับตา','ดาวสองดวงเคลื่อนมาชนกันเหนือหอคอยเวท','ลูกแก้วประเมินร้าวเป็นเส้นตรงจากบนลงล่าง','เสียงระฆังทั้งเมืองหลวงดังพร้อมกันโดยไม่มีใครตี'],bg:'radial-gradient(circle at 50% 45%,#3a2460,#0a0716 70%)'}}catch(e){}
+const KG=[['ดาบ','กระบี่'],['พิษ','แมลง','งู','แมงป่อง'],['หมัด','ฝ่ามือ','กายา','กระดูก','เหล็ก'],['มาร','อธรรม','ปีศาจ'],['หมอ','สมุนไพร','โอสถ','รักษา'],['เพลง','ดนตรี','พิณ','ขลุ่ย'],['ธนู','เกาทัณฑ์'],['ไฟ','เพลิง','เถ้า','ควัน'],['น้ำแข็ง','หิมะ','เยือกแข็ง'],['วายุ','เบากาย','ลมกรด'],['สวรรค์','เซียน','สายฟ้า'],['พ่อค้า','การค้า','ร่ำรวย','เหรียญ'],['ขุนนาง','ราชวงศ์','จักรพรรดิ','ตระกูลใหญ่'],['พุทธ','วัด','เส้าหลิน','ธรรมะ'],['เต๋า','อู่ตัง'],['ประตู','กุญแจ','กลอน','ธรณี'],['เฟือง','หุ่น','ช่างกล'],['โกหก','ลิ้น','ข่าวลือ','เท็จ'],['หนี้','บาดแผล'],['ระฆัง','เงียบ'],['ฝัน','หลับ'],['ท่าเรือ','คลอง','แม่น้ำ'],['โบสถ์','สวด','ศรัทธา','รุ่งอรุณ'],['ศาล','คดี','เสมียน','ผู้พิพากษา'],['กำพร้า','โรงทาน'],['มังกร'],['หมาป่า'],['จิ้งจอก'],['ดาว','ดารา','อวกาศ'],['กลายพันธุ์','ยีน'],['นักล่า'],['เวท','มานา','วงเวท'],['จันทร์','รัตติกาล','กลางคืน'],['มังกร','เกล็ด'],['เลือด'],['ตาย','วิญญาณ','ผี'],['เงา'],['ธนู','เล็ง'],['ฟีนิกซ์'],['หมาป่า'],['ดาว'],['รูน','อักษร'],['โกหก']];
 let RUN=null;const PREV=new Map();
 const nowT=()=>Date.now();
 const $q=(r,s)=>{try{return r.querySelector(s)}catch(e){return null}};
 const fx=()=>{let o=document.getElementById('rvFx');if(!o){o=document.createElement('div');o.id='rvFx';document.body.appendChild(o)}return o};
-const theme=h=>{const id=h.id;if(id==='fgB')return'fog';if(id==='skB')return'sky';if(id==='brB')return'beast';if(id==='mwB')return'mw';try{if(h.querySelector('.trait.sv')||(typeof CH_KEYS!=='undefined'&&CH_KEYS[CFG.chm]==='soul'))return'soul';if(CFG.xian)return'xian';if(CFG.mw)return'mw'}catch(e){}return'murim'};
+const theme=h=>{const id=h.id;if(id==='fnB')return'fan';if(id==='fgB')return'fog';if(id==='skB')return'sky';if(id==='brB')return'beast';if(id==='mwB')return'mw';try{if(h.querySelector('.trait.sv')||(typeof CH_KEYS!=='undefined'&&CH_KEYS[CFG.chm]==='soul'))return'soul';if(CFG.xian)return'xian';if(CFG.mw)return'mw'}catch(e){}return'murim'};
 const rowsOf=h=>[...h.querySelectorAll(h.id==='mwB'?'.mbT':'.trait')].filter(e=>!e.closest('.rvSkip'));
 const nameOf=e=>{const v=$q(e,'.v')||$q(e,'.mbTv');return v?v.textContent.trim():''};
 const keyOf=e=>{const k=$q(e,'.k')||$q(e,'.mbTh');return((k?k.textContent.trim():'')+'|'+nameOf(e)).replace(/[🔒🔓]/g,'').slice(0,90)};
@@ -6630,7 +6632,7 @@ const st=document.createElement('style');st.textContent=`
 const window=new Proxy(globalThis,{get(t,k){if(!__done&&k in __G)return __G[k]();const v=Reflect.get(t,k);if(typeof v==='function'&&__nat(v)){let b=__bc.get(v);if(!b){b=v.bind(t);__bc.set(v,b)}return b}return v},set(t,k,v){if(!__done&&k in __S){__S[k](v);return true}t[k]=v;return true},has(t,k){return k in t||k in __G}});
 
 try{(()=>{
-const onBirth=()=>{try{return['birth','skB','fgB'].some(id=>{const e=document.getElementById(id);return e&&e.classList.contains('on')})||!!(document.getElementById('mwB')&&document.getElementById('mwB').getClientRects().length)}catch(e){return false}};
+const onBirth=()=>{try{return['birth','skB','fgB','fnB'].some(id=>{const e=document.getElementById(id);return e&&e.classList.contains('on')})||!!(document.getElementById('mwB')&&document.getElementById('mwB').getClientRects().length)}catch(e){return false}};
 const n=v=>v==null?(window._tkOff?'<i class="tkL">—</i>':'<i class="tkL">…</i>'):fmt(v);
 const pity=()=>{try{return +LS.get('murim_pity')||0}catch(e){return 0}};
 try{const st=document.createElement('style');st.textContent=`.tkW{display:grid;gap:10px}.tkC{border:1px solid #ffffff1f;border-radius:14px;padding:12px;background:#ffffff08}.tkC.g{border-color:#e8b54a88;background:linear-gradient(160deg,#e8b54a1c,#ffffff05)}.tkC.l{border-color:#8fb4ff66}
