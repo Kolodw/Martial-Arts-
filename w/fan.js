@@ -1008,12 +1008,24 @@ let FB=null;
 const TOP=[['iso','⚔️','ต่างโลก','ถูกอัญเชิญข้ามโลก · อายุสุ่ม 0–16'],['magic','🔮','โลกเวทมนตร์','วิทยาลัยเวทอาร์คาเนีย · เกิดเป็นทารก'],['noble','🏰','โลกแห่งอะคาเดมี่','สถาบันหลวง การเมือง งานเลี้ยง · เกิดเป็นทารก']];
 const HAIR=['#1f1a17','#3a2a1e','#5b3a24','#c9b27a','#e8e8f0','#6a2a2a','#2a3550','#7a5aa8'],SKIN=['#f1c9a0','#e0ac69','#c68642','#8d5524','#f5d5b8'];
 const orgL=()=>BD['org_'+FB.top];
+// ===== ชื่อสุ่มโลกแฟนตาซี (ประกอบจากพยางค์ → หลายพันชื่อ ไม่ค่อยซ้ำ) =====
+const FNS=['อัล','เคล','ไร','ดา','เซ','ลู','มาร์','โอ','ฟิน','กา','เธ','วาล','รา','ไค','เอ','ซิล','บา','เลอ','ออ','เฟ','กริ','ธอ','อี','ยู','ซา','โร','แค','นิ','ดอร์','ฮา','เอียน','ไอ','วิ','คา','เมล','ทา','ลิ','เนีย','ฟา','โซ'],
+FNM=['','','','ริ','เว','ลา','ดิ','นา','เร','มิ','ซี'],
+FNE={m:['เรียน','ลัส','ดริก','วิน','ธอร์','เดน','รอน','กัส','เวล','ไลล์','โทร','มอนด์','ริค','ซัส','ฟาร์','เบิร์ต','ไรอัส','ดัส','กอร์','วาร์','เลียน','ทัส','แลนด์','เซอร์','นอส'],
+ f:['เลีย','ริน','เน่','ซา','ลีน','ไลรา','เวีย','ดิส','มีร่า','โรส','เซล','น่า','ฟีน','ลิส','เอล','เทีย','ริสา','เวน','ลูน่า','ซิส','เรีย','มิน','นาเรีย','ลอร่า','ซีน']},
+FHE=['ฮาร์ต','วูด','เบิร์ก','ฟิลด์','มอร์','เวล','ครอส','ไบรท์','สโตน','วินเทอร์','เกรย์','ไนท์','ฟอลล์','ฮอลโลว์','เมียร์','เกท'],
+THF=['ภูมิ','มิว','ฟ้าใส','ต้นกล้า','พิม','แพรว','โอม','น้ำหวาน','เก่ง','ปาล์ม','ไอซ์','เฟิร์น','ธัน','ข้าวหอม','กัปตัน','ปูเป้','บีม','ใบเตย','ภูผา','ออม','นนท์','แบม','ตะวัน','ขิม','เจมส์','มายด์','ไผ่','กิ๊ฟ','ก้อง','จูน','ธาม','ปลายฟ้า','ฟลุ๊ค','น้ำฝน','อิง','ปั้น','โบว์','เต้','ลูกปัด','ฮาร์ท','ข้าวปุ้น','แทน','มะปราง','ไทม์','น้ำขิง','กาย','ซัน','เมย์','ดิว','โมจิ'],
+THA=['แสง','ทอง','ศรี','บุญ','สุข','จันทร์','รุ่ง','มณี','เพชร','วงศ์','ชัย','อินทร์','พร','ทิพย์','ประ','สุวรรณ','กิตติ','ธนา','รัตน','ศักดิ์'],
+THB=['สุวรรณ','ประเสริฐ','ทวี','วัฒนา','รัตน์','ศักดิ์','พงษ์','กุล','ไพศาล','เจริญ','สกุล','ดี','วงศ์','มงคล','ศิริ','ชัย','ทรัพย์','ภักดี','นาค','อุดม'];
+const fbFirst=g=>{let n;for(let i=0;i<4;i++){n=pick(FNS)+pick(FNM)+pick(FNE[g==='หญิง'?'f':'m']);if(n.length<=12)break}return n};
+function fbName(top,g){if(top==='iso'){let a=pick(THA),b=pick(THB);if(a===b)b=pick(THB);return pick(THF)+' '+a+b}
+ const f=fbFirst(g),h=pick(FNS)+pick(FHE);if(top==='noble')return f+' '+(rnd()<.45?pick(['ฟอน ','เดอ ','แวน ']):'')+h;return f+' '+h}
 function fbRoll(first){if(!first){if(FB.left<=0)return;FB.left--}
  if(FB.top==='iso'){const r=window._isoForce?({hero:0,trash:.6,lost:.9})[window._isoForce]:rnd();FB.w=r<.55?'hero':r<.8?'trash':'lost';FB.sp=FB.w==='lost'?pick(['forest','desert','village','prison','abyss','dragon']):null;FB.age=window._isoAge!=null?window._isoAge:R(0,16)}else{FB.w=FB.top;FB.age=0}
  const b={};b.org=wPickB(orgL());b.race=wPickB(BD.race);b.el=wPickB(BD.el);b.mana=wPickB(BD.mana);b.omen=wPickB(BD.omen);b.mark=wPickB(BD.mark);
  b.tal=[];for(let i=0;i<3;i++)b.tal.push(wPickB(BD.tal,b.tal.map(x=>x.n)));b.curse=wPickB(BD.curse);b.fam=wPickB(BD.fam);b.item=wPickB(BD.item);b.sec=wPickB(BD.sec);FB.b=b;
  FB.sk=FB.w==='hero'||FB.w==='trash'||FB.w==='lost'?pick(SK[FB.w])[0]:null;
- if(first||!FB.edited){FB.g=FB.g||(rnd()<.5?'ชาย':'หญิง');FB.name=FB.top==='iso'?pick(TH)+' '+pick(['ใจดี','ศรีสุข','รักไทย','มั่นคง','แสงทอง','บุญมา','สายสุวรรณ','ทองดี']):nm(FB.g==='หญิง'?'f':'m')}
+ if(first||!FB.edited){FB.g=rnd()<.5?'ชาย':'หญิง';FB.name=fbName(FB.top,FB.g)}
  FB.hair=pick(HAIR);FB.skin=pick(SKIN);FB.seed=R(1,99999);fbDraw()}
 const fbItems=b=>[b.org,b.race,b.el,b.mana,b.omen,b.mark,...b.tal,b.curse,b.fam,b.item,b.sec];
 const fbCat=b=>[['org',b.org,orgL()],['race',b.race,BD.race],['el',b.el,BD.el],['mana',b.mana,BD.mana],['omen',b.omen,BD.omen],['mark',b.mark,BD.mark],['tal',b.tal[0],BD.tal],['tal',b.tal[1],BD.tal],['tal',b.tal[2],BD.tal],['curse',b.curse,BD.curse],['fam',b.fam,BD.fam],['item',b.item,BD.item],['sec',b.sec,BD.sec]];
@@ -1056,9 +1068,8 @@ function fbDraw(){const el=fbEl(),W=wNow(),b=FB.b,d=WD[FB.w];
  const sk=FB.sk?SK[FB.w].find(x=>x[0]===FB.sk):null,cb=combos(fbItems(b));
  el.innerHTML=`<h2>${W.t}</h2><div class="bwld">${W.c.map(c=>`<span class="bchip">${c}</span>`).join('')}</div>
  <div class="box hcard"><div class="row1"><div class="bstage"><canvas id="fnAva" width="136" height="150"></canvas><div class="bcap">${W.cap}</div></div>
-  <div class="bname" style="flex:1;min-width:0"><div class="tag2">ชื่อ</div><input class="fgIn" id="fanNm" maxlength="24" value="${E(FB.name)}" onchange="fanNm(this.value)" aria-label="ชื่อ">
-  <div class="fgG">${['ชาย','หญิง'].map(g=>`<button class="${FB.g===g?'on':''}" onclick="fanG('${g}')">${g==='ชาย'?'♂':'♀'} ${g}</button>`).join('')}<button onclick="fanLook()">🎲 สุ่มหน้าตา</button></div>
-  <div class="fgG" style="margin-top:4px">${TOP.map(t=>`<button class="${t[0]===FB.top?'on':''}" onclick="fanW('${t[0]}')">${t[1]} ${t[2]}</button>`).join('')}</div></div></div></div>
+  <div class="bname" style="flex:1;min-width:0"><div class="tag2">ชื่อ</div><div class="fgIn" id="fanNm" style="font-weight:700;padding:6px 8px">${E(FB.name)}</div>
+  <div class="fgG"><button class="on" style="cursor:default">${FB.g==='ชาย'?'♂':'♀'} ${FB.g}</button><button class="on" style="cursor:default">${(TOP.find(t=>t[0]===FB.top)||TOP[0]).slice(1,3).join(' ')}</button></div></div></div></div>
  <div class="fgTr" style="margin-top:8px">
   ${FB.top==='iso'?`<div class="trait r${FB.w==='trash'?2:FB.w==='lost'?1:0} show" data-rv="${FB.w==='trash'?2:FB.w==='lost'?1:0}"><div><div class="k">${FB.w==='lost'?'📍 จุดที่ลืมตา':'📜 ผลประเมินตอนอัญเชิญ'}</div><div class="v t${FB.w==='trash'?2:FB.w==='lost'?1:0}">${d.ic} ${FB.w==='hero'?'ผู้กล้า':FB.w==='lost'?'หลงมิติ':'สกิลขยะ'}</div><div class="d">${FB.w==='hero'?'ลูกแก้วสว่างจ้า วังเลี้ยงดูอย่างดี ... ในตอนแรก':FB.w==='lost'?'เพื่อนทั้งห้องไปโผล่ที่วัง แต่คุณลืมตา'+(({forest:'กลางป่าลึก',desert:'กลางทะเลทราย',village:'ในยุ้งข้าวหมู่บ้านชาวนา',prison:'ในคุกโจรภูเขา',abyss:'กลางดินแดนปีศาจ',dragon:'บนหลังมังกรที่กำลังบิน'})[FB.sp]||'ที่ไหนสักแห่ง')+' คนเดียว ไม่มีใครประเมินสกิลให้':'ราชาหัวเราะ ทหารลากคุณไปทิ้งนอกกำแพง แต่สกิลนี้โตได้'}${sk?`<span class="fnFx">${sk[1]} สกิล「${sk[2]}」 — ${sk[3]}</span>`:''}</div></div><span class="o t${FB.w==='trash'?2:0}">${FB.w==='hero'?'1 ใน 1.4':'1 ใน 3.3'}</span></div>`:''}
   <div class="trait r0 show" data-rv="0"><div><div class="k">🎂 อายุเริ่มต้น</div><div class="v t0">${FB.top==='iso'?(FB.age<12?`🧒 ${FB.age} ปี`:`🧑 ${FB.age} ปี`):'👶 แรกเกิด'}</div><div class="d">${FB.top==='iso'?(FB.age<12?'ถูกอัญเชิญมาตั้งแต่ยังเด็ก วัยเด็กจะเกิดในต่างโลก':'ถูกอัญเชิญมาตอนเป็นวัยรุ่น'):'เริ่มชีวิตตั้งแต่เป็นทารก ผ่านวัยเด็กก่อนเข้าเรียน'}</div></div><span class="o t0">${FB.top==='iso'?'สุ่ม 0-16':'ทารก'}</span></div>
