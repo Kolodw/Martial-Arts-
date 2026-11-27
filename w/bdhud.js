@@ -35,7 +35,7 @@ const left=p=>{const t=new Date(Date.now()+7*3600e3);let nx;if(p==='m')nx=Date.U
 const css=document.createElement('style');css.textContent=`
 .bhBg{position:fixed;inset:0;z-index:100050;background:rgba(2,4,8,.62);display:flex;align-items:flex-end;justify-content:center;animation:bhF .16s ease}
 @keyframes bhF{from{opacity:0}}
-.bh{--ac:#e8b54a;position:relative;width:min(560px,100%);max-height:86vh;display:flex;flex-direction:column;color:#e9eef6;font-variant-numeric:tabular-nums;
+.bh{--ac:#e8b54a;position:relative;width:min(560px,100%);max-height:86vh;max-height:86dvh;display:flex;flex-direction:column;color:#e9eef6;font-variant-numeric:tabular-nums;
  background:linear-gradient(rgba(120,180,255,.045) 1px,transparent 1px) 0 0/100% 4px,radial-gradient(120% 60% at 50% 0%,rgba(80,130,200,.16),transparent 60%),#0b0f17;
  border:1px solid rgba(160,200,255,.22);border-bottom:0;border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);animation:bhU .24s cubic-bezier(.2,.9,.3,1);overflow:hidden}
 @keyframes bhU{from{transform:translateY(46px);opacity:.3}}
@@ -49,7 +49,8 @@ const css=document.createElement('style');css.textContent=`
 .bhX{position:absolute;top:12px;right:14px;width:30px;height:30px;border:1px solid rgba(160,200,255,.3);background:rgba(255,255,255,.04);color:#cfe0f5;font-size:15px;cursor:pointer;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
 .bhS{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 10px;border:1px solid rgba(160,200,255,.2);background:rgba(0,0,0,.35);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
 .bhBg .bh .bhS input,.bhBg .bh .bhS input:focus{-webkit-appearance:none;appearance:none;outline:none!important;border-color:transparent!important;background:transparent!important;box-shadow:none!important}.bhS input{flex:1;min-width:0;border:0!important;background:none!important;box-shadow:none!important;color:#e9eef6;font:inherit;font-size:14px;outline:none;padding:0!important;margin:0!important;height:auto!important;border-radius:0!important}.bhS input::placeholder{color:#6f8096}
-.bhBody{overflow:auto;padding:8px 14px 18px;flex:1;min-height:0;scrollbar-width:thin}
+.bhMain{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+.bhBody{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding:8px 14px calc(18px + env(safe-area-inset-bottom));flex:1 1 auto;min-height:0;scrollbar-width:thin}
 .bhL{display:flex;align-items:center;gap:8px;margin:12px 2px 7px;font:800 11px ui-monospace,Menlo,monospace;letter-spacing:1.5px;color:#8fa4bf}
 .bhL:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(160,200,255,.3),transparent)}
 .bhMine{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.bhMine::-webkit-scrollbar{display:none}
