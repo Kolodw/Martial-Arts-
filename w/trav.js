@@ -142,7 +142,7 @@ function yearly(){const k=S.age+':'+(S._lid||S.name);if(lastY===k)return;lastY=k
 {const _py=passYear;passYear=function(){const a0=S&&S.age;const r=_py.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0)yearly()}catch(e){console.error('trav',e)}return r}}
 if(typeof mwYear==='function'){const _y=mwYear;mwYear=function(){const a0=S&&S.age;const r=_y.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0)yearly()}catch(e){console.error('trav mw',e)}return r}}
 // mwYear อาจโหลดทีหลัง (ไฟล์ยุคปัจจุบันโหลดเมื่อเข้าโลก)
-try{wNeed('mw',()=>{if(typeof mwYear==='function'&&!mwYear._trv){const _y=mwYear;mwYear=function(){const a0=S&&S.age;const r=_y.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0)yearly()}catch(e){}return r};mwYear._trv=1}})}catch(e){}
+try{(window.wOn||wNeed)('mw',()=>{if(typeof mwYear==='function'&&!mwYear._trv){const _y=mwYear;mwYear=function(){const a0=S&&S.age;const r=_y.apply(this,arguments);try{if(S&&S.alive&&S.age!==a0)yearly()}catch(e){}return r};mwYear._trv=1}})}catch(e){}
 
 // ---------- เมนู · แผงผู้ข้ามโลก · จอจบ ----------
 window.trvInfo=function(){const V=S&&S.trv;if(!V||!V.n){return toast('ยังไม่เคยข้ามโลก — '+ptxt(where()))}

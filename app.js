@@ -37136,6 +37136,8 @@ window.wLoad=function(n){n=String(n).replace(/[^a-z0-9_-]/g,'');if(R[n])return P
   s.onload=()=>{R[n]=1;if(mine){mine=0;act--;pump()}ok()};s.onerror=()=>{s.remove();if(++tries<3)setTimeout(go,800*tries);else{if(mine){mine=0;act--;pump()}delete P[n];no(new Error('wload:'+n))}};document.head.appendChild(s)};
   o.go=go;if(U[n]){go.st=1;act++;go()}else{Q.push(go);pump()}});
  P[n]=o;return o.p};
+// รอให้ไฟล์โลกโหลด (โดยไม่สั่งโหลดเอง) แล้วค่อยทำ fn — ใช้ห่อฟังก์ชันของโลกที่อาจโหลดทีหลัง
+window.wOn=function(n,fn){if(R[n]){try{fn()}catch(e){console.error(e)}return}const iv=setInterval(()=>{if(R[n]){clearInterval(iv);try{fn()}catch(e){console.error(e)}}},1500)};
 window.wNeed=function(n,fn,fail){if(R[n]){try{return fn&&fn()}catch(e){console.error(e)}return}
  U[n]=1;if(DEP[n])DEP[n].forEach(d=>U[d]=1);
  let ov=null;const t=setTimeout(()=>{ov=document.createElement('div');ov.className='wLoadOv';ov.innerHTML='<div><b>🚪 กำลังเปิดประตูโลก…</b><small>ครั้งแรกจะช้าหน่อย ครั้งต่อไปเร็วขึ้น</small><i></i></div>';document.body.appendChild(ov)},250);
@@ -37145,7 +37147,9 @@ const st=document.createElement('style');st.textContent=`.wLoadOv{position:fixed
 .wLoadOv small{display:block;color:#bba882;font-size:12px;margin-top:4px}.wLoadOv i{display:block;height:4px;margin-top:10px;border-radius:4px;background:linear-gradient(90deg,#e8b54a 0 30%,#3a2a12 30%);background-size:200% 100%;animation:wLd 1s linear infinite}
 @keyframes wLd{from{background-position:100% 0}to{background-position:-100% 0}}`;document.head.appendChild(st);
 // ตอนว่างหลังเปิดเกม: โหลดโลกที่เล่นล่าสุดไว้ก่อน
-const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>idle(()=>{try{const n=LS.get('murim_lastw','');if(n&&!R[n])wLoad(n).catch(()=>{})}catch(e){}}),6000);
+const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>idle(()=>{try{const n=LS.get('murim_lastw','');const W={mw:'mw',mwb:'mw',mwx:'mw',ghr:'mw',sky:'sky',soul:'soul',soul2:'soul',fog:'fog'};if(n&&!R[n]&&(!W[n]||(window._wRel&&window._wRel()[W[n]])))wLoad(n).catch(()=>{})}catch(e){}}),6000);
+// ⚡ โลกที่ผู้เล่นมีเซฟอยู่/เลือกไว้เท่านั้นที่โหลดล่วงหน้า (อ่านเซฟอย่างเดียว ไม่เขียน) · โลกอื่นโหลดตอนจะเข้า ผ่านประตู wNeed ที่มีอยู่แล้ว
+window._wRel=(()=>{let c=null,t=0;return function(){if(c&&Date.now()-t<15000)return c;const r={mw:0,soul:0,sky:0,fog:0};try{if(CFG.mw)r.mw=1;if(CH_KEYS[CFG.chm]==='soul')r.soul=1}catch(e){}try{const s=typeof S!=='undefined'&&S;if(s){if(s.mw){r.mw=1;if(s.mw.sky)r.sky=1}if(s.ch==='soul')r.soul=1;if(s.dream)r.mw=1}}catch(e){}try{for(const n of SLOTS){const d=readSave(n),s=d&&d.S;if(!s)continue;if(s.mw){r.mw=1;if(s.mw.sky)r.sky=1;if(s.mw.fog)r.fog=1}if(s.ch==='soul')r.soul=1;if(s.dream)r.mw=1}}catch(e){}try{const L=LS.get('murim_wlast',null),k=L&&L.k;if(k==='mw')r.mw=1;if(k==='sky'){r.mw=1;r.sky=1}if(k==='soul')r.soul=1;if(k==='fog')r.fog=1}catch(e){}t=Date.now();return c=r}})();
 // โลกที่ยังอยู่ในไฟล์หลัก
 ['murim','xian','god','beast','loop'].forEach(n=>R[n]=1);
 // 🏙️ ยุคปัจจุบัน (ระบบโลกย่อย ฮันเตอร์/ซอมบี้/ผี/… · วางแผนปี · บัตรฮันเตอร์ ฯลฯ) อยู่ที่ /w/mw.js — โหลดทันทีหลังเปิดเกม (ไม่ต้องรอ) และกันไม่ให้เริ่ม/โหลดชีวิตก่อนโหลดเสร็จ
@@ -37159,7 +37163,7 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
  const _lgM=loadGame;loadGame=function(n){if(R.mw)return _lgM.apply(this,arguments);const a=arguments,t=this;let isM=false;try{const d=readSave(n||1);isM=!!(d&&d.S&&d.S.mw)}catch(e){}
   return wNeed('mw',()=>_lgM.apply(t,a),()=>{if(isM)toast('เปิดยุคปัจจุบันไม่สำเร็จ เน็ตอาจหลุด ลองอีกครั้ง');else _lgM.apply(t,a)})};
  const done=()=>{try{window._gdTipApply&&window._gdTipApply()}catch(e){}};
- setTimeout(()=>{wLoad('mw').then(done,()=>{setTimeout(()=>wLoad('mw').then(done,()=>{}),5000)})},300)}
+ setTimeout(()=>{if(!window._wRel().mw){const iv=setInterval(()=>{if(wIs('mw')){clearInterval(iv);done()}},2000);return}wLoad('mw').then(done,()=>{setTimeout(()=>wLoad('mw').then(done,()=>{}),5000)})},300)}
 // ⭕ ทวีปจิตวิญญาณยุทธ์ (ระบบหลักของโลก · ดวงจิต 100+ ตัว · ล่าวงแหวน · ทีม · ตำนาน) อยู่ที่ /w/soul.js — โหลดเบื้องหลังต่อจาก mw.js
 //   ทางเข้าชีวิต/หน้าที่ต้องใช้ข้อมูลดวงจิต รอให้โหลดก่อน · โหลดไม่สำเร็จ → ชีวิตโลกอื่นเล่นต่อได้ ส่วนทวีปจิตวิญญาณยุทธ์ขึ้นแจ้งให้ลองใหม่
 {const isSv=()=>{try{return CH_KEYS[CFG.chm]==='soul'&&!CFG.mw}catch(e){return false}};
@@ -37170,7 +37174,7 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
  const _lgS=loadGame;loadGame=function(n){if(R.soul)return _lgS.apply(this,arguments);const a=arguments,t=this;let isS=false;try{const d=readSave(n||1);isS=!!(d&&d.S&&d.S.ch==='soul')}catch(e){}
   return wNeed('soul',()=>_lgS.apply(t,a),()=>{if(isS)toast('เปิดทวีปจิตวิญญาณยุทธ์ไม่สำเร็จ เน็ตอาจหลุด ลองอีกครั้ง');else _lgS.apply(t,a)})};
  const go=()=>wLoad('soul').catch(()=>setTimeout(()=>wLoad('soul').catch(()=>{}),6000));
- setTimeout(()=>{let n=0;const w=()=>{if(R.mw||++n>40)return go();setTimeout(w,500)};w()},600)}
+ setTimeout(()=>{if(!window._wRel().soul)return;let n=0;const w=()=>{if(R.mw||!window._wRel().mw||++n>40)return go();setTimeout(w,500)};w()},600)}
 // 📜 บันทึกอัปเดตรุ่นเก่าอยู่ที่ /w/upd.js — เปิดหน้าอัปเดตแล้วโหลดต่อท้ายให้เอง
 {const _ouW=openUpdate;openUpdate=function(){const r=_ouW.apply(this,arguments);if(!R.upd)wLoad('upd').then(()=>{try{const m=$('modal');if(modalOpen&&m.dataset.k==='update'){const sc=m.scrollTop;openUpdate();m.scrollTop=sc}}catch(e){}},()=>{});return r}}
 // 🌐 พจนานุกรมภาษาอังกฤษก้อนใหญ่อยู่ที่ /w/en.js — โหลดเฉพาะคนที่ใช้ EN · โหลดเสร็จแล้วแปลหน้าจอใหม่ทั้งหมด
@@ -37182,7 +37186,7 @@ const idle=window.requestIdleCallback||(f=>setTimeout(f,3000));setTimeout(()=>id
 {const stub=function(){const a=arguments,t=this;return wNeed('sky',()=>{if(window.skyStart===stub)throw new Error('skyStart missing');return window.skyStart.apply(t,a)})};if(!R.sky)window.skyStart=stub}
 {const _lg=loadGame;loadGame=function(n){try{if(!R.sky){const d=readSave(n||1);if(d&&d.S&&d.S.mw&&d.S.mw.sky){const a=arguments,t=this;return wNeed('sky',()=>loadGame.apply(t,a))}}}catch(e){}return _lg.apply(this,arguments)}}
 ['openBook','openGuide','openCodex'].forEach(n=>{const f=window[n];if(typeof f!=='function')return;window[n]=function(){if(R.sky)return f.apply(this,arguments);const a=arguments,t=this;return wNeed('sky',()=>f.apply(t,a))}});
-setTimeout(()=>idle(()=>{wLoad('sky').catch(()=>{})}),8000);
+setTimeout(()=>idle(()=>{if(window._wRel().sky)wLoad('sky').catch(()=>{})}),8000);
 // 🌫️ นครม่านหมอก อยู่ที่ /w/fog.js — ทางเข้า: การ์ดหน้าเลือกโลก · โหลดเซฟที่อยู่ในโลกนี้
 {const stub=function(){const a=arguments,t=this;return wNeed('fog',()=>{if(window.fogStart===stub)throw new Error('fogStart missing');return window.fogStart.apply(t,a)})};if(!R.fog)window.fogStart=stub}
 {const _gbF=goBirthPick;goBirthPick=function(){if(window._fogSel){window._fogSel=0;try{return fogStart()}catch(e){console.error(e)}}return _gbF.apply(this,arguments)};const _gbF2=goBirth;goBirth=function(){if(window._fogSel){window._fogSel=0;try{return fogStart()}catch(e){console.error(e)}}return _gbF2.apply(this,arguments)}}
@@ -39827,7 +39831,7 @@ window._b3={phOf,V,lsAsk,nemEv,lastEv};
 wSlot('late110',["checkDeath"]);
 
 // BLOCK 206: 📜 โหลด /w/ghr.js — เกมกฎผี (โลกผีไทย · ยุคปัจจุบัน) ต่อจาก mw.js
-try{setTimeout(()=>{try{const go=()=>wLoad('ghr');go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},6400)}catch(e){console.error('block206',e)}
+try{setTimeout(()=>{try{const go=()=>wLoad('ghr');if(window._wRel&&!window._wRel().mw){const iv=setInterval(()=>{if(wIs('mw')){clearInterval(iv);go().catch(()=>{})}},3000);return}go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},6400)}catch(e){console.error('block206',e)}
 
 // BLOCK 207: 🕸️ โหลด /w/hrt.js — สายใยข้ามชาติ (ของสืบทอด · ด้ายแดง · บทวัยกลางคน) ใช้ทุกโลก
 try{setTimeout(()=>{try{const go=()=>wLoad('hrt');go().catch(()=>setTimeout(()=>go().catch(()=>{}),6000))}catch(e){}},3800)}catch(e){console.error('block207',e)}
@@ -40428,7 +40432,7 @@ try{setTimeout(()=>{try{wLoad('hud').catch(()=>{})}catch(e){}},400)}catch(e){con
 try{setTimeout(()=>{try{wLoad('front').catch(()=>{})}catch(e){}},300)}catch(e){console.error('frStub',e)} /* 🏯 หน้าแรกใหม่ ธีมตามโลก (/w/front.js) */
 try{setTimeout(()=>{try{wLoad('hall').catch(()=>{})}catch(e){}},1500)}catch(e){console.error('hallStub',e)} /* 🏯 หอผู้ก่อตั้งใหม่ (/w/hall.js) */
 try{setTimeout(()=>{try{wLoad('arena2').catch(()=>{})}catch(e){}},1700)}catch(e){console.error('ar2Stub',e)} /* ⚔️ ลานหมื่นเงา ภาค 2 (/w/arena2.js) */
-try{setTimeout(()=>{try{wLoad('soul2').catch(()=>setTimeout(()=>wLoad('soul2').catch(()=>{}),6000))}catch(e){}},2600)}catch(e){console.error('sv2Stub',e)} /* ⭕ วิญญาณยุทธ์ภาค 2: ขีดปีวงแหวน · บัลลังก์เทพ · สัตว์ผู้เล่น (/w/soul2.js) */
+try{setTimeout(()=>{try{if(window._wRel&&!window._wRel().soul){const iv=setInterval(()=>{if(wIs('soul')){clearInterval(iv);wLoad('soul2').catch(()=>{})}},3000);return}wLoad('soul2').catch(()=>setTimeout(()=>wLoad('soul2').catch(()=>{}),6000))}catch(e){}},2600)}catch(e){console.error('sv2Stub',e)} /* ⭕ วิญญาณยุทธ์ภาค 2: ขีดปีวงแหวน · บัลลังก์เทพ · สัตว์ผู้เล่น (/w/soul2.js) */
 try{setTimeout(()=>{try{wLoad('store').catch(()=>setTimeout(()=>wLoad('store').catch(()=>{}),5000))}catch(e){}},900)}catch(e){console.error('stStub',e)} /* 💎 ร้านค้าหลักโฉมใหม่ (/w/store.js) */
 
 // 🎨 ไอคอนของในกระเป๋าแบบภาพ (items.webp 8×4) — แทน emoji ที่ตามด้วยชื่อของ ทุกจุดในเกม · ไม่มีภาพ = emoji เดิม
