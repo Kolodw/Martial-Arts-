@@ -761,8 +761,9 @@ function arcTick(){
    else{const v=ch(VILLAIN);log(`🧓 อาจารย์${m.n}ถูก${v}ลอบสังหาร! คุณคุกเข่าข้างร่างอาจารย์และสาบานว่าจะล้างแค้น`,'myth');if(!A.rev)startRevenge(v,'ผู้สังหารอาจารย์')}
    return true}}
  // revenge
- if(A.rev){const r=A.rev;if(Math.random()<.12){r.clue++;log(`🔥 ได้ข่าวลือเกี่ยวกับ${r.n} (${r.clue}/3)`)}
-  if(r.clue>=3&&S.age>=14){choice('🔥 พบตัวศัตรูแล้ว!',`คุณตามรอยจนพบรังของ <b>${r.n}</b> ${r.why}<br><span class="tag2">พลังของศัตรูประมาณ ${fmt(r.p)} · ของคุณ ${fmt(total())}</span>`,[
+ if(A.rev){const r=A.rev;if(r.clue<3&&Math.random()<.12){r.clue++;log(`🔥 ได้ข่าวลือเกี่ยวกับ${r.n} (${r.clue}/3)`)}
+  if(r.clue>=3&&S.age>=14){r.stk=r.lastA===S.age-1?(r.stk|0)+1:0;r.lastA=S.age;if(r.stk>=3){r.stk=0;const w=fight(r.n,r.p);if(w){S.fame+=120;S.karma+=10;S.kills++;S.flags.revenge=1;log(`🔥 ${r.n}บุกมาหาคุณเอง ศึกปะทุขึ้นกลางดึก — คุณปลิดชีพมันได้ ความแค้นสิ้นสุดลง`,'myth');A.rev=null}else{S.hp-=40;r.clue=1;log(`🔥 ${r.n}ลอบโจมตีคุณก่อน คุณหนีรอดมาได้ ร่องรอยของมันหายไปอีกครั้ง`,'bad',true)}return true}
+  choice('🔥 พบตัวศัตรูแล้ว!',`คุณตามรอยจนพบรังของ <b>${r.n}</b> ${r.why}<br><span class="tag2">พลังของศัตรูประมาณ ${fmt(r.p)} · ของคุณ ${fmt(total())}</span>`,[
     {t:'บุกเข้าไปล้างแค้น!',s:'ศึกเดิมพันชีวิต',f(){duel(r.n,r.p,w=>{if(w){S.fame+=120;S.karma+=10;S.kills++;S.flags.revenge=1;log(`🔥 ปลิดชีพ${r.n}ได้สำเร็จ! ความแค้นที่แบกมาหลายปีสิ้นสุดลง`,'myth');A.rev=null}else{S.hp-=40;r.clue=1;log(`🔥 พ่ายแพ้ต่อ${r.n} หนีรอดมาได้ในสภาพสะบักสะบอม ร่องรอยของมันหายไปอีกครั้ง`,'bad',true)}})}},
     {t:'ถอยไปฝึกให้แกร่งกว่านี้',s:'เบาะแสลดลง',f(){r.clue=2;log('ข่มใจถอยกลับ ความแค้นต้องรอได้')}}]);return true}}
  // rival
@@ -812,7 +813,7 @@ function yearEnd(){
  if(diseaseTick()){render();checkDeath();return}
  if(S.age<6){if(Math.random()<.5)childEvent();render();checkDeath();return}
  if(dirCross()){if(!decTick())crossroad();return}
- if(!S.faction&&!S.ownSect&&S.path!=='hermit'&&[8,11,14,17,21].map(a=>a+(S._ro|0)).includes(S.age))return recruitEvent();
+ if(!S.faction&&!S.ownSect&&S.path!=='hermit'&&[8,12,17].map(a=>a+(S._ro|0)).includes(S.age))return recruitEvent();
  if(heirTick()){render();checkDeath();return}
  if(S.promoReady&&S.faction&&S.age>=8){S.promoReady=false;promoExam();return}
  if(smTick()){render();checkDeath();return}
@@ -894,7 +895,8 @@ function recruitEvent(){
  if(S.clan&&big[0])opts.push({t:`🏮 ใช้เส้นสาย${S.clan.n}สอบ${big[0].n}`,s:'ทุกด่านผ่านง่ายขึ้น',f(){startExam(big[0],.15)}});
  if(S.money>=500&&big[0])opts.push({t:`💰 ติดสินบนผู้คุมสอบ${big[0].n} (500 ตำลึง)`,s:'ทุกด่านผ่านง่ายขึ้น · กรรม −',f(){S.money-=500;S.karma-=5;startExam(big[0],.1)}});
  opts.push({t:'ไม่เข้าร่วม ขอเป็นจอมยุทธ์พเนจร',f(){log('เลือกเส้นทางของตัวเอง ไม่ผูกมัดกับสำนักใด')}});
- choice('🏯 สำนักต่างๆ เปิดรับศิษย์',`ฤดูรับศิษย์มาถึง ผู้คนมุ่งหน้าไปสอบกันมากมาย<br><span class="tag2">สำนักใหญ่ต้องสอบ 3 ด่าน (ต้องผ่าน 2) · สำนักเล็กรับง่ายแต่โบนัสน้อย</span>`,opts);
+ S._rcn=(S._rcn|0)+1;const RCV=[['🏯 สำนักต่างๆ เปิดรับศิษย์','ฤดูรับศิษย์มาถึง ผู้คนมุ่งหน้าไปสอบกันมากมาย'],['📜 ศิษย์พี่จากต่างสำนักแวะมาชวน','ศิษย์รุ่นพี่หลายสำนักผ่านมาหมู่บ้าน เห็นแววคุณ จึงยื่นป้ายเชิญให้ลองไปสอบ'],['🏮 โอกาสสุดท้ายก่อนเป็นผู้ใหญ่','อายุเริ่มเลยวัยรับศิษย์แล้ว สำนักส่วนใหญ่จะไม่รับคนอายุมากกว่านี้ — นี่อาจเป็นครั้งสุดท้าย']][Math.min(2,S._rcn-1)];
+ choice(RCV[0],`${RCV[1]}<br><span class="tag2">สำนักใหญ่ต้องสอบ 3 ด่าน (ต้องผ่าน 2) · สำนักเล็กรับง่ายแต่โบนัสน้อย</span>`,opts);
 }
 const joinChance=f=>Math.min(.95,f.base+(S.talent.m-1)*.15+(S.family.join||0)+S.fame/400+realmIdx()*.08);
 function tryJoin(f,p){
@@ -2296,6 +2298,7 @@ function warTick(){
  if(S.age<w.at)return false;
  const foe=w.t==='rebel'?(w.side==='rebel'?'แม่ทัพหลวง':'แม่ทัพกบฏ'):'ขุนพลฝ่ายตรงข้าม',ep=total()*(.85+Math.random()*.4);
  if(w.side==='spy'){S.bigwar=null;S.flags.bigwarDone=1;if(roll01(S.int/180+.2)){S.money+=inc(8000);S.fame+=20;log('🔥 สงครามจบลง ทั้งสองฝ่ายต่างคิดว่าคุณอยู่ข้างตัวเอง ได้รางวัลจากทั้งคู่','myth');keyAdd('เป็นสายลับสองหน้าในสงครามกบฏ และรอดมาได้')}else{S.hp-=50;S.fame-=30;log('🔥 ฐานะสายลับสองหน้าคุณถูกเปิดโปง ทั้งสองฝ่ายตามล่า','bad');keyAdd('ถูกเปิดโปงว่าเป็นสายลับสองหน้า')}return false}
+ w.ask=(w.ask|0)+1;if(w.ask>=3){const ok=fight(foe,ep);log(ok?`⚔️ ศึกสุดท้ายปะทุขึ้นเองโดยไม่รอใคร — คุณฝ่าดงศัตรูจนพิชิต${foe}ได้`:`⚔️ ศึกสุดท้ายปะทุขึ้นเองโดยไม่รอใคร — ทัพของคุณแตกพ่ายต่อ${foe}`,ok?'epic':'bad');warEnd(ok);return true}
  choice('⚔️ ศึกตัดสินชะตาแผ่นดิน',`สงครามดำเนินมาหลายปี ถึงศึกสุดท้าย คุณต้องเผชิญ <b>${foe}</b>`,[
   {t:'⚔️ นำทัพบุก',f(){duel(foe,ep,ok=>warEnd(ok))}},
   {t:'🗡️ ลอบสังหารแม่ทัพฝ่ายตรงข้ามก่อนศึก',s:'เสี่ยง',f(){warEnd(roll01(.35+S.int/400+realmIdx()*.04))}}]);setScene('war');return true}
@@ -41114,3 +41117,25 @@ const _cr=choiceRun;choiceRun=function(i){try{if(choice._cur&&!_chAllow()){
 // ตั้งค่า: เหตุการณ์จับเวลา (ปิดเป็นค่าเริ่มต้น)
 try{const _oa=openAuto;openAuto=function(){const r=_oa.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('.tmdTg')){const on=LS.get('murim_timed',0);const d=document.createElement('div');d.className='item tmdTg';d.innerHTML=`<div class="h"><b>⏱ เหตุการณ์จับเวลา</b><button class="sysb">${on?'เปิด':'ปิด'}</button></div><p class="tag2">${on?'บางเหตุการณ์มีเวลาจำกัด หมดเวลาแล้วเกมเลือกให้':'ปิดอยู่: หมดเวลาแล้วเกมจะรอให้คุณเลือกเองเสมอ ไม่มีใครเลือกแทน'}</p>`;d.querySelector('button').onclick=()=>{LS.set('murim_timed',on?0:1);openAuto()};const ref=[...m.querySelectorAll('.item')].find(x=>/ชะตาตัดสินแทน/.test(x.textContent));if(ref)ref.after(d);else m.appendChild(d)}}catch(e){}return r}}catch(e){}
 })()}catch(e){console.error('block304',e)}
+
+// ============ BLOCK 305: กันเหตุการณ์ซ้ำ ทุกโลกทุกโหมด ============
+// 1) หัวเรื่องเดิมที่เพิ่งเจอ (ปีอื่น) จะไม่ขึ้นซ้ำจนกว่าจะพ้นช่วงพัก ยิ่งเจอบ่อยยิ่งพักนาน  2) กองสุ่มหลักสุ่มเรื่องใหม่แทนทันที  3) บรรทัดบันทึกที่ซ้ำเดิมไม่ขึ้นถี่
+try{(function(){
+const NK=t=>String(t||'').replace(/<[^>]+>/g,'').replace(/[0-9๐-๙][0-9๐-๙,.]*/g,'#').replace(/^[^\wก-๙]+/,'').trim().slice(0,40);
+const WL=/ศัตรู|แค้น|ไล่ล่า|ตามรอย|ศึกตัดสิน|สงคราม|สอบ|ด่าน|ดวล|แต่งงาน|ทะลวง|เลื่อนขั้น|ชาติ|เกิดใหม่|ตาย|สืบทอด|เปิดรับศิษย์|ศิษย์พี่จากต่างสำนัก|โอกาสสุดท้าย|บทสรุป|จุดจบ|ตอนจบ|ภารกิจ|เควส|คลอด|ระบบ|ทัณฑ์|เคราะห์|ทดสอบ|ชะตา|ล็อก|เลือก|ตั้งค่า|ร้าน|ตลาด|ยืนยัน|บอส|ฟื้น|มรดก|ข้ามโลก|ข้ามมิติ|เทศกาล|ปีใหม่|วันเกิด|อาชีพ|ฝึกงาน|สมัคร|ลงทะเบียน|ตั้งชื่อ|ปลุกพลัง|ตื่นพลัง|อัญเชิญ|ประมูล|แข่ง|ทัวร์นาเมนต์|ประลอง/;
+const gap=n=>5+3*Math.min(Math.max(n-1,0),3);// 5,8,11,14 ปี
+window._nrBlock=function(title,opts){try{if(typeof S==='undefined'||!S||!S.alive)return false;if(!Array.isArray(opts)||opts.length<2)return false;const k=NK(title);if(!k||WL.test(k))return false;
+ S._nr=S._nr||{};const r=S._nr[k],a=S.age|0;if(!r)return false;const d=a-r.a;if(d<1)return false;
+ if(r.sp===a)return true;if(r.sp===a-1)return false;// ถามซ้ำทุกปี = เรื่องราวที่รอผู้เล่นอยู่ ไม่กัน
+ const b=(r.n>=3&&d<18)||d<gap(r.n);if(b)r.sp=a;return b}catch(e){return false}};
+{const _c=choice;choice=function(title,text,opts){try{if(window._nrBlock(title,opts)){window._nrS=(window._nrS|0)+1;return}
+ if(typeof S!=='undefined'&&S&&Array.isArray(opts)&&opts.length>=2){const k=NK(title);if(k){S._nr=S._nr||{};const r=S._nr[k]||{n:0,a:-99};if(r.a!==(S.age|0)){r.n++;r.a=S.age|0}S._nr[k]=r;const ks=Object.keys(S._nr);if(ks.length>400)delete S._nr[ks[0]]}}}catch(e){}
+ return _c.apply(this,arguments)};for(const k in _c)try{choice[k]=_c[k]}catch(e){}window.choice=choice}
+// กองสุ่มหลัก: ถ้าเรื่องที่สุ่มได้ถูกกันซ้ำ สุ่มใหม่ได้อีก 2 ครั้ง (เรื่องเดิมติดคูลดาวน์แล้ว จะไม่ออกซ้ำ)
+if(typeof randomEvent==='function'){const _r=randomEvent;randomEvent=function(){let r;for(let i=0;i<3;i++){window._nrS=0;r=_r.apply(this,arguments);try{if(!window._nrS||choice._cur||modalOpen)break}catch(e){break}}window._nrS=0;return r};for(const k in _r)try{randomEvent[k]=_r[k]}catch(e){}window.randomEvent=randomEvent}
+// บันทึกซ้ำ: ข้อความเดิม (ตัวเลขต่างได้) ไม่ขึ้นซ้ำภายใน 3 ปี กลุ่มที่ถี่เป็นพิเศษพักนานกว่า
+const LK=t=>String(t||'').replace(/<[^>]+>/g,'').replace(/[0-9๐-๙][0-9๐-๙,.]*/g,'#').replace(/[「」"'“”]/g,'').trim().slice(0,30);
+const LG=[[/^👘 ปลดล็อกชุดใหม่/,5],[/^📋 /,4],[/^🎯 ทั้งเมืองพูดกันว่า/,6],[/^🎯 ข่าวลือ/,5],[/^🎯 /,4],[/^⌛ /,4],[/กำเริบ/,4],[/^🔹 ลมปราณมั่นคง/,4]];
+{const _l=log;log=function(t,c,key){try{if(typeof S!=='undefined'&&S&&S.alive&&!key&&c!=='myth'&&c!=='epic'&&typeof t==='string'&&(S.age|0)>=3){let k=LK(t);if(k.length>=6){S._lr=S._lr||{};const a=S.age|0,p=S._lr[k];let w=3,k2=k;for(const[re,n]of LG)if(re.test(k)){w=n;k2='g:'+re.source;break}k=k2;
+  if(p!=null&&a>p&&a-p<w)return;if(p==null||a>p){S._lr[k]=a;const ks=Object.keys(S._lr);if(ks.length>500)delete S._lr[ks[0]]}}}}catch(e){}return _l.apply(this,arguments)};for(const k in _l)try{log[k]=_l[k]}catch(e){}window.log=log}
+})()}catch(e){console.error('block305',e)}
