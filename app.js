@@ -32385,7 +32385,7 @@ const css=document.createElement('style');css.textContent=`#tMwCard{display:flex
 #tMwCard .i{font-size:30px}#tMwCard b{display:block;font-size:15px}#tMwCard small{display:block;opacity:.85;font-size:11.5px;line-height:1.35}#tMwCard .go{margin-left:auto;font-weight:900;font-size:13px;padding:6px 10px;border-radius:10px;background:#ffd84a;color:#2a1a00;white-space:nowrap}
 #tMwCard:after{content:'';position:absolute;top:0;bottom:0;width:30%;left:-40%;background:linear-gradient(100deg,transparent,#ffffff33,transparent);animation:mwShine 3.2s ease-in-out infinite}`;document.head.appendChild(css);
 window.mwQuickStart=function(){try{const b=document.querySelector('#title .mwopt');if(b)b.click();else{CFG.mw=1;CFG.xian=0}}catch(e){}try{closeM()}catch(e){}setTimeout(()=>{try{goBirthPick()}catch(e){console.error(e)}},60)};
-function card(){try{const t=$('title'),s=$('tStartIn');if(!t||!s||!t.offsetParent||!mwAllowed()){const c=$('tMwCard');if(c)c.remove();return}let c=$('tMwCard');if(CFG.mw){if(c)c.remove();return}
+function card(){try{const t=$('title'),s=$('tStartIn');if(t&&!t.classList.contains('on')&&!$('tMwCard'))return;if(!t||!s||!t.offsetParent||!mwAllowed()){const c=$('tMwCard');if(c)c.remove();return}let c=$('tMwCard');if(CFG.mw){if(c)c.remove();return}
  if(!c){c=document.createElement('button');c.id='tMwCard';c.type='button';c.onclick=mwQuickStart;c.innerHTML=`<span class="i">🏙️</span><span><b>ลองยุคปัจจุบัน</b><small>เกิดเป็นคนยุค ${MW_Y0} ชีวิตธรรมดา หรือสุ่มได้โลกฮันเตอร์ ซอมบี้ หมอผี วันซ้ำ… มีมินิเกมเฉพาะทุกโลก</small></span><span class="go">เล่นเลย ▶</span>`}
  if(!__after(c,s))s.insertAdjacentElement('afterend',c)}catch(e){}}
 setInterval(card,1200);setTimeout(card,300);
@@ -41007,8 +41007,8 @@ const css=document.createElement('style');css.textContent=`
 html body.ux2.ux2.ux2.ux2 #game>.box.top{position:relative!important;padding-bottom:30px!important}html body.ux2.ux2.ux2.ux2 #game.uxS>.box.top{padding-bottom:6px!important}html body.ux2.ux2.ux2.ux2 #game.uxS>.box.top:has(#uxRw.on){padding-bottom:28px!important}
 body.ux2 #islDock{display:none!important}
 html body.ux2.ux2.ux2 #game>#goalBox,html body.ux2.ux2.ux2 #game>#rvBar,html body.ux2.ux2.ux2 #game>#goalBox~#rvBar,html body.ux2.ux2.ux2 #game>#goalBox+#rvBar{display:none!important}
-body.ux2 #uxGoal{position:absolute;left:10px;right:100px;bottom:5px;font-size:11.5px;line-height:22px;color:#cbb895;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:1}body.ux2 #uxGoal span{cursor:pointer}
-body.ux2 #uxGoal b{color:#f3e9d8;font-weight:600}
+body.ux2 #uxGoal{position:absolute;left:10px;right:100px;bottom:5px;font-size:11.5px;line-height:22px;color:var(--mut,#cbb895);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:1}body.ux2 #uxGoal span{cursor:pointer}
+body.ux2 #uxGoal b{color:var(--ink,#f3e9d8);font-weight:600}
 body.ux2 #uxRw{position:absolute;right:8px;bottom:6px;height:24px;padding:0 10px;border-radius:12px;border:1px solid #6fc3a0aa;background:#0b0810;color:#e8f6ee;font-size:12px;font-weight:600;display:none;align-items:center;gap:4px;cursor:pointer;z-index:2}
 body.ux2 #uxRw.on{display:inline-flex}
 body.ux2 #uxRw.gold{background:#e7b04a;border-color:#e7b04a;color:#1b1309;animation:uxPulse 2.4s ease-in-out infinite}
@@ -41037,7 +41037,7 @@ function sync(){if(!document.body.classList.contains('ux2'))return;ensure();
  try{const g=$$('goalBox'),rv=$$('rvBar'),u=$$('uxGoal');if(u){const gt=g?(g.textContent||'').replace(/\s+/g,' ').trim():'',rt=rv&&getComputedStyle(rv).display!=='none'||rv&&rv.textContent.trim()?(rv.textContent||'').replace(/\s+/g,' ').trim():'';const gb=g&&g.querySelector('b');const h=(gt?`<span data-u="g">🎯 ${gb?'<b>'+esc(gb.textContent)+'</b>':esc(gt.replace(/^.*?:\s*/,''))}</span>`:'')+(rt?`${gt?' · ':''}<span data-u="r">${esc(rt)}</span>`:'');if(u._h!==h){u._h=h;u.innerHTML=h;u.querySelectorAll('span[data-u]').forEach(sp=>sp.onclick=e=>{e.stopPropagation();const t=sp.dataset.u==='g'?g:rv;if(!t)return;const c=t.querySelector('[onclick]')||t;try{c.dispatchEvent(new MouseEvent('click',{bubbles:true}))}catch(x){}})}u.style.display=h?'':'none'}}catch(e){}
  try{const L=chips(),b=$$('uxRw');if(b){b.classList.toggle('on',L.length>0);const rw=L.filter(isRw).length;b.classList.toggle('gold',rw>0);b.textContent=rw?`รอรับ ${rw}`:`ติดตาม ${L.length}`}}catch(e){}
  try{const p=$$('pauseBtn');if(p){const yb=$$('ybar'),w=parseFloat((yb&&yb.style.width)||'0')||0;p.style.setProperty('--uxP',Math.max(0,Math.min(100,w)));p.classList.toggle('au',!!auto);const ym=$$('ymon');p.title=(ym&&ym.textContent)||'';
-  const ac=getComputedStyle(document.body).getPropertyValue('--wAc')||'';if(ac.trim())p.style.setProperty('--uxAc',ac.trim())}}catch(e){}}
+  if(!sync._acT||Date.now()-sync._acT>4000){sync._acT=Date.now();const ac=getComputedStyle(document.body).getPropertyValue('--wAc')||'';if(ac.trim())p.style.setProperty('--uxAc',ac.trim())}}}catch(e){}}
 function openRw(){const L=chips();if(!L.length)return;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📌 ${L.some(isRw)?'รอรับและติดตาม':'สิ่งที่ติดตามอยู่'}</h3><div class="uxRwL">${L.map((c,i)=>{const ic=c.querySelector('i'),em=c.querySelector('em');const tt=(c.getAttribute('title')||c.dataset.t||'').trim();return`<button type="button" class="${isRw(c)?'gold':''}" data-i="${i}"><span class="i">${ic?ic.innerHTML:''}</span><span style="flex:1;min-width:0"><b>${em?em.innerHTML:esc(c.textContent)}</b>${tt?`<br><small class="tag2">${esc(tt)}</small>`:''}</span><span class="tag2">เปิด ›</span></button>`}).join('')}</div>`,'uxrw');
  const m=$$('modal');m.querySelectorAll('.uxRwL button').forEach(b=>b.onclick=()=>{const c=L[+b.dataset.i];closeM();setTimeout(()=>{try{c.dispatchEvent(new MouseEvent('click',{bubbles:true}))}catch(e){}},80)})}
@@ -41072,7 +41072,7 @@ let pv=null;setInterval(()=>{try{if(typeof S==='undefined'||!S||!S.alive){pv=nul
 let lastT=0;const READ_MS=8000;
 const touchF=e=>{try{const f=$$('feed');if(f&&f.contains(e.target))lastT=Date.now()}catch(x){}};
 ['pointerdown','touchmove','wheel'].forEach(ev=>document.addEventListener(ev,touchF,{passive:true,capture:true}));
-const upRead=()=>{const f=$$('feed');if(!f||!$$('game')||!$$('game').classList.contains('on'))return false;return f.scrollHeight-f.clientHeight-f.scrollTop>90};
+const upRead=()=>{const f=$$('feed');if(!f||!$$('game')||!$$('game').classList.contains('on')||(modalOpen&&!choice._cur))return false;return f.scrollHeight-f.clientHeight-f.scrollTop>90};
 const reading=()=>!!(typeof S!=='undefined'&&S&&S.alive)&&(Date.now()-lastT<READ_MS||upRead());
 window._pzReading=reading;
 setInterval(()=>{try{const r=reading();if(r)window._rdU=Math.max(window._rdU||0,Date.now()+400);rdChip(r)}catch(e){}},250);
@@ -41142,3 +41142,11 @@ const LG=[[/^👘 ปลดล็อกชุดใหม่/,5],[/^📋 /,4],[/
 })()}catch(e){console.error('block305',e)}
 // ============ BLOCK 306: 🎭 เรื่องใหม่ทุกโลก (โหลด /w/evx.js) ============
 try{setTimeout(()=>{try{wLoad('evx').catch(()=>setTimeout(()=>wLoad('evx').catch(()=>{}),6000))}catch(e){}},5200)}catch(e){console.error('block306',e)}
+// ============================================================
+// BLOCK 305 ⚡ เมนูเปิดเร็วขึ้นบนมือถือ: ระหว่างมีหน้าต่างเปิด หยุดอนิเมชันวนซ้ำที่อยู่ข้างหลัง (ฉาก/เกาะ/การ์ด) — ไม่ต้องวาดทับซ้ำใต้หน้าต่าง
+// ============================================================
+try{(()=>{const st=document.createElement('style');st.textContent=`html body.mdl #game *,html body.mdl #title *,html body.mdl #islDock *,html body.mdl #isl *,html body.mdl .feed *{animation-play-state:paused!important}html body.mdl #modal *{animation-play-state:running!important}`;document.head.appendChild(st);
+// ใส่คลาสทันทีตอนเปิด/ปิดหน้าต่าง (เดิมรอรอบ 250ms)
+const _md=modal;modal=function(){const r=_md.apply(this,arguments);try{document.body.classList.add('mdl')}catch(e){}return r};for(const k in _md)try{modal[k]=_md[k]}catch(e){}
+const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);try{if(!modalOpen)document.body.classList.remove('mdl')}catch(e){}return r};for(const k in _cm)try{closeM[k]=_cm[k]}catch(e){}
+})()}catch(e){console.error('block305',e)}

@@ -14,7 +14,7 @@ const T={
  murim:['#120f0d','#1d1814','#241d18','#3a2e24','#efe6d6','#a89a86','#c8402f','#d6a647','#2a221c',CH,14],
  xian:['#0f1a18','#16261f','#1c2f27','#2f4a3f','#eef3ea','#a3b8ad','#3f9c80','#e8dcb4','#213a30',CH,20],
  god:['#14121a','#1e1b26','#262232','#4a4258','#f4efe2','#b3aac2','#b08a3a','#f2d78a','#2a2636',CH,18],
- mw:['#eef1f5','#ffffff','#f4f6f9','#dde2ea','#15181d','#5b6472','#dc2626','#1d4ed8','#e3e7ee',PX,16,1],
+ mw:['#0e131c','#161d29','#1c2433','#2c3749','#e9eef6','#9ba7ba','#ef4444','#60a5fa','#222c3c',PX,16],
  soul:['#0c0b14','#15131f','#1c1929','#2e2742','#ece8f7','#a39cbd','#7c4ddb','#6ee7b7','#221e33',CH,10],
  loop:['#17120c','#211a12','#2a2117','#45372a','#f0e6d6','#b0a28c','#b3612c','#e3c48c','#2e2419',TR,8],
  beast:['#101710','#18221a','#1f2b20','#33452f','#eaf1e3','#a5b59b','#c9702a','#9cc56b','#243324',MI,22],
@@ -26,7 +26,7 @@ const T={
  'mw-ghost':['#120c0a','#1d1410','#261a13','#3b2a20','#f3e7d8','#b8a48e','#b3261e','#e9c46a','#2e2019',CH,12],
  'mw-loop':['#1a1024','#24172f','#2d1d3a','#4a2d4f','#f6e8ee','#c2a9b8','#b4532a','#f2a058','#33213f',TR,14],
  'mw-zombie':['#0f130d','#171d14','#1e2619','#2e3a26','#eef3e6','#a7b59a','#4d7c0f','#a3e635','#232c1d',KA,6],
- 'mw-tower':['#f4f4f0','#ffffff','#f7f7f4','#deded8','#17181a','#5e5e58','#17181a','#525252','#e6e6e1',PX,2,1],
+ 'mw-tower':['#131313','#1b1b1b','#222222','#363636','#f2f2ee','#a6a69f','#e7e5dc','#9a978c','#2a2a2a',PX,2],
  'mw-game':['#071a2b','#0b2540','#0f2f50','#1b4466','#e3f4ff','#93b8d4','#0369a1','#22d3ee','#123a5e',CP,6],
  'mw-gatewon':['#0e0f10','#18191b','#1f2023','#303236','#ecedef','#a3a6ab','#b91c1c','#cbd5e1','#26272a',KA,4],
  'mw-doom':['#140806','#1f0e0a','#29130d','#43201a','#fbeee6','#c4a397','#c2410c','#fde047','#33170f',KA,10]
@@ -101,7 +101,6 @@ ${S} #modal[data-k="choice"] .opt:hover{border-color:var(--hG)!important}
 ${S}[data-hud="fog"] #game .box,${S}[data-hud="fog"] #dkChar,${S}[data-hud="fog"] #dkFn,${S}[data-hud="fog"] #goalBox,${S}[data-hud="fog"] #deskR .box{border:3px double var(--line)!important}
 ${S}[data-hud="sky"] #modal[data-k="choice"],${S}[data-hud="mw-game"] #modal[data-k="choice"]{box-shadow:0 0 0 1px color-mix(in srgb,var(--hG) 30%,transparent),0 0 28px color-mix(in srgb,var(--hG) 22%,transparent)!important}
 html body[data-hud]{--sHp:#ff6b6b;--sJoy:#ffc145;--sLife:#5cc8ff;--sGold:#ffd36b;--sPow:#b794ff;--sWis:#4fe3c1;--sFame:#ff8cc6;--sGood:#5fd38d;--sBad:#ff6b6b}
-html body[data-hud="mw"],html body[data-hud="mw-tower"]{--sHp:#dc2626;--sJoy:#b7791f;--sLife:#0284c7;--sGold:#a16207;--sPow:#7c3aed;--sWis:#0f766e;--sFame:#be185d;--sGood:#15803d;--sBad:#dc2626}
 html body[data-hud]{background:linear-gradient(180deg,var(--bg),var(--hB0)) fixed!important}
 html body[data-hud] #game .box,html body[data-hud] #game .dk-panel,html body[data-hud] #dkChar,html body[data-hud] #dkFn,html body[data-hud] #goalBox,html body[data-hud] #deskR .box,html body[data-hud] #mwHud,html body[data-hud] #hintBar{background:linear-gradient(180deg,var(--hP1),var(--hP2))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 22px rgba(0,0,0,.28)!important}
 html body[data-hud] .dkb-t{background:var(--hB0)!important;box-shadow:inset 0 1px 2px rgba(0,0,0,.55)!important;height:10px!important}

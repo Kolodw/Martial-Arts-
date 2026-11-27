@@ -5008,18 +5008,22 @@ const L=c=>{const f=x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,
 const CR=(a,b)=>{const x=L(a),y=L(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
 const over=(t,b)=>[t[0]*t[3]+b[0]*(1-t[3]),t[1]*t[3]+b[1]*(1-t[3]),t[2]*t[3]+b[2]*(1-t[3]),1];
 // ⚡ perf: bgOfM = bgOf เดิมแต่จำผลต่อสายพ่อแม่ (ต่อรอบสแกน) — ไม่ไล่ getComputedStyle ซ้ำทุกลูก · ผลลัพธ์เท่าเดิม
-function bgBase(){return document.body.classList.contains('dark')||/mono|jade|ember|gold|royal/.test(document.body.className)?[20,18,26,1]:[250,246,238,1]}
+// สีพื้นจริงของหน้า (เดิมเดาจากชื่อธีม → ขาวดำถูกนับเป็นพื้นมืด ตัวหนังสือเลยถูกบังคับเป็นสีขาวบนพื้นขาว)
+function gAvg(img){const cols=(img.match(/(rgba?|color)\([^)]+\)|#[0-9a-fA-F]{3,8}\b/g)||[]).map(x=>{if(x[0]==='#'){let h=x.slice(1);if(h.length<6)h=h.split('').map(y=>y+y).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16),h.length>=8?parseInt(h.slice(6,8),16)/255:1]}return P(x)}).filter(Boolean);if(!cols.length)return null;const w=cols.reduce((t,c)=>t+c[3],0);if(w<.05)return[0,0,0,0];return[0,1,2].map(i=>cols.reduce((t,c)=>t+c[i]*c[3],0)/w).concat([Math.max(...cols.map(c=>c[3]))])}
+let _bb=null,_bbT=0;
+function bgBase(){if(_bb&&Date.now()-_bbT<2000)return _bb;let r=null;for(const e of [document.body,document.documentElement]){const cs=getComputedStyle(e);if(cs.backgroundImage&&/gradient/.test(cs.backgroundImage)){const g=gAvg(cs.backgroundImage);if(g&&g[3]>.5){r=[g[0],g[1],g[2],1];break}}const c=P(cs.backgroundColor);if(c&&c[3]>.5){r=[c[0],c[1],c[2],1];break}}
+ if(!r)r=document.body.classList.contains('dark')||/jade|ember|gold|royal/.test(document.body.className)?[20,18,26,1]:[250,246,238,1];_bb=r;_bbT=Date.now();return r}
 function bgOfM(e,C){if(!e||e.nodeType!==1)return bgBase();if(C.has(e))return C.get(e);const cs=getComputedStyle(e),own=[];let stop=false,res;
-  if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/gradient/.test(cs.backgroundImage)){const cols=(cs.backgroundImage.match(/(rgba?|color)\([^)]+\)/g)||[]).map(P).filter(Boolean);if(cols.length){const avg=[0,1,2].map(i=>cols.reduce((s,c)=>s+c[i],0)/cols.length),al=cols.reduce((s,c)=>s+c[3],0)/cols.length;own.push([...avg,al]);if(al>.85)stop=true}}
+  if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/gradient/.test(cs.backgroundImage)){const g=gAvg(cs.backgroundImage);if(g&&g[3]>0){const avg=[g[0],g[1],g[2]],al=g[3]*.9;own.push([...avg,al]);if(al>.85)stop=true}}
   if(!stop){const c=P(cs.backgroundColor);if(c&&c[3]>.02){own.push(c);if(c[3]>.85)stop=true}}
   if(!stop&&cs.backgroundImage&&/url\(/.test(cs.backgroundImage))res=null;
   else{let base=stop?bgBase():bgOfM(e.parentElement,C);if(base===null)res=null;else{for(let i=own.length-1;i>=0;i--)base=over(own[i],base);res=base}}
   C.set(e,res);return res}
 function bgOf(el){const stack=[];let e=el;while(e&&e.nodeType===1){const cs=getComputedStyle(e);
-  if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/gradient/.test(cs.backgroundImage)){const cols=(cs.backgroundImage.match(/(rgba?|color)\([^)]+\)/g)||[]).map(P).filter(Boolean);if(cols.length){const avg=[0,1,2].map(i=>cols.reduce((s,c)=>s+c[i],0)/cols.length),al=cols.reduce((s,c)=>s+c[3],0)/cols.length;stack.push([...avg,al]);if(al>.85)break}}
+  if(cs.backgroundImage&&cs.backgroundImage!=='none'&&/gradient/.test(cs.backgroundImage)){const g=gAvg(cs.backgroundImage);if(g&&g[3]>0){const avg=[g[0],g[1],g[2]],al=g[3]*.9;stack.push([...avg,al]);if(al>.85)break}}
   const c=P(cs.backgroundColor);if(c&&c[3]>.02){stack.push(c);if(c[3]>.85)break}
   if(cs.backgroundImage&&/url\(/.test(cs.backgroundImage))return null;e=e.parentElement}
- let base=document.body.classList.contains('dark')||/mono|jade|ember|gold|royal/.test(document.body.className)?[20,18,26,1]:[250,246,238,1];
+ let base=bgBase();
  for(let i=stack.length-1;i>=0;i--)base=over(stack[i],base);return base}
 const SKIP=/^(SCRIPT|STYLE|CANVAS|SVG|IMG|VIDEO|INPUT|TEXTAREA|SELECT|OPTION|BR)$/;
 function fix(el,W,C){if(!el||el.nodeType!==1||SKIP.test(el.tagName)||el.closest('svg'))return;let txt=false;for(const n of el.childNodes)if(n.nodeType===3&&n.nodeValue.trim()){txt=true;break}if(!txt)return;
@@ -5030,16 +5034,27 @@ function unfix(root){for(const e of (root||document).querySelectorAll('[data-cfi
 // แคช: ตรวจแล้วจำไว้ต่อองค์ประกอบ (คลาส+สไตล์+คลาสของพ่อ) ตรวจซ้ำเฉพาะเมื่อเปลี่ยน — เดิมเรียก getComputedStyle ไล่ทั้งสายทุกครั้งที่ข้อความเปลี่ยน
 let FCK=new WeakMap();const fsig=e=>{const p=e.parentElement;return(e.getAttribute('class')||'')+'|'+(e.getAttribute('style')||'')+'|'+(p?(p.getAttribute('class')||''):'')};
 // ⚡ perf: อ่านทั้งหมดก่อนแล้วค่อยเขียนทีเดียว (เดิมอ่าน→เขียน→อ่าน สลับกัน ทำให้เบราว์เซอร์คำนวณสไตล์ใหม่ซ้ำหลายสิบรอบตอนเปิดเมนู)
-function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')],W=[],C=new Map(),done=[];let n=0;for(const e of all){if(++n>(max||1500))break;try{if(FCK.get(e)===fsig(e))continue;fix(e,W,C);done.push(e)}catch(x){}}
- for(const [el,wr] of W){try{wr()}catch(x){}}for(const e of done){try{FCK.set(e,fsig(e))}catch(x){}}}
+// ⚡ แบ่งตรวจทีละช่วงสั้นๆ (≤6ms ต่อเฟรม) — เดิมตรวจรวดเดียวทั้งหน้าต่าง ทำให้เมนูเปิดช้าเกือบ 1 วิบนมือถือ
+const JOBS=[];let jRun=0;
+function pumpJ(){jRun=0;const t0=performance.now();while(JOBS.length&&performance.now()-t0<6){const j=JOBS[0];const W=[],done=[];
+  while(j.i<j.all.length&&performance.now()-t0<6){const e=j.all[j.i++];if(!e.isConnected)continue;try{if(FCK.get(e)===fsig(e))continue;fix(e,W,j.C);done.push(e)}catch(x){}}
+  for(const [el,wr] of W){try{wr()}catch(x){}}for(const e of done){try{FCK.set(e,fsig(e))}catch(x){}}
+  if(j.i>=j.all.length)JOBS.shift()}
+ if(JOBS.length){jRun=1;requestAnimationFrame(pumpJ)}}
+function scan(root,max){if(!root||root.nodeType!==1)return;const all=[root,...root.querySelectorAll('*')].slice(0,max||1500);
+ for(let k=JOBS.length-1;k>=0;k--)if(JOBS[k].root===root)JOBS.splice(k,1);JOBS.push({root,all,i:0,C:new Map()});if(!jRun){jRun=1;requestAnimationFrame(pumpJ)}}
 window.cfixScan=scan;
 // ของใหม่ในหน้า
 const Q=new Set();let tm=0;
 const run=()=>{tm=0;const L2=[...Q];Q.clear();for(const r of L2)if(r.isConnected)scan(r,600)};
 new MutationObserver(ms=>{for(const m of ms){if(m.type==='childList'){for(const n of m.addedNodes){if(n.nodeType===1)Q.add(n);else if(n.nodeType===3&&n.parentElement)Q.add(n.parentElement)}}else if(m.type==='characterData'&&m.target.parentElement)Q.add(m.target.parentElement)}if(Q.size>300){Q.clear();Q.add(document.body)}if(!tm)tm=(window.requestIdleCallback?requestIdleCallback(run,{timeout:600}):setTimeout(run,120))}).observe(document.body,{childList:true,subtree:true,characterData:true});
 // เปลี่ยนธีม → ล้างแล้วตรวจใหม่ทั้งหน้า
-{const _at=applyTheme;applyTheme=function(){const r=_at.apply(this,arguments);try{FCK=new WeakMap();unfix(document);setTimeout(()=>scan(document.body,5000),60)}catch(e){}return r};window.applyTheme=applyTheme}
+{const _at=applyTheme;applyTheme=function(){const r=_at.apply(this,arguments);try{FCK=new WeakMap();_bb=null;unfix(document);setTimeout(()=>scan(document.body,5000),60)}catch(e){}return r};window.applyTheme=applyTheme}
 setTimeout(()=>scan(document.body,5000),1500);
+// สกินโลก/ธีมเปลี่ยนแบบหน่วงเวลา (เช่น data-hud ของแต่ละโลก) → ล้างสีที่บังคับไว้แล้วตรวจใหม่ทั้งหน้า (เดิมค้างสีจากธีมก่อน: ตัวหนังสือดำบนพื้นดำ / ขาวบนพื้นขาว)
+{let sig='',rt=0;const bs=()=>{const b=document.body;return b.className.replace(/\b(pz|islUp|hzMask|hs-mask|mdl|scrFx)\b/g,'')+'|'+(b.dataset.hud||'')+'|'+getComputedStyle(b).backgroundImage.slice(0,60)+getComputedStyle(b).backgroundColor};
+ const re=()=>{rt=0;try{const n=bs();if(n===sig)return;sig=n;FCK=new WeakMap();_bb=null;unfix(document);scan(document.body,5000)}catch(e){}};
+ new MutationObserver(()=>{clearTimeout(rt);rt=setTimeout(re,350)}).observe(document.body,{attributes:true,attributeFilter:['class','data-hud','style']});setTimeout(()=>{sig=bs()},1600)}
 // หน้าต่างที่เปิดอยู่: ตรวจซ้ำเบาๆ (กรณีสลับคลาส/สีโดยไม่เพิ่มโหนด)
 setInterval(()=>{const go=()=>{try{const m=document.getElementById('modal');if(m&&m.offsetParent!==null)scan(m,800);const c=document.getElementById('choice');if(c&&c.offsetParent!==null)scan(c,300)}catch(e){}};window.requestIdleCallback?requestIdleCallback(go,{timeout:1000}):go()},1500);
 })()}catch(e){console.error('block102',e)}
