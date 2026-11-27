@@ -183,7 +183,7 @@ function tick(){
  try{
   const b=document.body;if(!b)return;
   let k=null;
-  if(b.classList.contains('royal')&&!LSg('murim_hudOff',0))k=key();
+  if(!LSg('murim_hudOff',0))k=key();
   if(k!==cur){cur=k;if(k){fonts();b.dataset.hud=k}else delete b.dataset.hud}
   widget(k);
   if(k)tagTiles();

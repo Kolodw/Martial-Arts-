@@ -188,7 +188,7 @@ let curW=null;
 function tick(){
  try{
   const b=document.body,T0=$('title');if(!b||!T0)return;
-  const on=T0.classList.contains('on')&&b.classList.contains('royal')&&!LSg('murim_frontOff',0);
+  const on=T0.classList.contains('on')&&!LSg('murim_frontOff',0);
   if(on){build(T0);const c=document.querySelector('#wPick .wc.on');const k=c&&T[c.dataset.k]?c.dataset.k:'murim';if(k!==curW){curW=k;fonts()}b.dataset.front=k;update()}
   else if(b.dataset.front){delete b.dataset.front;curW=null}
   try{deskB(T0.classList.contains('on')&&!LSg('murim_frontOff',0))}catch(e){console.error('deskB',e)}

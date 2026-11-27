@@ -41161,7 +41161,7 @@ const _cm=closeM;closeM=function(){const r=_cm.apply(this,arguments);try{if(!mod
 //  ใช้ตัวแปรเดิมของ /w/front.js (--fA สีหลัก · --fG สีรอง) และ /w/hud.js (--hA · --hG)
 // ============================================================
 try{(()=>{
-const B='html body.royal[data-front]';
+const B='html body[data-front]';
 const css=document.createElement('style');css.id='frPop';css.textContent=`
 @keyframes frGlow{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes frShine{0%{transform:translateX(-140%) skewX(-18deg)}55%,100%{transform:translateX(320%) skewX(-18deg)}}
@@ -41200,9 +41200,9 @@ ${B} #wPick .wc.on{border-color:var(--fA)!important;box-shadow:0 0 0 2px var(--f
 /* สลับโลก: ทุกอย่างกระพริบรับสีใหม่ */
 ${B}.frSw #frCont,${B}.frSw #tdTitle,${B}.frSw #frToday,${B}.frSw #tDock .tgo,${B}.frSw #uxGo .uxBorn{animation:frSwap .5s ease-out}
 /* ในเกม: สีโลกที่ส่วนหัว ปุ่มเล่นต่อ และเหตุการณ์ใหญ่ */
-html body.royal[data-hud] #game>.box.top{border-color:color-mix(in srgb,var(--hA) 55%,var(--line))!important;box-shadow:0 0 0 1px #0004,0 6px 22px color-mix(in srgb,var(--hA) 18%,transparent)!important}
-html body.royal[data-hud] #game .crow #pauseBtn{background:linear-gradient(135deg,var(--hG),var(--hA))!important;border-color:color-mix(in srgb,var(--hA) 70%,#000)!important;box-shadow:0 4px 0 color-mix(in srgb,var(--hA) 45%,#000),0 0 18px color-mix(in srgb,var(--hA) 40%,transparent)!important}
-html body.royal[data-hud] #game .bub.myth,html body.royal[data-hud] #game .bub.epic{border-color:var(--hG)!important;box-shadow:0 0 16px color-mix(in srgb,var(--hG) 30%,transparent)!important}
+html body[data-hud] #game>.box.top{border-color:color-mix(in srgb,var(--hA) 55%,var(--line))!important;box-shadow:0 0 0 1px #0004,0 6px 22px color-mix(in srgb,var(--hA) 18%,transparent)!important}
+html body[data-hud] #game .crow #pauseBtn{background:linear-gradient(135deg,var(--hG),var(--hA))!important;border-color:color-mix(in srgb,var(--hA) 70%,#000)!important;box-shadow:0 4px 0 color-mix(in srgb,var(--hA) 45%,#000),0 0 18px color-mix(in srgb,var(--hA) 40%,transparent)!important}
+html body[data-hud] #game .bub.myth,html body[data-hud] #game .bub.epic{border-color:var(--hG)!important;box-shadow:0 0 16px color-mix(in srgb,var(--hG) 30%,transparent)!important}
 @media (prefers-reduced-motion:reduce){${B} *,${B} *:after,${B} #frWChip{animation:none!important}}
 html body.mdl #title *{animation-play-state:paused!important}
 `;document.head.appendChild(css);
@@ -41214,3 +41214,44 @@ function tick(){try{const b=document.body,k=b.dataset.front||'';const big=docume
  if(k&&k!==last){if(last){b.classList.add('frSw');setTimeout(()=>b.classList.remove('frSw'),520)}last=k}}catch(e){}}
 setInterval(tick,600);setTimeout(tick,800);document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#wPick'))setTimeout(tick,30)},true);
 })()}catch(e){console.error('block306',e)}
+
+// ============================================================
+// BLOCK 307 🎨 ทุกธีมใช้หน้าแรกใหม่/สกินโลกได้ (เดิมใช้ได้แค่ทองราตรี ธีมอื่นการ์ดใสอ่านไม่ออก)
+//  ธีมคุมสีพื้น/การ์ด/ตัวหนังสือ · โลกคุมสีหลัก/สีรอง (แดงชาด หยกเขียว นีออน ฯลฯ)
+// ============================================================
+try{(()=>{
+// [bg, card, raised, line, ink, muted, light?]
+const TB={
+ dark:['#14131b','#1f1d29','#282535','#3a3650','#ece8f4','#a9a3bb',0],
+ jade:['#0f1f1a','#16302a','#1d3a33','#2f5a4c','#e6f4ee','#9fc2b4',0],
+ ember:['#1a0c0e','#2a1216','#33171c','#5a2630','#f6e6e6','#c9a1a4',0],
+ gold:['#1c160a','#2a2110','#332814','#5a4720','#f8eed6','#c9b48a',0],
+ light:['#f4eee2','#fffaf0','#f7efe0','#d9c9aa','#2a2014','#6e604a',1],
+ mono:['#f4f4f4','#ffffff','#f0f0f0','#bdbdbd','#111111','#555555',1]
+};
+const SEL={dark:'html body.dark:not(.royal)',jade:'html body.jade',ember:'html body.ember',gold:'html body.gold',mono:'html body.mono',light:'html body:not(.dark):not(.mono):not(.jade):not(.ember):not(.gold):not(.royal)'};
+function ramp(t){const L=!!t[11],up=L?'#000':'#fff',dn=L?'#fff':'#000';
+ return `--hB0:color-mix(in srgb,${t[0]} ${L?92:70}%,${dn});--hP1:color-mix(in srgb,${t[1]} ${L?100:93}%,${up});--hP2:color-mix(in srgb,${t[1]} 82%,${t[0]});--hR1:color-mix(in srgb,${t[2]} ${L?97:90}%,${up});--hR2:color-mix(in srgb,${t[2]} ${L?93:82}%,${up});--hL2:color-mix(in srgb,${t[3]} 72%,${L?'#000':t[7]});--hT2:color-mix(in srgb,${t[4]} 80%,${t[5]});--mut:color-mix(in srgb,${t[5]} 78%,${t[4]});--hHi:color-mix(in srgb,${t[7]} 82%,${L?'#000':'#fff'});`}
+function build(){const H=window._hud&&window._hud.T;if(!H)return false;let s='';
+ for(const th in TB){const b=TB[th],L=b[6];
+  for(const k in H){const w=H[k];
+   // สีโลกบนพื้นสว่าง: เข้มขึ้นให้อ่านออก
+   const A=L?`color-mix(in srgb,${w[6]} 82%,#000)`:w[6],G=L?`color-mix(in srgb,${w[7]} 62%,#000)`:w[7];
+   const t=[b[0],b[1],b[2],b[3],b[4],b[5],A,G,`color-mix(in srgb,${b[3]} 60%,${b[0]})`,w[9],w[10],L];
+   s+=`${SEL[th]}[data-hud="${k}"]{--bg:${t[0]};--card:${t[1]};--w:${t[2]};--line:${t[3]};--ink:${t[4]};--mut:${t[5]};--hA:${A};--hG:${G};--hK:${t[8]};--pink:${G};--pinkd:color-mix(in srgb,${G} 70%,#000);--onacc:${L?'#ffffff':b[0]};--good:color-mix(in srgb,#3fae5a ${L?22:16}%,${b[1]});--bad:color-mix(in srgb,#e0484f ${L?20:18}%,${b[1]});--epic:color-mix(in srgb,${G} 14%,${b[1]});--myth:color-mix(in srgb,${A} 18%,${b[1]});--peerb:${b[1]};--think:color-mix(in srgb,#4a7ad8 14%,${b[1]});--me:color-mix(in srgb,${A} 14%,${b[1]});--c3:${G};--c4:${A};color-scheme:${L?'light':'dark'};${ramp(t)}}\n`;
+   s+=`${SEL[th]}[data-front="${k}"]{--bg:${b[0]};--card:${b[1]};--w:${b[2]};--line:${b[3]};--ink:${b[4]};--mut:${b[5]};--fA:${A};--fG:${G};--fK:color-mix(in srgb,${b[3]} 60%,${b[0]});--pink:${G};--onacc:${L?'#ffffff':b[0]};color-scheme:${L?'light':'dark'}}\n`}}
+ // ธีมสว่าง: ปุ่มเกิด/ป้ายใช้ตัวหนังสือขาว · ม่านสีทับฉากบางลง
+ s+=`${SEL.light}[data-front] #frTint,${SEL.mono}[data-front] #frTint{opacity:.35}
+${SEL.light}[data-front] #tDock .tgo,${SEL.light}[data-front] #uxGo .uxBorn,${SEL.mono}[data-front] #tDock .tgo,${SEL.mono}[data-front] #uxGo .uxBorn{color:#fff!important;text-shadow:0 1px 0 #0006}
+${SEL.light}[data-front] #tDock .tgo small,${SEL.light}[data-front] #uxGo .uxBorn small,${SEL.mono}[data-front] #tDock .tgo small,${SEL.mono}[data-front] #uxGo .uxBorn small{color:#fff!important}
+${SEL.mono}[data-front] #title .big .gold,${SEL.mono}[data-hud] #game{filter:none}
+${SEL.light}[data-front] #lpTitle,${SEL.mono}[data-front] #lpTitle{background:var(--card)!important;background-image:none!important;border:1px solid var(--line)!important;color:var(--ink)!important}
+${SEL.light}[data-front] #lpTitle *,${SEL.mono}[data-front] #lpTitle *{color:inherit}${SEL.light}[data-front] #lpTitle small,${SEL.mono}[data-front] #lpTitle small{color:var(--mut)!important}
+${SEL.light}[data-front] #syncSt,${SEL.mono}[data-front] #syncSt{color:var(--mut)!important;background:color-mix(in srgb,var(--card) 80%,transparent);border-radius:10px;padding:2px 8px}
+${SEL.light}[data-hud] #game .box.top button,${SEL.mono}[data-hud] #game .box.top button{color:var(--ink)!important;background:var(--w)!important;border-color:var(--line)!important;opacity:1!important}
+${SEL.light}[data-hud] #game .box.top button *,${SEL.mono}[data-hud] #game .box.top button *{color:inherit!important;opacity:1!important}
+${SEL.light} #game .hudr :is(#wnBtn,#mBell,#onMini)::after,${SEL.mono} #game .hudr :is(#wnBtn,#mBell,#onMini)::after{color:var(--ink,#2a2014)!important;opacity:1!important}
+`;
+ const st=document.getElementById('thAll')||document.createElement('style');st.id='thAll';st.textContent=s;document.head.appendChild(st);return true}
+let n=0;const iv=setInterval(()=>{if(build()||++n>60)clearInterval(iv)},500);
+})()}catch(e){console.error('block307',e)}
