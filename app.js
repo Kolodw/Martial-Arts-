@@ -41021,7 +41021,9 @@ body.ux2 #sceneBox{transition:height .25s ease,margin .25s ease,opacity .2s;over
 html body.ux2.ux2.ux2.ux2 #game.uxS>#sceneBox{height:0!important;min-height:0!important;margin-top:0!important;margin-bottom:0!important;opacity:0;border-width:0!important;padding:0!important}
 html body.ux2.ux2.ux2 #game.uxS #gMini,html body.ux2.ux2.ux2 #game.uxS #uxGoal{display:none!important}
 
-html body.ux2 #game .crow #spdBtn,html body.ux2 #game .crow #autoBtn,html body.ux2 #game .crow>.ybar{display:none!important}
+html body.ux2 #game .crow #autoBtn,html body.ux2 #game .crow>.ybar,html body.ux2 #game .crow #aqCb{display:none!important}
+html body.ux2.ux2 #game .crow #spdBtn{display:flex!important;order:10!important;flex:1 1 0!important;flex-direction:column!important;height:48px!important;min-height:48px!important;padding:3px 0 2px!important;border-radius:15px!important;font-size:18px!important;font-weight:900!important;line-height:1.05!important;gap:0!important;color:#ffe7a8!important}
+html body.ux2.ux2 #game .crow #spdBtn .cbL{display:block!important;margin:1px 0 0!important;font-size:10.5px!important;font-weight:700!important;color:#efe6d6!important}
 html body.ux2 #game .crow #pauseBtn{position:relative;overflow:visible;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body.ux2 #pauseBtn .uxPb{position:absolute;left:12%;bottom:5px;height:3px;width:76%;border-radius:2px;background:#0004;overflow:hidden;pointer-events:none}body.ux2 #pauseBtn .uxPb i{display:block;height:100%;width:calc(var(--uxP,0)*1%);background:#1b1309;border-radius:2px}
 body.ux2 #pauseBtn .uxAu{position:absolute;left:-3px;top:-3px;width:12px;height:12px;border-radius:50%;background:#45c46a;border:2px solid #1b1309;display:none;pointer-events:none;z-index:2}
