@@ -41255,3 +41255,72 @@ ${SEL.light} #game .hudr :is(#wnBtn,#mBell,#onMini)::after,${SEL.mono} #game .hu
  const st=document.getElementById('thAll')||document.createElement('style');st.id='thAll';st.textContent=s;document.head.appendChild(st);return true}
 let n=0;const iv=setInterval(()=>{if(build()||++n>60)clearInterval(iv)},500);
 })()}catch(e){console.error('block307',e)}
+
+// ============================================================
+// BLOCK 310: 🌌 หน้าเลือกโลกแบบหมวด (ตามร่าง Design) — 🏯 ตะวันออก · 🏙️ ยุคปัจจุบัน · 🌠 อนาคต & ลึกลับ · 🔮 แฟนตาซี (เร็วๆ นี้: ต่างโลก / อะคาเดมี่)
+//  ต่อยอด #wPick ของ BLOCK 67 (ใช้ wpSel/wpGo เดิม ไม่แตะตรรกะการเกิด) · แต่ละหมวดมีสีคู่ไล่เฉด · คอม = การ์ดเป็นตาราง · มือถือ = แถบหมวด + การ์ดเลื่อน
+// ============================================================
+try{(()=>{
+const CAT=[
+ {id:'east',ic:'🏯',n:'ตะวันออก',a:'#ff6b4a',b:'#ffc35a',d:'#3a1418',t:'ยุทธภพ บำเพ็ญเซียน วิญญาณยุทธ์ และชีวิตสัตว์อสูร',k:['murim','xian','soul','loop','beast']},
+ {id:'mod',ic:'🏙️',n:'ยุคปัจจุบัน',a:'#4fc3ff',b:'#ff5fa8',d:'#10233f',t:'ชีวิตจริงในเมือง ที่บางวันประตูมิติเปิด · สุ่มได้ฮันเตอร์ ซอมบี้ ผีไทย วนลูป ฯลฯ',k:['mw']},
+ {id:'fut',ic:'🌠',n:'อนาคต & ลึกลับ',a:'#2ef2c8',b:'#7a7cff',d:'#0b2a2e',t:'หลังมหันตภัยดาวตก และนครใต้ม่านหมอกที่ไม่เคยจาง',k:['sky','fog']},
+ {id:'fan',ic:'🔮',n:'แฟนตาซี',a:'#b98cff',b:'#ffd37a',d:'#26163f',t:'เวทมนตร์ สัญญา และโลกที่ไม่ปรานีคนแปลกหน้า',k:[],soon:1}];
+const FAN={iso:{n:'ต่างโลก',a:'#c48bff',b:'#ff8ad8',W:[['🛡️','ถูกอัญเชิญเป็นผู้กล้า','30 คนข้ามมา ไม่ใช่ทุกคนจะรอด'],['🗑️','สกิลขยะ','ถูกทิ้งจากวัง แต่สกิลนี้โตได้'],['💀','ตายแล้วเกิดใหม่','ความทรงจำชาติก่อน เกิดเป็นเด็ก'],['🫧','เกิดเป็นมอนสเตอร์','สไลม์ กิน วิวัฒน์'],['🦹','ตัวร้ายในนิยาย','ตามเนื้อเรื่องต้องตายตอนอายุ 20']]},
+ aca:{n:'อะคาเดมี่',a:'#8fb4ff',b:'#ffd37a',W:[['🔮','โรงเรียนเวท','บ้านหอพัก ห้องสมุดต้องห้าม'],['⚔️','โรงเรียนอัศวิน','ปีสุดท้ายออกรบจริง'],['👑','โรงเรียนขุนนาง','ทุกงานเลี้ยงคือการเมือง'],['🌑','โรงเรียนลับ','จบรุ่นเหลือไม่ถึงครึ่ง'],['🐉','ผู้ฝึกสัตว์อสูร','ไข่มังกรมีคนพร้อมฆ่าแย่ง']]}};
+let cat=null,fb='iso';
+const st=document.createElement('style');st.textContent=`
+#wPick{--ca:#ffc35a;--cb:#ff6b4a;--cd:#3a1418}
+#wPick .wcT{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 9px}#wPick .wcT::-webkit-scrollbar{display:none}
+#wPick .wcT button{position:relative;flex:1 0 auto;min-width:76px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 8px 7px;border-radius:14px;border:1.5px solid #ffffff1c;background:#ffffff08;color:#e8dcc0;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
+#wPick .wcT button i{font-style:normal;font-size:20px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#0006}
+#wPick .wcT button small{font-size:9.5px;opacity:.7;font-weight:700}
+#wPick .wcT button.on{color:#fff;border-color:transparent;background:linear-gradient(180deg,var(--td),#120d22) padding-box,linear-gradient(135deg,var(--ta),var(--tb)) border-box;box-shadow:0 0 16px color-mix(in srgb,var(--ta) 45%,transparent)}
+#wPick .wcT button.on i{background:linear-gradient(135deg,var(--ta),var(--tb))}
+#wPick .wcT button .nw{position:absolute;top:-6px;right:-3px;font-size:9px;padding:1px 6px;border-radius:6px;background:#ffd37a;color:#1a1230;font-weight:900}
+#wPick .wcH{margin:0 2px 8px;padding:10px 12px;border-radius:14px;border:1.5px solid transparent;background:linear-gradient(160deg,var(--cd),#120d22) padding-box,linear-gradient(135deg,var(--ca),var(--cb)) border-box}
+#wPick .wcH b{display:block;font-size:17px;background:linear-gradient(90deg,var(--ca),var(--cb));-webkit-background-clip:text;background-clip:text;color:transparent}
+#wPick .wcH span{display:block;font-size:12px;color:#d9cfe8;line-height:1.45;margin-top:2px}
+#wPick .wDots{display:none!important}
+#wPick:not(.catEast) .wpC,#wPick:not(.catEast) .wpNote{display:none!important}
+#wPick:not(.catEast) #uxModeN{display:none!important}#wPick.fanOn #uxGo{display:none!important}
+#wPick.catEast .wpC{margin:2px 2px 0;padding:8px 10px;border-radius:12px;background:#0005;border:1px solid #ff6b4a44}
+#wPick .wc.wcHide{display:none!important}
+#wPick .wc.on{box-shadow:0 0 0 2px var(--ca),0 0 22px color-mix(in srgb,var(--ca) 45%,transparent)!important}
+#wPick .wcF{display:none}#wPick.fanOn .wcF{display:block}#wPick.fanOn .wpS,#wPick.fanOn .wpC{display:none!important}
+#wPick .wcFb{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;border-radius:12px;background:#0007;margin:0 2px 8px}
+#wPick .wcFb button{font:inherit;font-size:13px;font-weight:800;padding:8px;border-radius:9px;border:0;background:transparent;color:#cfc6e6;cursor:pointer}
+#wPick .wcFb button.on{background:linear-gradient(90deg,var(--ca),var(--cb));color:#140f28}
+#wPick .wcFg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0 2px}
+#wPick .wcFc{padding:10px;border-radius:12px;border:1.5px solid #ffffff18;background:#ffffff07;opacity:.85}
+#wPick .wcFc b{display:block;font-size:14px;margin-top:3px}#wPick .wcFc small{display:block;font-size:11.5px;color:#c9bfdc;line-height:1.35;margin-top:2px}
+#wPick .wcFc em{display:inline-block;margin-top:6px;font-style:normal;font-size:10px;padding:2px 7px;border-radius:999px;background:#0006;border:1px solid var(--ca);color:var(--ca)}
+#wPick .wcSoon{margin:8px 2px 0;padding:9px 12px;border-radius:12px;border:1px dashed var(--ca);font-size:12px;color:#e8dcf8;text-align:center}
+@media (min-width:900px){#wPick .wpS{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));overflow:visible!important;scroll-snap-type:none!important}#wPick .wpS .wc{max-width:none!important;flex:none!important}#wPick .wcFg{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+`;document.head.appendChild(st);
+const catOf=k=>(CAT.find(c=>c.k.includes(k))||CAT[0]).id;
+const selK=P=>{const on=P.querySelector('.wc.on');return on?on.dataset.k:null};
+function setCat(P,id){const c=CAT.find(x=>x.id===id)||CAT[0];cat=c.id;
+ const pal=c.soon?FAN[fb]:c;P.style.setProperty('--ca',pal.a);P.style.setProperty('--cb',pal.b);P.style.setProperty('--cd',c.d);
+ P.classList.toggle('fanOn',!!c.soon);P.classList.toggle('catEast',c.id==='east');
+ P.querySelectorAll('.wcT button').forEach(b=>b.classList.toggle('on',b.dataset.c===cat));
+ const H=P.querySelector('.wcH');if(H)H.innerHTML=`<b>${c.ic} ${c.n}</b><span>${c.t}</span>`;
+ P.querySelectorAll('.wpS .wc').forEach(w=>w.classList.toggle('wcHide',!!c.soon||!c.k.includes(w.dataset.k)));
+ if(c.soon)paintFan(P);
+ else{const vis=[...P.querySelectorAll('.wpS .wc:not(.wcHide)')];if(vis.length&&!vis.some(w=>w.classList.contains('on'))){try{wpSel(vis[0].dataset.k)}catch(e){}}const sc=P.querySelector('.wpS');if(sc)sc.scrollLeft=0}}
+function paintFan(P){const F=P.querySelector('.wcF');if(!F)return;const br=FAN[fb];
+ F.innerHTML=`<div class="wcFb">${Object.keys(FAN).map(k=>`<button class="${k===fb?'on':''}" onclick="wcFan('${k}')">${FAN[k].n} · ${FAN[k].W.length}</button>`).join('')}</div>
+ <div class="wcFg">${br.W.map(w=>`<div class="wcFc"><span style="font-size:22px">${w[0]}</span><b>${w[1]}</b><small>${w[2]}</small><em>🔒 เร็วๆ นี้</em></div>`).join('')}</div>
+ <div class="wcSoon">🔮 โลกแฟนตาซีกำลังสร้าง · ระหว่างนี้เลือกโลกจากหมวดอื่นได้เลย</div>`}
+window.wcCat=id=>{const P=document.getElementById('wPick');if(P)setCat(P,id)};
+window.wcFan=k=>{fb=k;const P=document.getElementById('wPick');if(P)setCat(P,'fan')};
+function inject(){try{const P=document.getElementById('wPick');if(!P||P._wc)return;const S0=P.querySelector('.wpS');if(!S0)return;P._wc=1;
+ const counts=id=>{const c=CAT.find(x=>x.id===id);return c.soon?10:[...P.querySelectorAll('.wpS .wc')].filter(w=>c.k.includes(w.dataset.k)).length};
+ const T=document.createElement('div');T.className='wcT';T.innerHTML=CAT.map(c=>`<button data-c="${c.id}" style="--ta:${c.a};--tb:${c.b};--td:${c.d}" onclick="wcCat('${c.id}')"><i>${c.ic}</i>${c.n}<small>${c.soon?'เร็วๆ นี้':counts(c.id)+' โลก'}</small>${c.soon?'<span class="nw">NEW</span>':''}</button>`).join('');
+ const H=document.createElement('div');H.className='wcH';const F=document.createElement('div');F.className='wcF';
+ S0.before(T);S0.before(H);S0.after(F);
+ setCat(P,cat||catOf(selK(P)||'murim'))}catch(e){console.error('block310',e)}}
+setInterval(inject,700);setTimeout(inject,350);
+// เลือกการ์ด (เช่น สุ่มโลก) แล้วหมวดตาม
+{const _ws=window.wpSel;if(_ws)window.wpSel=function(k){const r=_ws.apply(this,arguments);try{const P=document.getElementById('wPick');if(P&&P._wc){const c=catOf(k);if(c!==cat)setCat(P,c)}}catch(e){}return r}}
+})()}catch(e){console.error('block310',e)}
