@@ -3132,7 +3132,7 @@ const RARN=['ธรรมดา','หายาก','มหากาพย์','�
 const wdG=()=>{try{let w=LS.get('murim_fanwd',null);if(!w){w={own:{}};shuf(FOUT.filter(x=>x.rar===0)).slice(0,6).forEach(x=>w.own[x.id]=1);LS.set('murim_fanwd',w)}return w}catch(e){return{own:{}}}};
 function wdGive(src,rmax){const W=wdG(),L=FOUT.filter(x=>!W.own[x.id]&&x.rar<=(rmax==null?3:rmax));if(!L.length)return'';const wt=L.map(x=>[.55,.28,.13,.04][x.rar]),tot=wt.reduce((a,b)=>a+b,0);let r=rnd()*tot,o=L[0];for(let i=0;i<L.length;i++){r-=wt[i];if(r<0){o=L[i];break}}W.own[o.id]=1;try{LS.set('murim_fanwd',W)}catch(e){}if(o.rar>=2)fxBig('confetti',1.2);
  return ` · 👘 <b style="color:${RARC[o.rar]}">ได้ชุดใหม่: ${o.ic} ${o.n}</b> (${RARN[o.rar]})${src?' จาก'+src:''}`}
-{const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(on()){const K=FN();if(K&&K.fit!=null&&!isMon(K)){const f=FOUT[K.fit];if(f){Object.assign(o,f.o);if(o.wing&&S.age<14)o.wing=null;if(f.fs&&S.gender!=='หญิง'){o.skirt=null;o.noSkirt=1}if(o.hat==='bald'&&S.gender==='หญิง')o.hat=null}}}}catch(e){}return o}}
+{const _ml=meLook;meLook=function(){const o=_ml.apply(this,arguments);try{if(on()){const K=FN();if(K&&K.fit!=null&&!isMon(K)){const f=FOUT[K.fit];if(f){Object.assign(o,f.o);o._fst=f.st||'tunic';if(o.wing&&S.age<14)o.wing=null;if(f.fs&&S.gender!=='หญิง'){o.skirt=null;o.noSkirt=1}if(o.hat==='bald'&&S.gender==='หญิง')o.hat=null}}}}catch(e){}return o}}
 {const _ld=lootDrop;lootDrop=function(K,t,src){let r=_ld.apply(this,arguments);try{if(!isMon(K)&&rnd()<(t>=4?.35:t>=2?.12:.06))r+=wdGive(src,t>=4?3:t>=2?2:1)}catch(e){}return r}}
 {const _er=endRec;endRec=function(K,k){let first=false;try{const L=LS.get('murim_fanend',{})||{};first=!L[K.w+':'+k]}catch(e){}const r=_er.apply(this,arguments);try{if(first&&!isMon(K))setTimeout(()=>{try{const t=wdGive('ฉากจบใหม่',3);if(t)say('🎬'+t,'epic')}catch(e){}},1500)}catch(e){}return r}}
 let WDP=0,WDF='own';
@@ -3148,6 +3148,42 @@ window.fanWdSet=id=>{const K=FN();if(!K)return;K.fit=id<0?null:id;closeM();if(id
 window.fanWdBuy=(id,pr)=>{if((S.money||0)<pr)return;S.money-=pr;const W=wdG();W.own[id]=1;try{LS.set('murim_fanwd',W)}catch(e){}toast('ได้ชุด '+FOUT[id].n);render();fanWd()};
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const K=FN();if(on()&&K&&!isMon(K)){const d=$('modal').querySelector('[data-fa4]');if(d&&!d.querySelector('[data-fa12]')){const b=document.createElement('button');b.className='opt';b.setAttribute('data-fa12',1);b.innerHTML=`👘 ตู้เสื้อผ้า<small>${Object.keys(wdG().own).length}/${FOUT.length} ชุด</small>`;b.onclick=()=>fanWd(0);d.appendChild(b)}}}catch(e){}return r}}
 window._fan12={FOUT,wdG,wdGive};
+// =================== 👘 ตัววาดชุดแฟนตาซี (ทับทรงชุดยุทธ) ===================
+const FSTY={knight:'plate',paladin:'plate',dknight:'plate',drgk:'plate',valk:'plate',glad:'plate',spellb:'plate',mage:'robe',priest:'robe',necro:'robe',druid:'robe',scholar:'robe',monk:'robe',shaman:'robe',star:'robe',saint:'robe',alch:'coat',princess:'gown',witch:'gown',maid:'gown',noble:'coat',butler:'coat',dlord:'coat',bard:'tunic',ranger:'tunic',elf:'tunic',merch:'tunic',tamer:'tunic',pirate:'coat',rogue:'leather'};
+FOUT.forEach(f=>{f.st=FSTY[FAR[Math.floor(f.id/10)][0]]||'tunic'});
+function fanGarb(x,y,o,pose){if(pose==='lie')return;const X=Math.round(x*3),Y=Math.round(y*3),child=o.age<12,T=frame*.15,sd=(o.seed||((o.robe||'').length*7+(o.hair||'').length))%10;
+ const H=child?33:48,hh=child?11:12,tw=child?11:16,th=child?11:18,walk=pose==='walk',sit=pose==='sit';
+ const bob=walk?(child?(Math.sin(T*8)>0?-1:0):(Math.abs(Math.sin(T*3.2))>.7?-1:0)):Math.round(Math.sin(T*1.6+sd)*.6);
+ const stn=(pose==='stand'&&!child&&!sit)?o.stance:null;const top=Y-H+(sit?9:0)+(o.old?2:0)+bob,cx=X+12,ty=top+hh+1,ly=ty+th;
+ const R=o.robe||'#888',Rd=shd(R,-.28),Rl=shd(R,.22),Tc=o.trim||shd(R,.4),Td=shd(Tc,-.3),B=o.belt&&o.belt!==R?o.belt:'#5a3a22',Bt='#4a2e1c',skin=o.skin||'#f0c8a0',fem=o.g==='หญิง';
+ let st=o._fst;if(child)st='tunic';if(st==='gown'&&!fem)st='coat';
+ const L=cx-Math.floor(tw/2)+1,IW=tw-2,bY=ty+(child?6:9);
+ const fillT=(c,cd)=>{for(let r=0;r<th;r++){Q(L,ty+r,IW,1,c);Q(L+IW-2,ty+r,2,1,cd)}};
+ const as=walk?0:Math.round(Math.sin(T*1.6+sd)*.5);
+ const legs=(c,cuff)=>{if(sit)return;let a=0,b=0,ox1=0,ox2=0;if(walk&&!child){const s1=Math.sin(T*3.2);a=s1>.25?Math.round(s1*3):0;b=s1<-.25?Math.round(-s1*3):0}else if(walk){const sw=Math.round(Math.sin(T*8)*2);ox1=sw;ox2=-sw}else if(stn==='ready'){ox1=-2;ox2=2}
+  const bh=child?4:6;Q(cx-6+ox1,Y-bh-a,6,bh,c);Q(cx+1+ox2,Y-bh-b,6,bh,shd(c,-.15));if(cuff){Q(cx-6+ox1,Y-bh-a,6,1,cuff);Q(cx+1+ox2,Y-bh-b,6,1,shd(cuff,-.15))}Q(cx-6+ox1,Y-1-a,6,1,shd(c,-.35));Q(cx+1+ox2,Y-1-b,6,1,shd(c,-.4))};
+ if(st==='plate'){const P=o.plate||'#b8c0cc',PD=shd(P,-.3),PL=shd(P,.3);fillT(R,Rd);
+  Q(L,ty,IW,9,P);Q(L,ty,IW,1,PL);Q(cx,ty+1,1,7,PL);Q(cx-1,ty+1,1,7,PD);Q(L+IW-2,ty+1,2,8,PD);Q(L+1,ty+9,IW-2,2,PD);Q(L+1,ty+11,IW-2,2,P);Q(L+1,ty+12,IW-2,1,PD);
+  if(!child&&!walk){Q(cx-12,ty-1+as,6,4,P);Q(cx-12,ty-1+as,6,1,PL);Q(cx+7,ty-1-as,6,4,PD);Q(cx+7,ty-1-as,6,1,P)}
+  Q(L-1,ty+13,IW+2,2,B);Q(cx-1,ty+13,2,2,'#e8c860');Q(cx-2,ty+15,4,Math.max(2,ly-ty-13),R);Q(cx-2,ty+15,1,Math.max(2,ly-ty-13),Rl);if(o.emblem||o.trim)Q(cx-1,ty+16,2,2,o.emblem||Tc);
+  if(!sit){Q(cx-7,ly-1,5,5,P);Q(cx-7,ly-1,5,1,PL);Q(cx+2,ly-1,5,5,PD)}legs(P,PL)}
+ else if(st==='robe'){fillT(R,Rd);Q(cx-1,ty,2,th,Tc);Q(cx-4,ty,8,2,Tc);Q(cx-3,ty,6,1,shd(Tc,.3));Q(L,bY,IW,1,B);Q(cx+2,bY+1,1,3,B);Q(cx+2,bY+4,2,1,Tc);
+  if(!sit){const bot=Y-1;for(let yy=ly-1;yy<bot;yy++){const k=(yy-ly)/(bot-ly),w=IW+2+Math.round(k*4),lx=cx-Math.floor(w/2);Q(lx,yy,w,1,R);Q(lx+w-3,yy,3,1,Rd);Q(lx,yy,1,1,Rl)}const wb=IW+6;Q(cx-Math.floor(wb/2),bot-2,wb,2,Tc);Q(cx-1,ly-1,2,bot-ly-1,Tc);Q(cx-4,bot,3,1,'#2a1e18');Q(cx+1,bot,3,1,'#2a1e18')}
+  if(!walk&&!child&&!stn){Q(cx-12,ty+8+as,6,5,R);Q(cx-12,ty+12+as,6,1,Tc);Q(cx+7,ty+8-as,6,5,Rd);Q(cx+7,ty+12-as,6,1,Td);Q(cx-10,ty+13+as,3,2,skin);Q(cx+8,ty+13-as,3,2,shd(skin,-.15))}}
+ else if(st==='gown'){fillT(R,Rd);Q(cx-4,ty,8,2,skin);Q(cx-5,ty+2,10,1,Tc);for(let i=0;i<4;i++){Q(cx-1,ty+3+i*2,1,1,Tc);Q(cx,ty+4+i*2,1,1,Tc)}
+  if(!child&&!walk){Q(cx-12,ty,5,4,Rl);Q(cx-12,ty+3,5,1,Tc);Q(cx+8,ty,5,4,R);Q(cx+8,ty+3,5,1,Td)}Q(L,bY,IW,1,Tc);
+  if(!sit){const s0=bY+1,s1=Y-1,ws=walk?Math.sin(T*3.2):Math.sin(T*2+sd)*.5;for(let yy=s0;yy<=s1;yy++){const k=(yy-s0)/Math.max(1,s1-s0),w=Math.round(IW+k*12),off=Math.round(ws*1.4*k),lx=cx-Math.floor(w/2)+off;Q(lx,yy,w,1,R);Q(lx+w-3,yy,3,1,Rd);Q(lx,yy,1,1,Rl);if(yy>s0+2&&yy%3===0){Q(lx+Math.floor(w*.33),yy,1,1,Rd);Q(lx+Math.floor(w*.66),yy,1,1,Rd)}}
+   const wb=IW+12,lxb=cx-Math.floor(wb/2)+Math.round(ws*1.4);Q(lxb,s1-2,wb,2,Tc);for(let i=0;i<wb;i+=2)Q(lxb+i,s1,1,1,shd(Tc,.25));Q(lxb,s1+1,wb,1,'#00000022')}}
+ else if(st==='coat'){const C=o.coat||R,CD=shd(C,-.3),CL=o.coatL||shd(C,.3),sh=o.coat?R:'#f0ece4';fillT(sh,shd(sh,-.15));Q(cx-1,ty+1,2,4,'#f4f4f4');Q(cx-2,ty+1,4,1,'#ffffff');
+  for(let r=0;r<th;r++){const wl=Math.floor(IW/2)-2;Q(L,ty+r,wl,1,C);Q(L+IW-wl,ty+r,wl,1,CD);Q(L+wl-1,ty+r,1,1,CL);Q(L+IW-wl,ty+r,1,1,CL)}Q(L-1,ty,IW+2,2,C);Q(L-1,ty,IW+2,1,CL);
+  for(let i=0;i<4;i++){Q(cx-4,ty+4+i*3,1,1,'#e8c860');Q(cx+3,ty+4+i*3,1,1,'#e8c860')}Q(L,bY,IW,1,B);
+  if(!sit){const tl=child?4:9;Q(L-1,ly-1,6,tl,C);Q(L-1,ly-1,1,tl,CL);Q(L+IW-5,ly-1,6,tl,CD);Q(L+IW,ly-1,1,tl,CL)}
+  if(!walk&&!child&&!stn){Q(cx-12,ty+1+as,5,11,C);Q(cx-12,ty+11+as,5,1,CL);Q(cx+7,ty+1-as,5,11,CD);Q(cx+7,ty+11-as,5,1,CL)}legs('#2a1e18','#5a3a22')}
+ else if(st==='leather'){const Lc=shd(R,-.35),LD=shd(Lc,-.25);fillT(Lc,LD);for(let i=0;i<IW;i++){Q(L+i,ty+1+Math.round(i*th/IW*.7),1,1,B);Q(L+IW-1-i,ty+1+Math.round(i*th/IW*.7),1,1,shd(B,-.2))}Q(cx-1,ty+6,2,2,'#c8c8d0');Q(L-1,bY+2,IW+2,2,B);Q(cx-6,bY+4,3,3,shd(B,.15));Q(cx+3,bY+4,3,3,shd(B,.15));Q(cx+4,bY+3,1,5,'#c8ccd6');if(!sit){Q(L,ly-1,IW,3,Lc)}legs(Bt,shd(Bt,.3))}
+ else{fillT(R,Rd);Q(cx-2,ty,4,1,skin);Q(cx-1,ty+1,2,1,skin);Q(cx-3,ty,1,2,Tc);Q(cx+2,ty,1,2,Tc);for(let i=0;i<3;i++){Q(cx-1,ty+2+i*2,1,1,Tc);Q(cx,ty+3+i*2,1,1,Tc)}Q(L-1,bY,IW+2,2,B);Q(cx-1,bY,2,2,'#e8c860');Q(cx+3,bY+2,2,3,shd(B,.2));
+  if(!sit){Q(L-1,ly-1,IW+2,child?2:4,R);Q(L-1,ly-1+(child?1:3),IW+2,1,Tc);Q(L+IW-1,ly-1,2,child?2:4,Rd)}legs(Bt,shd(Bt,.35))}}
+{const _p0=person0;person0=function(x,y,o,pose){if(!o||!o._fst)return _p0.apply(this,arguments);const o2=Object.assign({},o,{trim:null,sash:null,wx:0,coat:null,coatL:null,plate:null,noSkirt:1,stripe:0,patch:0,jade:0,emblem:null,fur:null,belt:o.robe,ribbon:null});const r=_p0.call(this,x,y,o2,pose);try{fanGarb(x,y,o,pose)}catch(e){}return r}}
+
 
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}
