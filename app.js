@@ -41418,9 +41418,9 @@ try{const _sv=svInfo;svInfo=function(d){const r=_sv.apply(this,arguments);try{co
 // การ์ดในหมวดแฟนตาซี: 3 โลก ไม่มีหมวดย่อย (ต่างโลก · โลกเวทมนตร์ · โลกแห่งอะคาเดมี่)
 const FW3=[['iso','⚔️','ต่างโลก','ถูกอัญเชิญข้ามโลกพร้อมเพื่อนทั้งห้อง ลูกแก้วจะบอกว่าคุณเป็นผู้กล้า หรือคนที่วังโยนทิ้ง','#c48bff','#ff8ad8'],['magic','🔮','โลกเวทมนตร์','วิทยาลัยเวทที่ทุกปีมีนักเรียนหายไป ผนังหายใจได้ และห้องที่ 13 ไม่มีประตู','#7ab8ff','#b98cff'],['noble','🏰','โลกแห่งอะคาเดมี่','เด็กทุนคนเดียวในสถาบันลูกขุนนาง ทุกงานเลี้ยงคือการเมือง ทุกแก้วไวน์อาจมียาพิษ','#ffd37a','#ff9a6a']];
 // 🖼️ การ์ดแบบเดียวกับโลกอื่น: ฉากพิกเซลเต็มใบ (/worlds.png แถว fi/fm/fa) · แตะเพื่อเลือก · ปุ่มเกิดใหญ่ใต้การ์ด
-const FWX={iso:{wy:'fi',tg:['เริ่มอายุ 16','ผู้กล้า / สกิลขยะ'],d:'ถูกอัญเชิญมาพร้อมเพื่อนทั้งห้อง ลูกแก้วจะบอกว่าคุณคือผู้กล้า หรือคนที่วังโยนทิ้ง'},
- magic:{wy:'fm',tg:['เริ่มอายุ 12','วิทยาลัยเวท'],d:'วิทยาลัยเวทบนเกาะลอยฟ้า ทุกปีมีนักเรียนหายไป และห้องที่ 13 ไม่มีประตู'},
- noble:{wy:'fa',tg:['เริ่มอายุ 12','การเมืองขุนนาง'],d:'เด็กทุนคนเดียวในสถาบันลูกขุนนาง ทุกงานเลี้ยงคือการเมือง'}};
+const FWX={iso:{wy:'fi',tg:['อายุสุ่ม 0–16','ผู้กล้า / สกิลขยะ / หลงมิติ'],d:'ถูกอัญเชิญมาพร้อมเพื่อนทั้งห้อง ลูกแก้วจะบอกว่าคุณคือผู้กล้า หรือคนที่วังโยนทิ้ง'},
+ magic:{wy:'fm',tg:['เกิดเป็นทารก','วิทยาลัยเวท'],d:'วิทยาลัยเวทบนเกาะลอยฟ้า ทุกปีมีนักเรียนหายไป และห้องที่ 13 ไม่มีประตู'},
+ noble:{wy:'fa',tg:['เกิดเป็นทารก','การเมืองขุนนาง'],d:'เด็กทุนคนเดียวในสถาบันลูกขุนนาง ทุกงานเลี้ยงคือการเมือง'}};
 const WORD=['w0','w1','w3','w2','h','s','j','rg','l','k','mn','n','u','o','p','z','t','e','q','y','v','fi','fm','fa','f'];
 const wyOf=id=>(WORD.indexOf(id)/(WORD.length-1)*100).toFixed(4)+'%';
 let fsel=null;try{fsel=LS.get('murim_fansel',null)}catch(e){}if(!FW3.some(w=>w[0]===fsel))fsel='iso';
@@ -41517,7 +41517,7 @@ window.fanBornMenu=function(w){window._fanLk=null;window._fanCs=null;const k=w==
 // BLOCK 315b: ป้ายอายุเริ่มต้นบนการ์ดโลกแฟนตาซีให้ตรงกับระบบใหม่ (ทารก / สุ่ม 0–16)
 try{(()=>{const MP={'เริ่มอายุ 16':'อายุสุ่ม 0–16','เริ่มอายุ 12':'เกิดเป็นทารก','ผู้กล้า / สกิลขยะ':'ผู้กล้า / สกิลขยะ / หลงมิติ'};
 const fx=()=>{const P=document.getElementById('wPick');if(!P)return;P.querySelectorAll('.fwc .tg span').forEach(e=>{const t=MP[e.textContent.trim()];if(t)e.textContent=t})};
-new MutationObserver(()=>{if(document.getElementById('wPick'))fx()}).observe(document.body,{childList:true,subtree:true});})()}catch(e){console.error('block315b',e)}
+/* ป้ายแก้ที่ต้นทาง (FWX ใน BLOCK 311) แล้ว — ไม่ต้องเฝ้าหน้าเว็บทั้งหน้าอีก */})()}catch(e){console.error('block315b',e)}
 // ============================================================
 // BLOCK 316: ⚔️ ชั้น "สำนวนดวล" ของแต่ละโลก — โลกที่ลงทะเบียนใน window._duFlav จะเปลี่ยนท่าศัตรู / คำใบ้ / วิชาลับ (ใช้ได้หลายครั้งตามพลังงาน) / ข้อความ
 //   และเพิ่มปุ่มพิเศษประจำโลก 1 ปุ่มต่อการดวล · ใช้กลไกดวลเดิมทั้งหมด (บุก/ตั้งรับ/หลบ/สวน/วิชาลับ/หนี)
@@ -41581,6 +41581,7 @@ function tkDraw(fin){const T=TK,o=T.o,bar=(v,c)=>`<div class="hpbar" style="heig
  <div class="tag2" style="margin-top:4px">🛡️ ความน่าเชื่อถือของคุณ ${Math.round(T.cr)}/100</div>${bar(T.cr,'#7ad0ff')}
  <p style="margin-top:8px">${T.txt||'ทุกสายตาจับจ้องมาที่คุณ…'}</p>`+(fin||`<div class="item" style="border-left:4px solid #c39bff"><span class="tag2">ยกที่ ${T.r}/5 · ท่าทีของ${E(o.vs)}:</span><br><b>${TS[T.shown][0]} ${TS[T.shown][2]}</b></div>
  <div class="mgrid">${B('reason',0,'ชนะการเล่นอารมณ์ · ปลอดภัย')}${B('emo',0,'ชนะหลักฐาน · แพ้เหตุผล')}${B('proof',T.ev<=0,`ชนะเหตุผล/ถามจี้ · เหลือ ${T.ev} ชิ้น`)}${B('quiet',0,'ชนะการโจมตีตัวบุคคล · แพ้ถามจี้')}${B('lie',0,`ได้ผลเสมอ… ถ้าไม่โดนจับ (เสี่ยง ${risk}%)`)}</div>
+ <button class="opt" style="width:100%;margin-top:4px;opacity:.85" onclick="tkFate()">🎲 ให้ชะตาตัดสิน<small>ข้ามที่เหลือ · โอกาสชนะตามใจคนฟังตอนนี้ (${Math.round(cl(T.au/100*.9+((S.int||0)+(S.cha||0))/4000,.05,.95)*100)}%)</small></button>
  <p class="tag2" style="text-align:center">ใจคนฟังถึง 80 = ชนะทันที · ต่ำกว่า 20 หรือความน่าเชื่อหมด = แพ้ · ครบ 5 ยก ดูใจคนฟัง</p>`),'talk')}
 window.tkAct=function(k){const T=TK;if(!T||$('modal').dataset.k!=='talk')return;if(k==='proof'){if(T.ev<=0)return;T.ev--}const s=T.st;let [a,c]=TT[k][s];let t=TL[k][s];
  const sk=k==='reason'?(S.int||0):k==='emo'?(S.cha||0):0;if(a>0)a*=1+Math.min(.5,sk/1500);
@@ -41590,6 +41591,7 @@ window.tkAct=function(k){const T=TK;if(!T||$('modal').dataset.k!=='talk')return;
  T.txt=`<b>${TS[s][0]} เขา${TS[s][1]}</b> · คุณ${TM[k][1]} — ${t} <span class="tag2">(${a>=0?'+':''}${a} · ${rp})</span>`;try{sfx(a>0?'good':a<0?'hit':'click')}catch(e){}
  T.r++;const win=T.au>=80||(T.r>5&&T.au>50),lose=T.au<=20||T.cr<=0||(T.r>5&&T.au<=50);
  if(win||lose)return tkEnd(win);tkNext();tkDraw()};
+window.tkFate=function(){const T=TK;if(!T||$('modal').dataset.k!=='talk')return;const p=cl(T.au/100*.9+((S.int||0)+(S.cha||0))/4000,.05,.95);const w=rnd()<p;T.txt=`🎲 คุณปล่อยให้ชะตาตัดสิน… ${w?'คำพูดสุดท้ายของคุณโดนใจทุกคน':'ประโยคสุดท้ายของคุณพลาดไปนิดเดียว'}`;tkEnd(w)};
 function tkEnd(win){const T=TK;TK=null;const o=T.o;let tx='';try{tx=(win?o.win:o.lose)(T)||''}catch(e){console.error('talk end',e)}try{sfx(win?'realm':'bad')}catch(e){}
  try{ldAdd(o.vs,win?'tw':'tl')}catch(e){}
  TK={o,au:T.au,cr:T.cr,txt:T.txt,r:T.r,ev:T.ev,lies:T.lies,st:'logic',shown:'logic'};tkDraw(`<p style="font-size:18px;text-align:center"><b>${win?'🏆 ชนะวาทะ!':'💀 แพ้วาทะ'}</b></p><p>${tx}</p><button class="pbtn" style="width:100%" onclick="closeM();window._tkCb&&window._tkCb()">ต่อไป</button>`);TK=null;
@@ -41616,7 +41618,7 @@ const TPK={
   ['🕳️','ต่อรองกับนักบวชลัทธิ','ลัทธิจับเด็กสามคนไว้ในหอระฆัง และนักบวชยอมคุยกับคุณคนเดียว','นักบวชสวมหน้ากากระฆัง','สาวกที่ยืนล้อมรอบ',1,T=>'นักบวชปล่อยเด็กทั้งสาม "เจ้าพูดเหมือนคนที่ข้าเคยรัก"'+Rw.karma(12),T=>'นักบวชหัวเราะ เสียงระฆังดังขึ้นสามครั้ง คุณรู้ว่าไม่มีเวลาแล้ว'+Rw.joy(-12)]],
  sky:[['🏛️','สภาจักรวาล: ขอสิทธิ์ดาวเคราะห์','สามอารยธรรมต้องการดาวเคราะห์ดวงเดียวกัน คุณเป็นตัวแทนมนุษย์คนเดียวในห้องประชุม','ตัวแทนอารยธรรมแมลง','สภาจักรวาล',2,T=>'สภายกดาวเคราะห์ให้มนุษย์ อีกสองอารยธรรมจดชื่อคุณไว้'+Rw.fame(100),T=>'ดาวเคราะห์ตกเป็นของอารยธรรมแมลง ผู้อพยพหลายล้านไม่มีที่ไป'+Rw.joy(-10)],
   ['🧬','ไต่สวนคดียีนเถื่อน','คุณถูกกล่าวหาว่าลักลอบดัดแปลงยีนต้องห้าม ค่ายีนของคุณสูงผิดปกติจริง','อัยการสหพันธ์','ศาลสหพันธ์',1,T=>'คดีถูกยกฟ้อง ค่ายีนของคุณถูกบันทึกว่าเป็นวิวัฒนาการธรรมชาติ'+Rw.fame(40),T=>'คุณถูกคุมประพฤติ และต้องรายงานค่ายีนทุกเดือน'+Rw.joy(-8)]]};
-TPK.soul=TPK.murim;TPK.xian=TPK.murim;TPK.god=TPK.murim;TPK.loop=TPK.murim;
+TPK.soul=TPK.murim;TPK.xian=TPK.murim;TPK.god=TPK.murim;TPK.loop=TPK.murim;window._TPK=TPK;
 window.talkEv=function(force){const w=WK(),L=TPK[w];if(!L)return;const S0=S._tdk||(S._tdk={});const avail=L.filter(x=>!S0[x[1]]);const x=force!=null?L[force%L.length]:pk(avail.length?avail:L);S0[x[1]]=1;S._tdA=S.age;
  choice(`${x[0]} ${x[1]}`,`${x[2]}<br><span class="tag2">🗣️ ดวลวาทะ: อ่านท่าทีของอีกฝ่าย แล้วเลือกวิธีพูดให้ชนะใจคนฟัง</span>`,[
   {t:'🗣️ เผชิญหน้า',s:`ปะทะคารมกับ${x[3]}`,f(){talkDuel({ic:x[0],t:x[1],vs:x[3],jury:x[4]==='—'?'':x[4],ev:x[5]+((S.int||0)>400?1:0),intro:x[2],win:x[6],lose:x[7]},()=>{})}},
@@ -41662,21 +41664,20 @@ function novelHTML(N){const col={fan:'#6a3aa8',fog:'#3a4458',sky:'#14305a',mw:'#
  return `<div style="border-radius:12px;padding:14px;background:linear-gradient(160deg,${col},#120d18);border:2px solid #f0c86088;box-shadow:inset 0 0 30px #0008"><div class="tag2" style="letter-spacing:2px">1 ใน นวนิยาย · ${E(N.g.join(' · '))}</div><div style="font-size:20px;font-weight:800;margin:6px 0;color:#ffe9b0">${E(N.t)}</div><div class="tag2">โดย ชีวิตของ ${E(N.n)} · ${N.a} ปี</div><div style="margin-top:6px">👁️ ${fmt(N.views)} ครั้ง · ${'⭐'.repeat(Math.max(1,Math.min(5,Math.round(N.views/40000)+2)))}</div></div>
  <h4 style="margin:10px 0 4px">📑 สารบัญ</h4>${N.ch.map((c,i)=>`<div class="item" style="padding:6px 8px">บทที่ ${i+1} · <b>${E(c.s)}</b> <span class="tag2">อายุ ${c.a}</span></div>`).join('')}<div class="item" style="padding:6px 8px">บทส่งท้าย · <b>${E(strip(N.c).slice(0,40)||'วันสุดท้าย')}</b></div>
  <h4 style="margin:10px 0 4px">💬 ความเห็นนักอ่าน (ในเกม)</h4>${N.rv.map(r=>`<div class="tag2" style="margin:3px 0">${E(r)}</div>`).join('')}`}
-window.novelShelf=function(){const L=LS.get('murim_novels',[])||[];modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📚 ชั้นหนังสือ</h3><p class="tag2">ทุกชีวิตที่จบลงกลายเป็นนิยายหนึ่งเล่ม เรียงตามยอดวิว</p>${L.length?L.slice().sort((a,b)=>b.views-a.views).map((N,i)=>`<button class="opt" onclick="novelOpen(${L.indexOf(N)})">${i<3?['🥇','🥈','🥉'][i]:'📕'} ${E(N.t)}<small>${E(N.g.join(' · '))} · 👁️ ${fmt(N.views)}</small></button>`).join(''):'<p>ยังไม่มีนิยาย จบชีวิตแรกแล้วจะมีเล่มแรก</p>'}`,'shelf')};
+window.novelShelf=function(){const L=LS.get('murim_novels',[])||[];modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>📚 ชั้นหนังสือชีวิต</h3><p class="tag2">ทุกชีวิตที่จบลงกลายเป็นนิยายหนึ่งเล่ม เรียงตามยอดวิว</p>${L.length?L.slice().sort((a,b)=>b.views-a.views).map((N,i)=>`<button class="opt" onclick="novelOpen(${L.indexOf(N)})">${i<3?['🥇','🥈','🥉'][i]:'📕'} ${E(N.t)}<small>${E(N.g.join(' · '))} · 👁️ ${fmt(N.views)}</small></button>`).join(''):'<p>ยังไม่มีนิยาย จบชีวิตแรกแล้วจะมีเล่มแรก</p>'}`,'shelf')};
 window.novelOpen=i=>{const N=(LS.get('murim_novels',[])||[])[i];if(N)modal(`<button class="xbtn" onclick="novelShelf()">✕</button>${novelHTML(N)}`,'novel')};
 let lastNovel=null;
 {const _eg=endGame;endGame=function(){let N=null,W=[];try{if(S){N=novel();W=whatIf();const L=LS.get('murim_novels',[])||[];L.push(N);LS.set('murim_novels',L.slice(-30));lastNovel=N}}catch(e){console.error('novel',e)}const r=_eg.apply(this,arguments);
  setTimeout(()=>{try{const end=$('end');if(!end||!N||end.querySelector('.tale'))return;const box=document.createElement('div');box.className='box tale';box.style.marginTop='10px';
-  box.innerHTML=`<h4>📖 ชีวิตนี้กลายเป็นนิยาย</h4><div style="font-weight:800;font-size:17px;color:#ffe9b0">${E(N.t)}</div><div class="tag2">${E(N.g.join(' · '))} · ${N.ch.length+1} บท · 👁️ ${fmt(N.views)}</div><div style="display:flex;gap:6px;margin-top:6px"><button class="opt" style="flex:1" onclick="novelOpen(${(LS.get('murim_novels',[])||[]).length-1})">📖 เปิดอ่าน</button><button class="opt" style="flex:1" onclick="novelShelf()">📚 ชั้นหนังสือ</button></div>`+
+  box.innerHTML=`<h4>📖 ชีวิตนี้กลายเป็นนิยาย</h4><div style="font-weight:800;font-size:17px;color:#ffe9b0">${E(N.t)}</div><div class="tag2">${E(N.g.join(' · '))} · ${N.ch.length+1} บท · 👁️ ${fmt(N.views)}</div><div style="display:flex;gap:6px;margin-top:6px"><button class="opt" style="flex:1" onclick="novelOpen(${(LS.get('murim_novels',[])||[]).length-1})">📖 เปิดอ่าน</button><button class="opt" style="flex:1" onclick="novelShelf()">📚 ชั้นหนังสือชีวิต</button></div>`+
   (W.length?`<h4 style="margin-top:12px">⏳ ถ้าตอนนั้น…</h4>${W.map(x=>`<div class="item"><div class="tag2">อายุ ${x.a} · ${E(x.t)}</div>คุณเลือก「${E(x.ch)}」— ถ้าเลือก「<b>${E(x.alt)}</b>」แทน…<br><i>${E(x.l1)} ${E(x.l2)}</i></div>`).join('')}<p class="tag2">ชีวิตหน้าจะเลือกต่างไปไหม?</p>`:'');
   end.appendChild(box)}catch(e){console.error('tale ui',e)}},900);return r}}
-// ---------- ตัวจับปีใหม่ (ทุกโลก): ดวลวาทะ / คนที่จำคุณได้ ----------
-let la=-1,pend=null,pT=0;
-setInterval(()=>{try{if(!S||!S.alive){la=-1;return}if(S.age!==la){const first=la<0;la=S.age;if(first)return;const w=WK();if(w==='beast'||S.age<(w==='mw'?20:15))return;
-  if((S._ld||[]).some(x=>!x.bk&&S.age-x.a>=5)&&rnd()<.08&&S.age-(S._ldA||-9)>=3)pend='ld';else if(TPK[w]&&rnd()<.09&&S.age-(S._tdA||-9)>=3)pend='talk';pT=Date.now()}
- if(pend&&!busy()){const k=pend;pend=null;if(k==='ld')ldEv();else talkEv()}else if(pend&&Date.now()-pT>25000)pend=null}catch(e){}},1500);
+// ---------- ลงทะเบียนกับตัวจัดคิวปีใหม่กลาง (BLOCK 320) ----------
+(window._yrH=window._yrH||[]).push(
+ {k:'ld',pr:3,p:.08,can:()=>{const w=WK();return w!=='beast'&&S.age>=15&&S.age-(S._ldA||-9)>=3&&(S._ld||[]).some(x=>!x.bk&&S.age-x.a>=5)},run:()=>ldEv(),auto:()=>{const L=(S._ld||[]).filter(x=>!x.bk&&S.age-x.a>=5);if(!L.length)return;const x=pk(L);x.bk=1;S._ldA=S.age;try{log(`🕸️ ${x.n}จากเมื่อ ${S.age-x.a} ปีก่อนแวะมาหา ${pk(['ทั้งสองคุยกันสั้นๆ แล้วแยกย้าย','เขาจ้องคุณนานก่อนจะเดินจากไป','เขาฝากของมาให้แล้วหายไป'])}`,'')}catch(e){}}},
+ {k:'talk',pr:2,p:.09,can:()=>{const w=WK();return !!TPK[w]&&S.age>=(w==='mw'?20:15)&&S.age-(S._tdA||-9)>=3},run:()=>talkEv(),auto:()=>{const w=WK(),L=TPK[w];if(!L)return;const x=pk(L);S._tdA=S.age;const win=rnd()<cl(.45+((S.int||0)+(S.cha||0))/3000,.2,.85);let t='';try{t=(win?x[6]:x[7])({lies:0})}catch(e){}try{log(`${x[0]} <b>${x[1]}</b> — ${win?'ชนะวาทะ':'แพ้วาทะ'}: ${t}`,win?'good':'bad')}catch(e){}}});
 // เมนู: ชั้นหนังสือ + สมุดคนรู้จัก
-{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('[data-tale]')){const d=document.createElement('div');d.setAttribute('data-tale',1);d.style.cssText='display:flex;gap:6px;margin-top:6px';d.innerHTML=`<button class="opt" style="flex:1" onclick="novelShelf()">📚 ชั้นหนังสือ<small>นิยายจากทุกชีวิต</small></button><button class="opt" style="flex:1" onclick="fanLedger()">🕸️ สมุดคนรู้จัก<small>คนที่อาจกลับมา</small></button>`;const h=m.querySelector('h3');if(h&&h.nextSibling)h.parentNode.insertBefore(d,h.nextSibling.nextSibling||null);else m.appendChild(d)}}catch(e){}return r}}
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const m=$('modal');if(m&&!m.querySelector('[data-tale]')){const d=document.createElement('div');d.setAttribute('data-tale',1);d.style.cssText='display:flex;gap:6px;margin-top:6px';d.innerHTML=`<button class="opt" style="flex:1" onclick="novelShelf()">📚 ชั้นหนังสือชีวิต<small>นิยายจากชีวิตที่จบแล้ว</small></button><button class="opt" style="flex:1" onclick="fanLedger()">🕸️ สมุดคนรู้จัก<small>คนที่อาจกลับมา</small></button>`;const h=m.querySelector('h3');if(h&&h.nextSibling)h.parentNode.insertBefore(d,h.nextSibling.nextSibling||null);else m.appendChild(d)}}catch(e){}return r}}
 })()}catch(e){console.error('block317',e)}
 // ============================================================
 // BLOCK 318: 🎵 เพลงประจำโลก (สร้างด้วยโค้ดทั้งหมด ไม่มีไฟล์เสียง) — ใช้แทนเพลงยุทธภพเมื่อเลือกเพลง "อัตโนมัติ/gen"
@@ -41803,17 +41804,69 @@ const TUT={duel:['⚔️ ดวลแบบใหม่','ดูท่าที�
  talk:['🗣️ ดวลวาทะ','อ่านท่าทีอีกฝ่าย: เหตุผลชนะการเล่นอารมณ์ · หลักฐานชนะเหตุผลและการถามจี้ · เงียบกดดันชนะการด่า — ดันใจคนฟังให้ถึง 80 · โกหกได้ผลเสมอแต่ยิ่งโกหกยิ่งเสี่ยง'],
  tw:['🗼 หอคอย','เลือกประตูทีละชั้น ทุก 10 ชั้นมีบอส และธาตุของบอสบอกไว้ล่วงหน้า · ออกเมื่อไหร่ก็ได้ ถ้าหมดแรงของจะหายครึ่งหนึ่ง'],
  lab:['🧪 ห้องวิจัยเวท','เลือกธาตุ × รูปทรง × ผล แล้วทดลองปีละครั้ง · บางสูตรเป็นเวทในตำนาน · เวทที่ติดตัวคือท่าไม้ตายและธาตุของคุณตอนดวล'],
- cp:['💞 คู่หู','ใช้เวลากับคู่หูปีละครั้งที่เมนู · ยิ่งผูกพันยิ่งเติบโต และตอนดวลจะมีปุ่มช่วยของมัน']};
-function tut(k){try{const D=LS.get('murim_tuto',{})||{};if(D[k]||!TUT[k])return;D[k]=1;LS.set('murim_tuto',D);const d=document.createElement('div');d.style.cssText='position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:99999;max-width:360px;width:calc(100% - 24px);background:#1e1830f2;border:2px solid #c39bff;border-radius:14px;padding:12px 14px;color:#fff;box-shadow:0 8px 30px #0009;font-size:14px;line-height:1.5';
- d.innerHTML=`<b>💡 ${TUT[k][0]}</b><div style="margin-top:4px;opacity:.92">${TUT[k][1]}</div><button class="opt" style="margin-top:8px;width:100%">เข้าใจแล้ว</button>`;d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d);setTimeout(()=>{try{d.remove()}catch(e){}},22000)}catch(e){}}
+ cp:['💞 คู่หู','ใช้เวลากับคู่หูปีละครั้งที่เมนู · ยิ่งผูกพันยิ่งเติบโต และตอนดวลจะมีปุ่มช่วยของมัน'],
+ spr:['🧚 ภูต','คุย ให้ขนม หรือฝึกกับภูตปีละครั้ง · สัญญาบังคับแรงกว่าแต่ถ้าผูกพันต่ำอาจโดนทรยศ · ภูตเลเวลสูงสุดเป็นราชาภูต'],gr:['🪪 บัตรนักผจญภัย','ทุกปีมีกระดานเควสให้เลือก 1 ใน 3 · เควสสูงกว่าแรงก์ได้แต้ม ×2 · แต้มครบจะได้สอบเลื่อนแรงก์'],
+ mon:['🐾 เกิดเป็นสัตว์','เลือกที่ลืมตา แล้วสุ่มร่าง นิสัย และสกิลติดตัว · ล่าและกินเพื่อเรียนสกิล · เลเวล 10 และ 25 วิวัฒนาการ'],nv:['📚 ชั้นหนังสือชีวิต','ทุกชีวิตที่จบกลายเป็นนิยายหนึ่งเล่ม เรียงตามยอดวิว · หน้าจบมีการ์ดปกให้บันทึก/แชร์'],ld:['🕸️ สมุดคนรู้จัก','คนที่เคยดวลหรือดวลวาทะกับคุณ อาจกลับมาหาอีก 5 ปีขึ้นไป และบางคนตามไปถึงชาติหน้า']};
+const TQ=[];let tOn=0;function tut(k){try{const D=LS.get('murim_tuto',{})||{};if(D[k]||!TUT[k]||TQ.includes(k))return;TQ.push(k);tPump()}catch(e){}}
+function tPump(){if(tOn||!TQ.length)return;const k=TQ[0];if(window._ovBusy&&window._ovBusy(true)){setTimeout(tPump,1500);return}TQ.shift();tShow(k)}
+function tShow(k){try{const D=LS.get('murim_tuto',{})||{};if(D[k])return tPump();D[k]=1;LS.set('murim_tuto',D);tOn=1;const d=document.createElement('div');d.style.cssText='position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:99999;max-width:360px;width:calc(100% - 24px);background:#1e1830f2;border:2px solid #c39bff;border-radius:14px;padding:12px 14px;color:#fff;box-shadow:0 8px 30px #0009;font-size:14px;line-height:1.5';
+ d.className='tutPop';d.innerHTML=`<b>💡 ${TUT[k][0]}</b><div style="margin-top:4px;opacity:.92">${TUT[k][1]}</div><div style="display:flex;gap:6px;margin-top:8px"><button class="opt" style="flex:2">เข้าใจแล้ว</button><button class="opt" style="flex:1" data-g>📘 คู่มือ</button></div>`;const done=()=>{try{d.remove()}catch(e){}tOn=0;setTimeout(tPump,2500)};d.querySelector('button').onclick=done;d.querySelector('[data-g]').onclick=()=>{done();try{openGuide()}catch(e){}};document.body.appendChild(d);setTimeout(()=>{if(d.isConnected)done()},25000)}catch(e){tOn=0}}
 window._tut=tut;
 {const _dd=drawDuel;drawDuel=function(fin){const r=_dd.apply(this,arguments);try{if(!fin&&typeof DU!=='undefined'&&DU&&DU.fl){tut('duel');if(String(DU.fl.tag||'').includes(' vs '))setTimeout(()=>tut('el'),400)}}catch(e){}return r}}
-['fanTower','fanLab'].forEach(k=>{const iv=setInterval(()=>{if(typeof window[k]==='function'&&!window[k]._t){const f0=window[k];window[k]=function(){tut(k==='fanTower'?'tw':'lab');return f0.apply(this,arguments)};window[k]._t=1}},3000)});
-// ---------- ตัวจับปีใหม่: ศัตรูข้ามชาติ / คู่หู ----------
-let la=-1,pend=null,pT=0;const busy=()=>!S||!S.alive||auto||choice._cur||modalOpen||document.hidden||(S.mw&&S.mw.fan&&S.mw.fan.kidP);
-setInterval(()=>{try{if(!S||!S.alive){la=-1;return}if(S.age!==la){const first=la<0;la=S.age;if(first)return;const w=WK();if(w==='beast')return;
-  try{cpYear()}catch(e){}
-  if(!S._fx&&S.age>=18&&(LS.get('murim_ldx',[])||[]).length&&rnd()<.05)pend='foe';else if(CPT[w]&&!S._cp&&S.age>=8&&rnd()<.06)pend='cp';pT=Date.now()}
- if(pend&&!busy()){const k=pend;pend=null;if(k==='foe')foeEv();else cpMeet()}else if(pend&&Date.now()-pT>25000)pend=null}catch(e){}},1700);
+['fanTower','fanLab','fanSpirit','fanGuildCard','fanMonBirth','novelShelf','fanLedger'].forEach(k=>{const iv=setInterval(()=>{if(typeof window[k]==='function'){if(!window[k]._t){const f0=window[k];window[k]=function(){tut({fanTower:'tw',fanLab:'lab',fanSpirit:'spr',fanGuildCard:'gr',fanMonBirth:'mon',novelShelf:'nv',fanLedger:'ld'}[k]);return f0.apply(this,arguments)};window[k]._t=1}clearInterval(iv)}},4000)});
+// ---------- ลงทะเบียนกับตัวจัดคิวปีใหม่กลาง (BLOCK 320) ----------
+(window._yrH=window._yrH||[]).push(
+ {k:'cpy',pr:9,p:1,every:1,can:()=>!!cpOf(),run:()=>cpYear(),auto:()=>{const P=cpOf();if(P&&S.age-P.a0>=CPT[P.w].life){P.alive=0;P.dead=1;S._cp=null;try{log(`${CPT[P.w].ic} ${P.n}จากไปอย่างสงบในวัย ${S.age-P.a0} ปี`,'bad')}catch(e){}}}},
+ {k:'foe',pr:5,p:.05,can:()=>!S._fx&&S.age>=18&&WK()!=='beast'&&(LS.get('murim_ldx',[])||[]).length>0,run:()=>foeEv()},
+ {k:'cp',pr:1,p:.06,can:()=>{const w=WK();return !!CPT[w]&&!S._cp&&S.age>=8},run:()=>cpMeet()});
 {const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const P=cpOf(),m=$('modal'),d=m&&m.querySelector('[data-tale]');if(P&&d&&!d.querySelector('[data-cp]')){const b=document.createElement('button');b.className='opt';b.style.flex='1';b.setAttribute('data-cp',1);b.innerHTML=`${CPT[P.w].ic} ${E(P.n)}<small>${CPT[P.w].st[P.lv]}</small>`;b.onclick=()=>cpOpen();d.appendChild(b)}}catch(e){}return r}}
 })()}catch(e){console.error('block319',e)}
+
+// ============================================================
+// BLOCK 320: 🧭 เสถียรภาพ + เข้าใจง่าย
+//   1) ตัวจัดคิวปีใหม่กลาง: ระบบเสริม (คนที่จำคุณได้ / ดวลวาทะ / ศัตรูข้ามชาติ / คู่หู) ลงทะเบียนใน window._yrH แล้วตัวนี้ตัวเดียวเลือก ≤1 เหตุการณ์ต่อปี
+//      (ปีที่แล้วมีแล้ว ปีนี้โอกาสครึ่งเดียว) · รอจนไม่มีหน้าต่าง/ฉากเปิดตัว/ฉากตาย/ป๊อปอัปสอนเล่นค้างอยู่ก่อนค่อยขึ้น · โหมดอัตโนมัติสรุปผลเป็นบันทึกแทน
+//   2) window._ovBusy(): เช็กว่ามีหน้าต่างหรือฉากเต็มจอค้างอยู่ไหม (ใช้กับป๊อปอัปสอนเล่นด้วย)
+//   3) 📘 คู่มือ: เพิ่มหัวข้อระบบใหม่ทั้งหมด · 📚 สารานุกรม: หมวดใหม่ 7 หมวด (เวทในตำนาน ภูต สัตว์อสูรแฟนตาซี แรงก์ ผู้เฝ้าหอคอย ดวลวาทะ คู่หู)
+// ============================================================
+try{(()=>{const rnd=Math.random;
+const OVS=['#nsFx','.pxs','#dsOv','#rvCine','#coach','.tutPop','#fnB'];
+window._ovBusy=function(soft){try{if(!S)return true;if(!soft&&(!S.alive||choice._cur))return true;if(modalOpen&&!soft)return true;if(soft&&modalOpen&&$('modal')&&['duel','talk','choice'].includes($('modal').dataset.k)&&!S._tutDuelOk)return false;for(const q of OVS){const e=document.querySelector(q);if(e&&e.offsetParent!==null&&!(soft&&q==='.tutPop'))return true}return document.hidden}catch(e){return false}};
+let la=-1,pend=null,pT=0,lastEv=-9;
+setInterval(()=>{try{if(!S||!S.alive){la=-1;pend=null;return}
+ if(S.age!==la){const first=la<0;la=S.age;if(first)return;const H=(window._yrH||[]).filter(h=>{try{return h.can()}catch(e){return false}});
+  H.filter(h=>h.every).forEach(h=>{if(auto&&h.auto)try{h.auto()}catch(e){}else pend=pend||h});
+  if(!pend){const f=S.age-lastEv<=1?.5:1;const C=H.filter(h=>!h.every&&rnd()<h.p*f).sort((a,b)=>b.pr-a.pr);if(C.length){const h=C[0];if(auto){if(h.auto){try{h.auto()}catch(e){}lastEv=S.age}}else{pend=h;lastEv=S.age}}}
+  pT=Date.now()}
+ if(pend&&!window._ovBusy()){const h=pend;pend=null;try{h.run()}catch(e){console.error('yr '+h.k,e)}}else if(pend&&Date.now()-pT>40000)pend=null}catch(e){}},1500);
+// ---------- 📘 คู่มือ ----------
+try{const G=[
+ ['⚔️','ดวลแบบใหม่ (ทุกโลก)','อ่าน<b>ท่าทีศัตรู</b>ในกรอบสีม่วง (ถูกราว 75%) แล้วเลือก บุก / ตั้งรับ / หลบ / สวน · <b>ท่าไม้ตาย</b>ใช้ได้หลายครั้งตามหลอดพลังงานของโลกนั้น (มานา ลมปราณ ไอหมอก พลังยีน…) · ปุ่มเรืองแสงคือ<b>ท่าพิเศษ</b>ประจำชะตา/สำนัก/เส้นทาง ใช้ได้ 1 ครั้งต่อการดวล · มีคู่หูหรือภูตจะได้ปุ่มที่สอง'],
+ ['🔥','ธาตุแพ้ทาง (แฟนตาซี)','ไฟ ชนะ ลม · ลม ชนะ ดิน · ดิน ชนะ น้ำ · น้ำ ชนะ ไฟ · แสง กับ เงา แพ้ทางกัน · ชนะทาง = ทุกท่าแรงขึ้น แพ้ทาง = โดนหนักขึ้น · เปลี่ยนธาตุได้ด้วย<b>เวทที่ติดตัว</b>ในห้องวิจัยเวท'],
+ ['🗣️','ดวลวาทะ (ทุกโลก)','5 ยก ดันหลอด<b>ใจคนฟัง</b>ให้ถึง 80 · เหตุผล ชนะ เล่นอารมณ์ · หลักฐาน ชนะ เหตุผล/ถามจี้ · เงียบกดดัน ชนะ โจมตีตัวบุคคล · <b>โกหก</b>ได้ผลเสมอแต่ยิ่งโกหกยิ่งเสี่ยงโดนจับ · ชื่อเสียงสูงได้หลักฐานเพิ่ม · กด 🎲 ให้ชะตาตัดสินได้'],
+ ['🕸️','คนที่จำคุณได้ · ศัตรูข้ามชาติ','ทุกคนที่มีชื่อที่เคยดวลหรือดวลวาทะด้วยถูกจดใน<b>สมุดคนรู้จัก</b> · 5 ปีขึ้นไปอาจกลับมาล้างแค้น ขอบคุณ ขอรับเป็นศิษย์ หรือส่งลูกมา · ใครยังไม่จบเรื่องตอนคุณตาย อาจตามไปเจอใน<b>ชาติหน้า</b> แม้คนละโลก'],
+ ['📖','นิยายชีวิต · ถ้าตอนนั้น…','จบชีวิตแล้วได้นิยาย 1 เล่ม (แนว สารบัญจากเหตุการณ์จริง ยอดวิว) + <b>การ์ดปก 1080×1350</b> ไว้บันทึก/แชร์ · ทายาทรุ่นถัดไปเป็น "เล่ม 2, 3…" · หน้าจบโชว์ 3 ทางแยกของชีวิตว่าถ้าเลือกอีกทางจะเป็นยังไง · ดูทุกเล่มที่ 📚 ชั้นหนังสือชีวิต'],
+ ['💞','คู่หูประจำโลก','🐈 แมวจร (ยุคปัจจุบัน) · 🌑 เงาพูดได้ (นครม่านหมอก) · 🤖 โดรน AI (ทะลุฟ้าดารา) · พบเองระหว่างชีวิต · ใช้เวลาด้วยกันปีละครั้งที่เมนู · ผูกพันมากขึ้นจะเติบโตเป็นขั้นต่อไป · ตอนดวลมีปุ่มช่วย'],
+ ['🐾','แฟนตาซี: เกิดเป็นสัตว์','เลือก "🐾 เกิดเป็นสัตว์" ในเมนูต่างโลก → เลือกที่ลืมตา → สุ่มร่าง นิสัย ลักษณะพิเศษ ความทรงจำชาติก่อน สกิลติดตัว (เกิดใหม่ได้ 5 ครั้ง) · ล่าและกินเพื่อเรียนสกิล · วิวัฒนาการที่เลเวล 10 และ 25 · ระวังนักผจญภัยที่มาล่าค่าหัวคุณ'],
+ ['🪪','แฟนตาซี: บัตรนักผจญภัย F→SSS','อายุ 15 ขึ้นไปสมัครที่กิลด์ · ทุกปีมีกระดานเควส 3 ใบ (ดวล มินิเกม หรือเลือกทาง) · เควสสูงกว่าแรงก์ได้แต้ม ×2 · แต้มครบ = สอบเลื่อนแรงก์ (ดวล/ข้อสอบ/เอาตัวรอด) · S ราชาเรียกตัว · SSS มีตอนจบพิเศษ'],
+ ['🧪','แฟนตาซี: ห้องวิจัยเวท','ธาตุ × รูปทรง 8 × ผล 8 ทดลองปีละครั้ง (มินิเกมรูน) · มีสูตรตำนาน 12 สูตร · พลาดได้ผลแปลกๆ · <b>เวทที่ติดตัว</b> = ท่าไม้ตายและธาตุตอนดวล'],
+ ['🗼','แฟนตาซี: หอคอยไร้ที่สิ้นสุด','ปีละครั้ง · เลือกประตูทีละชั้น (บางบานมืด) · 9 แบบห้อง · ทุก 10 ชั้นมีผู้เฝ้า ธาตุบอกล่วงหน้า · ออกเมื่อไหร่ก็ได้ · หมดแรง = ของหายครึ่ง · <b>หอคอยประจำสัปดาห์</b>ทุกคนเจอชุดเดียวกัน · ชั้น 50 มีตอนจบลับ'],
+ ['🧚','แฟนตาซี: สัญญาภูต','ภูต 6 ธาตุ 18 ตัว นิสัยต่างกัน · สัญญาเท่าเทียม (มั่นคง) หรือสัญญาบังคับ (แรงแต่อาจทรยศ) · คุย/ให้ขนม/ฝึกปีละครั้ง · ถึงราชาภูตต้องเลือกให้อยู่หรือปล่อยไป · ได้ธาตุภูตไปใช้ในห้องวิจัย'],
+ ['🎵','เพลงประจำโลก','แฟนตาซี (พิณ+ขลุ่ย) · นครม่านหมอก (วอลทซ์ไอน้ำ) · ทะลุฟ้าดารา (ซินธ์) · ยุคปัจจุบัน (โลไฟ) · ตอนดวลจังหวะเร็วขึ้น · ใช้เมื่อเลือกเพลงแบบอัตโนมัติ']];
+ G.forEach(([ic,t,d])=>{if(!SYS_GUIDE.some(g=>g.t===t))SYS_GUIDE.push({s:'base',nw:1,ic,t,d})})}catch(e){console.error('guide320',e)}
+// ---------- 📚 สารานุกรม ----------
+const CD={"spl": [["light:wing:mirror", "ปีกแสงสะท้อนกาลเวลา"], ["shadow:snake:drain", "อสรพิษกลืนวิญญาณ"], ["water:ring:bind", "วงแหวนหนาวนิรันดร์"], ["fire:rain:spread", "ฝนเพลิงล้างเมือง"], ["earth:wall:mirror", "ป้อมปราการที่ตีกลับ"], ["wind:blade:split", "พายุพันใบมีด"], ["none:ball:delay", "ลูกแก้วที่ระเบิดพรุ่งนี้"], ["fire:lance:pierce", "หอกเพลิงเจาะดวงอาทิตย์"], ["shadow:wing:split", "ฝูงค้างคาวเงา"], ["water:snake:boom", "นาคาวารีระเบิด"], ["light:lance:pierce", "หอกพิพากษา"], ["earth:rain:boom", "ฝนอุกกาบาต"]], "spr": [["ไฟลี", "🦎 ไฟลี"], ["อิกนิส", "🔥 อิกนิส"], ["ซอล", "🐦‍🔥 ซอล"], ["มารีน", "🐟 มารีน"], ["ดรอป", "💧 ดรอป"], ["ไทด์", "🐚 ไทด์"], ["ซิลฟา", "🕊️ ซิลฟา"], ["ฟลิค", "🍃 ฟลิค"], ["เกล", "🌪️ เกล"], ["กอร์ม", "🐢 กอร์ม"], ["ปีบเบิล", "🪨 ปีบเบิล"], ["มอส", "🦔 มอส"], ["ลูเมน", "🌟 ลูเมน"], ["ฮาโล", "🕯️ ฮาโล"], ["ออโรร่า", "🦋 ออโรร่า"], ["นอคท์", "🦇 นอคท์"], ["ชาโด", "🐈‍⬛ ชาโด"], ["เวสเปอร์", "🕷️ เวสเปอร์"]], "msp": [["0", "🟢 สไลม์"], ["1", "🕷️ แมงมุมตัวจิ๋ว"], ["2", "💀 โครงกระดูกไร้นาม"], ["3", "🐺 ลูกหมาป่า"], ["4", "🐍 งูน้อย"], ["5", "🦇 ค้างคาว"], ["6", "🐛 หนอนผีเสื้อ"], ["7", "🦎 กิ้งก่า"], ["8", "🐸 กบ"], ["9", "🐀 หนู"], ["10", "🥚 ไข่มังกร"], ["11", "🍄 เห็ดเดินได้"], ["12", "🪨 ก้อนหินมีชีวิต"], ["13", "👻 วิญญาณเร่ร่อน"], ["14", "🐙 ปลาหมึกน้อย"], ["15", "🦂 แมงป่อง"], ["16", "🐝 ผึ้งงาน"], ["17", "🐌 หอยทาก"], ["18", "🦊 ลูกจิ้งจอก"], ["19", "🐦 ลูกนกกระจอก"], ["20", "🌱 ต้นกล้า"], ["21", "🐟 ปลาตัวเล็ก"], ["22", "🐗 ลูกหมูป่า"], ["23", "🦉 ลูกนกฮูก"], ["24", "🐻 ลูกหมี"], ["25", "🦀 ปูเสฉวน"], ["26", "🧟 ซอมบี้สด"], ["27", "😈 อิมพ์"], ["28", "🧚 ภูตแสง"], ["29", "🐈 แมวดำ"], ["30", "🦋 ผีเสื้อกลางคืน"], ["31", "🦈 ฉลามน้อย"], ["32", "🐢 ลูกเต่า"], ["33", "🪱 ไส้เดือน"], ["34", "🦗 ตั๊กแตน"], ["35", "🐊 ลูกจระเข้"], ["36", "🦌 ลูกกวาง"], ["37", "🐉 งูดิน"], ["38", "🦑 หมึกเงา"], ["39", "🦦 นาก"], ["40", "🐿️ กระรอก"], ["41", "🦔 เม่น"], ["42", "🦩 นกฟลามิงโก"], ["43", "🐞 เต่าทอง"], ["44", "🧊 ก้อนน้ำแข็งมีชีวิต"], ["45", "🔥 ลูกไฟวิญญาณ"], ["46", "📦 หีบสมบัติ (มิมิค)"], ["47", "🗡️ ดาบต้องสาป"], ["48", "☁️ ก้อนเมฆ"], ["49", "🐣 ลูกเจี๊ยบ (?)"]], "tb": [["ราชาก็อบลินสวมมงกุฎสนิม", "ราชาก็อบลินสวมมงกุฎสนิม"], ["แม่มดสามหน้า", "แม่มดสามหน้า"], ["ไคเมร่าสามหัว", "ไคเมร่าสามหัว"], ["อัศวินมังกรน้ำแข็ง", "อัศวินมังกรน้ำแข็ง"], ["ราชินีฮาร์ปี้", "ราชินีฮาร์ปี้"], ["ผู้พิพากษาแห่งแสง", "ผู้พิพากษาแห่งแสง"], ["เงาของตัวคุณเอง", "เงาของตัวคุณเอง"], ["มังกรเฝ้าหอคอย", "มังกรเฝ้าหอคอย"]]};
+try{const _cc=window.cxCats||cxCats;const f=function(){const L=_cc.apply(this,arguments);try{const add=(o)=>{if(!L.some(c=>c&&c.cat===o.cat))L.push(o)};
+ add({g:'other',ic:'🌟',t:'เวทในตำนาน · แฟนตาซี',te:'Legendary spells',cat:'fanspell',L:CD.spl.map(x=>[x[0],x[1],1])});
+ add({g:'other',ic:'🧚',t:'ภูตธาตุ · แฟนตาซี',te:'Spirits',cat:'fanspr',L:CD.spr.map(x=>[x[0],x[1]])});
+ add({g:'beast',ic:'🐾',t:'ร่างสัตว์อสูร · แฟนตาซี',te:'Fantasy monster forms',cat:'fanmon',L:CD.msp.map(x=>[x[0],x[1]])});
+ add({g:'pow',ic:'🪪',t:'แรงก์นักผจญภัย',te:'Adventurer ranks',cat:'fanrank',L:['F','E','D','C','B','A','S','SS','SSS'].map((r,i)=>[''+i,'แรงก์ '+r,i>=7])});
+ add({g:'other',ic:'🗼',t:'ผู้เฝ้าหอคอย',te:'Tower guardians',cat:'fantwb',L:CD.tb.map(x=>[x[0],x[1]])});
+ const T=window._TPK||{};const tl=[];Object.keys(T).forEach(w=>{(T[w]||[]).forEach(x=>{if(!tl.some(z=>z[0]===x[1]))tl.push([x[1],x[0]+' '+x[1]])})});add({g:'other',ic:'🗣️',t:'ดวลวาทะที่ชนะ',te:'Debates won',cat:'talkw',L:tl});
+ add({g:'other',ic:'💞',t:'คู่หูประจำโลก',te:'Companions',cat:'cmp',L:[['mw','🐈 แมวจร'],['fog','🌑 เงาพูดได้'],['sky','🤖 โดรน AI']]})}catch(e){console.error('cx320',e)}return L};window.cxCats=f;cxCats=f}catch(e){console.error('cx320 wrap',e)}
+// บันทึกลงสารานุกรมเมื่อเจอ
+{const _td=window.talkDuel;window.talkDuel=function(o,cb){const w0=o.win;o.win=function(){try{cdxAdd('talkw',o.t)}catch(e){}return w0?w0.apply(this,arguments):''};return _td(o,cb)}}
+setInterval(()=>{try{if(!S||!S.alive)return;if(S._cp&&S._cp.alive&&S._cp.w)cdxAdd('cmp',S._cp.w);const K=S.mw&&S.mw.fan;if(!K)return;const X=K.x9||{};
+ if(X.sp)X.sp.L.forEach(s=>{if(s.leg)cdxAdd('fanspell',s.k)});if(X.spr&&X.spr.n)cdxAdd('fanspr',X.spr.n);if(X.gr)for(let i=0;i<=X.gr.r;i++)cdxAdd('fanrank',''+i);
+ if(K.w==='mon'&&window._fanMsp!=null)cdxAdd('fanmon',''+window._fanMsp);if(X.twb)X.twb.forEach(n=>cdxAdd('fantwb',n))}catch(e){}},6000);
+})()}catch(e){console.error('block320',e)}
