@@ -41510,7 +41510,7 @@ window.fanBornMenu=function(w){window._fanLk=null;window._fanCs=null;const k=w==
  <button class="opt" onclick="closeM();window.fanStart('${k}')">🎲 สุ่ม ให้ฟ้าลิขิต<small>สุ่มชะตา พรสวรรค์ เผ่าพันธุ์ หน้าตา${k==='iso'?' โลกย่อย และอายุตอนถูกอัญเชิญ':''} · ดูผลแล้วกดเกิดใหม่ได้ 5 ครั้ง (ผู้สนับสนุนได้มากกว่า) · ล็อกชะตาได้</small></button>
  <button class="opt" onclick="closeM();window._fanFL(()=>window.fanDesign('${k}'))">🎨 ออกแบบหน้าตา ที่เหลือให้ฟ้าลิขิต<small>เลือกเพศ สีผม สีผิว และชื่อเอง แล้วไปหน้าสุ่มกำเนิด สุ่มใหม่/ล็อกชะตาได้</small></button>
  <button class="opt" onclick="closeM();window._fanFL(()=>window.fanCustom('${k}'))">✍️ สร้างเอง<small>เลือก${k==='iso'?'โลกย่อย อายุ จุดเกิด':'ชะตาพิเศษ'} และกฎแปลกของโลกเอง · สุ่มใหม่ได้ 5 ครั้ง<br><span style="color:#ff8a7a">⚠️ ชีวิตที่สร้างเองจะไม่ปลดความสำเร็จ และไม่นับชะตาประจำวัน</span></small></button>
- ${k==='iso'?'':'<!--'}<button class="opt" disabled style="opacity:.55;cursor:default">🐾 เกิดเป็นสัตว์ / มอนสเตอร์<small>เกิดเป็นสไลม์ หมาป่า มังกร และสัตว์อสูรอีกมากมาย · <b style="color:#ffd54a">เร็วๆ นี้</b></small></button>${k==='iso'?'':'-->'}`,'fanbm')};
+ ${k==='iso'?`<button class="opt" onclick="closeM();window._fanFL(()=>window.fanMonBirth())">🐾 เกิดเป็นสัตว์ / มอนสเตอร์<small>สไลม์ หมาป่า โครงกระดูก และสัตว์อสูรอีก 50 สายพันธุ์ · เลือกที่ลืมตา · กินเพื่อเรียนสกิล · วิวัฒนาการ <b style="color:#7aff9a">ใหม่!</b></small></button>`:''}`,'fanbm')};
 })()}catch(e){console.error('block315',e)}
 // BLOCK 315b: ป้ายอายุเริ่มต้นบนการ์ดโลกแฟนตาซีให้ตรงกับระบบใหม่ (ทารก / สุ่ม 0–16)
 try{(()=>{const MP={'เริ่มอายุ 16':'อายุสุ่ม 0–16','เริ่มอายุ 12':'เกิดเป็นทารก','ผู้กล้า / สกิลขยะ':'ผู้กล้า / สกิลขยะ / หลงมิติ'};
@@ -41532,10 +41532,10 @@ function flPost(fin){const F=DU&&DU.fl,M=$('modal');if(!F||!M)return;
  const w=document.createTreeWalker(M,NodeFilter.SHOW_TEXT);let nd;while(nd=w.nextNode()){let v=nd.nodeValue,o=v;for(const [a,b] of rep)if(v.includes(a))v=v.split(a).join(b);if(v!==o)nd.nodeValue=v}
  if(fin||!M.querySelector('#duT'))return;
  const h=M.querySelector('h3');if(h&&F.resN&&!M.querySelector('.duRes'))h.insertAdjacentHTML('afterend',`<div class="tag2 duRes">${F.resIc||'🔮'} ${F.resN}: <b style="letter-spacing:2px;color:${F.resC||'#9ad8ff'}">${'◆'.repeat(DU.mpL)}${'◇'.repeat(Math.max(0,DU.mpM-DU.mpL))}</b>${F.tag?` · ${F.tag}`:''}</div>`);
- const g=M.querySelector('.mgrid');if(g&&F.x&&!DU.xUsed&&!M.querySelector('.duX'))g.insertAdjacentHTML('beforeend',`<button class="opt duX" onclick="duFlX()" style="border-color:${F.x.c||'#c39bff'};box-shadow:0 0 8px ${F.x.c||'#c39bff'}55">${F.x.ic} ${F.x.n}<small>${F.x.s} · 1 ครั้ง</small></button>`)}
+ const g=M.querySelector('.mgrid');if(g&&!M.querySelector('.duX'))[F.x,F.x2].forEach((x,i)=>{if(x&&!DU['xUsed'+(i||'')])g.insertAdjacentHTML('beforeend',`<button class="opt duX" onclick="duFlX(${i})" style="border-color:${x.c||'#c39bff'};box-shadow:0 0 8px ${x.c||'#c39bff'}55">${x.ic} ${x.n}<small>${x.s} · 1 ครั้ง</small></button>`)})}
 {const _dd=drawDuel;drawDuel=function(fin){flInit();const F=DU&&DU.fl;if(F&&!fin&&DU._r!==DU.r)DU._snap={me:DU.me,en:DU.en};const r=_dd.apply(this,arguments);if(!F)return r;try{if(!fin&&DU._eye&&DU.shown!==DU.intent){DU.shown=DU.intent;_dd.apply(this,arguments)}flPost(fin)}catch(e){console.error('flPost',e)}return r}}
-window.duFlX=function(){if(!DU||!DU.fl||DU.xUsed||!DU.fl.x)return;const F=DU.fl;duClear();DU.xUsed=1;const e=DU.intent,rt=Math.max(.35,Math.min(3,total()/Math.max(1,DU.ep))),md=22*Math.pow(rt,.7)*(.8+Math.random()*.4),ed=22/Math.pow(rt,.7)*(.8+Math.random()*.4)*(DU.charge?1.8:1);let r={};
- try{r=F.x.f(DU,e,md,ed)||{}}catch(x){console.error('duFlX',x)}
+window.duFlX=function(i){i=i|0;const uk='xUsed'+(i||'');if(!DU||!DU.fl||DU[uk])return;const F=DU.fl,X=i?F.x2:F.x;if(!X)return;duClear();DU[uk]=1;const e=DU.intent,rt=Math.max(.35,Math.min(3,total()/Math.max(1,DU.ep))),md=22*Math.pow(rt,.7)*(.8+Math.random()*.4),ed=22/Math.pow(rt,.7)*(.8+Math.random()*.4)*(DU.charge?1.8:1);let r={};
+ try{r=X.f(DU,e,md,ed)||{}}catch(x){console.error('duFlX',x)}
  if(r.en)DU.en-=r.en;if(r.me)DU.me-=r.me;DU.me=Math.min(100,DU.me);DU.txt=(r.t||'')+(r.en>0?` <span class="tag2">−${Math.round(r.en)}</span>`:'');try{sfx(r.sfx||'rare')}catch(x){}
  if(r.good){DU.combo=(DU.combo||0)+1;DU.best=Math.max(DU.best||0,DU.combo);if(DU.combo>=2)DU.txt+=` <span class="tag2">🔥 คอมโบ ×${DU.combo}</span>`}else if(r.good===false)DU.combo=0;
  try{if(window.pxFx&&r.fx){const m=$('modal'),b=m&&m.getBoundingClientRect();if(b)pxFx(r.fx,b.left+b.width/2,b.top+b.height*.35,1.4)}}catch(x){}
