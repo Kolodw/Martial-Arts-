@@ -4448,6 +4448,25 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       await pipe([['LPUSH', 'graves', JSON.stringify(g)], ['LTRIM', 'graves', 0, 299]]);
       return res.json({ ok: 1, i: g.i });
     }
+    // 🌐 ผู้เล่นคนอื่นเลือกอะไร: chv = ส่งผลโหวตทั้งชีวิตรวดเดียวตอนจบ (≤40 ข้อ) · chvtop = สถิติของเหตุการณ์ยอดนิยม 400 อันดับ (แคช 15 นาที)
+    if (a === 'chv') {
+      if (!okId(id)) return res.json({ ok: 0 });
+      if (!(await cmd('SET', 'chvrl:' + id, 1, 'NX', 'EX', 45))) return res.json({ ok: 0, rate: 1 });
+      if (await cmd('SISMEMBER', 'cheaters', id)) return res.json({ ok: 1 });
+      const V = (Array.isArray(b.v) ? b.v : []).slice(0, 40).filter(x => Array.isArray(x) && /^[a-z0-9]{3,8}$/.test(String(x[0])) && /^[a-z0-9]{2,6}$/.test(String(x[1])));
+      const seen = new Set(), ops = [];
+      for (const [k, o] of V) { if (seen.has(k)) continue; seen.add(k); ops.push(['HINCRBY', 'chv:' + k, o, 1], ['HINCRBY', 'chv:' + k, '_', 1], ['EXPIRE', 'chv:' + k, 86400 * 120], ['ZINCRBY', 'chvz', 1, k]) }
+      if (ops.length) await pipe(ops);
+      return res.json({ ok: 1, n: seen.size });
+    }
+    if (a === 'chvtop') {
+      const C = global._chvC; if (C && now - C.t < 900e3) return res.json({ d: C.d });
+      const ks = await cmd('ZREVRANGE', 'chvz', 0, 399) || []; const d = {};
+      if (ks.length) { const H = await pipe(ks.map(k => ['HGETALL', 'chv:' + k]));
+        ks.forEach((k, i) => { const h = H[i]; if (!h) return; const o = {}; if (Array.isArray(h)) { for (let j = 0; j < h.length; j += 2) o[h[j]] = +h[j + 1] || 0 } else Object.keys(h).forEach(x => o[x] = +h[x] || 0); if ((o._ | 0) >= 20) d[k] = o }) }
+      if (Math.random() < .02) { try { await cmd('ZREMRANGEBYRANK', 'chvz', 0, -3001) } catch (e) {} }
+      global._chvC = { t: now, d }; return res.json({ d });
+    }
     // 🔥 โลกยอดนิยม: wpop = นับชีวิตที่เริ่มแยกตามโลก (รายวัน เวลาไทย) · wpopg = รวม 7 วันล่าสุด / 7 วันก่อนหน้า (แคช 10 นาที)
     if (a === 'wpop' || a === 'wpopg') {
       const WK = ['murim', 'xian', 'mw', 'soul', 'loop', 'beast', 'sky', 'fog'];

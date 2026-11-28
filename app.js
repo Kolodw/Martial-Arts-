@@ -41943,3 +41943,5 @@ try{const _yd=setInterval(()=>{try{if(typeof window._dvPick!=='function'||window
  window._dvPick=function(w){const r=_p.apply(this,arguments);try{if(S&&S.age<45&&r&&/วัยชรา/.test(r)){const k=S.mw&&S.mw.fan?'fan':(Y[w]?w:'mw');const L=Y[k];return L[Math.floor(Math.random()*L.length)]}}catch(e){}return r};window._dvPick._yd=1}catch(e){}},1500)}catch(e){}
 // 💞 เส้นทางรัก (/w/rmc.js · โหลดเบื้องหลัง)
 try{setTimeout(()=>{try{wLoad('rmc').catch(()=>setTimeout(()=>{try{wLoad('rmc').catch(()=>{})}catch(e){}},8000))}catch(e){}},3600)}catch(e){console.error('rmc load',e)}
+// ✨ อนิเมชันระหว่างเล่น + กราฟ/ไฮไลต์/หลังความตาย/สถิติผู้เล่น (/w/fx2.js · โหลดเบื้องหลัง)
+try{setTimeout(()=>{try{wLoad('fx2').catch(()=>setTimeout(()=>{try{wLoad('fx2').catch(()=>{})}catch(e){}},8000))}catch(e){}},4000)}catch(e){console.error('fx2 load',e)}
