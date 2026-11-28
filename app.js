@@ -13892,10 +13892,13 @@ wSlot('late26',["relWide"]);
 // ===================== v16.8 หน้าเล่นบนมือถือ: หัวกระชับ · ฉากยืดหด · แถบล่างบาง · ฟีดแน่นขึ้น =====================
 // ✂️ ท่อนนี้ย้ายไป /w/late.js (late27) — ช่องนี้รักษาลำดับการห่อ: -
 wSlot('late27',[]);
+// ผู้เล่นกำลังเลื่อนฟีดเองไหม (นิ้ว/ล้อเมาส์/ปุ่มคีย์บอร์ด ใน 0.9 วิที่ผ่านมา) — ใช้แยกการเลื่อนเองกับการที่หน้าขยับเพราะฉากหด/กาง
+var _fdU=0;function fdUser(){return Date.now()-_fdU<900}
+['touchstart','touchmove','wheel','pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,e=>{try{if(ev==='keydown'||(e.target&&e.target.closest&&e.target.closest('#feed')))_fdU=Date.now()}catch(x){}},{capture:true,passive:true}));
 {const MQ=()=>innerWidth<=820&&!document.body.classList.contains('desk');let pref=LS.get('murim_scn','mid'),mini=false,raf=0;
  const apply=()=>{raf=0;const b=$('sceneBox'),f=$('feed'),g=$('game');if(!b)return;
   if(g)g.classList.toggle('noscn',b.style.display==='none');
-  if(MQ()&&f){const d=f.scrollHeight-f.scrollTop-f.clientHeight;if(!mini&&d>90)mini=true;else if(mini&&d<24)mini=false}else mini=false;
+  if(MQ()&&f){const d=f.scrollHeight-f.scrollTop-f.clientHeight,now=Date.now();if(now-(apply._t||0)>=600){const was=mini;if(!mini&&d>Math.max(90,b.offsetHeight*.6+60)&&fdUser())mini=true;else if(mini&&d<24)mini=false;if(was!==mini)apply._t=now}}else mini=false;
   const s=mini?'mini':pref;b.classList.toggle('scn-mid',s==='mid');b.classList.toggle('scn-mini',s==='mini');b.classList.toggle('scn-full',s==='full')};
  let qT=0;const q=()=>{if(raf)return;const w=Math.max(0,200-(Date.now()-qT));raf=setTimeout(()=>{qT=Date.now();requestAnimationFrame(apply)},w)};window.scnApply=q;
  const init=()=>{const f=$('feed'),b=$('sceneBox');if(!f||!b||b._scn)return;b._scn=1;f.addEventListener('scroll',q,{passive:true});addEventListener('resize',q);
@@ -41113,7 +41116,11 @@ document.addEventListener('click',e=>{try{if(document.body.classList.contains('u
 let feedB=null;function bindFeed(){const f=$$('feed'),g=$$('game');if(!f||!g||f===feedB)return;feedB=f;let last=0;
  let uxR=0;f.addEventListener('scroll',()=>{if(!document.body.classList.contains('ux2')||uxR)return;uxR=requestAnimationFrame(()=>{uxR=0;const y=f.scrollTop,max=f.scrollHeight-f.clientHeight;
   // อ่านอยู่ล่างสุด (ตามเรื่องล่าสุด) = เปิดฉาก · เลื่อนขึ้นไปอ่านย้อน = หด
-  const atEnd=max-y<40;const want2=!atEnd&&max>160;if(want2!==g.classList.contains('uxS'))g.classList.toggle('uxS',want2);last=y})},{passive:true})}
+  // กันเด้งขึ้นลง: หดฉากแล้วฟีดยาวขึ้น → ระยะถึงล่างสุดหดตาม → เคยสลับกลับไปมาเองไม่หยุด
+  // ตอนนี้: หดเฉพาะเมื่อผู้เล่นเลื่อนเองและห่างจากล่างสุดเกินความสูงฉาก · กางเมื่อถึงล่างสุดจริง · สลับแล้วล็อก 0.6 วิ
+  const on=g.classList.contains('uxS'),d=max-y,now=Date.now();if(now-(g._uxT||0)<600)return;
+  let want2=on;if(!on){const sb=$$('sceneBox'),h=sb?sb.offsetHeight:0;if(fdUser()&&max>160&&d>h+80)want2=true}else if(d<30)want2=false;
+  if(want2!==on){g._uxT=now;g.classList.toggle('uxS',want2)}last=y})},{passive:true})}
 function apply(){const on=want();document.body.classList.toggle('ux2',on);if(!on){const g=$$('game');if(g)g.classList.remove('uxS')}else{bindFeed();sync()}}
 window._ux2={apply,sync,openRw};
 const _rd=render;render=function(){const r=_rd.apply(this,arguments);try{if(document.body.classList.contains('ux2'))sync()}catch(e){}return r};
