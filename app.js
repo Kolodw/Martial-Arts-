@@ -37922,16 +37922,17 @@ setInterval(()=>{try{const c=document.getElementById('chatBox');if(c&&!c._b149){
 // ✂️ ท่อนนี้ย้ายไป /w/mwx.js (mwx146) — ช่องนี้รักษาลำดับการห่อ: modal
 wSlot('mwx146',["modal"]);
 
-// BLOCK 150: 👁 เอาระบบ "ดูคนอื่นเล่น" ออกทั้งหมด (แอดมินด้วย) — หน้า "คนดูการเล่นของคุณ" · ป้าย 👁 · แท็บดูสด · หยุดส่งสถานะเกมขึ้นเซิร์ฟเวอร์ทุก 2.5 นาที (ประหยัดโควต้า)
+// BLOCK 150: 👁 ระบบ "ดูคนอื่นเล่น" — เฉพาะแอดมินเท่านั้น (ผู้เล่นทั่วไปไม่เห็นป้าย 👁 แท็บดูสด หรือหน้า "คนดูการเล่นของคุณ")
+// ผู้เล่นทุกคนกลับมาส่งสถานะเกมขึ้นเซิร์ฟเวอร์ตามเดิม (ทุก 2.5 นาที · ถี่ขึ้นเฉพาะตอนแอดมินกำลังดู) เพื่อให้แอดมินดูได้
 try{(()=>{
-try{clearTimeout(liveT)}catch(e){}
-liveSend=async function(){try{clearTimeout(liveT)}catch(e){}};
+const adm=()=>{try{return !!(typeof admK==='function'&&admK())}catch(e){return false}};
 openSpecSet=function(){};specAsk=function(){};
-openLiveList=function(){try{return openOnline('chat')}catch(e){}};
-{const _osMe=openSpectate;openSpectate=function(k){if(k==='@me')return _osMe.apply(this,arguments);toast('👁 ระบบดูคนอื่นเล่นถูกนำออกแล้ว')}};
-try{window.spList=function(){toast('👁 ระบบดูคนอื่นเล่นถูกนำออกแล้ว')}}catch(e){}
-try{delete ONL_NAV.live}catch(e){}
-const st=document.createElement('style');st.textContent=`#watchBadge{display:none!important}#modal [onclick*="openLiveList"],#modal [onclick*="openSpectate"],#modal [onclick*="spList"],#modal [onclick*="openSpecSet"],#modal [data-t="live"],#modal [onclick*="'live'"]{display:none!important}`;document.head.appendChild(st);
+{const _ll=openLiveList;openLiveList=function(){if(adm())return _ll.apply(this,arguments);try{return openOnline('chat')}catch(e){}}}
+{const _osMe=openSpectate;openSpectate=function(k){if(k==='@me'||adm())return _osMe.apply(this,arguments);toast('👁 ดูการเล่นของผู้เล่นอื่นได้เฉพาะแอดมิน')}}
+try{const _sp=window.spList;if(_sp)window.spList=function(){if(adm())return _sp.apply(this,arguments);toast('👁 ดูการเล่นของผู้เล่นอื่นได้เฉพาะแอดมิน')}}catch(e){}
+let LIVE=null;try{LIVE=ONL_NAV.live}catch(e){}
+const sync=()=>{try{const a=adm();document.body.classList.toggle('admLive',a);if(LIVE){if(a&&!ONL_NAV.live)ONL_NAV.live=LIVE;if(!a&&ONL_NAV.live)delete ONL_NAV.live}}catch(e){}};sync();setInterval(sync,2000);
+const st=document.createElement('style');st.textContent=`#watchBadge{display:none!important}body:not(.admLive) #modal [onclick*="openLiveList"],body:not(.admLive) #modal [onclick*="openSpectate"]:not([onclick*="@me"]),body:not(.admLive) #modal [onclick*="spList"],#modal [onclick*="openSpecSet"],body:not(.admLive) #modal [data-t="live"],body:not(.admLive) #modal [onclick*="'live'"]{display:none!important}`;document.head.appendChild(st);
 })()}catch(e){console.error('block150',e)}
 
 // ============================================================
