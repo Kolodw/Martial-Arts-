@@ -22473,10 +22473,10 @@ function ctSetHtml(){const am=LS.get('murim_automin',0)?1:0,lk=LS.get('murim_chl
  <div class="ctRow"><div><b>🔒 ล็อกตัวเลือก</b><small>เกมรอให้คุณเลือกเองทุกครั้ง (ปิดชะตาตัดสินแทน) · มีปุ่มนี้ในทุกหน้าต่างตัวเลือกด้วย</small></div>${sw(lk,"LS.set('murim_chlock',"+(lk?0:1)+");ctDraw()")}</div>
  <div class="ctRow"><div><b>⏩ ปีเงียบผ่านเร็ว</b><small>ปีที่ไม่มีอะไรเกิดขึ้นจะเร่งให้เอง</small></div>${sw(pc,"LS.set('murim_pace',"+(pc?0:1)+");ctDraw()")}</div>
  ${typeof tuOn==='function'&&!tuOn()?'<p class="tag2" style="color:#ffb040">⚠️ ตอนนี้ใช้แท็บแบบเดิมอยู่ กดค้างปุ่มจะยังไม่ทำงาน เปิด "แท็บแบบลื่น" ในเมนูก่อน</p>':''}
- <div class="ctNav"><button class="gbtn" onclick="CT.i=-1;ctDraw()">🎬 คลิป</button><button class="gbtn" onclick="ctNext(-1)">‹ ย้อน</button><button class="pbtn" onclick="ctEnd()">เข้าใจแล้ว ✓</button></div>`}
+ <div class="ctNav"><button class="gbtn" onclick="ctNext(-1)">‹ ย้อน</button><button class="pbtn" onclick="ctEnd()">เข้าใจแล้ว ✓</button></div>`}
 function ctDraw(){if(!CT.L)return;let o=$('ctOv');if(!o){o=document.createElement('div');o.id='ctOv';document.body.appendChild(o);window.addEventListener('resize',ctDraw)}
  const L=CT.L,n=L.length;
- if(CT.i<0){o.innerHTML=`<div class="ctDim"></div><div class="ctCard ctSet ctVid"><h3 style="margin:0 0 4px">🎬 ปุ่มด้านล่าง กดค้างได้ทุกปุ่ม</h3><p class="tag2" style="margin:0 0 8px">ดูคลิป 25 วิ กดค้างที่ปุ่มแล้วจะมีเมนูลัดเด้งขึ้นมา ลากนิ้วไปปุ่มข้างๆ ได้เลย</p><video src="ctrl-demo.mp4" poster="ctrl-demo.jpg" autoplay muted loop playsinline controls preload="metadata"></video><div class="ctNav"><button class="gbtn" onclick="ctEnd()">ข้าม</button><button class="pbtn" onclick="ctNext(1)">สอนทีละปุ่ม ›</button></div></div>`;return}
+ if(CT.i<0)CT.i=0;
  if(CT.i>=n){o.innerHTML=`<div class="ctDim"></div><div class="ctCard ctSet">${ctSetHtml()}</div>`;return}
  const st=L[CT.i],el=document.querySelector(st[0]);if(!el){CT.L.splice(CT.i,1);return ctDraw()}const r=el.getBoundingClientRect(),pad=5;
  const ring=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
@@ -22902,7 +22902,7 @@ const DV={speed:['demo/speed.mp4','เลือกความเร็วขอ
  slot:['demo/slot.mp4','ปุ่ม ⋯ ของช่องเซฟ: เล่นต่อ ตั้งป้าย ย้ายเข้าคลังสำรอง ลบ'],birth:['demo/birth.mp4','กดปุ่ม เล่นต่อ / เกิดใหม่ เลือกช่อง หรือเกิดแบบเร็วด้วยโหมดต่างๆ'],
  nav:['demo/nav.mp4','แถบปุ่มด้านล่างหน้าแรก: ชะตาวันนี้ · สมุดตำนาน · ลาน · ออนไลน์ · เมนู'],home:['demo/home.mp4','จากหน้าแรกเปิดเมนู'],
  menuh:['demo/menuh.mp4','เมนูหน้าแรก: แตะหมวดเพื่อพับ/กาง ค้นหาเมนูได้'],menug:['demo/menug.mp4','เมนูในเกม: ทุกอย่างอยู่ในหมวด เลื่อนหาหรือค้นหา']};
-function dvShow(keys){keys=[].concat(keys).filter(k=>DV[k]);if(!keys.length)return;dvClose();let i=0;
+function dvShow(keys){return;keys=[].concat(keys).filter(k=>DV[k]);if(!keys.length)return;dvClose();let i=0;
  const o=document.createElement('div');o.id='dvOv';o.innerHTML=`<div class="dvBox"><div class="dvCap"></div><video autoplay muted playsinline preload="auto" ${keys.length>1?'':'loop'}></video><div class="dvDots">${keys.length>1?keys.map((_,j)=>`<i data-j="${j}"></i>`).join(''):''}</div><button class="dvX" onclick="dvClose()">ปิด ✕</button></div>`;
  document.body.appendChild(o);const v=o.querySelector('video'),cap=o.querySelector('.dvCap');
  const go=j=>{i=(j+keys.length)%keys.length;const d=DV[keys[i]];v.src=d[0];v.poster=d[0].replace('.mp4','.jpg');cap.textContent='🎬 '+d[1];o.querySelectorAll('.dvDots i').forEach((x,k)=>x.classList.toggle('on',k===i));const p=v.play();if(p&&p.catch)p.catch(()=>{})};
@@ -22915,7 +22915,7 @@ function dvScan(){try{const T=$('title');if(T&&T.classList.contains('on')){
   if(!T.querySelector('[data-dv="slot"]')){const h=[...T.querySelectorAll('*')].find(e=>e.children.length<=3&&/^\s*💾?\s*ช่องเซฟ\s*\d/.test(e.textContent||'')&&(e.textContent||'').length<40);if(h)h.insertAdjacentHTML('beforeend',dvChip('slot'))}
   const bx=T.querySelector('.box.opts');if(bx&&!T.querySelector('.dvRow'))bx.insertAdjacentHTML('afterend',`<div class="dvRow">${dvChip('nav,home','ปุ่มด้านล่าง')}${dvChip('birth','เล่นต่อ / เกิดใหม่')}${dvChip('menuh','เมนูหน้าแรก')}</div>`)}
  const m=$('modal');if(m&&modalOpen){const h=m.querySelector('h3');if(h&&/^☰\s*เมนู/.test(h.textContent||'')&&!h.querySelector('.dvChip')){const land=T&&T.classList.contains('on');h.insertAdjacentHTML('beforeend',dvChip(land?'menuh':'menug','ดูวิธีใช้เมนู'))}}}catch(e){}}
-setInterval(dvScan,700);
+/* คลิปสาธิตถูกเอาออกตามที่เจ้าของเกมสั่ง */
 (()=>{const st=document.createElement('style');st.textContent=`.dvChip{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:2px 9px;border-radius:999px;border:1px solid var(--gold,#d4a94a);background:rgba(212,169,74,.12);color:var(--gold,#e8c06a);font:inherit;font-size:11px;font-weight:700;line-height:18px;cursor:pointer;vertical-align:middle}
 .dvChip:active{transform:scale(.96)}h3 .dvChip{font-size:11px}
 .dvRow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0 2px}.dvRow .dvChip{margin:0}
