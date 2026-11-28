@@ -131,7 +131,7 @@ html:root body.ink.ink.ink #title.on>.big{order:4;margin-bottom:2px!important}
 html:root body.ink.ink.ink #title.on>#frCont{order:5}
 html:root body.ink.ink.ink #title.on>#tdTitle{order:6;margin:0!important}
 html:root body.ink.ink.ink #title.on>#frToday{order:7;margin:0!important}
-html:root body.ink.ink.ink #title.on>#wPick{order:8;margin-top:6px!important}
+html:root body.ink.ink.ink #title.on>#wPick,html:root body.ink.ink.ink #title.on>.box.opts{order:8;margin-top:6px!important}
 html:root body.ink.ink.ink #title.on>#lpTitle{order:9;margin:0!important}
 html:root body.ink.ink.ink #title.on>#tGrid{order:10}
 html:root body.ink.ink.ink #title.on>#nbRow{order:11}
@@ -212,4 +212,24 @@ html:root body.ink.ink.ink.mUI.mExp #game>.box.top{right:10px!important;left:10p
 html:root body.ink.ink.ink.mUI:not(.mExp) #game>.box.top::after{content:'▾ แตะเพื่อดูค่าสถานะ'!important;display:block!important;position:absolute!important;left:10px!important;top:calc(100% + 6px)!important;bottom:auto!important;right:auto!important;width:auto!important;height:auto!important;padding:3px 10px!important;border-radius:12px!important;background:rgba(12,10,19,.72)!important;border:1px solid color-mix(in srgb,var(--kA) 55%,transparent)!important;color:#EEE7D7!important;font:500 11.5px/1.4 'Kanit',sans-serif!important;white-space:nowrap;pointer-events:none;animation:inkHint 1.4s ease-in-out 3;opacity:1!important;transform:none;box-shadow:none!important;text-shadow:none!important}
 html:root body.ink.ink.ink.mUI:not(.mExp):has(#detail[style*="block"]) #game>.box.top::after{content:'▴ แตะเพื่อซ่อนค่าสถานะ'!important;animation:none}
 html:root body.ink.ink.ink.mUI:not(.mExp) #game>.box.top{cursor:pointer}
+}
+
+/* ================= หน้าแรกมือถือ v2: หัวเตี้ย · การ์ดชีวิตมีปุ่มหลักปุ่มเดียว · แถบล่างเหลือแถบเดียว ================= */
+@media (max-width:820px){
+html:root body.ink.ink.ink.mUI #title.on{padding-top:calc(64px + env(safe-area-inset-top,0px))!important;padding-bottom:110px!important}
+html:root body.ink.ink.ink.mUI #title.on>#tHero,html:root body.ink.ink.ink.mUI #title.on>#tHeroCap,html:root body.ink.ink.ink.mUI #title.on>#frWChip{display:none!important}
+html:root body.ink.ink.ink.mUI #title.on>.big{margin:6px 0 4px!important}
+html:root body.ink.ink.ink.mUI #title.on>.big .gold{font-size:40px!important;line-height:1.1!important}
+html:root body.ink.ink.ink.mUI #title.on>.big #titleSub{font-size:14px!important;margin-top:2px!important}
+html:root body.ink.ink.ink.mUI #title.on>#frCont{margin:0!important;border-radius:18px 18px 0 0!important;border:1px solid color-mix(in srgb,var(--kA) 45%,#2E2944)!important;border-bottom:0!important;background:#1C1929!important;padding:14px 14px 6px!important}
+html:root body.ink.ink.ink.mUI #title.on>#frCont .ch{display:none!important}
+html:root body.ink.ink.ink.mUI #title.on>#frCont .ic{width:52px!important;height:52px!important;border-radius:14px!important;background:color-mix(in srgb,var(--kA) 20%,#211E31)!important;color:var(--kA)!important}
+html:root body.ink.ink.ink.mUI #title.on>#frCont .tx b{font:500 18px 'Kanit',sans-serif!important}
+html:root body.ink.ink.ink.mUI #title.on>.frAct{order:5;display:flex;gap:8px;margin:0!important;padding:8px 14px 14px;border-radius:0 0 18px 18px;background:#1C1929;border:1px solid color-mix(in srgb,var(--kA) 45%,#2E2944);border-top:0}
+html:root body.ink.ink.ink.mUI #title.on>.frAct button{flex:1;min-height:48px;border-radius:14px;border:1px solid #3A3354;background:#211E31;color:#EEE7D7;font:500 15px 'Kanit',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+html:root body.ink.ink.ink.mUI #title.on>.frAct button.go{flex:1.6;background:var(--kA);border-color:var(--kA);color:#1B1309}
+html:root body.ink.ink.ink.mUI.frHasC #tDock>.row{display:none!important}
+html:root body.ink.ink.ink.mUI #tDock{left:12px!important;right:12px!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;width:auto!important;border-radius:22px!important;border:1px solid #34304A!important;background:#1C1929!important;box-shadow:0 10px 30px rgba(0,0,0,.5)!important;padding:8px!important}
+html:root body.ink.ink.ink.mUI #tDock>.nav{border:0!important;background:transparent!important;margin:0!important;padding:0!important;box-shadow:none!important}
+html:root body.ink.ink.ink.mUI #tDock>.nav button{background:transparent!important;border:0!important;box-shadow:none!important}
 }
