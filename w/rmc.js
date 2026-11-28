@@ -125,7 +125,7 @@ function talk(ic,t,vs,intro,cb){try{if(typeof talkDuel==='function')return talkD
 function pickEv(){const X=RP(),L=live(),m=mine();
  // คนรักป่วยจนถึงวัน
  const ill=(X.P||[]).find(p=>p.dieAt&&S.age>=p.dieAt&&p.st!=='gone');if(ill){ill.st='gone';unwed(ill);say(`🕯️ ${NM(ill)}จากไปอย่างสงบ มือยังกุมมือคุณอยู่${J(-20)}`,'bad');mem(`${ill.n} จากไป`);return true}
- const C=[];if(L.length<3&&S.age>=14&&S.age<=55)C.push(['meet',L.length?1:4]);
+ const C=[];if(L.length<3&&S.age>=16&&S.age<=50)C.push(['meet',L.length?1:3]);
  L.forEach(p=>{if(p.st==='crush'&&p.aff>=60)C.push(['conf',4,p]);if(['friend','crush','date'].includes(p.st))C.push(['date',2,p]);if(!p.secK&&p.tr>=55)C.push(['sec',3,p]);
   if(p.st==='date'&&p.aff>=70&&p.tr>=40&&S.age-(p.dy0||p.a0)>=1)C.push(['prop',3,p]);if(['date','eng','wed'].includes(p.st)){C.push(['fight',p.jl>=40?3:1,p]);C.push(['world',1,p]);C.push(['mom',2,p])}});
  if(L.some(p=>p.aff>=30))C.push(['jeal',1]);if(!C.length)return false;
@@ -133,16 +133,17 @@ function pickEv(){const X=RP(),L=live(),m=mine();
  const p=c[2];if(c[0]==='conf'||(c[0]==='date'&&p.st==='date'&&!p.dy0))p.dy0=p.dy0||S.age;
  ({meet:evMeet,date:()=>evDate(p),sec:()=>evSecret(p),conf:()=>evConfess(p),prop:()=>evPropose(p),fight:()=>evFight(p),world:()=>evWorld(p),mom:()=>evMoment(p),jeal:evJeal})[c[0]]();return true}
 function autoEv(){const L=live();if(!L.length){if(S.age>=14){const p=mk();RP().P.push(p);say(`💞 คุณได้รู้จัก ${NM(p)} — ${E(p.org)}`)}return}const p=pk(L);bump(p,{aff:R(2,8),tr:R(0,5)});if(p.st==='crush'&&p.aff>=60){p.st='date';p.dy0=S.age;say(`💞 คุณกับ ${NM(p)} เริ่มคบกัน`,'epic');mem(`เริ่มคบกับ ${p.n}`)}else if(p.st==='date'&&p.aff>=80&&p.tr>=50){wed(p);say(`💒 คุณแต่งงานกับ ${NM(p)}`,'myth')}}
-(window._yrH=window._yrH||[]).push({k:'rmc',pr:6,p:.75,can:()=>on()&&S.age>=14,run:()=>{try{pickEv()}catch(e){console.error('rmc',e)}},auto:()=>{try{autoEv()}catch(e){}}});
+(window._yrH=window._yrH||[]).push({k:'rmc',pr:6,p:.38,can:()=>on()&&S.age>=14,run:()=>{try{pickEv()}catch(e){console.error('rmc',e)}},auto:()=>{try{autoEv()}catch(e){}}});
 // ---------- เปิด/ปิด ----------
-function init(force){if(!S)return;if(!S._rp)S._rp={on:0,P:[],mem:[],dy:-1,pref:LS.get('murim_rpPref','opp')};if(force){S._rp.on=1;try{if(typeof loveOpt==='function'&&loveOpt()==='off'){S.loveOpt='fate'}}catch(e){}}}
-setInterval(()=>{try{if(!S||!S.alive)return;if(!S._rp&&LS.get('murim_rpNext',0)&&GRP()&&S.age<=3){LS.set('murim_rpNext',0);init(1);say('💞 <b>เส้นทางรัก</b> — ชีวิตนี้ความรักจะเป็นเรื่องหลัก (ดูได้ที่เมนู ☰ → 💞 เส้นทางรัก)','epic')}}catch(e){}},1500);
+function init(force){if(!S)return;if(!S._rp)S._rp={on:1,P:[],mem:[],dy:-1,pref:LS.get('murim_rpPref','opp')};if(force){S._rp.on=1;try{if(typeof loveOpt==='function'&&loveOpt()==='off'){S.loveOpt='fate'}}catch(e){}}}
+// เส้นทางรักทำงานเองทุกชีวิต (ไม่ต้องกดเลือก) · เคารพการตั้งค่า "ครองโสด" ของเกมเดิม
+setInterval(()=>{try{if(!S||!S.alive||!GRP())return;if(!S._rp)init(0);else if(!S._rp.on)S._rp.on=1}catch(e){}},1500);
 // ---------- หน้าเส้นทางรัก ----------
 window.rmcOpen=function(){if(!S)return;init(0);const X=RP(),g=GRP();
  if(!g)return toast('💞 เส้นทางรักยังไม่มีในโลกนี้');
  if(!X.on){return modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>💞 เส้นทางรัก</h3><p>ให้ความรักเป็นเรื่องหลักของชีวิตนี้: คนที่จีบได้หลายคน แต่ละคนมีนิสัย ของที่ชอบ และ<b>ความลับ</b> · เดต · หึง · สารภาพ · ทะเลาะ/ง้อ · ปัญหาเฉพาะโลก · แต่งงานหรือจากกัน</p>
   ${S.age<=40?`<button class="pbtn" style="width:100%" onclick="rmcOn()">💞 เริ่มเส้นทางรักในชีวิตนี้</button>`:'<p class="tag2">อายุเกิน 40 แล้ว เปิดได้ในชีวิตถัดไป (ชิปที่หน้าเลือกโลก)</p>'}`,'rmc')}
- const P=(X.P||[]).filter(p=>p.st!=='left'||p.secK);const dOk=X.dy!==S.age;
+ if(!X.on)X.on=1;const P=(X.P||[]).filter(p=>p.st!=='left'||p.secK);const dOk=X.dy!==S.age;
  modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>💞 เส้นทางรัก</h3>
  <div class="tag2" style="margin-bottom:6px">อยากเจอ: ${[['opp','เพศตรงข้าม'],['same','เพศเดียวกัน'],['both','ได้ทั้งหมด']].map(([k,t])=>`<button class="gbtn" style="padding:2px 8px;font-size:11px;${X.pref===k?'border-color:#ff7ac8;color:#ff9ad8':''}" onclick="rmcPref('${k}')">${t}</button>`).join(' ')}</div>
  ${P.length?P.map((p,i)=>`<div class="item"><b>${A(p)[0]} ${E(p.n)}</b> <span class="tag2">${ST[p.st]||''} · ${A(p)[1]}</span><br><span class="tag2">${E(p.org)}</span><br>
@@ -153,17 +154,14 @@ window.rmcOpen=function(){if(!S)return;init(0);const X=RP(),g=GRP();
 window.rmcOn=()=>{init(1);closeM();say('💞 <b>เส้นทางรัก</b> เริ่มแล้ว — ความรักจะเป็นเรื่องหลักของชีวิตนี้','epic');try{if(!live().length&&S.age>=14&&!choice._cur&&!modalOpen)evMeet()}catch(e){}};
 window.rmcPref=k=>{const X=RP();if(!X)return;X.pref=k;LS.set('murim_rpPref',k);rmcOpen()};
 window.rmcDate=i=>{const X=RP(),p=X&&X.P[i];if(!p||X.dy===S.age)return;closeM();evDate(p,1)};
-// ชิปที่หน้าเลือกโลก (มีผลกับชีวิตถัดไป)
-setInterval(()=>{try{const T=document.getElementById('title');if(!T||!T.classList.contains('on'))return;const row=T.querySelector('#wPick .wpC');if(!row)return;let b=T.querySelector('#rmcChip');const v=!!LS.get('murim_rpNext',0);
- if(!b){b=document.createElement('button');b.id='rmcChip';b.type='button';b.style.cssText='margin:6px 0 0;width:100%;padding:8px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer';b.onclick=()=>{LS.set('murim_rpNext',LS.get('murim_rpNext',0)?0:1);toast(LS.get('murim_rpNext',0)?'💞 ชีวิตถัดไปจะเริ่มเส้นทางรัก':'ปิดเส้นทางรักสำหรับชีวิตถัดไป')};row.after(b)}
- const h=v?'💞 เส้นทางรัก: เปิด · ความรักเป็นเรื่องหลักของชีวิตถัดไป':'🤍 เส้นทางรัก: ปิด · แตะเพื่อเปิด';if(b.textContent!==h){b.textContent=h;b.style.background=v?'linear-gradient(90deg,#ff7ac833,#b07aff33)':'transparent';b.style.border=v?'1.5px solid #ff7ac8':'1.5px dashed #ffffff33';b.style.color=v?'#ffb0e0':'inherit'}}catch(e){}},900);
+try{document.getElementById('rmcChip')&&document.getElementById('rmcChip').remove()}catch(e){}
 // ปุ่มในเมนู ☰
 setInterval(()=>{try{if(!S||!S.alive||!GRP())return;const m=$('modal');if(!modalOpen||!m||m.dataset.k!=='menu'||m.querySelector('[data-rmc]'))return;const X=RP(),p=X&&mine();const b=document.createElement('button');b.className='opt';b.setAttribute('data-rmc',1);b.innerHTML=`💞 เส้นทางรัก<small>${X&&X.on?(p?ST[p.st]+' กับ '+E(p.n):'คนที่จีบอยู่ '+live().length+' คน'):'ให้ความรักเป็นเรื่องหลักของชีวิตนี้'}</small>`;b.onclick=()=>rmcOpen();const h=m.querySelector('h3');(h&&h.nextElementSibling?h.parentNode:m).insertBefore(b,h?h.nextElementSibling:null)}catch(e){}},900);
 // การ์ดตอนจบชีวิต
 setInterval(()=>{try{if(!S||S.alive||!S._rp||!S._rp.on)return;const end=document.querySelector('#end.on, .screen.on#end, #endScr.on');const box=document.querySelector('.screen.on');if(!box||box.querySelector('#rmcEnd'))return;if(!/end|death|over/i.test(box.id||''))return;const X=S._rp,P=(X.P||[]).filter(p=>p.st!=='left');if(!P.length)return;
  const d=document.createElement('div');d.id='rmcEnd';d.className='item';d.style.cssText='margin:8px 0;border:1.5px solid #ff7ac866;background:linear-gradient(135deg,#ff7ac81a,#b07aff14)';
  d.innerHTML=`<b>💌 เรื่องรักของฉัน</b>${P.map(p=>`<div>${A(p)[0]} <b>${E(p.n)}</b> <span class="tag2">${ST[p.st]||''}</span></div>`).join('')}${(X.mem||[]).slice(-4).map(m=>`<div class="tag2">อายุ ${m.a} — ${E(m.t)}</div>`).join('')}`;box.appendChild(d)}catch(e){}},1500);
-try{if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(g=>g.t==='💞 เส้นทางรัก'))SYS_GUIDE.push({s:'base',nw:1,ic:'💞',t:'💞 เส้นทางรัก',d:'เปิดที่ชิปหน้าเลือกโลก (ชีวิตถัดไป) หรือเมนู ☰ → 💞 เส้นทางรัก (ชีวิตนี้ ถ้าอายุไม่เกิน 40) · ทุกโลกยกเว้นแฟนตาซี (มีฮาเร็มของตัวเอง) · คนที่จีบได้หลายคน แต่ละคนมีนิสัย ของที่ชอบ/ไม่ชอบ (เดตถึงจะรู้) และความลับหนึ่งอย่าง · ความสัมพันธ์ 4 แกน: ชอบ ไว้ใจ หึง เคารพ · สารภาพ/ง้อด้วยดวลวาทะ · ปัญหาเฉพาะโลก (สำนักศัตรู งานต่างประเทศ ซอมบี้กัด กำแพงร้าว คดีหมอก) · แต่งงานด้วยระบบคู่ครองของโลกนั้น · ตอนจบมีการ์ด "เรื่องรักของฉัน"'})}catch(e){}
+try{if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(g=>g.t==='💞 เส้นทางรัก'))SYS_GUIDE.push({s:'base',nw:1,ic:'💞',t:'💞 เส้นทางรัก',d:'ทำงานเองในทุกชีวิต ไม่ต้องกดเลือก (ถ้าตั้ง "ครองโสด" ไว้จะไม่มี) · ดูคนที่จีบ/ความลับ/ความทรงจำได้ที่ ☰ → 💞 เส้นทางรัก · ทุกโลกยกเว้นแฟนตาซี (มีฮาเร็มของตัวเอง) · คนที่จีบได้หลายคน แต่ละคนมีนิสัย ของที่ชอบ/ไม่ชอบ (เดตถึงจะรู้) และความลับหนึ่งอย่าง · ความสัมพันธ์ 4 แกน: ชอบ ไว้ใจ หึง เคารพ · สารภาพ/ง้อด้วยดวลวาทะ · ปัญหาเฉพาะโลก (สำนักศัตรู งานต่างประเทศ ซอมบี้กัด กำแพงร้าว คดีหมอก) · แต่งงานด้วยระบบคู่ครองของโลกนั้น · ตอนจบมีการ์ด "เรื่องรักของฉัน"'})}catch(e){}
 window._rmc={init,pickEv,evMeet,evDate,evSecret,evConfess,evFight,evWorld,evPropose,evJeal,mk,RP,test:{on:()=>{init(1)},add:()=>{init(1);const p=mk();RP().P.push(p);return p}}};
 })()}catch(e){console.error('mod-rmc',e)}
 try{wReady('rmc')}catch(e){}
