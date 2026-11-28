@@ -133,7 +133,7 @@ const norm=s=>strip(s).replace(/[0-9๐-๙,\.]+/g,'#').replace(/\s+/g,' ').repl
 const SKIP=/มินิเกม|ภารกิจประจำวัน|สอบ|บทสอน|ทายผล|ดวลวาทะ|รอบที่|ด่านที่|ชั้นที่/;
 let CHV=null,chvT=0;const VQ=[];
 function chvLoad(){if(Date.now()-chvT<36e5||typeof api!=='function')return;chvT=Date.now();try{const c=LS.get('murim_chvc',null);if(c&&Date.now()-c.t<6*36e5){CHV=c.d;return}}catch(e){}
- Promise.resolve(api('chvtop',null)).then(j=>{if(j&&j.d){CHV=j.d;try{LS.set('murim_chvc',{t:Date.now(),d:j.d})}catch(e){}}}).catch(()=>{})}
+ Promise.resolve(api('chvtop',{})).then(j=>{if(j&&j.d){CHV=j.d;try{LS.set('murim_chvc',{t:Date.now(),d:j.d})}catch(e){}}}).catch(()=>{})}
 setTimeout(chvLoad,9000);
 function chvShow(k,o){try{if(!CHV||!CHV[k])return;const r=CHV[k],tot=r._|0;if(tot<20)return;const n=r[o]|0,pc=Math.round(n/tot*100);
  const t=pc>=70?'คนส่วนใหญ่ก็เลือกแบบนี้':pc>=40?'คนแบ่งเป็นสองฝั่งพอๆ กัน':pc>=12?'คุณอยู่ฝั่งคนส่วนน้อย':'แทบไม่มีใครเลือกแบบคุณ';
