@@ -205,3 +205,11 @@ html:root body.ink.ink.ink.mUI:not(.mExp) #game>.box.top #uxRw{position:static!i
 html:root body.ink.ink.ink.mUI.mExp #game>.box.top>.hudr{flex-direction:row!important;flex-wrap:wrap!important;height:auto!important}
 html:root body.ink.ink.ink.mUI.mExp #game>.box.top{right:10px!important;left:10px!important;max-height:calc(100vh - 220px);overflow:auto;box-shadow:0 14px 40px rgba(0,0,0,.55)!important}
 }
+
+/* ---------- เกาะลอย: ป้ายบอกว่าแตะเพื่อดูค่าสถานะ ---------- */
+@keyframes inkHint{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+@media (max-width:820px){
+html:root body.ink.ink.ink.mUI:not(.mExp) #game>.box.top::after{content:'▾ แตะเพื่อดูค่าสถานะ'!important;display:block!important;position:absolute!important;left:10px!important;top:calc(100% + 6px)!important;bottom:auto!important;right:auto!important;width:auto!important;height:auto!important;padding:3px 10px!important;border-radius:12px!important;background:rgba(12,10,19,.72)!important;border:1px solid color-mix(in srgb,var(--kA) 55%,transparent)!important;color:#EEE7D7!important;font:500 11.5px/1.4 'Kanit',sans-serif!important;white-space:nowrap;pointer-events:none;animation:inkHint 1.4s ease-in-out 3;opacity:1!important;transform:none;box-shadow:none!important;text-shadow:none!important}
+html:root body.ink.ink.ink.mUI:not(.mExp):has(#detail[style*="block"]) #game>.box.top::after{content:'▴ แตะเพื่อซ่อนค่าสถานะ'!important;animation:none}
+html:root body.ink.ink.ink.mUI:not(.mExp) #game>.box.top{cursor:pointer}
+}
