@@ -41522,16 +41522,16 @@ new MutationObserver(()=>{if(document.getElementById('wPick'))fx()}).observe(doc
 // ============================================================
 try{(()=>{const L=window._duFlav=window._duFlav||[];
 const get=(n,ep)=>{for(const f of L){try{const r=f(n,ep);if(r)return r}catch(e){console.error('duFlav',e)}}return null};
-function flInit(){try{if(!DU||DU._flk||auto||DU.ar)return;DU._flk=1;const F=get(DU.name,DU.ep);if(!F)return;DU.fl=F;DU.arts=F.arts||[];DU.art=F.sec;const n=Math.max(1,F.mp|0||1);DU.mpM=n;DU.mpL=n;
- Object.defineProperty(DU,'secret',{configurable:true,get(){return DU.mpL>0},set(v){if(!v&&DU.mpL>0)DU.mpL--}});DU._snap={me:DU.me,en:DU.en};if(F.start)try{F.start(DU)}catch(e){}DU.tech=null}catch(e){console.error('duFl',e)}}
+function flInit(){try{if(!DU||DU._flk||auto||DU.ar)return;DU._flk=1;const F=get(DU.name,DU.ep);if(!F)return;try{(window._duPost||[]).forEach(f=>f(F))}catch(e){}DU.fl=F;if(!F.keepArts)DU.arts=F.arts||[];if(F.sec)DU.art=F.sec;if(F.mp!==0){const n=Math.max(1,F.mp|0||1);DU.mpM=n;DU.mpL=n;
+ Object.defineProperty(DU,'secret',{configurable:true,get(){return DU.mpL>0},set(v){if(!v&&DU.mpL>0)DU.mpL--}})}else{DU.mpM=0;DU.mpL=0}DU._snap={me:DU.me,en:DU.en};if(F.start)try{F.start(DU)}catch(e){}DU.tech=null}catch(e){console.error('duFl',e)}}
 {const _t=duTech;duTech=function(){const F=DU&&DU.fl;if(F&&F.tech&&F.tech.length)return ch(F.tech);return _t.apply(this,arguments)}}
 {const _h=duHint;duHint=function(e){const F=DU&&DU.fl;if(F&&F.hint&&F.hint[e])return F.hint[e].replace(/\{t\}/g,DU.tech||'');return _h.apply(this,arguments)}}
 function flPost(fin){const F=DU&&DU.fl,M=$('modal');if(!F||!M)return;
- const rep=[['⚔️ ดวลกับ',F.title||'⚔️ ดวลกับ'],['ทั้งสองฝ่ายจ้องตากัน ลมพัดใบไม้ปลิวผ่าน...',F.intro||''],['กระบี่กระทบกัน',(F.wpn||'อาวุธ')+'กระทบกัน'],['ลมปราณ',F.en||'พลัง'],['ปราณ',F.en||'พลัง'],['✨ วิชาลับ',F.secL||'✨ ท่าไม้ตาย'],
-  ['ใช้ได้ 1 ครั้ง',`${F.resIc||'🔮'} ${F.resN||'พลัง'} ${DU.mpL}/${DU.mpM}`],['ใช้ไปแล้ว / ไม่มีวิชา',`${F.resN||'พลัง'}หมดแล้ว`],['คุณปล่อยวิชาลับ',F.secV||'คุณปล่อย']].concat(F.rep||[]);
+ const rep=[['⚔️ ดวลกับ',F.title||'⚔️ ดวลกับ'],['ทั้งสองฝ่ายจ้องตากัน ลมพัดใบไม้ปลิวผ่าน...',F.intro||''],...(F.en?[['กระบี่กระทบกัน',(F.wpn||'อาวุธ')+'กระทบกัน'],['ลมปราณ',F.en],['ปราณ',F.en]]:[]),['✨ วิชาลับ',F.secL||'✨ ท่าไม้ตาย'],
+  ...(DU.mpM?[['ใช้ได้ 1 ครั้ง',`${F.resIc||'🔮'} ${F.resN||'พลัง'} ${DU.mpL}/${DU.mpM}`],['ใช้ไปแล้ว / ไม่มีวิชา',`${F.resN||'พลัง'}หมดแล้ว`]]:[]),['คุณปล่อยวิชาลับ',F.secV||'คุณปล่อย']].concat(F.rep||[]);
  const w=document.createTreeWalker(M,NodeFilter.SHOW_TEXT);let nd;while(nd=w.nextNode()){let v=nd.nodeValue,o=v;for(const [a,b] of rep)if(v.includes(a))v=v.split(a).join(b);if(v!==o)nd.nodeValue=v}
  if(fin||!M.querySelector('#duT'))return;
- const h=M.querySelector('h3');if(h&&F.resN&&!M.querySelector('.duRes'))h.insertAdjacentHTML('afterend',`<div class="tag2 duRes">${F.resIc||'🔮'} ${F.resN}: <b style="letter-spacing:2px;color:${F.resC||'#9ad8ff'}">${'◆'.repeat(DU.mpL)}${'◇'.repeat(Math.max(0,DU.mpM-DU.mpL))}</b>${F.tag?` · ${F.tag}`:''}</div>`);
+ const h=M.querySelector('h3');if(h&&F.resN&&DU.mpM&&!M.querySelector('.duRes'))h.insertAdjacentHTML('afterend',`<div class="tag2 duRes">${F.resIc||'🔮'} ${F.resN}: <b style="letter-spacing:2px;color:${F.resC||'#9ad8ff'}">${'◆'.repeat(DU.mpL)}${'◇'.repeat(Math.max(0,DU.mpM-DU.mpL))}</b>${F.tag?` · ${F.tag}`:''}</div>`);
  const g=M.querySelector('.mgrid');if(g&&!M.querySelector('.duX'))[F.x,F.x2].forEach((x,i)=>{if(x&&!DU['xUsed'+(i||'')])g.insertAdjacentHTML('beforeend',`<button class="opt duX" onclick="duFlX(${i})" style="border-color:${x.c||'#c39bff'};box-shadow:0 0 8px ${x.c||'#c39bff'}55">${x.ic} ${x.n}<small>${x.s} · 1 ครั้ง</small></button>`)})}
 {const _dd=drawDuel;drawDuel=function(fin){flInit();const F=DU&&DU.fl;if(F&&!fin&&DU._r!==DU.r)DU._snap={me:DU.me,en:DU.en};const r=_dd.apply(this,arguments);if(!F)return r;try{if(!fin&&DU._eye&&DU.shown!==DU.intent){DU.shown=DU.intent;_dd.apply(this,arguments)}flPost(fin)}catch(e){console.error('flPost',e)}return r}}
 window.duFlX=function(i){i=i|0;const uk='xUsed'+(i||'');if(!DU||!DU.fl||DU[uk])return;const F=DU.fl,X=i?F.x2:F.x;if(!X)return;duClear();DU[uk]=1;const e=DU.intent,rt=Math.max(.35,Math.min(3,total()/Math.max(1,DU.ep))),md=22*Math.pow(rt,.7)*(.8+Math.random()*.4),ed=22/Math.pow(rt,.7)*(.8+Math.random()*.4)*(DU.charge?1.8:1);let r={};
@@ -41711,3 +41711,107 @@ function bar(w,t0){const m=M[w],fx=fight(),beat=60/(m.bpm*(fx?1.35:1)),b=BGM.bar
  BGM.bar++;return beat*4}
 {const _bb=bgmBar;bgmBar=function(t0){try{const w=WK();if(w&&M[w]&&bgmTrack()==='gen')return bar(w,t0)}catch(e){console.error('wbgm',e)}return _bb.apply(this,arguments)}}
 })()}catch(e){console.error('block318',e)}
+// ============================================================
+// BLOCK 319: ต่อยอดชุดใหญ่ — ⚔️ ดวลยุทธภพ/วิญญาณยุทธ์ได้ปุ่มพิเศษตามสำนัก · 🗣️ หลักฐานจากชื่อเสียง + เหตุการณ์วาทะเพิ่ม
+//   🖼️ การ์ดปกนิยาย 1080×1350 + 📚 ภาคต่อ (เล่ม 2, 3…) · 👻 ศัตรูข้ามชาติ · 🐈 คู่หูประจำโลก (ยุคปัจจุบัน/นครม่านหมอก/ทะลุฟ้าดารา)
+//   🏆 ความสำเร็จของระบบใหม่ · 💡 สอนเล่นครั้งแรก
+// ============================================================
+try{(()=>{
+const WK=()=>{try{if(!S)return'';if(S.beastMode)return'beast';if(S.mw){if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+const rnd=Math.random,pk=a=>a[Math.floor(rnd()*a.length)],cl=(v,a,b)=>Math.max(a,Math.min(b,v)),E=t=>{try{return esc(String(t))}catch(e){return String(t)}},strip=t=>String(t||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+// ---------- ⚔️ ดวลยุทธภพ / วิญญาณยุทธ์ ----------
+const SX=[[/ภูผาขาว|กระบี่สิบทิศ|เมฆม่วง/,{ic:'🗡️',n:'กระบี่ทะลวงเมฆ',s:'ฟันสองจังหวะติด',c:'#9ad8ff',f(D,e,md){const h=(rnd()<.75)+(rnd()<.6);return {en:md*.95*h,t:`🗡️ กระบี่วาดเส้นขาวสองเส้นกลางอากาศ โดน <b>${h}/2</b>`,good:h>=1,fx:'spark'}}}],
+ [/ศิลาธรรม/,{ic:'🔔',n:'ระฆังทองคุ้มกาย',s:'กันทั้งยก + สะท้อนท่าหนัก',c:'#ffd76a',f(D,e,md,ed){return e==='heavy'||e==='atk'?{en:ed*1.4,t:'🔔 เสียงระฆังทองดังกังวาน ท่าของศัตรูกระแทกกลับเข้าตัวเขาเอง',good:true,fx:'mana'}:{me:-8,t:'🔔 ระฆังทองคลุมตัว ศัตรูไม่ได้โจมตี คุณได้พักหายใจ',keep:1}}}],
+ [/กระยาจก/,{ic:'🍶',n:'เรียกพวกขอทาน',s:'คนทั้งตลาดช่วยปาของ',c:'#c8a878',f(D,e,md){const n=R(3,9);return {en:md*.25*n,t:`🍶 คุณผิวปากหนึ่งที ขอทาน <b>${n}</b> คนโผล่จากทุกซอก ปาหม้อ ปาไห ปาเปลือกแตงใส่ศัตรู`,good:n>=5}}}],
+ [/ดอกท้อ/,{ic:'🌸',n:'กลีบบุปผาลวงตา',s:'เห็นท่าศัตรูชัดทั้งดวล',c:'#ff9ac8',f(D,e,md){D._eye=1;return {en:md*.5,t:'🌸 กลีบท้อนับพันปลิวว่อน ศัตรูมองไม่เห็นคุณ แต่คุณเห็นทุกการขยับของเขา',keep:1}}}],
+ [/โอสถ/,{ic:'💊',n:'ยาลับประจำสำนัก',s:'ฟื้นเลือด 35',c:'#7aff9a',f(){return {me:-35,t:'💊 คุณกลืนยาเม็ดสีเขียวที่อาจารย์ให้ไว้ "ใช้ตอนจะตายเท่านั้น" — ได้ผลจริง',keep:1,fx:'mana',sfx:'good'}}}],
+ [/เงาโลหิต/,{ic:'🩸',n:'แทงจุดตาย',s:'ถ้าศัตรูตั้งรับ/รวมพลัง แรง ×3',c:'#ff5a5a',f(D,e,md,ed){return e==='def'||e==='chg'?{en:md*3,t:'🩸 คุณเห็นช่องว่างนิ้วเดียวในท่าตั้งรับ แล้วแทงเข้าไปตรงนั้นพอดี',good:true,fx:'burst'}:{en:md*.8,me:ed*.4,t:'🩸 แทงได้ แต่ศัตรูสวนกลับในจังหวะเดียวกัน',good:null}}}],
+ [/หอพิษ/,{ic:'☠️',n:'พ่นหมอกพิษ',s:'ศัตรูอ่อนแรงทั้งดวล',c:'#9aff5a',f(D,e,md){D.ep*=.85;return {en:md*.9,t:'☠️ หมอกสีม่วงพ่นจากแขนเสื้อ ศัตรูไอเป็นเลือด ท่าที่เหลือช้าลงทุกท่า',good:true,fx:'poof'}}}],
+ [/โจรสลัด/,{ic:'🌊',n:'ลากลงน้ำ',s:'ศัตรูเสียหลักทั้งยก',c:'#5ad0ff',f(D,e,md){D.charge=false;return {en:md*1.4,t:'🌊 คุณคว้าข้อเท้าศัตรูแล้วกระโดดลงแม่น้ำพร้อมกัน — คุณว่ายน้ำเป็น เขาไม่เป็น',good:true}}}],
+ [/ข่าวกรอง/,{ic:'📜',n:'เปิดโปงความลับ',s:'ศัตรูเสียขวัญ + เห็นท่า',c:'#e8d8a8',f(D,e,md){D._eye=1;return {en:md*.7,t:'📜 คุณกระซิบชื่อเมียน้อยคนที่สามของเขา ดาบในมือเขาสั่น',keep:1}}}],
+ [/เสือดำ/,{ic:'🐯',n:'คำรามเสือ',s:'ศัตรูชะงักทั้งยก',c:'#ffb040',f(D,e,md){D.charge=false;return {en:md*1.3,t:'🐯 เสียงคำรามจากท้องคุณดังจนนกบินหนีทั้งป่า ศัตรูก้าวถอยโดยไม่รู้ตัว',good:true}}}]];
+const SX0={ic:'🍂',n:'ปาทรายใส่ตา',s:'ไม่สง่า แต่ได้ผล',c:'#c8b088',f(D,e,md){return rnd()<.7?{en:md*1.2,t:'🍂 คุณกำทรายปาใส่หน้าศัตรู "จอมยุทธ์อะไรทำแบบนี้!" — คนที่ยังมีชีวิตอยู่ไง',good:true}:{t:'🍂 ลมตีกลับ ทรายเข้าตาคุณเอง',good:false,me:5}}};
+const SXS={ic:'⭕',n:'ปลดปล่อยดวงจิต',s:'ดวงจิตออกมาโจมตีเอง',c:'#c070ff',f(D,e,md){return {en:md*2,t:'⭕ วงแหวนดวงจิตหมุนรอบตัว ร่างแท้ของดวงจิตพุ่งออกไปขย้ำศัตรู',good:true,fx:'mana'}}};
+(window._duFlav=window._duFlav||[]).push(name=>{const w=WK();if(!['murim','xian','god','loop','soul'].includes(w)||!S||!S.alive)return null;const fn=S.faction&&S.faction.n||'';let x=w==='soul'?SXS:SX0;for(const [rx,v] of SX)if(rx.test(fn)){x=v;break}
+ const na=(S.arts||[]).length;return {keepArts:1,title:'⚔️ ดวลกับ',intro:'ทั้งสองฝ่ายจ้องตากัน ลมพัดใบไม้ปลิวผ่าน...',secL:'✨ วิชาลับ',secV:'คุณปล่อยวิชาลับ',mp:na?Math.min(3,1+Math.floor(na/3)):0,resN:'ลมปราณ',resIc:'🌀',resC:'#9ad8ff',x}});
+// ---------- 🗣️ หลักฐานจากชื่อเสียง ----------
+{const _td=window.talkDuel;window.talkDuel=function(o,cb){try{const f=S.fame|0;o.ev=(o.ev|0)+(f>=20000?2:f>=4000?1:0)}catch(e){}tut('talk');return _td(o,cb)}}
+// ---------- 🖼️ การ์ดปกนิยาย + 📚 ภาคต่อ ----------
+let SNAP=null;
+{const _eg=endGame;endGame=function(){try{const c=$('scene');if(c&&c.width)SNAP=c.toDataURL('image/png')}catch(e){SNAP=null}
+ try{if(S){const L=LS.get('murim_novels',[])||[];S._vol=1;const par=S.lineage&&S.lineage.length?S.lineage[S.lineage.length-1].n:null;if(par&&S.gen>1){const pv=L.slice().reverse().find(n=>n.n===par);if(pv)S._vol=(pv.vol||1)+1}}}catch(e){}
+ try{if(S&&S._ld){const U=S._ld.filter(x=>!x.bk&&(x.r==='dw'||x.r==='dl')).slice(-3).map(x=>({n:x.n,r:x.r,w:x.w,me:S.name}));if(U.length){const X=LS.get('murim_ldx',[])||[];LS.set('murim_ldx',X.concat(U).slice(-6))}}}catch(e){}
+ const r=_eg.apply(this,arguments);
+ setTimeout(()=>{try{const L=LS.get('murim_novels',[])||[],N=L[L.length-1];if(N&&S&&S._vol>1&&!N.vol){N.vol=S._vol;N.t=`${N.t} เล่ม ${S._vol}`;LS.set('murim_novels',L)}const box=document.querySelector('#end .tale');if(box&&!box.querySelector('.tCard')){const b=document.createElement('button');b.className='pbtn tCard';b.style.cssText='width:100%;margin-top:6px';b.textContent='🖼️ การ์ดปกนิยาย (แชร์ได้)';b.onclick=()=>novelCard(L.length-1);box.insertBefore(b,box.querySelector('h4:nth-of-type(2)')||null)}}catch(e){console.error('tale+',e)}},1200);return r}}
+window.novelCard=function(i){const N=(LS.get('murim_novels',[])||[])[i];if(!N)return;const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ const col={fan:'#4a2a7a',fog:'#2a3242',sky:'#0e2446',mw:'#4a1e2a',murim:'#5a1414',soul:'#4a2e14',xian:'#1e4a5a',god:'#5a4a14',loop:'#144a3a',beast:'#2a4a1e'}[N.w]||'#2a1e3a';
+ const gr=x.createLinearGradient(0,0,0,H);gr.addColorStop(0,col);gr.addColorStop(1,'#0a070e');x.fillStyle=gr;x.fillRect(0,0,W,H);
+ const fin=()=>{x.fillStyle='rgba(0,0,0,.35)';x.fillRect(0,560,W,H-560);x.strokeStyle='#f0c860';x.lineWidth=6;x.strokeRect(30,30,W-60,H-60);x.lineWidth=2;x.strokeRect(46,46,W-92,H-92);
+  x.textAlign='center';x.fillStyle='#f0c860';x.font='600 34px sans-serif';x.fillText('1 ใน นวนิยาย',W/2,110);x.fillStyle='#c8b8a0';x.font='28px sans-serif';x.fillText(N.g.join(' · '),W/2,156);
+  x.fillStyle='#ffe9b0';x.font='800 72px sans-serif';const ws=[];let line='';for(const ch of N.t){if(x.measureText(line+ch).width>W-160){ws.push(line);line=ch}else line+=ch}ws.push(line);ws.slice(0,3).forEach((l,k)=>x.fillText(l,W/2,640+k*86));
+  let y=640+Math.min(3,ws.length)*86+20;x.fillStyle='#e8dcc8';x.font='32px sans-serif';x.fillText(`ชีวิตของ ${N.n} · ${N.a} ปี`,W/2,y);y+=60;x.textAlign='left';x.font='30px sans-serif';
+  N.ch.slice(0,6).forEach((cc,k)=>{x.fillStyle='#f0c860';x.fillText(`บทที่ ${k+1}`,110,y);x.fillStyle='#e8e0d0';let s=cc.s;while(x.measureText(s).width>700&&s.length>4)s=s.slice(0,-2);x.fillText(s+(s!==cc.s?'…':''),260,y);y+=50});
+  x.textAlign='center';x.fillStyle='#ffd76a';x.font='700 40px sans-serif';x.fillText(`👁️ ${fmt(N.views)} ครั้ง`,W/2,H-150);x.fillStyle='#a89880';x.font='26px sans-serif';x.fillText(N.rv[0]||'',W/2,H-95);
+  const url=c.toDataURL('image/png');modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>🖼️ การ์ดปกนิยาย</h3><img src="${url}" style="width:100%;border-radius:10px"><div style="display:flex;gap:6px;margin-top:8px"><a class="pbtn" style="flex:1;text-align:center" href="${url}" download="novel.png">⬇️ บันทึกรูป</a><button class="gbtn" style="flex:1" onclick="novelShare(this)">📤 แชร์</button></div>`,'ncard');window._ncUrl=url};
+ const img=new Image();img.onload=()=>{x.imageSmoothingEnabled=false;const h=Math.round(W*img.height/img.width);x.globalAlpha=.9;x.drawImage(img,0,170,W,Math.min(390,h));x.globalAlpha=1;fin()};img.onerror=fin;if(SNAP&&i===(LS.get('murim_novels',[])||[]).length-1)img.src=SNAP;else fin()};
+window.novelShare=async function(){try{const b=await (await fetch(window._ncUrl)).blob(),f=new File([b],'novel.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],text:'#1ในนวนิยาย'});else toast('อุปกรณ์นี้แชร์รูปตรงๆ ไม่ได้ กด "บันทึกรูป" แทน')}catch(e){}};
+// ---------- 👻 ศัตรูข้ามชาติ ----------
+function foeEv(){const X=LS.get('murim_ldx',[])||[];if(!X.length||!S||S._fx)return false;const i=Math.floor(rnd()*X.length),x=X[i];S._fx=1;const WN={fan:'โลกแฟนตาซี',fog:'นครม่านหมอก',sky:'ทะลุฟ้าดารา',mw:'ยุคปัจจุบัน',murim:'ยุทธภพ',soul:'ทวีปดวงจิต',xian:'โลกเซียน',god:'แดนเทพ',loop:'ยุทธภพ'};const P=Math.max(1,(typeof total==='function'?total():S.power||100));
+ const same=x.w===WK(),who=pk(same?['ชายแปลกหน้าในโรงเตี๊ยม','ผู้หญิงที่ยืนจ้องคุณกลางตลาด','เด็กที่ไม่ควรรู้ชื่อชาติก่อนของคุณ']:['คนแปลกหน้าที่พูดสำเนียงไม่มีในโลกนี้','ชายผู้มีแผลเป็นที่ไม่มีใครรู้ที่มา','เงาที่เดินตามคุณมาสามวัน']);
+ const rm=x.r==='dw'?`ชาติก่อนใน${WN[x.w]||'อีกโลก'} ${x.me||'คุณ'}เคยเอาชนะ ${x.n} — วิญญาณนั้นไม่เคยลืม`:`ชาติก่อนใน${WN[x.w]||'อีกโลก'} ${x.n}เคยเอาชนะ${x.me||'คุณ'} — และยังจำกลิ่นวิญญาณของคุณได้`;
+ choice(`👻 ศัตรูจากชาติก่อน`,`${who}เรียกชื่อที่คุณไม่ได้ใช้มาทั้งชีวิต "<b>${E(x.me||'')}</b>…" ${rm}`,[
+  {t:'⚔️ ชำระกันให้จบ',s:'ดวล',f(){duel(`${x.n} (ข้ามชาติ)`,Math.round(P*(1.05+rnd()*.25)),w=>{const Y=LS.get('murim_ldx',[])||[];Y.splice(Y.findIndex(z=>z.n===x.n),1);LS.set('murim_ldx',Y);try{log(w?`👻 ${x.n}สลายเป็นควัน "ในที่สุด… ข้าก็ได้พัก" หนี้ข้ามชาติถูกชำระ`:`👻 ${x.n}หัวเราะ "อีกสักชาติก็ได้" แล้วหายไป`,w?'myth':'bad',!!w)}catch(e){}})}},
+  {t:'🗣️ คุยกันแบบคนที่เคยตาย',s:'ดวลวาทะ',f(){talkDuel({ic:'👻',t:'ศัตรูจากชาติก่อน',vs:x.n,ev:1,intro:'ทั้งสองคนรู้ว่าอีกฝ่ายเคยตายมาแล้วอย่างน้อยหนึ่งครั้ง',win:()=>{const Y=LS.get('murim_ldx',[])||[];Y.splice(Y.findIndex(z=>z.n===x.n),1);LS.set('murim_ldx',Y);return `${x.n}ยิ้มเป็นครั้งแรกในสองชาติ "งั้นชาตินี้เราไม่ต้องเป็นศัตรูกัน"`},lose:()=>`${x.n}ไม่เชื่อ "ชาติหน้าข้าจะหาเจ้าให้เจออีก"`},()=>{})}},
+  {t:'🚶 แกล้งทำเป็นจำไม่ได้',s:'',f(){try{log(`🚶 คุณเดินผ่านไป ได้ยินเสียงข้างหลัง "ไม่เป็นไร ข้ารอได้… ข้ารอมาแล้วหนึ่งชาติ"`,'')}catch(e){}}}]);return true}
+// ---------- 🐈 คู่หูประจำโลก ----------
+const CPT={mw:{ic:'🐈',k:'แมวจร',names:['ส้มหยุด','ข้าวตัง','มะขาม','ทองหยอด','ซาลาเปา','ถั่วแดง'],st:['ลูกแมวขี้กลัว','แมวประจำบ้าน','เจ้านายตัวจริงของบ้าน','แมวแก่ใจดี','ตำนานแมวแห่งซอย'],life:16,meet:'ลูกแมวตัวผอมนั่งตากฝนหน้าบ้าน มองคุณเหมือนรู้จักกันมานาน',x:{ic:'🐈',n:'แมวกระโจนใส่หน้า',s:'ศัตรูตกใจเสียจังหวะ',f:(D,e,md)=>({en:md*.7,t:'🐈 เจ้าแมวพุ่งออกจากเป้ ข่วนหน้าศัตรูสามแผลแล้ววิ่งหนี',good:true})}},
+ fog:{ic:'🌑',k:'เงาพูดได้',names:['นอกซ์','อัมบรา','เกรย์','เวสเปอร์','มิสต์','แอช'],st:['เงาที่กระซิบ','เงาที่ตอบคำถาม','เงาที่เดินนำ','เงาที่ตัดสินใจแทน','เงาที่เป็นคุณ'],life:99,meet:'คืนหนึ่งเงาของคุณบนกำแพงไม่ยอมขยับตามคุณ แล้วมันก็พูดขึ้นมา "ในที่สุดเจ้าก็เห็นข้า"',x:{ic:'🌑',n:'เงาโจมตีแทน',s:'เงาของคุณตีจากข้างหลังศัตรู',f:(D,e,md)=>({en:md*1.5,t:'🌑 เงาของคุณยืดยาวไปถึงตัวศัตรู แล้วรัดคอเขาจากข้างหลัง',good:true,fx:'poof'})}},
+ sky:{ic:'🤖',k:'โดรน AI',names:['ไพ','โนวา','บิต','ลูมิ','เคโอ','ไซฟ์'],st:['โดรนตอบคำสั่ง','โดรนที่ถามว่า "ทำไม"','โดรนที่รู้จักเหงา','โดรนที่ฝันได้','เพื่อนที่เป็นโลหะ'],life:99,meet:'โดรนสอดแนมพังๆ ตกลงมาข้างตัวคุณ คุณซ่อมมัน และมันเรียกคุณว่า "ผู้ดูแล"',x:{ic:'🤖',n:'โดรนยิงเลเซอร์สนับสนุน',s:'ยิงแม่น + เห็นท่าศัตรู',f:(D,e,md)=>{D._eye=1;return {en:md*.9,t:'🤖 "วิเคราะห์รูปแบบการโจมตีเสร็จสิ้น" โดรนยิงเลเซอร์แล้วฉายภาพท่าต่อไปของศัตรูให้คุณดู',keep:1}}}}};
+function cpOf(){const P=S&&S._cp;return P&&P.alive&&P.w===WK()?P:null}
+function cpMeet(){const w=WK(),T=CPT[w];if(!T||S._cp)return false;const n=pk(T.names);choice(`${T.ic} ${T.k}`,T.meet,[
+ {t:`🤝 รับไว้ ตั้งชื่อว่า "${n}"`,s:'เป็นคู่หูกันไปตลอดชีวิต',f(){S._cp={w,n,lv:0,bond:50,a0:S.age,t:-1,alive:1};try{log(`${T.ic} ${n}กลายเป็นคู่หูของคุณ · ดูได้ที่เมนู · ตอนดวลมีปุ่ม "${T.x.n}"`,'epic')}catch(e){}tut('cp')}},
+ {t:'🙅 ปล่อยไป',s:'',f(){S._cp={w,alive:0,no:1};try{log(`${T.ic} คุณเดินจากมา ${w==='fog'?'เงาของคุณกลับมาขยับตามปกติ… เกือบปกติ':'มันมองตามคุณจนลับตา'}`,'')}catch(e){}}}]);return true}
+window.cpOpen=function(){const P=cpOf();if(!P){toast('ยังไม่มีคู่หู');return}const T=CPT[P.w],can=P.t!==S.age;
+ modal(`<button class="xbtn" onclick="closeM()">✕</button><h3>${T.ic} ${E(P.n)} <span class="tag2">${T.st[P.lv]}</span></h3><div>💞 ${Math.round(P.bond)}/100<div class="hpbar" style="height:8px"><i style="width:${P.bond}%;background:#ff8ab0"></i></div></div><p style="font-style:italic">"${cpLine(P)}"</p>
+ ${can?`<div class="mgrid"><button class="opt" onclick="cpDo('talk')">💬 ใช้เวลาด้วยกัน<small>ผูกพัน +</small></button><button class="opt" onclick="cpDo('gift')">🎁 ของขวัญ<small>เงินนิดหน่อย</small></button></div>`:'<p class="tag2">ปีนี้ใช้เวลาด้วยกันแล้ว</p>'}`,'cp')};
+function cpLine(P){const L={mw:['เมี้ยว (แปลว่า: ข้าวเย็นช้าไปห้านาที)','*นอนทับคีย์บอร์ดคุณ*','*เอาหัวมาถูขาคุณตอนคุณร้องไห้*','เมี้ยว… (มันแก่แล้ว แต่ยังมานอนข้างคุณทุกคืน)'],fog:['เจ้ากลัวอะไรอยู่? ข้ารู้ เพราะข้าคือเจ้า','คืนนี้อย่าเดินตรอกที่สาม','บางทีข้าก็สงสัยว่าใครเป็นเงาของใคร','ถ้าวันหนึ่งข้าเดินนำ เจ้าจะตามมาไหม'],sky:['ผู้ดูแล วันนี้ท่านยิ้มน้อยกว่าเมื่อวาน 12%','ทำไมมนุษย์ต้องนอน? ข้าเฝ้าท่านทั้งคืนได้','ข้าบันทึกเสียงหัวเราะของท่านไว้ 341 ไฟล์','ถ้าข้าดับไป ท่านจะจำข้าได้ไหม']}[P.w];return L[Math.min(L.length-1,P.lv)]}
+window.cpDo=function(a){const P=cpOf();if(!P||P.t===S.age)return;P.t=S.age;closeM();if(a==='gift'){S.money=Math.max(0,(S.money||0)-Math.round(30+(S.money||0)*.01))}P.bond=Math.min(100,P.bond+(a==='gift'?10:7));if(P.bond>=40+P.lv*15&&P.lv<4){P.lv++;try{log(`${CPT[P.w].ic} ${P.n}เปลี่ยนไป — ตอนนี้เป็น「${CPT[P.w].st[P.lv]}」`,'epic')}catch(e){}}try{joy(4)}catch(e){}try{render()}catch(e){}};
+function cpYear(){const P=cpOf();if(!P)return;const T=CPT[P.w];if(S.age-P.a0>=T.life&&!P.dead){P.alive=0;P.dead=1;choice(`${T.ic} ลาก่อน ${P.n}`,`${P.n}อยู่กับคุณมา ${S.age-P.a0} ปี เช้านี้มันไม่ตื่นขึ้นมากินข้าว นอนขดอยู่ที่เดิมที่มันชอบที่สุด ตรงที่แดดส่องถึง`,[{t:'🌸 ฝังไว้ใต้ต้นไม้หลังบ้าน',s:'',f(){try{log(`🌸 ปีต่อมา มีลูกแมวสีเดียวกับ${P.n}มานั่งรอหน้าบ้าน`,'good');S._cp=null;joy(-10)}catch(e){}}}]);return}
+ if(P.w==='fog'&&P.lv>=4&&P.bond<50&&rnd()<.15){choice('🌑 เงาเดินนำ',`${P.n}ไม่ตามคุณอีกแล้ว มันเดินนำ และร่างของคุณเริ่มตามมัน`,[{t:'✋ ดึงตัวเองกลับมา',s:'',f(){P.bond=60;try{log('🌑 คุณยืนนิ่งจนเงาหดกลับมาใต้เท้า มันพึมพำว่า "ครั้งนี้เท่านั้น"','')}catch(e){}}},{t:'🚶 ปล่อยให้มันนำ',s:'',f(){try{S.power=(S.power||0)*1.15;log('🌑 คุณรู้สึกแข็งแกร่งขึ้น… และไม่แน่ใจว่าความคิดเมื่อกี้เป็นของใคร','epic')}catch(e){}}}])}}
+(window._duPost=window._duPost||[]).push(F=>{const P=cpOf();if(P&&!F.x2){const T=CPT[P.w];F.x2=Object.assign({c:'#ff8ab0'},T.x,{n:`${P.n}: ${T.x.n}`})}});
+// ---------- 🏆 ความสำเร็จของระบบใหม่ ----------
+try{const fk=()=>S&&S.mw&&S.mw.fan,x9=()=>(fk()&&fk().x9)||{};const L=[
+ {id:'nx_tw30',n:'ไต่ฟ้าไร้ยอด',d:'ขึ้นหอคอยไร้ที่สิ้นสุดถึงชั้น 30',r:3,c:()=>((x9().tw||{}).best|0)>=30},
+ {id:'nx_sss',n:'แรงก์ที่ไม่ควรมีอยู่',d:'ได้บัตรนักผจญภัยแรงก์ SSS',r:4,c:()=>((x9().gr||{}).r|0)>=8},
+ {id:'nx_spell',n:'ผู้ประพันธ์เวท',d:'คิดค้นเวทในตำนานได้',r:3,c:()=>((x9().sp||{}).leg|0)>=1},
+ {id:'nx_sprk',n:'เพื่อนของราชา',d:'เลี้ยงภูตจนเป็นราชาภูต',r:3,c:()=>((x9().spr||{}).lv|0)>=4},
+ {id:'nx_honest',n:'ลิ้นไม่เคยคด',d:'ชนะดวลวาทะ 3 ครั้งในชาติเดียวโดยไม่โกหกเลย',r:2,c:()=>(S._tkH|0)>=3},
+ {id:'nx_liar',n:'นักเล่าเรื่องตัวจริง',d:'ชนะดวลวาทะด้วยการโกหก 3 ครั้งขึ้นไปในการปะทะเดียว',r:2,c:()=>!!S._tkL},
+ {id:'nx_ledger',n:'อดีตไม่เคยหายไปไหน',d:'มีคนจากอดีตกลับมาหาคุณ 3 คนในชาติเดียว',r:2,c:()=>(S._ld||[]).filter(x=>x.bk).length>=3},
+ {id:'nx_foe',n:'หนี้ข้ามภพ',d:'เจอศัตรูจากชาติก่อน',r:2,c:()=>!!S._fx},
+ {id:'nx_mon',n:'ไม่ใช่คนก็มีชีวิตได้',d:'วิวัฒนาการครบ 3 ร่างในชีวิตสัตว์อสูรแฟนตาซี',r:3,c:()=>!!(fk()&&fk().ms&&(fk().ms.st|0)>=2)},
+ {id:'nx_cp',n:'คู่หูตลอดกาล',d:'คู่หูประจำโลกเติบโตถึงขั้นสุดท้าย',r:2,c:()=>!!(S._cp&&(S._cp.lv|0)>=4)},
+ {id:'nx_novel',n:'นักเขียนล้านวิว',d:'มีนิยายชีวิตยอดวิวทะลุ 1,000,000',r:3,c:()=>(LS.get('murim_novels',[])||[]).some(n=>n.views>=1e6)}];
+ ACH.push(['📖 ตำนานบทใหม่',L]);L.forEach(a=>ACH_ALL.push(a))}catch(e){console.error('nx ach',e)}
+// นับชนะวาทะแบบซื่อสัตย์/โกหก: ห่อ talkDuel cb
+{const _td=window.talkDuel;window.talkDuel=function(o,cb){const w0=o.win;o.win=function(T){try{if((T.lies|0)===0)S._tkH=(S._tkH|0)+1;if((T.lies|0)>=3)S._tkL=1}catch(e){}return w0?w0.apply(this,arguments):''};return _td(o,cb)}}
+// ---------- 💡 สอนเล่นครั้งแรก ----------
+const TUT={duel:['⚔️ ดวลแบบใหม่','ดูท่าทีของศัตรูในกรอบสีม่วง แล้วเลือกท่าที่ชนะทาง (บุก/ตั้งรับ/หลบ/สวน) · ท่าไม้ตายใช้ได้หลายครั้งตามหลอดพลังงาน · ปุ่มเรืองแสงคือท่าพิเศษของคุณ ใช้ได้ครั้งเดียวต่อการดวล'],
+ el:['🔥 ธาตุแพ้ทาง','ไฟชนะลม · ลมชนะดิน · ดินชนะน้ำ · น้ำชนะไฟ · แสงกับเงาแพ้ทางกัน — ถ้าชนะทาง ทุกท่าแรงขึ้น เปลี่ยนธาตุได้ด้วยเวทที่ติดตัวในห้องวิจัยเวท'],
+ talk:['🗣️ ดวลวาทะ','อ่านท่าทีอีกฝ่าย: เหตุผลชนะการเล่นอารมณ์ · หลักฐานชนะเหตุผลและการถามจี้ · เงียบกดดันชนะการด่า — ดันใจคนฟังให้ถึง 80 · โกหกได้ผลเสมอแต่ยิ่งโกหกยิ่งเสี่ยง'],
+ tw:['🗼 หอคอย','เลือกประตูทีละชั้น ทุก 10 ชั้นมีบอส และธาตุของบอสบอกไว้ล่วงหน้า · ออกเมื่อไหร่ก็ได้ ถ้าหมดแรงของจะหายครึ่งหนึ่ง'],
+ lab:['🧪 ห้องวิจัยเวท','เลือกธาตุ × รูปทรง × ผล แล้วทดลองปีละครั้ง · บางสูตรเป็นเวทในตำนาน · เวทที่ติดตัวคือท่าไม้ตายและธาตุของคุณตอนดวล'],
+ cp:['💞 คู่หู','ใช้เวลากับคู่หูปีละครั้งที่เมนู · ยิ่งผูกพันยิ่งเติบโต และตอนดวลจะมีปุ่มช่วยของมัน']};
+function tut(k){try{const D=LS.get('murim_tuto',{})||{};if(D[k]||!TUT[k])return;D[k]=1;LS.set('murim_tuto',D);const d=document.createElement('div');d.style.cssText='position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:99999;max-width:360px;width:calc(100% - 24px);background:#1e1830f2;border:2px solid #c39bff;border-radius:14px;padding:12px 14px;color:#fff;box-shadow:0 8px 30px #0009;font-size:14px;line-height:1.5';
+ d.innerHTML=`<b>💡 ${TUT[k][0]}</b><div style="margin-top:4px;opacity:.92">${TUT[k][1]}</div><button class="opt" style="margin-top:8px;width:100%">เข้าใจแล้ว</button>`;d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d);setTimeout(()=>{try{d.remove()}catch(e){}},22000)}catch(e){}}
+window._tut=tut;
+{const _dd=drawDuel;drawDuel=function(fin){const r=_dd.apply(this,arguments);try{if(!fin&&typeof DU!=='undefined'&&DU&&DU.fl){tut('duel');if(String(DU.fl.tag||'').includes(' vs '))setTimeout(()=>tut('el'),400)}}catch(e){}return r}}
+['fanTower','fanLab'].forEach(k=>{const iv=setInterval(()=>{if(typeof window[k]==='function'&&!window[k]._t){const f0=window[k];window[k]=function(){tut(k==='fanTower'?'tw':'lab');return f0.apply(this,arguments)};window[k]._t=1}},3000)});
+// ---------- ตัวจับปีใหม่: ศัตรูข้ามชาติ / คู่หู ----------
+let la=-1,pend=null,pT=0;const busy=()=>!S||!S.alive||auto||choice._cur||modalOpen||document.hidden||(S.mw&&S.mw.fan&&S.mw.fan.kidP);
+setInterval(()=>{try{if(!S||!S.alive){la=-1;return}if(S.age!==la){const first=la<0;la=S.age;if(first)return;const w=WK();if(w==='beast')return;
+  try{cpYear()}catch(e){}
+  if(!S._fx&&S.age>=18&&(LS.get('murim_ldx',[])||[]).length&&rnd()<.05)pend='foe';else if(CPT[w]&&!S._cp&&S.age>=8&&rnd()<.06)pend='cp';pT=Date.now()}
+ if(pend&&!busy()){const k=pend;pend=null;if(k==='foe')foeEv();else cpMeet()}else if(pend&&Date.now()-pT>25000)pend=null}catch(e){}},1700);
+{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{const P=cpOf(),m=$('modal'),d=m&&m.querySelector('[data-tale]');if(P&&d&&!d.querySelector('[data-cp]')){const b=document.createElement('button');b.className='opt';b.style.flex='1';b.setAttribute('data-cp',1);b.innerHTML=`${CPT[P.w].ic} ${E(P.n)}<small>${CPT[P.w].st[P.lv]}</small>`;b.onclick=()=>cpOpen();d.appendChild(b)}}catch(e){}return r}}
+})()}catch(e){console.error('block319',e)}
