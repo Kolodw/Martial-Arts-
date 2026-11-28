@@ -17,7 +17,7 @@ const CAT=[
  {k:'chal',n:'ท้าทาย',ic:'🔥',a:'#ff6a3a',L:[['h','นรก','hell'],['s','ชีวิตสั้น','short'],['j','รากขยะ','junk'],['rg','ผู้ย้อนกาล','regress ย้อนเวลา']]},
  {k:'mod',n:'ยุคปัจจุบัน',ic:'🏙️',a:'#3ab0ff',L:[['n','ฮันเตอร์','hunter เกต'],['u','ใต้ดิน','under มาเฟีย'],['o','ผีไทย','ghost ผี'],['p','วนลูป','loop'],['z','ซอมบี้','zombie'],['t','หอคอย','tower'],['e','ระบบเกม','game'],['q','เกตชนะ','gate'],['y','วันสิ้นโลก','doom']]},
  {k:'fut',n:'อนาคตและลึกลับ',ic:'🌠',a:'#b07aff',L:[['k','ทะลุฟ้าดารา','sky ดาว อวกาศ'],['f','นครม่านหมอก','fog หมอก ไอน้ำ'],['v','ผู้ข้ามโลก','trav ข้ามโลก']]},
- {k:'fan',n:'แฟนตาซี',ic:'🔮',a:'#ff7ac8',soon:1,L:[['fi','ต่างโลก','isekai'],['fm','โลกเวทมนตร์','magic เวท'],['fa','โลกแห่งอะคาเดมี่','academy โรงเรียน']]}];
+ {k:'fan',n:'แฟนตาซี',ic:'🔮',a:'#ff7ac8',L:[['i','แฟนตาซี · ต่างโลก เวทมนตร์ อะคาเดมี่','fantasy isekai magic academy ต่างโลก โลกเวทมนตร์ เวท อะคาเดมี่ โรงเรียน']]}];
 const ALL=[];CAT.forEach(c=>c.L.forEach(x=>ALL.push({id:x[0],n:x[1],q:x[2],c})));
 const catOf=id=>(ALL.find(x=>x.id===id)||{}).c||CAT[0];
 const myPu=()=>T_(()=>String(pid).replace(/[^a-z0-9]/g,'').slice(0,12))||'';
@@ -33,16 +33,16 @@ const left=p=>{const t=new Date(Date.now()+7*3600e3);let nx;if(p==='m')nx=Date.U
 
 // ---------- สไตล์ HUD ----------
 const css=document.createElement('style');css.textContent=`
-.bhBg{position:fixed;inset:0;z-index:100050;background:rgba(2,4,8,.62);display:flex;align-items:flex-end;justify-content:center;animation:bhF .16s ease}
+.bhBg{position:fixed;inset:0;z-index:100050;background:rgba(2,4,8,.62);display:flex;align-items:center;justify-content:center;padding:max(14px,env(safe-area-inset-top)) 10px max(14px,env(safe-area-inset-bottom));animation:bhF .16s ease}
 @keyframes bhF{from{opacity:0}}
-.bh{--ac:#e8b54a;position:relative;width:min(560px,100%);max-height:86vh;max-height:86dvh;display:flex;flex-direction:column;color:#e9eef6;font-variant-numeric:tabular-nums;
+.bh{--ac:#e8b54a;position:relative;width:min(560px,100%);max-height:82vh;max-height:82dvh;display:flex;flex-direction:column;color:#e9eef6;font-variant-numeric:tabular-nums;
  background:linear-gradient(rgba(120,180,255,.045) 1px,transparent 1px) 0 0/100% 4px,radial-gradient(120% 60% at 50% 0%,rgba(80,130,200,.16),transparent 60%),#0b0f17;
- border:1px solid rgba(160,200,255,.22);border-bottom:0;border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);animation:bhU .24s cubic-bezier(.2,.9,.3,1);overflow:hidden}
-@keyframes bhU{from{transform:translateY(46px);opacity:.3}}
+ border:1px solid rgba(160,200,255,.22);border-radius:18px;box-shadow:0 14px 50px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06);animation:bhU .24s cubic-bezier(.2,.9,.3,1);overflow:hidden}
+@keyframes bhU{from{transform:translateY(18px) scale(.97);opacity:.3}}
 .bh .cn{position:absolute;width:16px;height:16px;border:2px solid var(--ac);pointer-events:none;z-index:3;filter:drop-shadow(0 0 4px var(--ac))}
 .bh .cn.a{top:8px;left:8px;border-right:0;border-bottom:0}.bh .cn.b{top:8px;right:8px;border-left:0;border-bottom:0}
 .bhTop{padding:12px 16px 8px;border-bottom:1px solid rgba(160,200,255,.12);position:relative}
-.bhGrip{width:42px;height:4px;border-radius:9px;background:rgba(160,200,255,.3);margin:0 auto 10px}
+.bhGrip{display:none}
 .bhK{font:700 10px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:2px;color:var(--ac);opacity:.9}
 .bhH{display:flex;align-items:center;gap:8px;margin-top:4px}.bhH b{font-size:18px;font-weight:900;letter-spacing:.3px}
 .bhH{padding-right:40px}.bhH .pd{margin-left:auto;font:700 11px ui-monospace,Menlo,monospace;color:#9fd8ff;border:1px solid rgba(110,200,255,.45);padding:3px 8px;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);background:rgba(60,150,255,.10);white-space:nowrap}
