@@ -71,20 +71,50 @@ html:root body.ink.ink.ink #game .crow #pauseBtn *{color:#1B1309!important}
 html:root body.ink.ink.ink #game .crow.crow #autoBtn.cb.on{background:#1E3A2A!important;color:#9BE3B6!important}
 html:root body.ink.ink.ink #game .focus .fc.on{background:var(--kA)!important;color:#1B1309!important}
 html:root body.ink.ink.ink #feed,html:root body.ink.ink.ink .feed{font-family:'Sarabun',sans-serif!important;font-size:15.5px!important;line-height:1.65!important}
-html:root body.ink.ink.ink #feed.feed>.bub.bub,html:root body.ink.ink.ink #feed .bub{position:relative;background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:3px 4px 3px 18px!important;margin:2px 0!important;color:#EEE7D7!important;animation-duration:.22s!important}
-html:root body.ink.ink.ink #feed .bub::before{content:'';position:absolute;left:4px;top:.85em;width:6px;height:6px;border-radius:3px;background:#4A4266}
-html:root body.ink.ink.ink #feed .bub.good::before{background:#6FD39A}
-html:root body.ink.ink.ink #feed .bub.bad::before{background:#E5655A}
+html:root body.ink.ink.ink #feed.feed>.bub.bub.bub,html:root body.ink.ink.ink #feed .bub{position:relative;background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:3px 4px 3px 18px!important;margin:2px 0!important;color:#EEE7D7!important;animation-duration:.22s!important}
+html:root body.ink.ink.ink #feed.feed>.bub.bub.bub::before,html:root body.ink.ink.ink #feed .bub::before{content:''!important;position:absolute!important;left:4px!important;top:13px!important;width:6px!important;height:6px!important;border-radius:3px!important;background:#4A4266!important;box-shadow:none!important;border:0!important;transform:none!important;opacity:1!important;padding:0!important;margin:0!important;font-size:0!important;line-height:0!important;display:block!important;vertical-align:top!important}
+html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.good::before{background:#6FD39A!important}
+html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.bad::before{background:#E5655A!important}
 html:root body.ink.ink.ink #feed .bub.dim,html:root body.ink.ink.ink #feed .bub.sum{color:#A8A0BC!important}
-html:root body.ink.ink.ink #feed.feed>.bub.epic,html:root body.ink.ink.ink #feed.feed>.bub.myth{background:#1E1A2C!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;padding:10px 14px!important;margin:6px 0!important}
-html:root body.ink.ink.ink #feed .bub.epic::before,html:root body.ink.ink.ink #feed .bub.myth::before{display:none}
-html:root body.ink.ink.ink #feed.feed>.bub.myth{border-color:color-mix(in srgb,var(--kA) 55%,#3A3354)!important}
+html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.epic,html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.myth,html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.peer{background:#1E1A2C!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;padding:10px 14px!important;margin:6px 0!important}
+html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.epic::before,html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.myth::before,html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.peer::before{display:none!important}
+html:root body.ink.ink.ink #feed.feed>.bub.bub.bub.myth{border-color:color-mix(in srgb,var(--kA) 55%,#3A3354)!important}
 html:root body.ink.ink.ink #feed .yr,html:root body.ink.ink.ink #feed .ageH,html:root body.ink.ink.ink #feed .yrH,html:root body.ink.ink.ink #feed [class*="ageb"],html:root body.ink.ink.ink .feed .hdr{background:transparent!important;border:0!important;box-shadow:none!important;color:#A8A0BC!important;font-family:'Kanit',sans-serif!important;font-size:12.5px!important;border-radius:0!important}
 
 /* ---------- มือถือ: ฉากคงที่ไม่ดันฟีด · หน้าต่างเป็นแผ่นจากล่าง ---------- */
 @media (max-width:820px){
-html:root body.ink.ink.ink #game>#sceneBox,html:root body.ink.ink.ink #game.uxS>#sceneBox,html:root body.ink.ink.ink html body.ux2 #game.uxS>#sceneBox{height:84px!important;min-height:0!important;max-height:84px!important;opacity:.75!important;margin:0!important;border:0!important;border-radius:0!important;transition:none!important;-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent)}
+html:root body.ink.ink.ink #game>#sceneBox,html:root body.ink.ink.ink #game.uxS>#sceneBox,html:root body.ink.ink.ink.ux2 #game.uxS>#sceneBox{height:84px!important;min-height:0!important;max-height:84px!important;opacity:.75!important;margin:0!important;border:0!important;border-radius:0!important;transition:none!important;-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent)}
 html:root body.ink.ink.ink #game>#sceneBox canvas{width:100%!important;height:100%!important;object-fit:cover}
 html:root body.ink.ink.ink #game>.box.top{border-radius:0 0 18px 18px!important;border-top:0!important;margin:0!important}
 }
+
+/* ================= v2: หน้าเล่นมือถือ — ฉากเป็นหัวจอ ข้อมูลตัวละครลอยบนฉาก ================= */
+@media (max-width:820px){
+html:root body.ink.ink.ink.mUI #game{position:relative}
+html:root body.ink.ink.ink.mUI #game>#sceneBox,html:root body.ink.ink.ink.mUI #game.uxS>#sceneBox,html:root body.ink.ink.ink.mUI.ux2 #game.uxS>#sceneBox{display:block!important;order:-1;height:calc(var(--topH,96px) + 84px)!important;max-height:none!important;min-height:0!important;flex:0 0 auto!important;margin:0!important;border:0!important;border-radius:0 0 20px 20px!important;opacity:1!important;-webkit-mask-image:none!important;mask-image:none!important;overflow:hidden!important;position:relative!important}
+html:root body.ink.ink.ink.mUI #game>#sceneBox::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(12,10,19,.82) 0%,rgba(12,10,19,.45) calc(var(--topH,96px) - 10px),rgba(12,10,19,0) calc(var(--topH,96px) + 20px),rgba(19,17,28,.85) 100%)}
+html:root body.ink.ink.ink.mUI #game>#sceneBox #scCap{top:auto!important;bottom:8px!important;left:12px!important;right:auto!important;z-index:2;background:rgba(14,12,22,.6)!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:12px!important}
+html:root body.ink.ink.ink.mUI #game>#sceneBox #mEye{display:none!important}
+html:root body.ink.ink.ink.mUI #game>.box.top{position:absolute!important;left:10px!important;right:10px!important;top:calc(6px + env(safe-area-inset-top,0px))!important;z-index:5!important;margin:0!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important}
+html:root body.ink.ink.ink.mUI #game>.box.top,html:root body.ink.ink.ink.mUI #game>.box.top *{text-shadow:0 1px 2px rgba(0,0,0,.85)!important}
+html:root body.ink.ink.ink.mUI #game>.box.top #gName{color:#fff!important;font-size:16.5px!important}
+html:root body.ink.ink.ink.mUI #game>.box.top .frw{border-radius:14px!important;box-shadow:0 0 0 2px var(--kA)!important}
+html:root body.ink.ink.ink.mUI #game>.box.top .hudr button{background:rgba(14,12,22,.62)!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:12px!important}
+html:root body.ink.ink.ink.mUI #game>.box.top .hpbar{background:rgba(255,255,255,.16)!important;height:5px!important}
+html:root body.ink.ink.ink.mUI #qTrk{order:0;margin:8px 2px 0!important;padding:7px 12px!important;border-radius:16px!important;background:color-mix(in srgb,var(--kA) 13%,#1C1929)!important;border:1px solid color-mix(in srgb,var(--kA) 45%,#2E2944)!important;box-shadow:none!important;font-family:'Sarabun',sans-serif!important}
+html:root body.ink.ink.ink.mUI #qTrk .how{display:none!important}
+html:root body.ink.ink.ink.mUI #qTrk .bar{height:3px!important;margin:5px 0 0!important;background:rgba(255,255,255,.1)!important}
+html:root body.ink.ink.ink.mUI #qTrk .bar i{background:var(--kA)!important}
+html:root body.ink.ink.ink.mUI #qTrk .go{background:var(--kA)!important;border:0!important;color:#1B1309!important;border-radius:10px!important;padding:3px 10px!important}
+html:root body.ink.ink.ink.mUI #game>#feed{margin-top:4px!important}
+html:root body.ink.ink.ink.mUI #game>.ctrl{margin:6px 2px calc(10px + env(safe-area-inset-bottom,0px))!important;border:1px solid #34304A!important;border-radius:22px!important;background:#1C1929!important;box-shadow:0 10px 30px rgba(0,0,0,.45)!important;padding-top:0!important;overflow:visible!important}
+html:root body.ink.ink.ink.mUI #game .crow.crow #pauseBtn.cb.cb,html:root body.ink.ink.ink.mUI #game .crow #pauseBtn{transform:translateY(-14px);min-width:64px!important;height:62px!important;border-radius:22px!important;border:4px solid #13111C!important;box-sizing:border-box}
+html:root body.ink.ink.ink.mUI #game .crow #spdBtn{color:var(--kA)!important}
+}
 @media (prefers-reduced-motion:reduce){html:root body.ink.ink.ink #feed .bub{animation:none!important}}
+
+html:root body.ink.ink.ink #feed .yr{background:#13111C!important}
+html:root body.ink.ink.ink #feed .yr>span{background:#1C1929!important;border:1px solid #2E2944!important;border-radius:14px!important;padding:0 12px!important;color:#C9C0DA!important;box-shadow:0 2px 10px rgba(19,17,28,.9)!important}
+@media (max-width:820px){
+html:root body.ink.ink.ink.mUI #game>.box.top{background:rgba(12,10,19,.62)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08)!important;border-radius:18px!important;padding-bottom:32px!important}
+}
