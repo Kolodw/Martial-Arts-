@@ -59,9 +59,23 @@ function view(){const it=ITEMS;let h='';
  else if(ST.pg==='pin'){const P=pins()||pinList().map(x=>x.key);h+=head('จัดเรียงปักหมุด',1)+`<div class="m2b"><div class="m2l" style="display:block">แตะดาวเพื่อเลือก (สูงสุด 7) · ตอนนี้ ${P.length} อย่าง</div>${it.filter(x=>!['set','foot'].includes(x.cat)).map(x=>row(x,1)).join('')}</div>`}
  return h}
 function paint(m){let r=m.querySelector(':scope>.m2r');if(!r){r=document.createElement('div');r.className='m2r';m.appendChild(r)}
- const st=r.querySelector('.m2b')?r.querySelector('.m2b').scrollTop:0;rec=1;r.innerHTML=view();rec=0;
+ const st=r.querySelector('.m2b')?r.querySelector('.m2b').scrollTop:0;rec=1;r.innerHTML=isD()?desk(view()):view();r.classList.toggle('m2D',isD());m.classList.toggle('mnu2D',isD());rec=0;
  if(ST.pg!=='hub'||!ST.q){const b=r.querySelector('.m2b');if(b&&ST._keep)b.scrollTop=st}ST._keep=0;
  const qi=r.querySelector('#m2q');if(qi){qi.oninput=()=>{ST.q=qi.value;ST.pg=qi.value.trim()?'search':'hub';paint(m);const n=m.querySelector('#m2q');if(n){n.focus();try{n.setSelectionRange(n.value.length,n.value.length)}catch(e){}}}}}
+
+const isD=()=>innerWidth>=900;
+// 🖥️ คอม: แถบหมวดด้านซ้าย (ค้นหา · หน้าหลัก · 6 หมวด · ตั้งค่า · หน้าแรก/จบชีวิต) + เนื้อหาด้านขวาเป็นตาราง
+function desk(html){const t=document.createElement('div');t.innerHTML=html;const it=ITEMS;
+ const ttl=(t.querySelector('.m2h b')||{}).innerHTML||'เมนู';['.m2h','.m2s','.m2f'].forEach(q=>t.querySelectorAll(q).forEach(e=>e.remove()));
+ if(ST.pg==='hub'){const c=t.querySelector('.m2c');if(c){const l=c.previousElementSibling;if(l&&l.classList.contains('m2l'))l.remove();c.remove()}}
+ const nav=(k,ic,n,sub,on,dot,c)=>`<button type="button" class="m2nv ${on?'on':''}" ${k}>${ic}<span class="m2t"><b>${n}</b>${sub?`<small${c?` style="color:${c}"`:''}>${sub}</small>`:''}</span>${dot?'<span class="m2dot"></span>':''}</button>`;
+ let sd=`<label class="m2s"><span>🔎</span><input type="search" id="m2q" placeholder="ค้นหาเมนู" value="${esc(ST.q)}" autocomplete="off"></label><div class="m2nvL">`;
+ sd+=nav('data-go="hub"','<span class="m2i" style="--s:34px">🏠</span>','หน้าหลัก','กิจกรรม · ปักหมุด',ST.pg==='hub'||ST.pg==='search'||ST.pg==='pin');
+ CATS.forEach(C=>{const L=it.filter(x=>x.cat===C[0]);if(!L.length)return;sd+=nav(`data-cat="${C[0]}"`,`<span class="m2i" style="--s:34px;background:color-mix(in srgb,${C[3]} 18%,#211E31)">${C[1]}</span>`,C[2],L.length+' ระบบ',ST.pg==='cat'&&ST.cat===C[0],L.some(x=>x.dot),C[3])});
+ sd+=nav('data-go="set"','<span class="m2i" style="--s:34px">⚙️</span>','ตั้งค่า',it.filter(x=>x.cat==='set').length+' อย่าง',ST.pg==='set');
+ sd+='</div><div class="m2sf">'+it.filter(x=>x.cat==='foot').map(x=>`<button type="button" class="m2fb" data-k="${esc(x.key)}">${icon(x,20)}<span>${esc(/toTitle/.test(x.key)?'หน้าแรก':x.lab.replace(/\s*—.*$/,''))}</span></button>`).join('')+'</div>';
+ return `<aside class="m2side">${sd}</aside><section class="m2main"><div class="m2mh"><b>${ST.pg==='hub'?'เมนู':ST.pg==='search'?'ผลการค้นหา':ttl}</b><button type="button" class="m2ib" data-x="1" aria-label="ปิด">✕</button></div>${t.innerHTML}</section>`}
+let _rz=0;addEventListener('resize',()=>{clearTimeout(_rz);_rz=setTimeout(()=>{const m=$('modal');if(m&&m.classList.contains('mnu2'))paint(m)},200)});
 function find(k){return ITEMS.find(x=>x.key===k)}
 function onClick(e){const m=$('modal');if(!m||!m.classList.contains('mnu2'))return;const t=e.target;if(!t.closest||!t.closest('.m2r'))return;
  const pin=t.closest('[data-pin]');if(pin){e.preventDefault();e.stopPropagation();const k=pin.dataset.pin;let P=pins()||pinList().map(x=>x.key);P=P.includes(k)?P.filter(x=>x!==k):P.concat(k).slice(-7);LSs('murim_mnu2pin',P);ST._keep=1;paint(m);return}
@@ -78,7 +92,7 @@ function go(m,force){if(busy)return;const on=!LSg('murim_mnu2off',0);if(!on){add
  if(!m.classList.contains('mnu2'))ST={pg:'hub',q:'',cat:null};m.classList.add('mnu2');paint(m)}
 let tm=0,lastOpen=0;
 function check(){const m=$('modal');if(!m)return;const isMenu=m.dataset.k==='menu'&&typeof modalOpen!=='undefined'&&modalOpen;
- if(!isMenu){if(m.classList.contains('mnu2')){m.classList.remove('mnu2');SIG=''}return}
+ if(!isMenu){if(m.classList.contains('mnu2')||m.classList.contains('mnu2D')){m.classList.remove('mnu2','mnu2D');SIG=''}return}
  clearTimeout(tm);tm=setTimeout(()=>go(m),40)}
 const css=document.createElement('style');css.textContent=`
 #modal.mnu2{padding:0!important;display:flex!important;flex-direction:column;height:min(88vh,860px);max-height:88vh!important;overflow:hidden!important;width:min(94vw,460px)!important}
@@ -121,6 +135,33 @@ const css=document.createElement('style');css.textContent=`
 .m2fb .m2i{background:transparent}
 .m2e{color:#A8A0BC;text-align:center;padding:20px 0}
 .m2back{display:block;width:100%;margin:6px 0 8px}
+#modal.mnu2.mnu2D{width:min(1120px,94vw)!important;max-width:none!important;height:min(86vh,780px)}
+#modal.mnu2>.m2r.m2D{flex-direction:row!important}
+#modal.mnu2 .m2D .m2side{width:280px;flex:none;display:flex;flex-direction:column;border-right:1px solid #2E2944;background:#16131F;padding:16px 0 0}
+#modal.mnu2 .m2D .m2side .m2s{margin:0 14px 12px}
+#modal.mnu2 .m2nvL{flex:1;min-height:0;overflow-y:auto;padding:0 10px;display:flex;flex-direction:column;gap:2px}
+#modal.mnu2 .m2nv{position:relative;display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:14px;border:0;background:transparent;text-align:left}
+#modal.mnu2 .m2nv:hover{background:#211E31}.m2nv.on{background:#2A2640;box-shadow:inset 3px 0 0 var(--hA,#E7B04A)}
+#modal.mnu2 .m2nv .m2t b{font:500 14.5px/1.3 'Kanit',sans-serif}.m2nv .m2dot{position:absolute;right:12px;top:50%;margin-top:-4px}
+#modal.mnu2 .m2sf{display:flex;gap:8px;padding:12px 14px 14px;border-top:1px solid #2E2944}.m2sf .m2fb{min-height:42px;font-size:13.5px!important}
+#modal.mnu2 .m2D .m2main{flex:1;min-width:0;display:flex;flex-direction:column}
+#modal.mnu2 .m2mh{display:flex;align-items:center;padding:16px 14px 6px 24px}.m2mh b{flex:1;font:500 22px 'Kanit',sans-serif}
+#modal.mnu2 .m2D .m2b{padding:0 24px 24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;align-content:start}
+#modal.mnu2 .m2D .m2b>:not(.m2row){grid-column:1/-1}
+#modal.mnu2 .m2D .m2b>.m2row{border-bottom:1px solid #2A2640}
+#modal.mnu2 .m2D .m2chips{flex-wrap:wrap;overflow:visible}
+#modal.mnu2 .m2D .m2q{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#modal.mnu2 .m2D .m2qb{flex-direction:row;justify-content:flex-start;gap:10px;padding:10px 12px;border-radius:16px;background:#211E31;border:1px solid #2E2944;text-align:left;font-size:14px!important}
+#modal.mnu2 .m2D .m2qb:hover,#modal.mnu2 .m2D .m2pb:hover .m2i,#modal.mnu2 .m2D .m2row:hover{border-color:var(--hA,#E7B04A)}
+#modal.mnu2 .m2D .m2row:hover{background:#1E1B2C}
+#modal.mnu2 .m2D .m2p{grid-template-columns:repeat(8,minmax(0,1fr))}
+#modal.mnu2 .m2D .m2g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px}
+#modal.mnu2 .m2D .m2g .m2row{border-bottom:1px solid #2A2640}
+#modal.mnu2 .m2row,#modal.mnu2 .m2nv,#modal.mnu2 .m2cb,#modal.mnu2 .m2fb,#modal.mnu2 .m2chip{display:flex!important;flex-direction:row!important;align-items:center!important;text-align:left!important;width:auto}
+#modal.mnu2 .m2row,#modal.mnu2 .m2nv{width:100%!important;justify-content:flex-start!important}
+#modal.mnu2 .m2fb{justify-content:center!important}
+#modal.mnu2 .m2qb,#modal.mnu2 .m2pb{display:flex!important;flex-direction:column!important;align-items:center!important}
+#modal.mnu2 .m2D .m2qb{flex-direction:row!important;justify-content:flex-start!important}
 @media (prefers-reduced-motion:no-preference){#modal.mnu2>.m2r .m2b{animation:m2in .2s ease-out}@keyframes m2in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}}
 `;document.head.appendChild(css);
 document.addEventListener('click',onClick,true);
