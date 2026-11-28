@@ -3878,6 +3878,40 @@ function monNpcs(K){const k=monEvK,s=age()*7;if(k==='hunter'){fNpc(110,47,s+1,{r
 window._drawMonT=(ctx,x,y,f)=>{g=ctx;PS=ctx.canvas.width/SW;ctx.setTransform(PS,0,0,PS,0,0);ctx.imageSmoothingEnabled=false;drawMon(FN(),x,y,f||0)};
 window._monTest=(sp,st,ev)=>{const K=FN();if(!K)return;const m=MS2(K);if(sp!=null)m.sp=sp;if(st!=null)m.st=st;window._monEvT=ev};
 
+
+// =================== 🧍 ร่างมนุษย์ของสัตว์อสูร + 🔄 แปลงร่างไปมา ===================
+//   ได้ร่างมนุษย์ 2 ทาง: (1) วิวัฒนาการสาย "ร่างมนุษย์" ที่ LV25 (เดิม) (2) เหตุการณ์พิเศษของสายพันธุ์ที่แปลงกายได้ เช่น กลืนร่างนักผจญภัยที่กำลังจะตาย / จิ้งจอกเรียนแปลงกาย
+//   ร่างมนุษย์คงลักษณะเดิม (สีผม = สีตัว · หูสัตว์ · เขา · ปีก · หาง) · แปลงร่างได้จากเมนู · ร่างมนุษย์เข้าเมือง/สมัครกิลด์นักผจญภัยได้
+const HFX={0:{n:'ร่างมนุษย์ของสไลม์',hat:null,glow:'#9ad8ff'},18:{hat:'ears',tail:'fox'},29:{hat:'ears',tail:'cat'},3:{hat:'ears',tail:'wolf'},10:{hat:'horn',wing:'dragon',tail:'dragon'},37:{hat:'horn',wing:'dragon',tail:'dragon'},4:{tail:'snake'},28:{wing:'butterfly',hat:'flower'},27:{hat:'horn',wing:'bat',tail:'imp'},13:{hat:'halo',ghost:1},5:{wing:'bat'},44:{hat:'crown',glow:'#c8f0ff'},45:{wing:'flame',glow:'#ff8a3a'},48:{wing:'feather',hat:'halo'},47:{glow:'#c83a6a'},19:{wing:'feather'},36:{hat:'horn'},24:{hat:'ears'},39:{hat:'ears',tail:'otter'},40:{hat:'ears',tail:'squirrel'},14:{glow:'#f09ac0'},31:{},2:{ghost:1}};
+const monHum=K=>{const m=MS2(K);return !!(m.hf||(m.st>=2&&m.path==='human'))};
+const monForm=K=>{const m=MS2(K);return monHum(K)&&m.form!=='mon'};
+function hfLook(K){const m=MS2(K),A=MA[m.sp]||MA[0],X=HFX[m.sp]||{},L=m.hl||(m.hl={g:rnd()<.5?'ชาย':'หญิง',seed:R(1,99999),skin:pick(['#ffe3cf','#f1c7a5','#e8c0a0','#ffe8d8'])});
+ const hair=m.mrk===2?'#f0d060':A[1];return {robe:A[2],trim:A[3],belt:'#00000055',hs:L.g==='หญิง'?3:4,mood:'happy',seed:L.seed,age:Math.min(30,S.age+12),g:L.g,skin:X.ghost?'#e8f0ff':L.skin,hair,hat:X.hat||null,wing:X.wing||null,wingC:X.wing?A[1]:undefined,eye:A[4],_hf:1}}
+function hfTail(K,x,y,f){const m=MS2(K),X=HFX[m.sp]||{},A=MA[m.sp]||MA[0],c=m.mrk===2?'#f0d060':A[1];if(!X.tail)return;const X0=x*3-10,Y0=y*3-30,sw=Math.sin(f*.12)*3;
+ if(X.tail==='fox'){const n=[1,3,9][m.st|0];for(let i=0;i<n;i++){const a=(i-(n-1)/2)*.3;mO(X0-6+Math.sin(a)*8,Y0-Math.cos(a)*6+sw,3,7,c,'#140e18');mE(X0-6+Math.sin(a)*8,Y0-6-Math.cos(a)*6+sw,2,2,'#ffffff')}}
+ else if(X.tail==='cat'){for(let i=0;i<8;i++)Q(X0-i*1.5,Y0-i*2+Math.sin(f*.15+i*.4)*2,3,3,c);if((m.st|0)>=1)for(let i=0;i<8;i++)Q(X0-3-i*1.5,Y0+2-i*2+Math.sin(f*.15+i*.4+1)*2,3,3,c)}
+ else if(X.tail==='dragon'||X.tail==='snake'||X.tail==='imp'){for(let i=0;i<9;i++)mE(X0-i*2.5,Y0+8+Math.sin(f*.12+i*.5)*i*.3,3-i*.25,2.4-i*.2,i%2?c:A[2]);if(X.tail==='imp')mTri(X0-24,Y0+6,X0-28,Y0+3,X0-27,Y0+10,A[4])}
+ else mO(X0-4,Y0+4+sw*.5,4,6,c,'#140e18')}
+{const _pp2=person;person=function(x,y,o,pose){try{if(o&&o===curMe&&on()){const K=FN();if(K&&isMon(K)&&monForm(K)){const L=hfLook(K),f=frame||0,X=HFX[MS2(K).sp]||{};if(X.glow){g.globalAlpha=.25;mE(x*3,y*3-24,16,22,X.glow);g.globalAlpha=1}hfTail(K,x,y,f);if(X.ghost)g.globalAlpha=.85;const r=_pp2.call(this,x,y,L,pose);g.globalAlpha=1;return r}}}catch(e){}return _pp2.apply(this,arguments)}}
+// เหตุการณ์ได้ร่างมนุษย์ (สายพันธุ์ที่แปลงกายได้)
+const HFEV={slime:[0,14,44,45,48,47],beast:[18,29,3,24,36,39,40],dragon:[10,37,4],spirit:[28,27,13,5,19,2,31]};
+MEV.push(K=>{const m=MS2(K);if(m.hf||monHum(K)||(m.st|0)<1||!(m.sp in HFX)||rnd()<.35){feed(pick(['🌙 คืนนี้คุณนอนมองดาว แล้วนึกถึงชีวิตที่เคยเป็นคน','🪞 คุณเห็นเงาตัวเองในแอ่งน้ำ และจำหน้าตัวเองในชาติก่อนไม่ได้แล้ว']));return}
+ const g2=HFEV.slime.includes(m.sp)?'slime':HFEV.beast.includes(m.sp)?'beast':HFEV.dragon.includes(m.sp)?'dragon':'spirit';
+ const T={slime:['🫧 นักผจญภัยที่กำลังจะตาย','ในถ้ำมีนักผจญภัยหญิงผมดำนอนบาดเจ็บสาหัส เธอมองคุณโดยไม่กลัว "ถ้าเจ้ากินข้า… ช่วยใช้ร่างนี้ไปดูทะเลแทนข้าที"','🫧 ดูดซับร่างและความทรงจำของเธอ','ร่างของคุณยืดขึ้น กลายเป็นคนผมยาวที่มีใบหน้าคล้ายเธอ ในหัวมีความทรงจำของคนที่ไม่เคยเห็นทะเล'],
+  beast:['🍂 ใบไม้วิเศษ','จิ้งจอกแก่ที่ศาลเจ้ามอบใบไม้ใบหนึ่งให้ "วางบนหัวแล้วนึกถึงหน้าคนที่เจ้ารัก"','🍂 วางใบไม้บนหัว','ควันสีขาวพุ่งขึ้น คุณยืนสองขาได้ มีมือห้านิ้ว… แต่หูกับหางยังซ่อนไม่มิด'],
+  dragon:['🌕 คืนจันทร์เต็มดวง','มังกรเฒ่าที่ใกล้ตายบินมาเกาะบนผาข้างคุณ "เผ่าเรามีร่างที่สอง เจ้าแค่ยังไม่เคยลอง"','🌕 ลองหลับตาแล้วหดตัว','เกล็ดหดหายเหลือแค่บนแก้ม เขาเล็กๆ ยังโผล่จากผม และคุณเพิ่งรู้ว่าการเดินสองขายากแค่ไหน'],
+  spirit:['✨ พรของเทพี','แสงจากรูปปั้นเทพีโบราณส่องลงบนตัวคุณ "วิญญาณที่ยังจำความเป็นคนได้ สมควรได้ร่างคืน"','✨ รับพร','แสงหลอมรวมเป็นร่างมนุษย์ ยังโปร่งแสงนิดๆ ตรงปลายนิ้ว']}[g2];
+ C(T[0],T[1],[O(T[2],()=>{m.hf=1;m.form='human';S.cha=(S.cha||0)+8;K.mpM+=15;fxBig('mana',1.6);say(`🧍 <b>ได้ร่างมนุษย์!</b> ${T[3]} <span class="tag2">แปลงร่างไปมาได้ที่เมนู · ร่างมนุษย์เข้าเมืองและสมัครกิลด์ได้</span>`,'myth',true);try{cdxAdd('fanmon','h'+m.sp)}catch(e){}}),O('🙅 ไม่เอา ยังอยากเป็นแบบนี้',()=>feed('🙅 คุณปฏิเสธ… บางทีร่างนี้ก็ดีพอแล้ว'))])});
+// เหตุการณ์ในร่างมนุษย์
+MEV.push(K=>{if(!monForm(K)){return}const m=MS2(K);const L=[['🏙️ เดินเที่ยวเมืองมนุษย์','คุณเดินในตลาดครั้งแรกในร่างมนุษย์ ทุกอย่างมีกลิ่นและเสียงมากเกินไป',[O('🍢 ลองกินของคนดู',()=>feed(`🍢 เสียบไม้ย่างรสชาติดีกว่าทุกอย่างที่คุณเคยกินในป่า${money(-20)}`)),O('👀 แค่ดูเฉยๆ',()=>feed('👀 เด็กคนหนึ่งชี้มาที่คุณ "แม่ พี่คนนั้นมีหาง!" คุณรีบเดินหนี'))]],
+ ['😳 เกือบโดนจับได้','ระหว่างคุยกับคนขายผัก ร่างคุณเริ่มกลับเป็นสัตว์ทีละนิด',[O('🔄 รีบหลบไปแปลงกลับ',()=>feed('🔄 คุณวิ่งเข้าซอกตึกทันเวลาพอดี')),O('😅 ทำเป็นว่าเป็นมายากล',()=>feed(`😅 ทุกคนปรบมือ มีคนโยนเหรียญให้ด้วย${money(30)}`))]],
+ ['🍺 เข้าบาร์นักผจญภัย','นักผจญภัยโต๊ะข้างๆ กำลังวางแผนล่า "สัตว์อสูรที่พูดได้" ในป่าที่คุณเกิด',[O('🗣️ ชวนคุยเปลี่ยนใจ',()=>talkDuel({ic:'🍺',t:'โน้มน้าวนักล่า',vs:'หัวหน้าปาร์ตี้นักล่า',ev:1,intro:'เขาไม่รู้ว่ากำลังคุยกับเป้าหมายของตัวเอง',win:()=>'เขายกเลิกภารกิจ "ถ้ามันพูดได้ มันก็คงไม่ต่างจากเรา"',lose:()=>'เขาหัวเราะแล้วออกเดินทางพรุ่งนี้เช้า'},()=>{})),O('🤐 ฟังเงียบๆ',()=>feed('🤐 คุณจำหน้าทุกคนไว้'))]]];
+ const x=pick(L);C(x[0],x[1],x[2])});
+window.fanMonForm=function(){const K=FN();if(!K||!isMon(K)||!monHum(K))return;const m=MS2(K);m.form=monForm(K)?'mon':'human';fxBig('poof',1.3);feed(m.form==='human'?'🧍 คุณแปลงเป็นร่างมนุษย์':'🐾 คุณกลับเป็นร่างเดิม');closeM();render()};
+{const _om3=openMenu;openMenu=function(){const r=_om3.apply(this,arguments);try{const K=FN();if(on()&&K&&isMon(K)&&monHum(K)){const d=$('modal').querySelector('[data-fa4]');if(d&&!d.querySelector('[data-hf]')){const b=document.createElement('button');b.className='opt';b.setAttribute('data-hf',1);b.innerHTML=monForm(K)?`🐾 กลับเป็นร่างสัตว์<small>ล่า วิวัฒนาการ ใช้พลังเต็มที่</small>`:`🧍 แปลงเป็นร่างมนุษย์<small>เข้าเมือง สมัครกิลด์ คุยกับคนได้</small>`;b.onclick=()=>fanMonForm();d.prepend(b)}}}catch(e){}return r}}
+// ร่างมนุษย์สมัครกิลด์นักผจญภัยได้
+{const _fy2=fanYear;fanYear=function(){const r=_fy2.apply(this,arguments);try{const K=FN();if(K&&S.alive&&isMon(K)&&monForm(K)){const G=grOf(K);if(!G&&rnd()<.35){queue(()=>evGuildJoin(K));flush()}else if(G&&G.y!==age()&&rnd()<.5){queue(()=>evGuildBoard(K));flush()}}}catch(e){}return r}}
+
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}
 try{const st=document.createElement('style');st.textContent='body.fanW #hintBar{display:none!important}';document.head.appendChild(st)}catch(e){}
