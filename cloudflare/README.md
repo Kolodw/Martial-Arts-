@@ -70,3 +70,8 @@ npx wrangler deploy                      # ได้ลิงก์ https://1ina
 - ทดสอบแล้วบนเครื่อง (wrangler dev + Redis): หน้าเว็บ, ping, ทำเนียบ (ส่งชีวิตขึ้นกระดานได้), ลานประลอง, กับดักบอท, คำขอพร้อมกัน 60 ครั้ง ผ่านหมด
 - ยังไม่ได้ทดสอบ: ส่ง Web Push จริง และ Google Login บนโดเมนจริง ลองเช็คหลัง deploy
 - ทดสอบในเครื่อง: สร้าง `cloudflare/.dev.vars` ใส่ `VALKEY_URL=redis://...` แล้ว `npx wrangler dev` (ไฟล์นี้ไม่ขึ้น git)
+
+## ⚡ บีบไฟล์เกมแน่นพิเศษ (Brotli ระดับสูงสุด)
+- ทุกครั้งที่ deploy `wrangler.toml [build]` จะรัน `../tools/br.mjs` สร้าง `../_br/*.br` (ไม่เก็บใน git)
+- `worker.js` ส่งไฟล์ .br แทน app.js และไฟล์โลกใหญ่ (รายชื่อใน `run_worker_first`) · app.js จาก ~2.9MB เหลือ ~1.9MB
+- ถ้าไม่มีไฟล์ .br หรือเบราว์เซอร์ไม่รองรับ จะส่งไฟล์ปกติเหมือนเดิม · เพิ่มไฟล์ใหม่ต้องแก้ 3 ที่: `run_worker_first`, `BR_RE` ใน worker.js, รายชื่อใน br.mjs

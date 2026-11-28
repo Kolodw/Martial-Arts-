@@ -79,6 +79,17 @@ const SEC_H = {
   'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://www.1inanovel.com https://1inanovel.com wss://www.1inanovel.com wss://1inanovel.com https://accounts.google.com; frame-src https://accounts.google.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests",
 };
 function withSec(r) { try { if (!r || r.status === 101) return r; const o = new Response(r.body, r); for (const k in SEC_H) if (!o.headers.has(k)) o.headers.set(k, SEC_H[k]); return o } catch (e) { return r } }
+const BR_RE = /^\/(app\.js|pfx\.js|w\/(mw|late|sky|fan|soul|fog|en|mwb|mwx|upd)\.js)$/;
+async function brAsset(request, env, url) {
+  const inm = request.headers.get('if-none-match');
+  const r = await env.ASSETS.fetch(new Request(url.origin + '/_br' + url.pathname + '.br', { headers: inm ? { 'if-none-match': inm } : {} }));
+  const h = new Headers({ 'content-type': 'application/javascript; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate', 'vary': 'Accept-Encoding' });
+  const et = r.headers.get('etag'); if (et) h.set('etag', et);
+  if (r.status === 304) return new Response(null, { status: 304, headers: h });
+  if (r.status !== 200) return null;
+  h.set('content-encoding', 'br'); const cl = r.headers.get('content-length'); if (cl) h.set('content-length', cl);
+  return new Response(request.method === 'HEAD' ? null : r.body, { status: 200, headers: h, encodeBody: 'manual' });
+}
 const jr = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 async function payProducts(env) {
   try { const r = await env.PAY_DB.prepare("SELECT sku,kind,scope,world_id,tier,days,n,price_baht FROM products WHERE active=1 ORDER BY sort").all(); return jr({ items: r.results || [] }) } catch (e) { return jr({ items: [] }) }
@@ -339,6 +350,10 @@ export default {
       // กระจายข้อความใหม่ถึงทุกคนที่เปิดแชทอยู่ทันที (ไม่ต้องรอรอบดึง)
       try { const a0 = url.searchParams.get('a') || ''; if (request.method === 'POST' && r.status === 200 && /^(say|annrm|annclear|annvote|chathide|chatdel)$/.test(a0)) { const h = hub(env); if (h) { let msg = '{"t":"r"}'; if (a0 === 'say') { try { const j = await r.clone().json(); if (j && j.m && !j.ann) msg = JSON.stringify({ t: 'm', m: j.m }) } catch (e) {} } ctx.waitUntil(h.fetch('https://hub/b', { method: 'POST', body: msg }).catch(() => {})) } } } catch (e) {}
       return r;
+    }
+    // ไฟล์เกมใหญ่ → ส่งรุ่นที่บีบ Brotli ระดับสูงสุดไว้ตอน deploy (../_br) · ไม่มีไฟล์/เบราว์เซอร์ไม่รองรับ → ไฟล์ปกติ
+    if ((request.method === 'GET' || request.method === 'HEAD') && BR_RE.test(url.pathname) && /\bbr\b/.test(request.headers.get('accept-encoding') || '')) {
+      try { const r = await brAsset(request, env, url); if (r) return withSec(r) } catch (e) { console.error('BR_ERR', String(e && e.message || e)) }
     }
     // โดเมนเดิม (www) → ใช้ไฟล์หน้าเว็บ
     return withSec(await env.ASSETS.fetch(request));
