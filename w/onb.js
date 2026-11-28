@@ -54,6 +54,24 @@ const OB_W=[
   goal:'ไต่ขั้นไปถึงดวงดาว',
   first:'อ่านคัมภีร์ของโลกนี้ ในเมนู ☰ จะเห็นทั้ง 36 ขั้นและวิธีขึ้นขั้น',
   fit:'คนที่ชอบโลกวันสิ้นโลกแบบไทยๆ และชอบมินิเกม'},
+ {k:'fan_iso',ic:'⚔️',n:'ต่างโลก',lv:2,tag:'แฟนตาซี · ใหม่',
+  what:'คุณถูกอัญเชิญไปต่างโลกพร้อมเพื่อนทั้งห้อง ลูกแก้วจะประเมินว่าคุณคือผู้กล้า หรือได้สกิลขยะ บางคนก็หลงมิติไปคนเดียวโดยไม่มีใครรู้',
+  do:'เข้ากิลด์รับเควสระดับ F ถึง S ลงดันเจี้ยน ล่ามอนสเตอร์ ตีบวกอาวุธ ตั้งปาร์ตี้ และเลี้ยงสัตว์อสูร',
+  goal:'ไต่อันดับผู้กล้า ปราบจอมมาร หรือหาทางกลับโลกเดิม มีฉากจบหลายสิบแบบ',
+  first:'แตะแผง STATUS ดูว่าได้สกิลอะไร แล้วลองเข้ากิลด์รับเควสแรก',
+  fit:'คนที่ชอบนิยายต่างโลกและเกมแนว RPG'},
+ {k:'fan_magic',ic:'🔮',n:'โลกเวทมนตร์',lv:2,tag:'แฟนตาซี · เกิดเป็นทารก',
+  what:'เกิดในโลกเวทมนตร์ตั้งแต่เป็นทารก แล้วเข้าพิธีวัดพรสวรรค์ ผลอาจเป็นพลังล้นเหลือ ไร้มานา หรือพรสวรรค์แปลกๆ ที่ไม่มีใครเข้าใจ',
+  do:'ฝึกเวทตามธาตุ ทำสัญญากับภูต ออกผจญภัย 8 ภูมิภาค และเล่นมินิเกมเวทมนตร์ 12 แบบ',
+  goal:'เป็นจอมเวทแห่งยุค หรือเลือกทางของตัวเอง จะฝั่งดีหรือฝั่งมืดก็ได้',
+  first:'รอพิธีวัดพรสวรรค์ก่อน แล้วค่อยเลือกทางให้เข้ากับธาตุและพรสวรรค์ที่ได้',
+  fit:'คนที่ชอบเวทมนตร์ ธาตุ และการเติบโตตั้งแต่เด็ก'},
+ {k:'fan_aca',ic:'🏰',n:'โลกแห่งอะคาเดมี่',lv:3,tag:'แฟนตาซี · ชีวิตในโรงเรียน',
+  what:'ใช้ชีวิตในสถาบันเวทของเหล่าขุนนาง มีชมรม 8 ชมรม อาจารย์ที่ซ่อนความลับ ฝ่ายการเมือง และการหมั้นหมาย',
+  do:'เรียน สอบ แข่งคะแนนหอ เข้าชมรม ผูกมิตรหรือเป็นศัตรูกับเพื่อนร่วมรุ่น',
+  goal:'จบการศึกษาด้วยอันดับสูง หรือพลิกเกมการเมืองของแคว้น',
+  first:'เลือกชมรมแรกให้ตรงกับพรสวรรค์ และจำไว้ว่าเพื่อนร่วมรุ่นจะกลับมาในชีวิตคุณอีก',
+  fit:'คนที่ชอบเรื่องโรงเรียน ดราม่า และการเมือง'},
  {k:'fog',ic:'🌉',n:'นครม่านหมอก',lv:3,tag:'สืบสวน · ลึกลับ',
   what:'เมืองไอน้ำใต้หมอกที่ไม่เคยจาง มีคดีประหลาดเกิดขึ้นเรื่อยๆ',
   do:'สืบคดี เลือกหนึ่งใน 8 เส้นทาง และข้ามธรณีทีละชั้น ยิ่งแกร่งยิ่งเสี่ยงเสียตัวตน',
@@ -71,21 +89,23 @@ const OB_M=[
 ];
 const OB_V=[
  {ic:'🌿',n:'ชิลล์ ดูชีวิตเดินไปเอง',d:'ไม่อยากกดเยอะ อยากดูว่าชีวิตจะพาไปไหน',w:['murim','mw'],chill:1},
- {ic:'⚔️',n:'ฝึกวิชา ไต่ระดับ',d:'ชอบเก่งขึ้นเรื่อยๆ และเห็นตัวเลขโตขึ้น',w:['murim','xian','soul']},
+ {ic:'⚔️',n:'ฝึกวิชา ไต่ระดับ',d:'ชอบเก่งขึ้นเรื่อยๆ และเห็นตัวเลขโตขึ้น',w:['murim','xian','soul','sky']},
+ {ic:'🔮',n:'แฟนตาซี เวทมนตร์ ต่างโลก',d:'ชอบผู้กล้า กิลด์ ดันเจี้ยน และโรงเรียนเวท',w:['fan_iso','fan_magic','fan_aca']},
  {ic:'🏙️',n:'ชีวิตจริงสมัยนี้',d:'ชอบเรื่องงาน เงิน ความรัก ครอบครัว',w:['mw']},
  {ic:'🔎',n:'เรื่องราว ปริศนา หักมุม',d:'ชอบตามเรื่อง ไขคดี รอดูตอนจบ',w:['fog','sky','loop']},
- {ic:'🐾',n:'อยากลองอะไรแปลกๆ',d:'ไม่อยากเป็นคนธรรมดา',w:['beast','loop','soul']}
+ {ic:'🐾',n:'อยากลองอะไรแปลกๆ',d:'ไม่อยากเป็นคนธรรมดา',w:['beast','fan_iso','loop']}
 ];
 const wOf=k=>OB_W.find(x=>x.k===k);
 const onTitle=()=>{const t=$$('title');return !!(t&&t.classList.contains('on'))};
 const inLife=()=>{try{return !!(S&&S.alive&&$$('game')&&$$('game').classList.contains('on'))}catch(e){return false}};
-const curW=()=>{try{const M=S&&S.mw;if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S&&(S.ch==='soul'||S.sv&&S.ch==='soul'))return'soul';if(S&&(S.ch==='regress'||S.ch==='loop'))return'loop';if(S&&S.beastMode)return'beast';if(M)return'mw';return S&&S.xian?'xian':'murim'}catch(e){return'murim'}};
+const curW=()=>{try{const M=S&&S.mw;if(M&&M.fan){const w=M.fan.w;return w==='magic'?'fan_magic':(w==='noble'||w==='aca')?'fan_aca':'fan_iso'}if(M&&M.sky)return'sky';if(M&&M.fog)return'fog';if(S&&(S.ch==='soul'||S.sv&&S.ch==='soul'))return'soul';if(S&&(S.ch==='regress'||S.ch==='loop'))return'loop';if(S&&S.beastMode)return'beast';if(M)return'mw';return S&&S.xian?'xian':'murim'}catch(e){return'murim'}};
 
 // ───────── ไปเกิด ─────────
 function goBorn(k){
  try{closeM()}catch(e){}
  if(!onTitle()){toast('กลับหน้าแรกก่อน แล้วกดเลือกโลกนี้อีกครั้ง');return}
  if(k==='mw'){try{if(typeof mwAllowed==='function'&&!mwAllowed())return toast('โลกนี้ปิดปรับปรุงชั่วคราว')}catch(e){}}
+ if(/^fan_/.test(k)){const F={fan_iso:'hero',fan_magic:'magic',fan_aca:'noble'}[k];setTimeout(()=>{const go=()=>{try{window.fanStart(F)}catch(e){console.error(e);try{goBirthPick()}catch(x){}}};if(typeof window.fanStart==='function')go();else if(typeof wLoad==='function')wLoad('fan').then(go).catch(()=>{try{goBirthPick()}catch(x){}});else{try{goBirthPick()}catch(x){}}},120);return}
  if(typeof window.wpGo==='function')setTimeout(()=>{try{window.wpGo(k)}catch(e){console.error(e);try{goBirthPick()}catch(x){}}},120);
  else{try{goBirthPick()}catch(e){}}
 }
@@ -274,7 +294,7 @@ const st=document.createElement('style');st.textContent=`
 .obV i{font-style:normal;font-size:30px;flex:0 0 auto}.obV span{flex:1;min-width:0}.obV b{display:block;font-size:16px}.obV small{display:block;opacity:.75;font-size:13px;margin-top:2px;line-height:1.4}.obV em{font-style:normal;font-size:24px;opacity:.5}
 .obV:active{transform:scale(.98)}
 .obC{position:relative;padding:12px 14px;margin:0 0 10px;border-radius:16px;border:1px solid rgba(127,127,127,.35);background:rgba(127,127,127,.1)}
-.obC.top{border-color:#e8b54a;background:linear-gradient(135deg,rgba(232,181,74,.2),rgba(232,181,74,.05))}
+.obC.top{display:block!important;padding:12px 14px!important;cursor:default!important;border-color:#e8b54a;background:linear-gradient(135deg,rgba(232,181,74,.2),rgba(232,181,74,.05))}
 .obBest{position:absolute;top:-9px;right:12px;background:#e8b54a;color:#2a1a04;font-size:11px;font-weight:800;padding:2px 9px;border-radius:999px}
 .obCh{display:flex;gap:10px;align-items:center}.obCh i{font-style:normal;font-size:32px}.obCh b{display:block;font-size:17px}.obCh small{opacity:.75;font-size:12.5px}
 .obC p,.obCard p{margin:8px 0;font-size:14.5px;line-height:1.65}
