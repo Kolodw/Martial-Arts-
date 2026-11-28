@@ -1,0 +1,92 @@
+/* ============================================================
+   📖 ธีม "นิยาย" (theme = 'ink' → body.dark.royal.ink)
+   นิยายก่อน HUD ทีหลัง: พื้นหมึกม่วงเข้มเรียบ · Kanit หัวข้อ / Sarabun เนื้อเรื่อง · ไม่มีเงาเรือง ไม่มีไล่สี
+   ฟีดไม่มีกรอบทุกบรรทัด (จุดสีบอกดี/ร้าย · กล่องเฉพาะเรื่องตำนาน) · ฉากไม่ดันฟีด · มือถือ: หน้าต่างเป็นแผ่นจากล่าง
+   สีเน้น = สีของโลก (--hA ในเกม · --fA หน้าแรก)
+   ============================================================ */
+html:root body.ink.ink.ink{--bg:#13111C;--card:#1C1929;--w:#211E31;--ink:#EEE7D7;--mut:#A8A0BC;--line:#2E2944;--grid:transparent;
+ --kA:var(--hA,var(--fA,#E7B04A));--kSf:#1C1929;--kSf2:#16131F;--kBd:#2E2944;--kBd2:#3A3354;--hR:16px;--hR1:12px;--hR2:16px;
+ background:#13111C!important;color:#EEE7D7;font-family:'Sarabun','Itim',sans-serif!important}
+html:root body.ink.ink.ink[data-hud],html:root body.ink.ink.ink[data-front]{--bg:#13111C;--card:#1C1929;--w:#211E31;--ink:#EEE7D7;--mut:#A8A0BC;--line:#2E2944}
+html:root body.ink.ink.ink h1,html:root body.ink.ink.ink h2,html:root body.ink.ink.ink h3,html:root body.ink.ink.ink h4,html:root body.ink.ink.ink .k,html:root body.ink.ink.ink .nm,html:root body.ink.ink.ink #gName,html:root body.ink.ink.ink .wpH b,html:root body.ink.ink.ink button{font-family:'Kanit','Sarabun',sans-serif!important;letter-spacing:0!important}
+html:root body.ink.ink.ink h3,html:root body.ink.ink.ink h4{font-weight:500!important;text-shadow:none!important}
+html:root body.ink.ink.ink *{text-shadow:none!important}
+html:root body.ink.ink.ink .tag2,html:root body.ink.ink.ink small{color:#A8A0BC}
+
+/* ---------- ปุ่ม ---------- */
+html:root body.ink.ink.ink .pbtn,html:root body.ink.ink.ink .tgo,html:root body.ink.ink.ink #tGo.tgo,html:root body.ink.ink.ink #tDock .tgo,html:root body.ink.ink.ink #uxGo .uxBorn,html:root body.ink.ink.ink #wPick .fanGo{background:var(--kA)!important;background-image:none!important;color:#1B1309!important;border:0!important;border-radius:14px!important;box-shadow:none!important;clip-path:none!important}
+html:root body.ink.ink.ink .pbtn *,html:root body.ink.ink.ink .tgo *,html:root body.ink.ink.ink #uxGo .uxBorn *{color:inherit!important}
+html:root body.ink.ink.ink .gbtn,html:root body.ink.ink.ink .sysb{background:#211E31!important;background-image:none!important;border:1px solid var(--kBd2)!important;border-radius:12px!important;box-shadow:none!important;color:#EEE7D7!important}
+html:root body.ink.ink.ink .gbtn:hover,html:root body.ink.ink.ink .sysb:hover{border-color:var(--kA)!important}
+html:root body.ink.ink.ink .sysb.on{background:var(--kA)!important;color:#1B1309!important;border-color:var(--kA)!important}
+
+/* ---------- หน้าต่าง ---------- */
+html:root body.ink.ink.ink .mask{background:rgba(10,8,16,.55)!important;backdrop-filter:none!important}
+html:root body.ink.ink.ink .modal,html:root body.ink.ink.ink #modal.modal,html:root body.ink.ink.ink #modal#modal.modal,html:root body.ink.ink.ink #modal.modal[data-k]{background:#1A1726!important;background-image:none!important;border:1px solid var(--kBd2)!important;border-radius:20px!important;box-shadow:0 18px 48px rgba(0,0,0,.5)!important;color:#EEE7D7}
+html:root body.ink.ink.ink .modal h3{color:#EEE7D7!important;border-color:var(--kBd)!important;font-size:20px}
+html:root body.ink.ink.ink .modal h4{color:var(--kA)!important}
+html:root body.ink.ink.ink .modal p{line-height:1.65}
+html:root body.ink.ink.ink .modal .xbtn{background:transparent!important;border:0!important;color:#C9C0DA!important;border-radius:12px!important;clip-path:none!important;box-shadow:none!important}
+html:root body.ink.ink.ink #modal.modal[data-k] .opt,html:root body.ink.ink.ink .modal .opt,html:root body.ink.ink.ink #choiceBox .opt,html:root body.ink.ink.ink .chBox .opt{background:#211E31!important;background-image:none!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;box-shadow:none!important;color:#EEE7D7!important;font-family:'Sarabun',sans-serif!important;font-size:15.5px!important;line-height:1.5!important;padding:12px 16px!important}
+html:root body.ink.ink.ink #modal.modal[data-k] .opt:hover,html:root body.ink.ink.ink .modal .opt:hover{border-color:var(--kA)!important}
+html:root body.ink.ink.ink .modal .opt.on,html:root body.ink.ink.ink .modal .opt:active{border-color:var(--kA)!important;background:#2A2640!important}
+html:root body.ink.ink.ink .modal .opt small{color:#A8A0BC!important}
+html:root body.ink.ink.ink .modal .item{background:#211E31!important;background-image:none!important;border:1px solid var(--kBd)!important;border-radius:14px!important;box-shadow:none!important}
+html:root body.ink.ink.ink .modal .tabs button,html:root body.ink.ink.ink .modal .seg button,html:root body.ink.ink.ink .tabb{border-radius:16px!important;background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important;color:#D9D1E6!important;box-shadow:none!important}
+html:root body.ink.ink.ink .modal .tabs button.on,html:root body.ink.ink.ink .modal .seg button.on,html:root body.ink.ink.ink .tabb.on{background:var(--kA)!important;color:#1B1309!important;border-color:var(--kA)!important}
+html:root body.ink.ink.ink .modal input:not([type=checkbox]):not([type=radio]):not([type=range]),html:root body.ink.ink.ink .modal textarea,html:root body.ink.ink.ink .modal select{background:#13111C!important;border:1px solid var(--kBd2)!important;border-radius:12px!important;color:#EEE7D7!important}
+html:root body.ink.ink.ink .modal .item button:not(.pbtn):not(.tabb){background:var(--kA)!important;background-image:none!important;border:0!important;color:#1B1309!important;border-radius:12px!important}
+html:root body.ink.ink.ink .toast{background:#211E31!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;color:#EEE7D7!important;box-shadow:0 8px 24px rgba(0,0,0,.45)!important}
+html:root body.ink.ink.ink #modal.modal[data-k] .chtop,html:root body.ink.ink.ink #modal.modal[data-k] .chfoot{border-color:var(--kBd)!important}
+html:root body.ink.ink.ink #modal.modal[data-k] .minb{border-radius:12px!important;background:transparent!important;border:0!important;color:#A8A0BC!important}
+html:root body.ink.ink.ink #modal[data-k=choice] h3{font-size:21px!important;line-height:1.35!important;border:0!important;padding-bottom:0!important}
+html:root body.ink.ink.ink #modal[data-k=choice] .lfEmo{background:transparent!important;border:0!important;padding:0!important;color:#A8A0BC!important;font-size:12.5px!important}
+html:root body.ink.ink.ink #modal[data-k=choice] .csbox{background:#16131F!important;border:1px solid var(--kBd)!important;border-radius:14px!important}
+
+/* ---------- หน้าแรก / เลือกโลก ---------- */
+html:root body.ink.ink.ink #frCont,html:root body.ink.ink.ink #tdTitle,html:root body.ink.ink.ink #lpTitle,html:root body.ink.ink.ink #title .box,html:root body.ink.ink.ink .tsP .tsC,html:root body.ink.ink.ink #frRail{background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important;border-radius:16px!important;box-shadow:none!important}
+html:root body.ink.ink.ink #frToday button,html:root body.ink.ink.ink #tGrid>button,html:root body.ink.ink.ink #tGrid .gAq,html:root body.ink.ink.ink #tGrid .gSt,html:root body.ink.ink.ink #tGrid .gOn,html:root body.ink.ink.ink #tGrid .gMw{--bg:#1C1929!important;background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important;border-radius:16px!important;box-shadow:none!important}
+html:root body.ink.ink.ink #nbRow button,html:root body.ink.ink.ink #obRow button,html:root body.ink.ink.ink #tStartIn{background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important;border-radius:14px!important;color:#EEE7D7!important;box-shadow:none!important;clip-path:none!important}
+html:root body.ink.ink.ink #nbRow button *,html:root body.ink.ink.ink #obRow button *{color:inherit!important}
+html:root body.ink.ink.ink #frRail button{border-radius:12px!important}
+html:root body.ink.ink.ink #frRail button:hover{background:#2A2640!important}
+html:root body.ink.ink.ink #tDock{background:#16131F!important;border-top:1px solid var(--kBd)!important}
+html:root body.ink.ink.ink #wPick .wpH button,html:root body.ink.ink.ink #wPick .wcT button,html:root body.ink.ink.ink #wPick .wpC button{border-radius:16px!important;background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important;box-shadow:none!important;color:#EEE7D7!important}
+html:root body.ink.ink.ink #wPick .wcT button.on{background:var(--kA)!important;color:#1B1309!important;border-color:var(--kA)!important}
+html:root body.ink.ink.ink #wPick .wcT button.on *{color:#1B1309!important}
+html:root body.ink.ink.ink #wPick .wcH{border-radius:16px!important;background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important}
+html:root body.ink.ink.ink #wPick .wc,html:root body.ink.ink.ink #wPick .fwc{border-radius:16px!important;box-shadow:none!important}
+html:root body.ink.ink.ink #wPick .wc.on,html:root body.ink.ink.ink #wPick .fwc.on{box-shadow:0 0 0 2px var(--kA)!important}
+
+/* ---------- หน้าเล่น ---------- */
+html:root body.ink.ink.ink #game>.box.top,html:root body.ink.ink.ink #game .box{background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important;border-radius:16px!important;box-shadow:none!important}
+html:root body.ink.ink.ink #game #gAge{color:#EEE7D7!important;font-family:'Kanit',sans-serif!important}
+html:root body.ink.ink.ink #game .hpbar{border-radius:2px!important;background:#2A2640!important;height:4px!important;border:0!important;box-shadow:none!important}
+html:root body.ink.ink.ink #game .hpbar i{border-radius:2px!important;box-shadow:none!important}
+html:root body.ink.ink.ink #game .hudr button{border-radius:12px!important;background:transparent!important;border:1px solid var(--kBd)!important;box-shadow:none!important}
+html:root body.ink.ink.ink #game>.ctrl{background:#16131F!important;background-image:none!important;border-top:1px solid var(--kBd)!important;box-shadow:none!important}
+html:root body.ink.ink.ink #game .crow.crow.crow>button.cb.cb,html:root body.ink.ink.ink #game .crow.crow>button[id].cb.cb.cb,html:root body.ink.ink.ink #game .crow.crow #spdBtn.cb.cb,html:root body.ink.ink.ink #game .focus .fc{background:transparent!important;background-image:none!important;border:0!important;border-radius:14px!important;box-shadow:none!important;color:#C9C0DA!important;clip-path:none!important}
+html:root body.ink.ink.ink #game .crow.crow #pauseBtn.cb.cb,html:root body.ink.ink.ink #game .crow #pauseBtn{background:var(--kA)!important;background-image:none!important;color:#1B1309!important;border:0!important;border-radius:18px!important;box-shadow:none!important;clip-path:none!important}
+html:root body.ink.ink.ink #game .crow #pauseBtn *{color:#1B1309!important}
+html:root body.ink.ink.ink #game .crow.crow #autoBtn.cb.on{background:#1E3A2A!important;color:#9BE3B6!important}
+html:root body.ink.ink.ink #game .focus .fc.on{background:var(--kA)!important;color:#1B1309!important}
+html:root body.ink.ink.ink #feed,html:root body.ink.ink.ink .feed{font-family:'Sarabun',sans-serif!important;font-size:15.5px!important;line-height:1.65!important}
+html:root body.ink.ink.ink #feed.feed>.bub.bub,html:root body.ink.ink.ink #feed .bub{position:relative;background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:3px 4px 3px 18px!important;margin:2px 0!important;color:#EEE7D7!important;animation-duration:.22s!important}
+html:root body.ink.ink.ink #feed .bub::before{content:'';position:absolute;left:4px;top:.85em;width:6px;height:6px;border-radius:3px;background:#4A4266}
+html:root body.ink.ink.ink #feed .bub.good::before{background:#6FD39A}
+html:root body.ink.ink.ink #feed .bub.bad::before{background:#E5655A}
+html:root body.ink.ink.ink #feed .bub.dim,html:root body.ink.ink.ink #feed .bub.sum{color:#A8A0BC!important}
+html:root body.ink.ink.ink #feed.feed>.bub.epic,html:root body.ink.ink.ink #feed.feed>.bub.myth{background:#1E1A2C!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;padding:10px 14px!important;margin:6px 0!important}
+html:root body.ink.ink.ink #feed .bub.epic::before,html:root body.ink.ink.ink #feed .bub.myth::before{display:none}
+html:root body.ink.ink.ink #feed.feed>.bub.myth{border-color:color-mix(in srgb,var(--kA) 55%,#3A3354)!important}
+html:root body.ink.ink.ink #feed .yr,html:root body.ink.ink.ink #feed .ageH,html:root body.ink.ink.ink #feed .yrH,html:root body.ink.ink.ink #feed [class*="ageb"],html:root body.ink.ink.ink .feed .hdr{background:transparent!important;border:0!important;box-shadow:none!important;color:#A8A0BC!important;font-family:'Kanit',sans-serif!important;font-size:12.5px!important;border-radius:0!important}
+
+/* ---------- มือถือ: ฉากคงที่ไม่ดันฟีด · หน้าต่างเป็นแผ่นจากล่าง ---------- */
+@media (max-width:820px){
+html:root body.ink.ink.ink #game>#sceneBox,html:root body.ink.ink.ink #game.uxS>#sceneBox,html:root body.ink.ink.ink html body.ux2 #game.uxS>#sceneBox{height:84px!important;min-height:0!important;max-height:84px!important;opacity:.75!important;margin:0!important;border:0!important;border-radius:0!important;transition:none!important;-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent)}
+html:root body.ink.ink.ink #game>#sceneBox canvas{width:100%!important;height:100%!important;object-fit:cover}
+html:root body.ink.ink.ink #game>.box.top{border-radius:0 0 18px 18px!important;border-top:0!important;margin:0!important}
+html:root body.ink.ink.ink .mask.on{align-items:flex-end!important;padding:0!important}
+html:root body.ink.ink.ink .mask.on>#modal.modal{width:100%!important;max-width:100%!important;margin:0!important;border-radius:22px 22px 0 0!important;border-bottom:0!important;max-height:88vh!important;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))!important}
+}
+@media (prefers-reduced-motion:reduce){html:root body.ink.ink.ink #feed .bub{animation:none!important}}
