@@ -5932,6 +5932,22 @@ function mwFate(){try{const M=window._mbGet&&window._mbGet(),o=document.getEleme
  }catch(e){console.error(e)}}
 {const _h=window._mbHook;window._mbHook=function(){const r=_h?_h.apply(this,arguments):undefined;setTimeout(mwFate,60);setTimeout(mwFate,200);return r}}
 setInterval(()=>{try{if(document.getElementById('mwB'))mwFate()}catch(e){}},1200);
+// 🎲 ยุคปัจจุบัน: ป้าย "1 ใน …" ข้างแต่ละช่อง (บ้านเกิด พื้นเพ นิสัย พรสวรรค์ โลก) แบบเดียวกับหน้าเกิดโลกอื่น
+function mwOdTxt(p){if(!(p>0))return'';if(p>=.95)return'ทั่วไป';const n=1/p;return'1 ใน '+(n<10?(Math.round(n*10)/10):fmt(Math.round(n)))}
+function mwOdT(p,bad){return bad?'bd':p<.02?'t4':p<.05?'t3':p<.12?'t2':p<.3?'t1':'t0'}
+function mwOdPut(host,p,bad,cls){if(!host||!(p>0))return;const t=mwOdTxt(p),c='mwOd '+mwOdT(p,bad)+(cls?' '+cls:'');let e=host.querySelector(':scope>.mwOd');if(e&&e.textContent===t&&e.className===c)return;if(!e){e=document.createElement('span');host.appendChild(e)}e.className=c;e.textContent=t}
+function mwOdds(){try{const M=window._mbGet&&window._mbGet(),o=document.getElementById('mwB');if(!M||!o)return;
+ const tv=s=>o.querySelector(s+' .mbTv');
+ if(M.pv)mwOdPut(tv('.mbT_pv'),1/77,false,'v');
+ if(M.bg)mwOdPut(tv('.mbT_bg'),1/8,!!HARD[M.bg],'v');
+ o.querySelectorAll('.mbTc').forEach(c=>/จากพื้นเพ/.test(c.textContent)?0:mwOdPut(c,2/9,/ใจร้อน|ขี้เหงา/.test(c.textContent),'in'));
+ const TB=window._mwTAL,TT=window._mwTT,TL=window._mwTALL;if(TB&&TT&&TL)o.querySelectorAll('.mtTal .mtc').forEach(c=>{const m=/mwTalInfo\('([^']+)'\)/.exec(c.getAttribute('onclick')||'');const x=m&&TB[m[1]];if(!x)return;const cnt=TL.filter(y=>y.t===x.t).length||1;const tp=x.t==='n'?.15:(TT[x.t][2]/100);mwOdPut(c,Math.min(.9,tp/cnt*1.6),x.t==='n','ch')})
+}catch(e){console.error('mwOdds',e)}}
+{const _f=mwFate;mwFate=function(){const r=_f.apply(this,arguments);mwOdds();return r}}
+try{const st2=document.createElement('style');st2.textContent=`#mwB .mbTh{position:relative}#mwB .mwOd{display:inline-block;margin-left:auto;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;background:#ffffff14;color:#c8c8d0;border:1px solid #ffffff22}
+#mwB .mbTv>.mwOd.v{margin-left:8px;vertical-align:3px}#mwB .mbTc{position:relative}#mwB .mbTc>.mwOd.in{position:absolute;right:8px;top:8px}#mwB .mtc>.mwOd.ch{margin-left:6px;padding:0 6px;font-size:10px}
+#mwB .mwOd.t1{color:#9fe0a8;border-color:#5ad06a55}#mwB .mwOd.t2{color:#8fc0ff;border-color:#5a96ff66}#mwB .mwOd.t3{color:#d0a8ff;border-color:#b07aff77;background:#b07aff1c}#mwB .mwOd.t4{color:#ffd86a;border-color:#ffc03088;background:#ffc0301f}#mwB .mwOd.bd{color:#ff9aa8;border-color:#ff5a7366}`;document.head.appendChild(st2)}catch(e){}
+
 const st=document.createElement('style');st.textContent=`
 .fateB{--fc:#8a8a96;text-align:center;line-height:1.5}.fateB .n{font-size:30px;margin:2px 0}.fateB .ot{font-size:15px;margin-top:2px}.fateB .od{font-size:12px;color:#b9ad94;margin-top:2px}.fateB .fgrade{display:inline-block;margin-top:6px;font-weight:800;font-size:15px}
 .fateB.fb0{--fc:#6a6a76}.fateB.fb1{--fc:#8a9a7a}.fateB.fb2{--fc:#3ab04a}.fateB.fb3{--fc:#2ab0b0}.fateB.fb4{--fc:#4a8aff}.fateB.fb5{--fc:#a86aff}.fateB.fb6{--fc:#ff8a2a}.fateB.fb7{--fc:#ffc030}.fateB.fb8{--fc:#ff3a5a}.fateB.fb9,.fateB.fb10,.fateB.fb11,.fateB.fb12{--fc:#ff5ad8}
