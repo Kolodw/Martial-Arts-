@@ -41168,8 +41168,18 @@ try{const _qp=qmPlay;qmPlay=function(){const o=_qp.apply(this,arguments);try{if(
 // ============================================================
 try{(()=>{
 let lastU=0;
-const mark=e=>{try{if(!e.isTrusted)return;if(e.type==='keydown'){if(choice._cur)lastU=Date.now();return}const t=e.target;if(t&&t.closest&&t.closest('button,.opt,a,[onclick],.isl,#isl,#pendBar'))lastU=Date.now()}catch(x){}};
-['pointerup','click','keydown'].forEach(ev=>document.addEventListener(ev,mark,true));
+// นับเฉพาะการแตะที่ "ตอบเหตุการณ์" จริง: ปุ่มในหน้าต่างตัวเลือก · แถบเหตุการณ์ค้าง · เกาะแจ้งเตือน
+// (เดิมนับทุกปุ่ม → กด ▶ เล่นต่อ แล้วเหตุการณ์เด้งภายใน 1.5 วิ ระบบเลือกแทนผ่านประตูไปได้)
+let pdT=0,mdT=0;
+const inCh=t=>{try{const m=t.closest&&t.closest('#modal');return !!(m&&m.dataset.k==='choice'&&t.closest('button,.opt,[onclick],[data-i]'))}catch(x){return false}};
+const mark=e=>{try{if(!e.isTrusted)return;if(e.type==='keydown'){if(choice._cur&&modalOpen&&$('modal').dataset.k==='choice')lastU=Date.now();return}const t=e.target;if(!t||!t.closest)return;
+ if(e.type==='pointerdown'){pdT=performance.now();return}
+ if(inCh(t)||t.closest('.isl,#isl,#pendBar'))lastU=Date.now()}catch(x){}};
+// กันแตะทะลุ: นิ้วที่กด ▶ ไว้ตั้งแต่ก่อนหน้าต่างตัวเลือกเด้ง จะไม่ไปโดนตัวเลือก (และแตะรัวใน 0.35 วิแรกไม่นับ)
+{const _mdG=modal;modal=function(h,k){try{if(k==='choice'&&!(modalOpen&&$('modal').dataset.k==='choice'))mdT=performance.now()}catch(x){}return _mdG.apply(this,arguments)};for(const k in _mdG)try{modal[k]=_mdG[k]}catch(x){}}
+const ghost=e=>{try{if(!e.isTrusted||auto||!mdT)return;const t=e.target;if(!t||!inCh(t))return;const now=performance.now();if(pdT<mdT||now-mdT<350){e.stopImmediatePropagation();e.preventDefault()}}catch(x){}};
+['pointerup','click'].forEach(ev=>document.addEventListener(ev,ghost,true));
+['pointerdown','pointerup','click','keydown'].forEach(ev=>document.addEventListener(ev,mark,true));
 window._chAllow=function(){try{return !!(auto||fateSec()>0||LS.get('murim_timed',0)||window._pzForce||window._inQmFF||(S&&S.rg&&S.rg.ff)||Date.now()-lastU<1500)}catch(e){return true}};
 window._chWait=function(){try{clearTimeout(choice._t);clearInterval(choice._cd);const c=choice._cur;if(!c)return;
  if(!(modalOpen&&$('modal')&&$('modal').dataset.k==='choice')&&!choice._min&&!(typeof pendModal!=='undefined'&&pendModal)){try{choiceShow()}catch(e){}}
