@@ -4147,6 +4147,18 @@ window.lwFix=i=>{const K=FN(),L=LW(K),x=L.inj[i];if(!x)return;const I=INJ[x.k];i
 try{if(typeof SYS_GUIDE!=='undefined'&&!SYS_GUIDE.some(g=>g.t==='🌍 โลกและชีวิต (แฟนตาซี)'))SYS_GUIDE.push({s:'base',nw:1,ic:'🌍',t:'🌍 โลกและชีวิต (แฟนตาซี)',d:'เมนู → 🌍 โลกและชีวิต · 🧠 ความเครียด (เกิน 60 ดวลพลาดง่าย ลดได้จากพัก/เทศกาล/คนรัก/กองไฟ) · 🩹 แผลถาวรจากการแพ้ ซื้อแขนกล/ตาเวทแก้ได้ · 🤺 คู่แข่งตลอดชีวิต อาจกลายเป็นเพื่อน คนรัก หรือสาวกจอมมาร · 🏰 ชื่อเสียง 7 ฝ่าย ช่วยฝ่ายหนึ่งอีกฝ่ายเกลียด · ⚒️ ตีอาวุธจากวัตถุดิบมอนสเตอร์ ตั้งชื่อเองได้ · 📰 ข่าวลือที่ลุกลามทุกปีถ้าไม่มีใครหยุด · 🌸 4 ฤดูกับเทศกาล ชวนคนในใจไปเดตได้'})}catch(e){}
 window._lwTest={rv:()=>{const K=FN(),L=LW(K);L.rv=L.rv||rvMake(K);evRival(K)},news:()=>{const K=FN(),L=LW(K);L.news.push({k:'war',s:1,y:age()});evNews(K)},sea:()=>evSeason(FN()),fac:()=>evFaction(FN()),camp:()=>evCamp(FN()),inj:()=>injAdd(FN(),'ทดสอบ'),mat:()=>{const K=FN();matAdd(K,'มังกรไฟ','dragon');matAdd(K,'หมาป่า','beast')},st:v=>{LW(FN()).st=v}};
 
+
+// =================== 🔊 เสียงบรรยากาศตามฉากแฟนตาซี (ต่อจากระบบเสียงบรรยากาศเดิม: คลื่น ลม ฝูงชน น้ำหยดในถ้ำ) ===================
+{const AMBF={sea:{wa:.24,wi:.1},dragon_sky:{wi:.28},desert:{wi:.2},abyss:{wi:.16,cr:0},forest:{wi:.05},village:{cr:.04},guild:{cr:.14},market:{cr:.17},fest:{cr:.2},tour:{cr:.22},ball:{cr:.1},war:{cr:.12,wi:.12},throne:{cr:.04},church:{cr:.03},wed:{cr:.1},kitchen:{cr:.05},cave:{dr:1},dgn:{dr:1},grave:{wi:.08}};
+ let CR=null,drT=0;
+ const crBuild=a=>{try{const len=a.sampleRate*2,buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);let l=0;for(let i=0;i<len;i++){l=(l+.04*(Math.random()*2-1))*.985;d[i]=l*3}
+  const src=a.createBufferSource();src.buffer=buf;src.loop=true;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=520;f.Q.value=.6;const g=a.createGain();g.gain.value=0;src.connect(f);f.connect(g);g.connect(AMB.master);src.start();CR={g}}catch(e){}};
+ const drip=a=>{try{const t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type='sine';const f=900+Math.random()*700;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.45,t+.12);g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+.25);o.connect(g);g.connect(AMB.master);o.start(t);o.stop(t+.3)}catch(e){}};
+ const _au=ambUpdate;ambUpdate=function(){const r=_au.apply(this,arguments);try{if(typeof AMB==='undefined'||!AMB)return r;const a=ac();if(!a)return r;const t=a.currentTime;
+  const K=on()&&ambOn?FN():null;const P=K&&!K.end?AMBF[fScene(K)]||{}:null;if(P&&!CR)crBuild(a);
+  if(CR)CR.g.gain.setTargetAtTime(P&&P.cr?P.cr*(.75+.25*Math.sin(t*.9)):0,t,.8);
+  if(P){if(P.wa!=null)AMB.water.gain.setTargetAtTime(P.wa*(.8+.2*Math.sin(t*.45)),t,.8);if(P.wi!=null)AMB.wind.gain.setTargetAtTime(P.wi*(.7+.3*Math.sin(t*.6)),t,.8);if(P.dr&&Date.now()-drT>1400&&Math.random()<.5){drT=Date.now();drip(a)}}
+ }catch(e){}return r}}
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}
 try{const st=document.createElement('style');st.textContent='body.fanW #hintBar{display:none!important}';document.head.appendChild(st)}catch(e){}

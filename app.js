@@ -41919,3 +41919,25 @@ function quiet(){const w=WK(),L=QY[w]||QY.murim;const U=S._qy||(S._qy={});const 
 try{setInterval(function(){try{const B=document.body;if(!B.classList.contains('ink')||!B.classList.contains('mUI'))return;const f=document.getElementById('frCont');const cs=f&&getComputedStyle(f),on=!!(f&&f.offsetParent&&cs.display!=='none'&&cs.visibility!=='hidden'&&cs.position!=='absolute');B.classList.toggle('frHasC',on);
  let a=document.querySelector('#title>.frAct');if(on&&!a&&f){a=document.createElement('div');a.className='frAct';a.innerHTML='<button type="button" class="go">▶ เล่นต่อ</button><button type="button" class="nw">✨ เกิดใหม่</button>';f.after(a);a.querySelector('.go').onclick=()=>f.click();a.querySelector('.nw').onclick=()=>{const w=document.getElementById('wPick');if(w)w.scrollIntoView({behavior:'smooth',block:'start'})}}
  if(a)a.style.display=on?'':'none'}catch(e){}},700)}catch(e){}
+
+// 🌍 คู่แข่งตลอดชีวิต + ข่าวลือที่ลุกลาม ทุกโลก (/w/lw2.js · โหลดเบื้องหลังหลังหน้าแรกขึ้น)
+try{setTimeout(()=>{try{wLoad('lw2').catch(()=>setTimeout(()=>{try{wLoad('lw2').catch(()=>{})}catch(e){}},8000))}catch(e){}},3200)}catch(e){console.error('lw2 load',e)}
+// บทสอนปุ่มด้านล่าง: ออกจากหน้าเล่น (กลับหน้าแรก/หน้าเกิด) → ปิดบทสอนเอง ไม่ให้ค้างทับหน้าอื่น
+try{setInterval(()=>{try{if($('ctOv')&&$('game')&&!$('game').classList.contains('on')&&typeof ctEnd==='function')ctEnd()}catch(e){}},800)}catch(e){}
+// 🐾 ฉากทะลวงขั้นของสัตว์: ไอคอนและคำบรรยายตามรูปร่างจริง (นกไม่มีเขี้ยว งูไม่มีขน ปลาไม่มีกรงเล็บ)
+try{(()=>{const SH={bird:{ic:'🦅',r:[['เขี้ยวเล็บฉีกหนังเหล็กได้','กรงเล็บจิกทะลุหนังเหล็กได้'],['เขี้ยวคม','จะงอยปากคม'],['ขนยังอ่อน','ขนปีกยังอ่อน'],['ซ่อนตัวในพุ่มไม้','ซ่อนตัวบนกิ่งสูง'],['คำรามจนป่าทั้งป่าเงียบ','กรีดร้องจนป่าทั้งป่าเงียบ'],['เสียงคำราม','เสียงกรีดร้อง']]},
+ serp:{ic:'🐍',r:[['เขี้ยวเล็บฉีกหนังเหล็กได้','เขี้ยวพิษกัดทะลุหนังเหล็กได้'],['กล้ามเนื้อแข็งแรง เขี้ยวคม','ลำตัวรัดแน่นดั่งเหล็ก เขี้ยวพิษคม'],['ขนยังอ่อน','เกล็ดยังอ่อน'],['คำรามจนป่าทั้งป่าเงียบ','ขู่ฟ่อจนป่าทั้งป่าเงียบ'],['เสียงคำราม','เสียงขู่ฟ่อ']]},
+ fish:{ic:'🐟',r:[['เขี้ยวเล็บฉีกหนังเหล็กได้','ฟันคมกัดขาดตาข่ายเหล็กได้'],['ครองอาณาเขตป่า','ครองอาณาเขตห้วงน้ำ'],['ขนยังอ่อน','เกล็ดยังอ่อน'],['ซ่อนตัวในพุ่มไม้','ซ่อนตัวใต้สาหร่าย'],['คำรามจนป่าทั้งป่าเงียบ','ฟาดหางจนน้ำทั้งบึงเงียบ'],['เสียงคำราม','คลื่นจากหาง']]},
+ turt:{ic:'🐢',r:[['เขี้ยวเล็บฉีกหนังเหล็กได้','กระดองแข็งจนดาบฟันไม่เข้า'],['ขนยังอ่อน','กระดองยังอ่อน'],['คำรามจนป่าทั้งป่าเงียบ','ยืนนิ่งจนป่าทั้งป่าเงียบ']]},
+ bug:{ic:'🪲',r:[['เขี้ยวเล็บฉีกหนังเหล็กได้','เขี้ยวกรามตัดเหล็กได้'],['ขนยังอ่อน','เปลือกยังอ่อน'],['คำรามจนป่าทั้งป่าเงียบ','เสียงปีกกระพือจนป่าทั้งป่าเงียบ'],['เสียงคำราม','เสียงปีก']]},
+ ape:{ic:'🦍'},drag:{ic:'🐲'},qilin:{ic:'🦄'}};
+ const shape=()=>{try{const sp=S&&S.beastMode&&S.beastMode.sp;if(!sp)return null;const r=BSP.find(x=>x[0]===sp)||BSP.find(x=>sp.includes(x[0])||x[0].includes(sp));return r?r[1]:null}catch(e){return null}};
+ const _p=rlmPopHtml;rlmPopHtml=function(){let h=_p.apply(this,arguments);try{if(!S||!S.beastMode)return h;const c=rlmCur();if(c.w!=='b'||c.L>=0)return h;const k=shape(),M=k&&SH[k];if(!M)return h;
+  if(c.i>=1&&c.i<=3)h=h.replace(/(<div class="rlmic">)[^<]*(<\/div>)/,`$1${M.ic}$2`);(M.r||[]).forEach(([a,b])=>{h=h.split(a).join(b)})}catch(e){}return h}})()}catch(e){console.error('rlmBeast',e)}
+// 🪦 สิ้นอายุขัยตอนยังหนุ่มสาว (อายุขัยถูกตัดจากเวท สัญญา ยีน ฯลฯ): ไม่ใช้คำว่า "วัยชรา" กับคนอายุยี่สิบ
+try{const _yd=setInterval(()=>{try{if(typeof window._dvPick!=='function'||window._dvPick._yd)return;clearInterval(_yd);const _p=window._dvPick;
+ const Y={fan:['อายุขัยที่ถูกเวทและสัญญากัดกินไปหมดลงก่อนวัยอันควร คุณหลับไปและไม่ตื่นขึ้นอีก','ผมของคุณขาวโพลนในคืนเดียว ร่างกายแก่เกินอายุจริงหลายสิบปี แล้วหัวใจก็หยุดเต้นเงียบๆ','ราคาของพลังที่ใช้ไปทั้งชีวิตถูกเรียกเก็บครบในเช้าวันหนึ่ง คุณจากไปทั้งที่ยังหนุ่มสาว'],
+  mw:['หัวใจหยุดเต้นกะทันหันทั้งที่อายุยังน้อย หมอบอกว่าร่างกายเหนื่อยล้าสะสมมาเกินกว่าจะรับไหว','จากไปก่อนวัยอันควร ในงานศพเพื่อนรุ่นเดียวกันยังไม่มีใครเชื่อว่าเป็นเรื่องจริง','หลับไปหลังเลิกงานดึกคืนหนึ่ง และไม่ตื่นขึ้นมาอีกเลยทั้งที่อายุยังไม่มาก'],
+  sky:['ยีนในร่างเผาผลาญชีวิตเร็วกว่าคนทั่วไป คุณจากไปก่อนวัยในห้องพยาบาลของกำแพง','ร่างกายรับยีนเกินขีดจำกัดมานานเกินไป วันหนึ่งมันก็หยุดทำงานทั้งที่คุณยังหนุ่มสาว'],
+  fog:['ไอหมอกกัดกินปอดจนหมดลมหายใจทั้งที่ยังหนุ่มสาว','จากไปก่อนวัยในคืนที่หมอกหนาที่สุดของปี ไม่มีใครรู้ว่าคุณป่วยหนักมาตั้งแต่เมื่อไร']};
+ window._dvPick=function(w){const r=_p.apply(this,arguments);try{if(S&&S.age<45&&r&&/วัยชรา/.test(r)){const k=S.mw&&S.mw.fan?'fan':(Y[w]?w:'mw');const L=Y[k];return L[Math.floor(Math.random()*L.length)]}}catch(e){}return r};window._dvPick._yd=1}catch(e){}},1500)}catch(e){}
