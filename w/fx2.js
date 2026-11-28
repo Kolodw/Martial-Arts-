@@ -14,7 +14,7 @@ const strip=s=>String(s==null?'':s).replace(/<[^>]+>/g,'').trim();
 const inGame=()=>{const g=$$('game');return !!(g&&g.classList.contains('on')&&S&&S.alive)};
 const RM=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
 const fxOn=()=>{try{if(LS.get('murim_fx2',1)===0)return false;if(RM())return false;if(typeof fxQ!=='undefined'&&fxQ<1)return false;if(typeof auto!=='undefined'&&auto&&typeof speed!=='undefined'&&speed>=4)return false;if(document.hidden)return false}catch(e){}return true};
-const WK=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw){if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+const WK=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw){if(S.mw.ani)return'mw';if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
 const layer=()=>{let l=$$('fx2L');if(!l){l=document.createElement('div');l.id='fx2L';document.body.appendChild(l)}return l};
 const add=(h,cls,ms)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;layer().appendChild(d);setTimeout(()=>{try{d.remove()}catch(e){}},ms||1600);return d};
 let lastFx=0;const gate=ms=>{const t=Date.now();if(t-lastFx<(ms||650))return false;lastFx=t;return true};

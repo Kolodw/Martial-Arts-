@@ -10,7 +10,7 @@ try{(function(){if(window._rmc)return;
 const rnd=Math.random,pk=a=>a[Math.floor(rnd()*a.length)],cl=(v,a,b)=>Math.max(a,Math.min(b,v)),R=(a,b)=>a+Math.floor(rnd()*(b-a+1));
 const E=s=>{try{return esc(String(s))}catch(e){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}};
 const F=n=>{try{return fmt(Math.round(n))}catch(e){return String(Math.round(n))}};
-const WK=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw){if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
+const WK=()=>{try{if(!S)return'';if(S.beastMode&&!S.beastMode.human)return'beast';if(S.mw){if(S.mw.ani)return'ani';if(S.mw.fan)return'fan';if(S.mw.fog)return'fog';if(S.mw.sky)return'sky';return'mw'}if(S.ch==='soul')return'soul';if(S.ch==='regress')return'loop';if(S.xt)return'god';if(S.xian)return'xian'}catch(e){}return'murim'};
 const GRP=()=>({murim:'east',xian:'east',god:'east',loop:'east',soul:'east',mw:'mw',sky:'sky',fog:'fog'})[WK()]||'';
 const RP=()=>S&&S._rp;
 const on=()=>!!(S&&S.alive&&RP()&&RP().on&&GRP()&&(typeof loveOpt!=='function'||loveOpt()!=='off'));

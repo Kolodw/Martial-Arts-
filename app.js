@@ -41975,6 +41975,7 @@ try{dmPill=function(){if(!S||!(S.bp>0))return;const tt=Math.max(1,total()),g0=pp
  try{openDm()}catch(e){}};window.dmPill=dmPill}catch(e){console.error('dmPill fix',e)}
 try{const _od=openDm;openDm=function(){const r=_od.apply(this,arguments);try{setTimeout(()=>{const m=$('modal');if(!m||m.dataset.k!=='dm')return;const p=[...m.querySelectorAll('.dmsec p.tag2')].find(x=>/พลังยุทธ์ \+2%/.test(x.textContent));if(!p||p.dataset.fx)return;p.dataset.fx=1;const tt=Math.max(1,total()),g=ppPeek(.02);
  p.innerHTML=g>=Math.max(1,tt*.001)?`พลังยุทธ์ +2% <b>(ตอนนี้ได้จริง +${fmt(g)})</b> · กรรม −5 · ได้ 30% เมื่อชนะดวล (บารมี 300+)`:`<b>พลังของขั้นนี้อิ่มตัวแล้ว</b> — กลืนตอนนี้จะได้ <b>พลังชีวิตสูงสุด +2% ถาวร + ฟื้นเลือดเต็ม</b> แทน · กรรม −5 · พลัง % จะกลับมาได้เต็มเมื่อขึ้นขั้นใหม่`},30)}catch(e){}return r};window.openDm=openDm}catch(e){}
+<<<<<<< Updated upstream
 // ===================== BLOCK 9F: 🔮 ทำเนียบแฟนตาซี (หมวด 'i' · ฝั่งเซิร์ฟเวอร์ ch = 'mw_fan') — รวมต่างโลก/โลกเวทมนตร์/อะคาเดมี่ · คะแนนเฉลี่ยทั้งชีวิต =====================
 try{(()=>{const fanOn=()=>{try{return !!(S&&S.mw&&S.mw.fan)}catch(e){return false}};
  const FW={lost:'⚔️ ต่างโลก',hero:'⚔️ ต่างโลก',trash:'⚔️ ต่างโลก',iso:'⚔️ ต่างโลก',magic:'🔮 โลกเวทมนตร์',noble:'🏰 อะคาเดมี่',aca:'🏰 อะคาเดมี่'};
@@ -41991,3 +41992,8 @@ try{(()=>{const fanOn=()=>{try{return !!(S&&S.mw&&S.mw.fan)}catch(e){return fals
  {const _wt=window.wimTh;if(typeof _wt==='function')window.wimTh=function(id,cls){return _wt.call(this,id==='i'?'fm':id,cls)}}
  try{setTimeout(()=>{try{wLoad('fanb').catch(()=>{})}catch(e){}},2700)}catch(e){}
 })()}catch(e){console.error('block9f',e)}
+=======
+// 🐾 เกิดเป็นหมา/แมวยุคปัจจุบัน (/w/ani.js) · โหลดเบื้องหลัง + โหลดก่อนเปิดเซฟที่เป็นหมาแมว
+try{setTimeout(()=>{try{wLoad('ani').catch(()=>setTimeout(()=>{try{wLoad('ani').catch(()=>{})}catch(e){}},8000))}catch(e){}},4400)}catch(e){console.error('ani load',e)}
+try{const _lgA=loadGame;loadGame=function(n){try{if(!wIs('ani')){const d=readSave(n||1);if(d&&d.S&&d.S.mw&&d.S.mw.ani){const a=arguments,t=this;return wNeed('mw',()=>wNeed('ani',()=>loadGame.apply(t,a)))}}}catch(e){}return _lgA.apply(this,arguments)}}catch(e){}
+>>>>>>> Stashed changes
