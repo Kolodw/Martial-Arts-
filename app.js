@@ -41509,3 +41509,30 @@ window.fanBornMenu=function(w){window._fanLk=null;window._fanCs=null;const k=w==
 try{(()=>{const MP={'เริ่มอายุ 16':'อายุสุ่ม 0–16','เริ่มอายุ 12':'เกิดเป็นทารก','ผู้กล้า / สกิลขยะ':'ผู้กล้า / สกิลขยะ / หลงมิติ'};
 const fx=()=>{const P=document.getElementById('wPick');if(!P)return;P.querySelectorAll('.fwc .tg span').forEach(e=>{const t=MP[e.textContent.trim()];if(t)e.textContent=t})};
 new MutationObserver(()=>{if(document.getElementById('wPick'))fx()}).observe(document.body,{childList:true,subtree:true});})()}catch(e){console.error('block315b',e)}
+// ============================================================
+// BLOCK 316: ⚔️ ชั้น "สำนวนดวล" ของแต่ละโลก — โลกที่ลงทะเบียนใน window._duFlav จะเปลี่ยนท่าศัตรู / คำใบ้ / วิชาลับ (ใช้ได้หลายครั้งตามพลังงาน) / ข้อความ
+//   และเพิ่มปุ่มพิเศษประจำโลก 1 ปุ่มต่อการดวล · ใช้กลไกดวลเดิมทั้งหมด (บุก/ตั้งรับ/หลบ/สวน/วิชาลับ/หนี)
+// ============================================================
+try{(()=>{const L=window._duFlav=window._duFlav||[];
+const get=(n,ep)=>{for(const f of L){try{const r=f(n,ep);if(r)return r}catch(e){console.error('duFlav',e)}}return null};
+function flInit(){try{if(!DU||DU._flk||auto||DU.ar)return;DU._flk=1;const F=get(DU.name,DU.ep);if(!F)return;DU.fl=F;DU.arts=F.arts||[];DU.art=F.sec;const n=Math.max(1,F.mp|0||1);DU.mpM=n;DU.mpL=n;
+ Object.defineProperty(DU,'secret',{configurable:true,get(){return DU.mpL>0},set(v){if(!v&&DU.mpL>0)DU.mpL--}});DU._snap={me:DU.me,en:DU.en};if(F.start)try{F.start(DU)}catch(e){}DU.tech=null}catch(e){console.error('duFl',e)}}
+{const _t=duTech;duTech=function(){const F=DU&&DU.fl;if(F&&F.tech&&F.tech.length)return ch(F.tech);return _t.apply(this,arguments)}}
+{const _h=duHint;duHint=function(e){const F=DU&&DU.fl;if(F&&F.hint&&F.hint[e])return F.hint[e].replace(/\{t\}/g,DU.tech||'');return _h.apply(this,arguments)}}
+function flPost(fin){const F=DU&&DU.fl,M=$('modal');if(!F||!M)return;
+ const rep=[['⚔️ ดวลกับ',F.title||'⚔️ ดวลกับ'],['ทั้งสองฝ่ายจ้องตากัน ลมพัดใบไม้ปลิวผ่าน...',F.intro||''],['กระบี่กระทบกัน',(F.wpn||'อาวุธ')+'กระทบกัน'],['ลมปราณ',F.en||'พลัง'],['ปราณ',F.en||'พลัง'],['✨ วิชาลับ',F.secL||'✨ ท่าไม้ตาย'],
+  ['ใช้ได้ 1 ครั้ง',`${F.resIc||'🔮'} ${F.resN||'พลัง'} ${DU.mpL}/${DU.mpM}`],['ใช้ไปแล้ว / ไม่มีวิชา',`${F.resN||'พลัง'}หมดแล้ว`],['คุณปล่อยวิชาลับ',F.secV||'คุณปล่อย']].concat(F.rep||[]);
+ const w=document.createTreeWalker(M,NodeFilter.SHOW_TEXT);let nd;while(nd=w.nextNode()){let v=nd.nodeValue,o=v;for(const [a,b] of rep)if(v.includes(a))v=v.split(a).join(b);if(v!==o)nd.nodeValue=v}
+ if(fin||!M.querySelector('#duT'))return;
+ const h=M.querySelector('h3');if(h&&F.resN&&!M.querySelector('.duRes'))h.insertAdjacentHTML('afterend',`<div class="tag2 duRes">${F.resIc||'🔮'} ${F.resN}: <b style="letter-spacing:2px;color:${F.resC||'#9ad8ff'}">${'◆'.repeat(DU.mpL)}${'◇'.repeat(Math.max(0,DU.mpM-DU.mpL))}</b>${F.tag?` · ${F.tag}`:''}</div>`);
+ const g=M.querySelector('.mgrid');if(g&&F.x&&!DU.xUsed&&!M.querySelector('.duX'))g.insertAdjacentHTML('beforeend',`<button class="opt duX" onclick="duFlX()" style="border-color:${F.x.c||'#c39bff'};box-shadow:0 0 8px ${F.x.c||'#c39bff'}55">${F.x.ic} ${F.x.n}<small>${F.x.s} · 1 ครั้ง</small></button>`)}
+{const _dd=drawDuel;drawDuel=function(fin){flInit();const F=DU&&DU.fl;if(F&&!fin&&DU._r!==DU.r)DU._snap={me:DU.me,en:DU.en};const r=_dd.apply(this,arguments);if(!F)return r;try{if(!fin&&DU._eye&&DU.shown!==DU.intent){DU.shown=DU.intent;_dd.apply(this,arguments)}flPost(fin)}catch(e){console.error('flPost',e)}return r}}
+window.duFlX=function(){if(!DU||!DU.fl||DU.xUsed||!DU.fl.x)return;const F=DU.fl;duClear();DU.xUsed=1;const e=DU.intent,rt=Math.max(.35,Math.min(3,total()/Math.max(1,DU.ep))),md=22*Math.pow(rt,.7)*(.8+Math.random()*.4),ed=22/Math.pow(rt,.7)*(.8+Math.random()*.4)*(DU.charge?1.8:1);let r={};
+ try{r=F.x.f(DU,e,md,ed)||{}}catch(x){console.error('duFlX',x)}
+ if(r.en)DU.en-=r.en;if(r.me)DU.me-=r.me;DU.me=Math.min(100,DU.me);DU.txt=(r.t||'')+(r.en>0?` <span class="tag2">−${Math.round(r.en)}</span>`:'');try{sfx(r.sfx||'rare')}catch(x){}
+ if(r.good){DU.combo=(DU.combo||0)+1;DU.best=Math.max(DU.best||0,DU.combo);if(DU.combo>=2)DU.txt+=` <span class="tag2">🔥 คอมโบ ×${DU.combo}</span>`}else if(r.good===false)DU.combo=0;
+ try{if(window.pxFx&&r.fx){const m=$('modal'),b=m&&m.getBoundingClientRect();if(b)pxFx(r.fx,b.left+b.width/2,b.top+b.height*.35,1.4)}}catch(x){}
+ if(DU.me<=0||DU.en<=0)return duelEnd(DU.en<=0);
+ if(r.keep){drawDuel();return}
+ DU.charge=false;DU.r++;if(DU.r>6)return duelEnd(DU.me>DU.en);DU.intent=duelIntent();drawDuel()};
+})()}catch(e){console.error('block316',e)}

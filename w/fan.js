@@ -3435,6 +3435,59 @@ if(FSS){const _df=drawFan;drawFan=function(ctx){try{const K=FN();if(!K)return _d
 window._fanScTest=(id)=>{window._fanScForce=id};
 {const _fs=fScene;fScene=function(K){return window._fanScForce||_fs(K)}}
 
+
+// =================== ⚔️ ดวลสไตล์แฟนตาซี (ท่าศัตรู / เวทของเรา / มานา / ปุ่มพิเศษตามชะตา) ===================
+const DTK={demon:['เปลวเพลิงนรก','หอกเงามืด','คำสาปกัดกร่อน','ปีกค้างคาวฟาดฟัน','ระเบิดเลือดดำ','โซ่วิญญาณ'],
+ dragon:['ลมหายใจมังกร','หางฟาดภูผา','คำรามสะท้านฟ้า','กรงเล็บทองคำ','ปีกพายุ'],
+ mage:['ลูกไฟระเบิด','หอกน้ำแข็ง','สายฟ้าฟาด','โซ่ศิลา','พายุใบมีดลม','อุกกาบาตจิ๋ว','คำสาปนิทรา'],
+ knight:['ฟันเฉียงอัศวิน','แทงทะลวงโล่','ดาบคู่หมุนวน','ชาร์จม้าศึก','ฟาดด้ามดาบ','ท่าดาบราชองครักษ์'],
+ rogue:['มีดอาบยาพิษ','ก้าวเงา','ระเบิดควัน','แทงข้างหลัง','ปาดาวกระจาย'],
+ beast:['พุ่งชน','กัดกระชาก','ตะปบ','กรีดร้องเรียกพวก','ฟาดหาง'],
+ hero:['ดาบศักดิ์สิทธิ์','แสงพิพากษา','ฟันแยกมิติ','โล่แห่งพันธสัญญา'],
+ noble:['ดาบเรเปียร์แทงสามจังหวะ','เวทพันธนาการเงิน','ออร่าตระกูลกดทับ','ถุงมือขาวปาใส่หน้า']};
+const DEL={fire:['🔥','ฟีนิกซ์เพลิงกัลป์'],water:['🌊','มหาสมุทรคลั่ง'],wind:['🌪️','พายุใบมีดพันเล่ม'],earth:['⛰️','ภูผาถล่ม'],light:['☀️','แสงพิพากษา'],shadow:['🌑','อุ้งมือเงานรก']};
+function dKind(n){n=String(n||'');return /จอมมาร|มาร|ปีศาจ|ขุนพล/.test(n)?'demon':/มังกร/.test(n)?'dragon':/อาจารย์|จอมเวท|นักเวท|แม่มด|พ่อมด|อธิการ/.test(n)?'mage':/อัศวิน|องครักษ์|ทหาร|ดยุก|เคาน์|บารอน|ราชา|เจ้าชาย/.test(n)?'knight':/โจร|นักฆ่า|มือสังหาร|ขโมย/.test(n)?'rogue':/ก็อบลิน|สไลม์|หมาป่า|มอนสเตอร์|อสูร|โอเกอร์|ออร์ค|หมี|แมงมุม|ราชินี/.test(n)?'beast':/ผู้กล้า/.test(n)?'hero':/คุณหนู|ท่านหญิง|คุณชาย|ขุนนาง|ธิดา|บุตร/.test(n)?'noble':''}
+function dSec(K){const M=K.mv&&MV[K.mv];
+ if(K.mv==='muscle')return ['💪','หมัดกล้ามล้วนทลายมิติ',3,'💪 แรงกล้าม','#ffb070'];
+ if(K.w==='mon'){const s=(K.ms&&K.ms.sk||[])[0];return ['🦷',(s!=null&&MSKL[s]?MSKL[s][1]:'พลังอสูรคลั่ง'),2,'🩸 พลังอสูร','#ff6a6a']}
+ if(K.w==='hero'||K.w==='lost'){const L=K.w==='lost'&&typeof lsk==='function'?lsk(K):(SK[K.w]||[]).find(x=>x[0]===K.sk);if(L)return [L[1],L[2],K.w==='hero'?3:2,'🔷 มานา','#7ad0ff']}
+ if(K.w==='trash'){const n=TRUE_SK[K.sk]?TRUE_SK[K.sk][Math.min(4,Math.max(0,(K.skL|0)-1))]:'สกิลขยะ';return ['🗑️',n,1+Math.min(3,K.skL|0),'🔷 มานา','#9ad86a']}
+ const cl=X3(K).cls&&CLS[X3(K).cls];if(cl&&rnd()<.5)return [cl[0],'ท่าไม้ตาย'+cl[1],2,'🔷 มานา','#c39bff'];
+ const e=DEL[K.el]||DEL.fire;return [e[0],e[1],K.w==='magic'?3:2,'🔷 มานา','#7ad0ff']}
+const DX={
+ muscle:{ic:'🏋️',n:'ยกศัตรูทุ่มพื้น',s:'ทะลุการตั้งรับ',c:'#ffb070',f(D,e,md,ed){return e==='def'||e==='chg'?{en:md*2.4,t:'🏋️ คุณคว้าตัวศัตรูทั้งโล่ทั้งคน ยกขึ้นเหนือหัวแล้วทุ่มลงพื้น! พื้นหินแตกเป็นวง',good:true,fx:'burst'}:{en:md*1.1,me:ed*.5,t:'🏋️ คุณพุ่งเข้าไปปล้ำ ศัตรูสวนกลับระหว่างที่คุณยก แต่ก็ทุ่มลงไปได้',good:null,fx:'poof'}}},
+ regress:{ic:'⏪',n:'ย้อนเวลา 1 ยก',s:'เลือดกลับเป็นต้นยก แล้วรู้ท่าศัตรู',c:'#9ad8ff',f(D){const s=D._snap||{};D.me=Math.max(D.me,s.me||D.me);D._eye=1;return {t:'⏪ นาฬิกาในอกหมุนย้อน… ทุกอย่างกลับไปเมื่อสิบวินาทีก่อน คุณเห็นท่าต่อไปของศัตรูชัดเจน',keep:1,fx:'mana'}}},
+ demon:{ic:'😈',n:'ปล่อยปีศาจในร่าง',s:'แรงมาก แต่กินเลือดตัวเอง',c:'#ff5a7a',f(D,e,md,ed){return {en:md*3,me:12,t:'😈 ดวงตาคุณกลายเป็นสีแดง เสียงหัวเราะที่ไม่ใช่ของคุณดังออกมาจากคอ… ศัตรูกระเด็นไปชนกำแพง',good:true,fx:'burst'}}},
+ reborn:{ic:'👑',n:'คำสั่งราชันย์',s:'ศัตรูชะงักทั้งยก',c:'#ffd76a',f(D,e,md){return {en:md*1.2,t:'👑 "คุกเข่า" คำเดียวจากความทรงจำชาติก่อน ศัตรูทรุดลงโดยไม่รู้ตัว แล้วคุณก็ฟันลงไป',good:true,fx:'spark'}}},
+ hidden:{ic:'📚',n:'เผยฝีมือจริง',s:'เลิกแกล้งอ่อน ดาเมจ ×2.5',c:'#c8a8ff',f(D,e,md,ed){return {en:md*2.5,me:e==='heavy'?ed*.5:0,t:'📚 คุณถอนหายใจ "ไม่อยากให้ใครรู้เลย" แล้วร่ายเวทระดับที่อาจารย์ยังทำไม่ได้',good:true,fx:'mana'}}},
+ blade:{ic:'🗡️',n:'ดาบเวทหกสาย',s:'ฟันหกครั้ง ครั้งละธาตุ',c:'#9ad8ff',f(D,e,md){let t=0;for(let i=0;i<6;i++)if(rnd()<.6)t++;return {en:md*.5*t,t:`🗡️ ดาบเรืองแสงหกสี ฟันโดน <b>${t}/6</b> ครั้ง`,good:t>=3,fx:'spark'}}},
+ alch:{ic:'🧪',n:'ปาขวดยาทดลอง',s:'สุ่ม 5 ผล',c:'#7aff9a',f(D,e,md){const r=R(0,4);return [{en:md*2,t:'🧪 ขวดสีเขียวระเบิดเป็นควันพิษ ศัตรูไออย่างหนัก',good:true,fx:'poof'},{me:-25,t:'🧪 ปาผิดขวด! แต่มันคือยาฟื้นพลัง คุณดื่มเองซะเลย',fx:'mana'},{en:md*.5,t:'🧪 ศัตรูกลายเป็นกบสามวินาที แล้วกลับเป็นคนพร้อมอาการงง',good:true,keep:1},{me:10,en:md,t:'🧪 ระเบิดทั้งคู่ ผมคุณไหม้เป็นทรงแปลกๆ',fx:'burst'},{t:'🧪 ขวดไม่แตก มันกลิ้งไปหยุดที่เท้าศัตรู ทุกคนมองหน้ากัน…'}][r]}},
+ sys:{ic:'🟦',n:'ระบบวิเคราะห์ศัตรู',s:'เห็นท่าศัตรูชัด 100% ตลอดการดวล',c:'#5cd2ff',f(D){D._eye=1;return {t:'🟦 <b>[ระบบ]</b> สแกนเป้าหมายเสร็จสิ้น · แสดงท่าถัดไปของศัตรูแล้ว',keep:1,sfx:'good'}}},
+ dk:{ic:'🌑',n:'ปลดปล่อยพลังจอมมาร',s:'ศัตรูหวาดกลัว ตั้งรับไม่ได้',c:'#c070ff',f(D,e,md){D.charge=false;return {en:md*2.2,t:'🌑 ออร่าสีม่วงดำแผ่ออกจากตัวคุณ หญ้ารอบตัวเหี่ยวแห้ง ศัตรูมือสั่นจนทำดาบหล่น',good:true,fx:'burst'}}},
+ trash:{ic:'🗑️',n:'สกิลขยะ (ไม่รู้จะเกิดอะไร)',s:'สุ่มผลแปลกๆ',c:'#9ad86a',f(D,e,md){const r=R(0,5);return [{en:md*3,t:'🗑️ สกิลทำงานผิดพลาด… แต่ผิดพลาดใส่ศัตรู! ระเบิดตูม',good:true,fx:'burst'},{t:'🗑️ ไม่มีอะไรเกิดขึ้น ศัตรูหัวเราะเยาะ'},{me:-30,t:'🗑️ สกิลเก็บความเหนื่อยของคุณไปทิ้ง เลือดฟื้นขึ้น!',fx:'mana'},{en:md,me:8,t:'🗑️ สกิลดูดของรอบตัวมาทั้งหมด รวมถึงก้อนหินที่ตกใส่หัวคุณ'},{en:md*1.5,t:'🗑️ คุณเก็บดาบศัตรูมาได้ตอนเขาเผลอ',good:true,fx:'spark'},{t:'🗑️ สกิลแปลงคุณเป็นไก่ 2 วินาที… ศัตรูอึ้งจนลืมโจมตี',keep:1}][r]}},
+ lost:{ic:'🌲',n:'ใช้ภูมิประเทศ',s:'ลากศัตรูเข้าที่ที่คุณรู้จักดี',c:'#7ae0a0',f(D,e,md,ed,K){const sp=K&&K.f&&K.f.sp;const t={forest:'🌲 คุณล่อศัตรูเข้าดงหนาม แล้วกระโดดลงมาจากต้นไม้',desert:'🏜️ คุณเตะทรายใส่ตาศัตรูในจังหวะที่ลมพัดพอดี',village:'🌾 ชาวบ้านที่คุณเคยช่วยโยนคราดมาให้คุณ',prison:'⛓️ คุณใช้โซ่ในคุกที่รู้ทุกห่วงพันขาศัตรู',abyss:'🌋 คุณผลักศัตรูไปบนรอยแยกลาวาที่คุณจำได้ว่าเปราะ',dragon:'🐉 มังกรของคุณสะบัดหาง ศัตรูกระเด็นออกไป'}[sp]||'🌲 คุณใช้ภูมิประเทศที่รู้จักให้เป็นประโยชน์';return {en:md*1.8,t,good:true,fx:'poof'}}},
+ hero:{ic:'✨',n:'พรจากเทพี',s:'ฟื้นเลือด 30 + ล้างการรวมพลังศัตรู',c:'#fff2b0',f(D){D.charge=false;return {me:-30,t:'✨ แสงสีทองโอบตัวคุณ เสียงหญิงสาวกระซิบ "ยังไม่ถึงเวลาของเจ้า"',keep:1,fx:'mana',sfx:'good'}}},
+ noble:{ic:'🌹',n:'กลอุบายขุนนาง',s:'ศัตรูเสียจังหวะทั้งยก',c:'#ffd37a',f(D,e,md){return {en:md*.9,t:pick(['🌹 คุณทำผ้าเช็ดหน้าตก ศัตรูก้มเก็บตามมารยาท แล้วคุณก็ตีเข้าที่ท้ายทอย','🌹 คุณตะโกนชื่อพ่อของเขาต่อหน้าทุกคน เขาเสียสมาธิไปครู่หนึ่ง','🌹 คุณโยนถุงเงินขึ้นฟ้า ลูกน้องเขาแย่งกันเก็บ']),good:true}}},
+ magic:{ic:'🔮',n:'โล่สะท้อนเวท',s:'กันดาเมจยกนี้ + สะท้อนกลับ',c:'#c39bff',f(D,e,md,ed){const h=e==='atk'||e==='heavy';return h?{en:ed*(e==='heavy'?1.6:1),t:'🔮 โล่แก้วรูปหกเหลี่ยมก่อตัวทันเวลา ท่าของศัตรูสะท้อนกลับเข้าตัวเขาเอง',good:true,fx:'mana'}:{t:'🔮 คุณกางโล่… แต่ศัตรูไม่ได้โจมตีเลย เสียมานาเปล่า',good:false}}},
+ mon:{ic:'🦷',n:'กลืนกินศัตรู',s:'ดูดเลือดศัตรูมาเป็นของตัวเอง',c:'#ff6a6a',f(D,e,md){const d=md*1.3;return {en:d,me:-Math.min(30,d*.6),t:'🦷 คุณงับเข้าที่คอ พลังของศัตรูไหลเข้ามาในร่างอสูรของคุณ',good:true,fx:'burst'}}},
+ villain:{ic:'🎭',n:'พูดบทตัวร้าย',s:'ศัตรูรอให้คุณพูดจบ (ตามบท)',c:'#ff8ab0',f(D,e,md){return {en:md*1.6,t:'🎭 "เจ้าคิดว่าเรื่องจะจบแค่นี้หรือ?" ศัตรูยืนฟังจนจบอย่างสุภาพตามบทนิยาย… แล้วโดนคุณฟัน',good:true}}},
+ cook:{ic:'🍲',n:'โยนอาหารหอมฉุย',s:'ศัตรูหิว เสียสมาธิ',c:'#ffb040',f(D,e,md){return {en:md*.8,me:-10,t:'🍲 กลิ่นสตูว์ลอยไปทั่วสนาม ท้องศัตรูร้องดังกว่าเสียงดาบ คุณกินไปคำหนึ่งด้วย',good:true}}},
+ sword:{ic:'🗡️',n:'ดาบพูดได้ช่วยบอก',s:'รู้ท่าศัตรูยกนี้ + ดาบฟันเอง',c:'#c8d8ff',f(D,e,md){D._eye=1;return {en:md*.6,t:'🗡️ "ซ้าย! ไม่ใช่… ขวาของเจ้า!" ดาบในมือตะโกน แล้วกระตุกตัวเองฟันใส่ศัตรู',keep:1}}}
+};
+function dXof(K){if(K.mv&&DX[K.mv])return DX[K.mv];if(X8(K).dk)return DX.dk;if(SY(K)&&SY(K).on!==0)return DX.sys;if(K.mvx&&DX[K.mvx])return DX[K.mvx];if(K.w==='trash')return DX.trash;if(K.w==='lost')return DX.lost;if(K.w==='mon')return DX.mon;if(K.w==='hero')return DX.hero;if(K.w==='noble')return DX.noble;return DX.magic}
+window._duFlav=window._duFlav||[];
+window._duFlav.push((name)=>{if(!on())return null;const K=FN();if(!K)return null;const k=dKind(name)||(K.w==='magic'?'mage':K.w==='noble'?pick(['knight','noble','mage']):K.w==='mon'?'beast':pick(['knight','beast','mage'])),s=dSec(K),x=dXof(K);
+ const en=K.mv==='muscle'?'แรงกล้าม':K.w==='mon'?'พลังอสูร':'มานา',wpn=K.mv==='muscle'?'กำปั้น':K.w==='mon'?'กรงเล็บ':K.w==='magic'?'ไม้เท้า':'ดาบ';
+ const H={atk:'ยกอาวุธเตรียมใช้《{t}》พุ่งเข้ามาตรงๆ',heavy:'วงเวทขนาดใหญ่ก่อตัวขึ้นข้างหลัง กำลังจะปล่อย《{t}》ที่รับตรงๆ ไม่ไหวแน่',feint:'ทำท่าจะใช้《{t}》… แต่ปากขยับไม่ตรงคาถา',def:'กางโล่เวทรอบตัว รอจังหวะ',chg:'ดูดมานารอบตัวเข้าหาตัวเอง แสงรอบกายสว่างขึ้นเรื่อยๆ'};
+ if(k==='beast'||k==='dragon')Object.assign(H,{atk:'ขู่คำราม เตรียม《{t}》พุ่งเข้าใส่',heavy:'ถอยหลังย่อตัว กล้ามเนื้อพองขึ้น กำลังจะ《{t}》เต็มแรง',feint:'ทำท่าจะ《{t}》แต่หางยังไม่ขยับ',def:'ขดตัวตั้งเกล็ดแข็ง',chg:'สูดหายใจลึกจนอกพอง'});
+ if(k==='knight'||k==='noble')Object.assign(H,{def:'ยกโล่ขึ้นบังครึ่งตัว ตั้งท่าอัศวิน',chg:'หลับตาสวดคำปฏิญาณ ออร่ารอบดาบสว่างขึ้น'});
+ return {title:k==='dragon'?'🐉 สู้กับ':k==='demon'?'😈 เผชิญหน้า':'⚔️ ดวลกับ',intro:pick(['ลมพัดเสื้อคลุมปลิว แสงเวทรอบตัวทั้งคู่วูบวาบ…','ฝูงชนเงียบกริบ มีแค่เสียงหัวใจคุณเต้น','วงเวทใต้เท้าศัตรูเริ่มเรืองแสง','ทั้งสองฝ่ายจ้องตากัน อากาศรอบตัวหนักขึ้นจากมานาที่อัดแน่น']),
+  tech:DTK[k]||DTK.mage,hint:H,sec:s[1],secL:`${s[0]} ${K.mv==='muscle'?'ท่าไม้ตาย':'ร่ายสกิล'}`,secV:'คุณปลดปล่อย',mp:s[2],resN:s[3].replace(/^\S+ /,''),resIc:s[3].split(' ')[0],resC:s[4],en,wpn,x:{...x,f:(D,e,md,ed)=>x.f(D,e,md,ed,K)},
+  rep:[['ศัตรูแทงเบาๆ','ศัตรูปาเวทเบาๆ'],['กระบี่','ดาบ']]}});
+// ฉากหลังตอนดวล: ใช้ฉากแฟนตาซีตามศัตรู
+{const _fs2=fScene;fScene=function(K){try{if(typeof DU!=='undefined'&&DU&&DU.fl&&!window._fanScForce){const k=dKind(DU.name);return k==='dragon'?'dragon':k==='demon'?'dk':k==='mage'?'ritual':k==='beast'?(K.w==='mon'?'cave':'forest'):'tour'}}catch(e){}return _fs2(K)}}
+if(typeof dusBg==='function'){const _db=dusBg;dusBg=function(){try{if(on()&&typeof DU!=='undefined'&&DU&&FSS){const K=FN(),id=fScene(K),k='fan:'+id;if(DUS.bg&&DUS.bgK===k)return DUS.bg;const b=document.createElement('canvas');b.width=PXW;b.height=PXH;b.getContext('2d').drawImage(fStill(id,PXW,PXH),0,0);DUS.bg=b;DUS.bgK=k;DUS.scars=0;return b}}catch(e){}return _db.apply(this,arguments)};window.dusBg=dusBg}
+
 {const _cd=checkDeath;checkDeath=function(){try{if(on()&&S.hp<=0&&!S.deathCause){const K=FN();if(K.save>0){K.save--;S.hp=Math.max(1,Math.round(S.maxHp*.35));say(`🪽 <b>รอดตายอย่างหวุดหวิด</b> — ชะตาที่ติดตัวมาดึงคุณกลับ (เหลือ ${K.save} ครั้ง)`,'epic',true);return false}}}catch(e){}return _cd.apply(this,arguments)}}
 try{if(typeof coStart==='function'){const _cs=coStart;coStart=function(id){try{if(on()&&(id==='start'||/^mw_/.test(String(id))))return}catch(e){}return _cs.apply(this,arguments)}}}catch(e){}
 try{const st=document.createElement('style');st.textContent='body.fanW #hintBar{display:none!important}';document.head.appendChild(st)}catch(e){}
