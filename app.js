@@ -41536,3 +41536,9 @@ window.duFlX=function(){if(!DU||!DU.fl||DU.xUsed||!DU.fl.x)return;const F=DU.fl;
  if(r.keep){drawDuel();return}
  DU.charge=false;DU.r++;if(DU.r>6)return duelEnd(DU.me>DU.en);DU.intent=duelIntent();drawDuel()};
 })()}catch(e){console.error('block316',e)}
+// BLOCK 316b: ⚔️ สำนวนดวลยุคปัจจุบัน (ต่อยข้างถนน) — ใช้เมื่ออยู่ในยุคปัจจุบันธรรมดา (ไม่ใช่โลกแฟนตาซี/หมอก/ทะลุฟ้า)
+try{(()=>{(window._duFlav=window._duFlav||[]).push(n=>{try{const M=S&&S.mw;if(!M||M.fan||M.fog||M.sky||!S.alive)return null}catch(e){return null}
+ return {title:'👊 ปะทะกับ',intro:ch(['คนมุงเริ่มยกมือถือขึ้นอัดคลิป…','ไฟหน้าร้านสะดวกซื้อกะพริบ เสียงรถมอเตอร์ไซค์ผ่านไป','ซอยเปลี่ยวจนได้ยินเสียงหายใจตัวเอง']),
+  tech:['หมัดตรง','เตะก้านคอ','ล็อกแขน','ศอกกลับ','ทุ่มไหล่','หมัดฮุก','คว้าเก้าอี้พลาสติกฟาด'],hint:{atk:'กำหมัดแน่น ก้าวเข้ามาจะ《{t}》',heavy:'ถอยไปคว้าของแข็ง กำลังจะ《{t}》สุดแรง',feint:'ทำท่าจะ《{t}》แต่ไหล่ไม่หมุนตาม',def:'ยกการ์ดมวยปิดหน้า',chg:'กระโดดเบาๆ หายใจเข้าลึก เตรียมตัว'},
+  sec:'หมัดชุดสุดท้าย',secL:'🔥 ท่าไม้ตาย',secV:'คุณปล่อย',mp:2,resN:'อะดรีนาลีน',resIc:'⚡',resC:'#ffd04a',en:'อะดรีนาลีน',wpn:'หมัด',rep:[['กระบี่','หมัด']],
+  x:{ic:'📱',n:'ยกมือถืออัดคลิป',s:'ศัตรูลังเล เสียจังหวะ',c:'#9ad8ff',f(D,e,md){D.charge=false;return {en:md*.7,t:'📱 "ยิ้มหน่อย กำลังไลฟ์อยู่" ศัตรูชะงัก หันหน้าหนีกล้อง คุณสวนเข้าไปหนึ่งหมัด',good:true}}}}})})()}catch(e){console.error('block316b',e)}
