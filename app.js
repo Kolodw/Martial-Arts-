@@ -41945,3 +41945,12 @@ try{const _yd=setInterval(()=>{try{if(typeof window._dvPick!=='function'||window
 try{setTimeout(()=>{try{wLoad('rmc').catch(()=>setTimeout(()=>{try{wLoad('rmc').catch(()=>{})}catch(e){}},8000))}catch(e){}},3600)}catch(e){console.error('rmc load',e)}
 // ✨ อนิเมชันระหว่างเล่น + กราฟ/ไฮไลต์/หลังความตาย/สถิติผู้เล่น (/w/fx2.js · โหลดเบื้องหลัง)
 try{setTimeout(()=>{try{wLoad('fx2').catch(()=>setTimeout(()=>{try{wLoad('fx2').catch(()=>{})}catch(e){}},8000))}catch(e){}},4000)}catch(e){console.error('fx2 load',e)}
+// 🩸 ยาโลหิตตอนพลังอิ่มตัว (ผู้เล่นแจ้ง: แซงซากยองกลืนแล้วพลัง +0)
+//  สาเหตุ: % พลังถาวรมีเพดานต่อขั้น (ได้เต็มแค่ 30% แรกของขั้นนั้น หลังจากนั้นลดฮวบ) และขั้นสุดท้ายไม่มีขั้นถัดไปให้รีเซ็ต
+//  แก้: บอกผลจริงก่อนกลืน · ถ้าได้พลังน้อยกว่า 0.1% ของพลังรวม → เปลี่ยนเป็นพลังชีวิตสูงสุด +2% ถาวร + ฟื้นเลือดเต็ม แทน (ยาไม่เสียฟรี)
+try{dmPill=function(){if(!S||!(S.bp>0))return;const tt=Math.max(1,total()),g0=ppPeek(.02);S.bp--;S.karma-=5;mpAdd(10);
+ if(g0>=Math.max(1,tt*.001)){const g=pctPow(.02);S.power+=g;log(`🩸 กลืนยาโลหิต พลังยุทธ์ +${fmt(g)} · กรรม −5`,'epic')}
+ else{const h=Math.max(1,Math.round((S.maxHp||100)*.02));S.maxHp+=h;S.hp=S.maxHp;log(`🩸 กลืนยาโลหิต — พลังยุทธ์ของขั้นนี้อิ่มตัวแล้ว เลือดจึงไหลไปเสริมร่างกายแทน: พลังชีวิตสูงสุด +${fmt(h)} ถาวร · ฟื้นเลือดเต็ม · กรรม −5`,'epic')}
+ try{openDm()}catch(e){}};window.dmPill=dmPill}catch(e){console.error('dmPill fix',e)}
+try{const _od=openDm;openDm=function(){const r=_od.apply(this,arguments);try{setTimeout(()=>{const m=$('modal');if(!m||m.dataset.k!=='dm')return;const p=[...m.querySelectorAll('.dmsec p.tag2')].find(x=>/พลังยุทธ์ \+2%/.test(x.textContent));if(!p||p.dataset.fx)return;p.dataset.fx=1;const tt=Math.max(1,total()),g=ppPeek(.02);
+ p.innerHTML=g>=Math.max(1,tt*.001)?`พลังยุทธ์ +2% <b>(ตอนนี้ได้จริง +${fmt(g)})</b> · กรรม −5 · ได้ 30% เมื่อชนะดวล (บารมี 300+)`:`<b>พลังของขั้นนี้อิ่มตัวแล้ว</b> — กลืนตอนนี้จะได้ <b>พลังชีวิตสูงสุด +2% ถาวร + ฟื้นเลือดเต็ม</b> แทน · กรรม −5 · พลัง % จะกลับมาได้เต็มเมื่อขึ้นขั้นใหม่`},30)}catch(e){}return r};window.openDm=openDm}catch(e){}
