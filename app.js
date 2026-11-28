@@ -41941,3 +41941,5 @@ try{const _yd=setInterval(()=>{try{if(typeof window._dvPick!=='function'||window
   sky:['ยีนในร่างเผาผลาญชีวิตเร็วกว่าคนทั่วไป คุณจากไปก่อนวัยในห้องพยาบาลของกำแพง','ร่างกายรับยีนเกินขีดจำกัดมานานเกินไป วันหนึ่งมันก็หยุดทำงานทั้งที่คุณยังหนุ่มสาว'],
   fog:['ไอหมอกกัดกินปอดจนหมดลมหายใจทั้งที่ยังหนุ่มสาว','จากไปก่อนวัยในคืนที่หมอกหนาที่สุดของปี ไม่มีใครรู้ว่าคุณป่วยหนักมาตั้งแต่เมื่อไร']};
  window._dvPick=function(w){const r=_p.apply(this,arguments);try{if(S&&S.age<45&&r&&/วัยชรา/.test(r)){const k=S.mw&&S.mw.fan?'fan':(Y[w]?w:'mw');const L=Y[k];return L[Math.floor(Math.random()*L.length)]}}catch(e){}return r};window._dvPick._yd=1}catch(e){}},1500)}catch(e){}
+// 💞 เส้นทางรัก (/w/rmc.js · โหลดเบื้องหลัง)
+try{setTimeout(()=>{try{wLoad('rmc').catch(()=>setTimeout(()=>{try{wLoad('rmc').catch(()=>{})}catch(e){}},8000))}catch(e){}},3600)}catch(e){console.error('rmc load',e)}
