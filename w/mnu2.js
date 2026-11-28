@@ -21,7 +21,7 @@ const SKIP=/^(✕|แสดงทั้งหมด|⚙️|🎬 ดูวิธ�
 let ST={pg:'hub',q:'',cat:null},ITEMS=[],SIG='',busy=0,rec=0;
 const use=()=>LSg('murim_mnu2use',{})||{},pins=()=>LSg('murim_mnu2pin',null),seen=()=>LSg('murim_mnu2seen',{})||{};
 function harvest(m){const out=[],dup={};
- m.querySelectorAll('button').forEach(b=>{if(b.closest('.m2r'))return;if(b.classList.contains('xbtn')||b.classList.contains('mnX'))return;
+ m.querySelectorAll('button').forEach(b=>{if(b.closest('.m2r'))return;if(b.classList.contains('xbtn')||b.classList.contains('mnX')||b.classList.contains('mbBack'))return;
   const oc=b.getAttribute('onclick')||'';const c=b.cloneNode(true);const sm=c.querySelector('small');const sub=sm?sm.textContent.trim():'';if(sm)sm.remove();
   let isNew=false;c.querySelectorAll('i,span,b,em').forEach(x=>{if(/^ใหม่$/.test(x.textContent.trim())||/mnNew/.test(x.className)){isNew=true;x.remove()}});
   const px=c.querySelector('.pxi');let ic='';if(px){ic=px.outerHTML;px.remove()}
@@ -89,8 +89,8 @@ function go(m,force){if(busy)return;{const a=document.activeElement;if(!force&&a
  if(!force&&sig===SIG&&m.classList.contains('mnu2')&&m.querySelector(':scope>.m2r'))return;SIG=sig;ITEMS=L;
  if(!m.classList.contains('mnu2'))ST={pg:'hub',q:'',cat:null};m.classList.add('mnu2');paint(m)}
 let tm=0,lastOpen=0;
-function check(){const m=$('modal');if(!m)return;const isMenu=m.dataset.k==='menu'&&typeof modalOpen!=='undefined'&&modalOpen;
- if(!isMenu){if(m.classList.contains('mnu2')||m.classList.contains('mnu2D')){m.classList.remove('mnu2','mnu2D');SIG=''}return}
+function check(){const m=$('modal');if(!m)return;const isMenu=m.dataset.k==='menu'&&typeof modalOpen!=='undefined'&&modalOpen&&[...m.children].some(x=>!x.classList.contains('m2r')&&/บันทึกอัตโนมัติ/.test(x.textContent||''));
+ if(!isMenu){if(m.classList.contains('mnu2')||m.classList.contains('mnu2D')){m.classList.remove('mnu2','mnu2D');SIG=''}m.querySelectorAll(':scope>.m2r').forEach(x=>x.remove());return}
  clearTimeout(tm);tm=setTimeout(()=>go(m),40)}
 const css=document.createElement('style');css.textContent=`
 #modal.mnu2{padding:0!important;display:flex!important;flex-direction:column;height:min(88vh,860px);max-height:88vh!important;overflow:hidden!important;width:min(94vw,460px)!important}

@@ -128,7 +128,7 @@ const cmd = USE_VK ? vkCmd : upCmd;
 const pipe = USE_VK ? vkPipe : upPipe;
 
 // ===== ทำเนียบรายวัน (v15.3): แยก 4 หมวด · คะแนนจากค่าเฉลี่ยทุกด้าน · รางวัลอันดับ 1–3 =====
-const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj', 'cl', 'ck', 'cn', 'cu', 'co', 'cp', 'cz', 'ct', 'ce', 'cq', 'cy', 'cv', 'cf', 'ci']; // ci = 🔮 แฟนตาซี (ต่างโลก/เวทมนตร์/อะคาเดมี่ · รายสัปดาห์/เดือน) · cf = 🌉 นครม่านหมอก (รายสัปดาห์/เดือน) · c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
+const BD_CATS = ['m', 'x', 'g', 'b', 'c', 'r', 'ch', 'cs', 'cj', 'cl', 'ck', 'cn', 'cu', 'co', 'cp', 'cz', 'ct', 'ce', 'cq', 'cy', 'cv', 'cf', 'ci', 'cw', 'cd']; // แฟนตาซี (รายสัปดาห์/เดือน): ci ⚔️ ต่างโลก · cw 🔮 โลกเวทมนตร์ · cd 🏰 อะคาเดมี่ · cf = 🌉 นครม่านหมอก (รายสัปดาห์/เดือน) · c = ทำเนียบท้าทายรวม (เลิกใช้แล้ว) · ch นรก · cs ชีวิตสั้น · cj รากขยะ · r ผู้ย้อนกาล
 const CHC = { hell: 'ch', short: 'cs', junk: 'cj', soul: 'cl', sky: 'ck' }, CHM = { h: 'ch', s: 'cs', j: 'cj', l: 'cl', k: 'ck' }, CHF = { ch: 'h', cs: 's', cj: 'j', cl: 'l', ck: 'k', cn: 'n', cu: 'u', co: 'o', cp: 'p', cz: 'z', ct: 't', ce: 'e', cq: 'q', cy: 'y' };
 // 🎯 เป้าหมายร่วมทั้งเว็บรายสัปดาห์ (หมุนโลกตามสัปดาห์)
 const CG_L = [['m_ghost', 300], ['soul', 300], ['murim', 500], ['m_zombie', 250], ['xian', 400], ['m_hunter', 300], ['sky', 200], ['rg', 250], ['m_tower', 200], ['beast', 200], ['m_game', 200], ['hell', 250]];
@@ -140,7 +140,7 @@ const RW_L = ['mn_mu', 'mz_mu', 'mh_so', 'sk_mn', 'mg_xi', 'dm_any', 'mu_gm', 'm
 const rwOf = wk => RW_L[((wk * 7 + 3) % RW_L.length + RW_L.length) % RW_L.length];
 const CH_OK = ['hell', 'short', 'junk', 'regress', 'soul', 'sky'];
 // 🏙️ ยุคปัจจุบัน: แยกทำเนียบตามโลกพิเศษ 9 แบบ (ch = 'mw_' + id) · คะแนนเฉลี่ยทุกด้านทั้งชีวิตแบบโหมดปกติ
-const MW_B = { hunter: 'n', under: 'u', ghost: 'o', loop: 'p', zombie: 'z', tower: 't', game: 'e', gatewon: 'q', doom: 'y', trav: 'v', fog: 'f', fan: 'i' }; // fog = 🌉 นครม่านหมอก // trav = 🚪 ผู้ข้ามโลก
+const MW_B = { hunter: 'n', under: 'u', ghost: 'o', loop: 'p', zombie: 'z', tower: 't', game: 'e', gatewon: 'q', doom: 'y', trav: 'v', fog: 'f', iso: 'i', magic: 'w', aca: 'd', fan: 'i' }; // fan = ch เก่าก่อนแยก 3 โลก → ต่างโลก // fog = 🌉 นครม่านหมอก // trav = 🚪 ผู้ข้ามโลก
 for (const [w, l] of Object.entries(MW_B)) { CHC['mw_' + w] = 'c' + l; CHM[l] = 'c' + l; CHF['c' + l] = l; CH_OK.push('mw_' + w) }
 // ฉายาทำเนียบ (ชั่วคราว): รายวัน/สัปดาห์/เดือน · อันดับ 1–3
 const RKT = { d: ['', 'ตะวันเจิดจ้า', 'จันทร์เหนือเมฆ', 'ดาวประกาย'], w: ['', 'จ้าวยุทธภพ', 'ขุนศึกไร้พ่าย', 'ยอดฝีมือผงาด'], m: ['', 'จักรพรรดิเหนือฟ้า', 'มหาเทพบัญชาสวรรค์', 'ตำนานผู้ถูกจารึก'] };
@@ -155,7 +155,9 @@ const RKT_L = { d: ['', 'ผู้ปลุกดวงจิตแห่งว�
 const RKT_K = { d: ['', 'ผู้ทะลวงกำแพงเหล็ก', 'สัญญาณดาวดวงใหม่', 'เซลล์ดาราตื่น'], w: ['', 'จ้าวห้วงดารา', 'ผู้พิทักษ์นครกำแพง', 'นักล่าดาวเทียม'], m: ['', 'จักรพรรดิแห่งกาแล็กซี', 'ราชันเนบิวลา', 'ผู้เดินบนวงโคจร'] };
 const RKT_MW = { n: { d: ['', 'ฮันเตอร์ดาวรุ่งแห่งวัน', 'ผู้ปิดเกตไวที่สุด', 'นักล่าลูทแรร์'], w: ['', 'ราชาแห่งเกตมิติ', 'ฮันเตอร์แรงก์เอสแห่งสัปดาห์', 'ผู้คุมดันเจี้ยน'], m: ['', 'จักรพรรดิฮันเตอร์', 'ผู้ตื่นพลังเหนือแรงก์', 'ตำนานสมาคมฮันเตอร์'] }, u: { d: ['', 'เจ้าถิ่นราตรีนี้', 'ดาวเด่นตลาดมืด', 'ตัวตึงซอยเปลี่ยว'], w: ['', 'เบอร์หนึ่งโลกใต้ดิน', 'ผู้คุมเขตเถื่อน', 'มือดีลใต้โต๊ะ'], m: ['', 'เจ้าพ่อแห่งนครใต้ดิน', 'ราชาไฟนีออน', 'ตำนานตลาดมืด'] }, o: { d: ['', 'หมอผีดาวรุ่ง', 'ผู้ไม่กลัวป่าช้า', 'มือปราบผีคืนนี้'], w: ['', 'ปรมาจารย์ยันต์แดง', 'เจ้าของเครื่องรางร้อยองค์', 'ผู้คุมตะเกียงวิญญาณ'], m: ['', 'จ้าวแห่งคาถาอาคม', 'ราชาหมอผีแห่งสยาม', 'ตำนานบ้านผีสิง'] }, p: { d: ['', 'ผู้ตื่นเจ็ดโมงเช้า', 'นักจำวันเดิม', 'ผู้รอดวันซ้ำ'], w: ['', 'ราชาลูปเวลา', 'ผู้หักเข็มวินาที', 'นักสืบเดจาวู'], m: ['', 'จ้าวแห่งวันพรุ่งนี้', 'ผู้ทลายลูปเวลา', 'ตำนานความจำข้ามวัน'] }, z: { d: ['', 'ผู้รอดชีวิตแห่งวัน', 'มือกระสุนนัดสุดท้าย', 'ดาวรุ่งเซฟโซน'], w: ['', 'ราชาแห่งเมืองร้าง', 'ผู้นำเซฟโซน', 'นักล่าคลื่นศพ'], m: ['', 'ผู้ค้นพบวัคซีน', 'จักรพรรดิแห่งเขตกักกัน', 'ตำนานผู้รอดชีวิต'] }, t: { d: ['', 'ผู้ไต่หอแห่งวัน', 'นักทะลวงประตูชั้น', 'ดาวรุ่งบันไดเวียน'], w: ['', 'ผู้พิชิตชั้นที่ร้อย', 'ราชาบอสประจำชั้น', 'นักไต่ไร้พัก'], m: ['', 'ผู้ยืนบนยอดหอคอย', 'จักรพรรดิหอคอย', 'ตำนานชั้นบนสุด'] }, e: { d: ['', 'ผู้เลเวลอัปไวที่สุด', 'นักล่าเควสลับ', 'สายฟาร์มแห่งวัน'], w: ['', 'ราชาหน้าต่างสถานะ', 'เจ้าของสกิลแรร์', 'ผู้เคลียร์อีเวนต์พิเศษ'], m: ['', 'เพลเยอร์เบอร์หนึ่งของระบบ', 'ผู้ทะลุเลเวลสูงสุด', 'ตำนานกาชาเกลือ'] }, q: { d: ['', 'ผู้เฝ้ากำแพงคืนนี้', 'มือปืนแนวป้องกัน', 'ดาวรุ่งฐานทัพมนุษย์'], w: ['', 'ผู้บัญชาการกำแพงเมือง', 'ผู้ยึดโลกคืน', 'ธงมนุษย์ผืนสุดท้าย'], m: ['', 'ผู้ปิดเกตแม่', 'จักรพรรดิเมืองสุดท้าย', 'ตำนานปราการเหล็ก'] }, y: { d: ['', 'ผู้นับถอยหลังอย่างกล้าหาญ', 'เจ้าของหลุมหลบภัย', 'ผู้ยิ้มใต้ฟ้าแดง'], w: ['', 'ผู้นำจรวดอพยพ', 'ราชาเสบียงสุดท้าย', 'ผู้รักจนวันสุดท้าย'], m: ['', 'ผู้กอบกู้วันสิ้นโลก', 'ผู้หยุดอุกกาบาตล้างโลก', 'ตำนานสิบสองปีสุดท้าย'] } };
 RKT_MW.f = { d: ['', 'ผู้เดินฝ่าหมอกแห่งวัน', 'เสียงหวีดไอน้ำ', 'ช่างกลดาวรุ่ง'], w: ['', 'จ้าวแห่งโรงหมอก', 'ผู้ถือกุญแจทองเหลือง', 'นักเดินท่อใต้นคร'], m: ['', 'ราชาแห่งนครม่านหมอก', 'ประธานสมาคมเงา', 'ตำนานหมอกไม่จาง'] };
-RKT_MW.i = { d: ['', 'ดาวรุ่งแห่งวงเวท', 'ผู้ร่ายคาถาแรก', 'ประกายมานา'], w: ['', 'จอมเวทแห่งสัปดาห์', 'อัศวินคริสตัล', 'ผู้ข้ามประตูต่างโลก'], m: ['', 'อาร์คเมจแห่งทวีปลอยฟ้า', 'จ้าวมังกรเงิน', 'ตำนานแห่งอะคาเดมี่'] };
+RKT_MW.i = { d: ['', 'ผู้กล้าดาวรุ่ง', 'นักผจญภัยหน้าใหม่', 'ผู้มาเยือนจากต่างโลก'], w: ['', 'ผู้กล้าแห่งสัปดาห์', 'อัศวินทวีปลอยฟ้า', 'ผู้ข้ามประตูต่างโลก'], m: ['', 'ผู้ปราบจอมมาร', 'จ้าวมังกรเงิน', 'ตำนานผู้ข้ามโลก'] };
+RKT_MW.w = { d: ['', 'ดาวรุ่งแห่งวงเวท', 'ผู้ร่ายคาถาแรก', 'ประกายมานา'], w: ['', 'จอมเวทแห่งสัปดาห์', 'ผู้อัญเชิญภูต', 'ศิษย์หอคอยดาวรุ่ง'], m: ['', 'อาร์คเมจแห่งหอคอยงาช้าง', 'มหาปราชญ์แห่งวงเวท', 'ผู้ผนึกเวทโบราณ'] };
+RKT_MW.d = { d: ['', 'นักเรียนดาวรุ่ง', 'ผู้ได้ทุนหลวง', 'ดอกไม้ประจำรุ่น'], w: ['', 'ประธานแห่งสัปดาห์', 'หัวหน้าหอดาวเหนือ', 'นักดวลประจำรุ่น'], m: ['', 'ราชินีงานเต้นรำ', 'นักเรียนอันดับหนึ่งแห่งอะคาเดมี่', 'ตำนานแห่งอะคาเดมี่'] };
 const RKT_M = { ch: RKT_H, cs: RKT_S, cj: RKT_J, cl: RKT_L, ck: RKT_K }; for (const l in RKT_MW) RKT_M['c' + l] = RKT_MW[l];
 const RKT_ALL = new Map(); [RKT, RKT_C, RKT_A, RKT_R, RKT_H, RKT_S, RKT_J, RKT_L, RKT_K, ...Object.values(RKT_MW)].forEach(TT => Object.entries(TT).forEach(([p, L]) => L.forEach((t, r) => { if (t) RKT_ALL.set(t, { p, r }) })));
 // ===== ฉายา/กรอบทำเนียบแบบสุ่มจากคลังคำ (ไม่ใช้ AI) · ผลเหมือนกันทุกเครื่องจากรหัสรอบ =====
@@ -222,13 +224,26 @@ const RKG = (() => {
     if ([...t].length > 34) t = core + suf;
     return t;
   }
-  // 🔮 แฟนตาซี (i): ต่างโลก · โลกเวทมนตร์ · อะคาเดมี่ — วงเวท คริสตัล มังกร ดาวตก
-  TH.i = ['วงเวทเก้าชั้น', 'คริสตัลมานา', 'หอคอยจอมเวท', 'คัมภีร์ต้องห้าม', 'มังกรเงิน', 'ประตูต่างโลก', 'อะคาเดมี่หลวง', 'ดาวตกสีม่วง', 'ไม้เท้าแสงจันทร์', 'ป่าเอลฟ์', 'อัศวินสีขาว', 'ทวีปลอยฟ้า', 'อักขระรูน', 'น้ำพุแห่งพร', 'บัลลังก์จอมมาร', 'สภาผู้วิเศษ', 'หอสมุดดวงดาว', 'ดาบศักดิ์สิทธิ์']; TH1.i = TH.i.slice(0, 6);
-  const CORE_I = [null, ['จอมเวท', 'ผู้กล้า', 'จอมราชัน', 'อาร์คเมจ', 'ราชินีเวท', 'นักบุญ', 'จ้าวมังกร', 'ท่านดยุก'], ['อัศวิน', 'จอมเวทหนุ่ม', 'นักดาบเวท', 'ท่านเคานต์', 'ผู้พิทักษ์', 'หัวหน้าหอ'], ['นักเวทฝึกหัด', 'นักผจญภัย', 'ผู้ข้ามโลก', 'นักเรียนดีเด่น', 'อัศวินฝึกหัด', 'ผู้ถูกเลือก']];
-  const SUF_I = ['แห่งวงเวทเก้าชั้น', 'ผู้ข้ามมาจากต่างโลก', 'ใต้แสงจันทร์คู่', 'แห่งหอคอยงาช้าง', 'ผู้ปลุกมังกร', 'แห่งอะคาเดมี่หลวง', 'ผู้อ่านคัมภีร์ต้องห้าม', 'เหนือทวีปลอยฟ้า', 'ผู้ไม่เคยร่ายพลาด', 'แห่งรุ่งอรุณสีม่วง', 'ผู้ถือดาบศักดิ์สิทธิ์', 'ผู้เขียนตำนานบทใหม่'];
+  // 🔮 แฟนตาซี 3 โลก: i ต่างโลก · w โลกเวทมนตร์ · d โลกแห่งอะคาเดมี่ — คลังคำแยกโลก
+  const FNC = ['i', 'w', 'd'];
+  TH.i = ['ประตูต่างโลก', 'ทวีปลอยฟ้า', 'กิลด์นักผจญภัย', 'ดาบศักดิ์สิทธิ์', 'บัลลังก์จอมมาร', 'ดันเจี้ยนลึก', 'มังกรเงิน', 'ป่าเอลฟ์', 'อัศวินสีขาว', 'หมู่บ้านเริ่มต้น', 'สกิลโกง', 'เทพธิดาแห่งพร', 'ปราสาทเมฆ', 'ทุ่งสไลม์', 'หอคอยบททดสอบ', 'แผนที่โลกใหม่'];
+  TH.w = ['วงเวทเก้าชั้น', 'คริสตัลมานา', 'หอคอยจอมเวท', 'คัมภีร์ต้องห้าม', 'ไม้เท้าแสงจันทร์', 'อักขระรูน', 'น้ำพุมานา', 'สภาผู้วิเศษ', 'หอสมุดดวงดาว', 'ห้องวิจัยเวท', 'ภูตแห่งธาตุ', 'ดาวตกสีม่วง', 'หม้อยาเดือด', 'กระจกพยากรณ์', 'เปลวเวทสีคราม', 'พันธสัญญาภูต'];
+  TH.d = ['อะคาเดมี่หลวง', 'หอพักดาวเหนือ', 'ห้องเรียนชั้นบนสุด', 'สภานักเรียน', 'งานเต้นรำประจำปี', 'สนามดวลหลังตึก', 'ห้องสมุดต้องห้าม', 'ชมรมดาบ', 'ตราประจำบ้าน', 'สอบปลายภาค', 'ดอกกุหลาบขาว', 'ระฆังหอนาฬิกา', 'จดหมายเชิญจากวัง', 'ชุดพิธีการ', 'ม้านั่งใต้ต้นโอ๊ก', 'ถ้วยรางวัลประจำหอ'];
+  FNC.forEach(c => { TH1[c] = TH[c].slice(0, 6) });
+  const CORE_FN = {
+    i: [null, ['ผู้กล้า', 'จ้าวมังกร', 'ผู้ปราบจอมมาร', 'ราชันผู้ข้ามโลก', 'วีรบุรุษ', 'นักบุญ', 'ราชินีอัศวิน', 'ท่านดยุก'], ['อัศวิน', 'นักดาบ', 'นักผจญภัยแรงก์เอส', 'ท่านเคานต์', 'ผู้พิทักษ์', 'หัวหน้ากิลด์'], ['นักผจญภัย', 'ผู้ข้ามโลก', 'ผู้ถูกเลือก', 'อัศวินฝึกหัด', 'นักเดินทาง', 'ผู้มาเยือน']],
+    w: [null, ['อาร์คเมจ', 'จอมเวท', 'มหาปราชญ์', 'ราชินีเวท', 'จ้าวแห่งธาตุ', 'จอมเวทสูงสุด', 'ผู้คุมหอคอย', 'ผู้ร่ายคาถาสุดท้าย'], ['นักเวทหนุ่ม', 'นักเล่นแร่แปรธาตุ', 'ผู้อัญเชิญภูต', 'นักพยากรณ์', 'อาจารย์เวท', 'ผู้พิทักษ์คัมภีร์'], ['นักเวทฝึกหัด', 'ศิษย์หอคอย', 'ผู้ร่ายคาถาแรก', 'นักอ่านคัมภีร์', 'ผู้ตื่นมานา', 'ผู้ถือไม้เท้า']],
+    d: [null, ['ประธานสภานักเรียน', 'เจ้าหญิง', 'ท่านดยุก', 'นักเรียนอันดับหนึ่ง', 'ราชินีงานเต้นรำ', 'ทายาทจักรพรรดิ', 'ผู้คุมหอ', 'อัจฉริยะประจำรุ่น'], ['หัวหน้าหอ', 'ท่านเคานต์', 'รองประธาน', 'ดาวเด่นชมรม', 'ท่านหญิง', 'นักดวลประจำรุ่น'], ['นักเรียนดีเด่น', 'นักเรียนใหม่', 'ผู้ได้ทุน', 'สมาชิกชมรม', 'เด็กหอพัก', 'ผู้ถูกจับตา']]
+  };
+  const SUF_FN = {
+    i: ['ผู้ข้ามมาจากต่างโลก', 'แห่งทวีปลอยฟ้า', 'ผู้ปลุกมังกร', 'ผู้ถือดาบศักดิ์สิทธิ์', 'ผู้ปราบจอมมาร', 'แห่งกิลด์นักผจญภัย', 'ผู้ไม่เคยกลับบ้าน', 'ผู้เขียนตำนานบทใหม่', 'ใต้แสงจันทร์คู่', 'แห่งรุ่งอรุณสีทอง', 'ผู้เริ่มจากหมู่บ้านเล็กๆ', 'ผู้ฝ่าดันเจี้ยนชั้นสุดท้าย'],
+    w: ['แห่งวงเวทเก้าชั้น', 'ผู้อ่านคัมภีร์ต้องห้าม', 'แห่งหอคอยงาช้าง', 'ผู้ไม่เคยร่ายพลาด', 'แห่งรุ่งอรุณสีม่วง', 'ผู้คุยกับภูต', 'ใต้แสงดาวตก', 'ผู้ผนึกเวทโบราณ', 'แห่งสภาผู้วิเศษ', 'ผู้ปลุกมานาหลับใหล', 'ผู้เขียนอักขระใหม่', 'เหนือหอสมุดดวงดาว'],
+    d: ['แห่งอะคาเดมี่หลวง', 'ผู้ชนะงานเต้นรำ', 'แห่งหอพักดาวเหนือ', 'ผู้ไม่เคยสอบตก', 'ใต้ระฆังหอนาฬิกา', 'ผู้ถือตราประจำบ้าน', 'แห่งสนามดวลหลังตึก', 'ผู้ได้รับจดหมายจากวัง', 'ผู้ไขห้องสมุดต้องห้าม', 'ที่ทั้งรุ่นจำชื่อได้', 'แห่งดอกกุหลาบขาว', 'ผู้คว้าถ้วยประจำหอ']
+  };
+  const CORE_I = [null, 1, 2, 3].map(r => r ? FNC.flatMap(c => CORE_FN[c][r]) : null);
   function titleI(p, c, k, r) {
-    const R = RNG(H('ti|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE_I[r] || CORE_I[3]), TK = ['เวท', 'มังกร', 'อะคาเดมี่', 'ดาบ', 'อัศวิน', 'ต่างโลก', 'หอ', 'คัมภีร์'];
-    const pre = pk(R, TH.i.filter(w => !TK.some(t => core.includes(t) && w.includes(t)))), suf = pk(R, SUF_I.filter(w => !TK.some(t => (core.includes(t) || pre.includes(t)) && w.includes(t))));
+    const CO = CORE_FN[c] || CORE_FN.i, SU = SUF_FN[c] || SUF_FN.i, R = RNG(H('ti|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CO[r] || CO[3]), TK = ['เวท', 'มังกร', 'อะคาเดมี่', 'ดาบ', 'อัศวิน', 'ต่างโลก', 'หอ', 'คัมภีร์', 'ภูต', 'มานา', 'ดันเจี้ยน', 'จอมมาร', 'เต้นรำ', 'กิลด์', 'ดยุก', 'เคานต์'];
+    const pre = pk(R, TH[c].filter(w => !TK.some(t => core.includes(t) && w.includes(t)))), suf = pk(R, SU.filter(w => !TK.some(t => (core.includes(t) || pre.includes(t)) && w.includes(t))));
     let t = p === 'm' ? (R() < .5 ? core + 'แห่ง' + pre + (/^แห่ง/.test(suf) ? '' : suf) : core + suf) : p === 'w' && R() < .4 ? core + suf : core + 'แห่ง' + pre;
     if ([...t].length > 34) t = core + suf;
     return t;
@@ -243,7 +258,7 @@ const RKG = (() => {
   }
   function title(p, c, k, r) {
     if (c === 'f') return titleF(p, c, k, r);
-    if (c === 'i') return titleI(p, c, k, r);
+    if (FNC.includes(c)) return titleI(p, c, k, r);
     if (MWL.includes(c)) return titleMW(p, c, k, r);
     if (!/v/.test(String(k))) return title1(p, c, k, r);
     const R = RNG(H('t2|' + p + '|' + c + '|' + k + '|' + r)), core = pk(R, CORE[r] || CORE[3]), pre = (R() < .6 || c === 'k') ? pk(R, TH[c] || TH.m) : pk(R, PRE);
@@ -257,7 +272,7 @@ const RKG = (() => {
   const SH1 = { m: ['sword', 'laurel', 'crown', 'dbl'], x: ['cloud', 'ringh', 'leaf', 'pearl'], g: ['ray', 'ringh', 'star4', 'lotus'], b: ['horn', 'scale', 'thorn', 'wing'], r: ['clock', 'moon', 'star4'], c: ['flame', 'thorn', 'chain'], h: ['flame', 'horn', 'drip', 'gate'], s: ['flame', 'star4', 'butterfly'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh'] };
   const TY1 = [null, 'spin halo orbit ring2 aura2 sparkle star ember corner badge rk1', 'spin orbit ring2 snow corner badge rk2', 'corner badge rk3'];
   const PN = { d: 'ประจำวัน', w: 'ประจำสัปดาห์', m: 'ประจำเดือน' }, BD = { d: ['', '🌅', '🥈', '🥉'], w: ['', '⚔️', '🥈', '🥉'], m: ['', '🌟', '🥈', '🥉'] };
-  const RE = /^f_g([dwm])([mxgbrchsjlknuopzteqyvfi])([0-9a-z]+)_([123])$/;
+  const RE = /^f_g([dwm])([mxgbrchsjlknuopzteqyvfiwd])([0-9a-z]+)_([123])$/;
   // ชุดที่ 2: สีจากวงล้อสี (โทนคู่ตรงข้าม/ข้างเคียง) · ลายประดับตามหมวด + ลายสุ่ม · แสงสุ่มชุดใหม่ทุกรอบ · ตราตามหมวด
   const hsl = (h, s, l) => { h = ((h % 360) + 360) % 360; s /= 100; l /= 100; const a = s * Math.min(l, 1 - l), f = n => { const k = (n + h / 30) % 12, c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0') }; return '#' + f(0) + f(8) + f(4) };
   const SH = { m: ['sword', 'laurel', 'crown', 'dbl', 'gem'], x: ['cloud', 'ringh', 'leaf', 'pearl', 'gate'], g: ['ray', 'ringh', 'star4', 'lotus', 'crown'], b: ['horn', 'scale', 'thorn', 'wing', 'eye'], r: ['clock', 'moon', 'star4', 'ringh'], c: ['flame', 'thorn', 'chain', 'eye'], h: ['flame', 'horn', 'drip', 'gate', 'skull'], s: ['flame', 'star4', 'butterfly', 'petal'], j: ['knob', 'chain', 'fade', 'leaf'], l: ['ringh', 'star4', 'lotus', 'ray', 'gem'], k: ['star4', 'lightning', 'gem', 'ringh', 'ray'] };
@@ -268,34 +283,34 @@ const RKG = (() => {
   MWL.forEach(c => { SH1[c] = ['star4', 'gem', 'ray']; SH[c] = ['star4', 'gem', 'ray', 'lightning'] });
   SH1.f = ['gear', 'pipe', 'lamp', 'cogr']; SH.f = ['gear', 'pipe', 'lamp', 'cogr', 'keyh', 'steam']; MARK.f = ['🕰️', '⚙️', '🗝️', '🎩', '🔭'];
   const ANY_F = ['steam', 'clock', 'gem', 'pearl', 'moon', 'knob', 'chain'], HUE_F = [26, 34, 40, 46, 172, 182, 198, 286];
-  SH1.i = ['star4', 'gem', 'ringh', 'wing']; SH.i = ['star4', 'gem', 'ringh', 'wing', 'moon', 'pearl']; MARK.i = ['🔮', '🪄', '🐉', '📜', '💎'];
-  const ANY_I = ['star4', 'gem', 'moon', 'pearl', 'petal', 'lightning'], HUE_I = [262, 276, 290, 304, 318, 200, 186];
+  FNC.forEach(c => { SH1[c] = ['star4', 'gem', 'ringh', 'wing']; SH[c] = ['star4', 'gem', 'ringh', 'wing', 'moon', 'pearl'] }); MARK.i = ['⚔️', '🐉', '🗺️', '🛡️']; MARK.w = ['🔮', '🪄', '📜', '💎']; MARK.d = ['🏰', '🎓', '🌹', '🔔'];
+  const ANY_I = ['star4', 'gem', 'moon', 'pearl', 'petal', 'lightning'], HUE_FN = { i: [40, 48, 172, 190, 205], w: [262, 276, 290, 304, 318], d: [348, 356, 6, 222, 232] };
   function frame(id) {
     const m = RE.exec(id); if (!m) return null; const [, p, c, k, rs] = m, r = +rs;
     const dt = String(k).replace(/[sv].*/, ''), dl = dt.length >= 8 ? dt.slice(6, 8) + '/' + dt.slice(4, 6) + '/' + dt.slice(0, 4) : dt.slice(4, 6) + '/' + dt.slice(0, 4);
     const base = { id, n: 'กรอบ「' + title(p, c, k, r) + '」', side: 'r', c: 0, d: 'อันดับ ' + r + ' ทำเนียบ' + PN[p] + ' รุ่น ' + dl + ' — มีรอบเดียว ไม่กลับมาอีก', gen: 1 };
     if (!/v/.test(k)) { const R = RNG(H('f|' + id)), pal = pk(R, PALS), sh = (SH1[c] || SH1.m).slice().sort(() => R() - .5).slice(0, r === 1 ? 3 : r === 2 ? 2 : 1); if (r === 1) sh.unshift('rnd'); if (r === 1 && !sh.includes('crown') && R() < .5) sh.push('gem'); return Object.assign(base, { ty: TY1[r], c1: pal[0], c2: pal[1], c3: pal[2], pc: pal[1], bd: BD[p][r], sh: sh.join('|') }) }
-    const R = RNG(H('f2|' + id)), h0r = Math.floor(R() * 360), h0 = c === 'f' ? pk(R, HUE_F) + Math.round(R() * 8 - 4) : c === 'i' ? pk(R, HUE_I) + Math.round(R() * 10 - 5) : h0r, sat = c === 'f' ? (r === 1 ? 78 : r === 2 ? 58 : 34) : r === 1 ? 88 : r === 2 ? 70 : 42, mode = c === 'f' ? pk(R, [180, 150, 200, -150]) : c === 'i' ? pk(R, [60, -60, 150, 40]) : pk(R, [150, 180, 30, -40, 120]);
+    const R = RNG(H('f2|' + id)), h0r = Math.floor(R() * 360), h0 = c === 'f' ? pk(R, HUE_F) + Math.round(R() * 8 - 4) : FNC.includes(c) ? pk(R, HUE_FN[c]) + Math.round(R() * 10 - 5) : h0r, sat = c === 'f' ? (r === 1 ? 78 : r === 2 ? 58 : 34) : r === 1 ? 88 : r === 2 ? 70 : 42, mode = c === 'f' ? pk(R, [180, 150, 200, -150]) : FNC.includes(c) ? pk(R, [60, -60, 150, 40]) : pk(R, [150, 180, 30, -40, 120]);
     const c1 = hsl(h0, sat, r === 3 ? 52 : 60), c2 = hsl(h0 + 10, 95, 90), c3 = hsl(h0 + mode, sat, r === 3 ? 30 : 42);
-    const own = (SH[c] || SH.m).slice().sort(() => R() - .5), extra = (c === 'f' ? ANY_F : c === 'i' ? ANY_I : ANY).slice().sort(() => R() - .5);
+    const own = (SH[c] || SH.m).slice().sort(() => R() - .5), extra = (c === 'f' ? ANY_F : FNC.includes(c) ? ANY_I : ANY).slice().sort(() => R() - .5);
     const sh = r === 1 ? [own[0], own[1], extra[0]] : r === 2 ? [own[0], extra[0]] : [own[0]];
     const outline = r === 1 ? pk(R, ['rnd', 'rnd', 'soft', '']) : r === 2 ? pk(R, ['soft', '', 'rnd']) : pk(R, ['', 'soft']); if (outline) sh.unshift(outline);
     const fx = FX[r].slice().sort(() => R() - .5).slice(0, r === 1 ? 4 + Math.floor(R() * 2) : r === 2 ? 2 + Math.floor(R() * 2) : Math.floor(R() * 2));
-    const ty = (r === 1 ? 'spin ' : r === 2 ? pk(R, ['spin ', 'pulse ', '']) : '') + fx.join(' ') + ' corner badge rk' + r + (c === 'f' ? ' fogf' : c === 'i' ? ' fanf' : '');
+    const ty = (r === 1 ? 'spin ' : r === 2 ? pk(R, ['spin ', 'pulse ', '']) : '') + fx.join(' ') + ' corner badge rk' + r + (c === 'f' ? ' fogf' : FNC.includes(c) ? ' fanf' : '');
     const bd = r === 1 ? pk(R, MARK[c] || MARK.m) : ['', '', '🥈', '🥉'][r];
     return Object.assign(base, { ty, c1, c2, c3, pc: c2, bd, sh: [...new Set(sh)].join('|') });
   }
   const fid = (p, c, k, r) => 'f_g' + p + c + k + '_' + r;
   const ALLC = [null, ...[1, 2, 3].map(r => CORE[r].concat(CORE_MW[r], CORE_F[r], CORE_I[r]))];
   const rank = t => { t = String(t || ''); let best = 0, bl = 0; for (let r = 1; r <= 3; r++) for (const w of ALLC[r]) if (t.startsWith(w) && w.length > bl) { bl = w.length; best = r } return best };
-  const cat = t => { t = String(t || ''); for (const k of ['i', 'f', ...MWL, 'k', 'l', 'h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
+  const cat = t => { t = String(t || ''); for (const k of ['d', 'w', 'i', 'f', ...MWL, 'k', 'l', 'h', 's', 'j', 'r', 'b', 'x', 'g', 'c']) if (TH[k].some(w => t.includes(w))) return k; return 'm' };
   return { title, frame, fid, RE, H, rank, cat, MWL };
 })();
 const RKG_C = { m: 'm', x: 'x', g: 'g', b: 'b', r: 'r', c: 'c', ch: 'h', cs: 's', cj: 'j', cl: 'l', ck: 'k' };
 // ยุคปัจจุบัน/นครม่านหมอก: ฉายา+กรอบที่แจกตรงกับที่หน้าทำเนียบโชว์ (เดิมตกไปเป็นชุดยุทธภพ)
 for (const l of Object.values(MW_B)) RKG_C['c' + l] = l;
 // เกลือแยกหมวด: แอดมินสุ่มเฉพาะนครม่านหมอกได้ โดยไม่เปลี่ยนชุดของทำเนียบอื่น
-const RK_OWN = ['f', 'i'];
+const RK_OWN = ['f', 'i', 'w', 'd'];
 const rkKey = (lab, salt) => String(lab || '').replace(/[^0-9]/g, '') + 'v' + (salt || ''); // v = ชุดที่ 2
 const bdCat = e => e.bm ? 'b' : e.g ? 'g' : e.x ? 'x' : 'm';
 const bdKey = (c, ms, back = 0) => 'bd3:' + c + ':' + new Date(ms + 7 * 3600e3 - back * 86400e3).toISOString().slice(0, 10);
@@ -2175,7 +2190,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const admB = !!ADM_KEY && String(qOf(req).key || '') === ADM_KEY;
       Object.values(chov).forEach(v => { const e0 = v._e; delete v._e; if (e0 && e0.lid && pm[e0.lid] === 2) v.n = 'ผู้ไม่ประสงค์ออกนาม'; const t0 = v._t || []; delete v._t; v.t3 = t0.map(x => ({ n: x.lid && pm[x.lid] === 2 ? 'ผู้ไม่ประสงค์ออกนาม' : x.n, s: x.hd === 2 || x.hd === 3 || x.hs != null ? (x.hs != null ? x.hs : x.s) : x.s })) });
       const fix = l => l.map(x => { const v = x.lid ? pm[x.lid] || 0 : 0; const o = Object.assign(x, { pub: v === 1 || (admB && x.lid) ? 1 : 0 }); if (v === 2 && !admB) { o.n = 'ผู้ไม่ประสงค์ออกนาม'; o.f = ''; o.anon = 1 } const ow = x.lid && ownM[x.lid]; if (ow && !o.anon) o.pu = String(ow).replace(/[^a-z0-9]/g, '').slice(0, 12); return o });
-      return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), cm: CHF[cmK], chov, arena, daily: 1, p: per, rks: await (async () => { try { const L = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }, v = await pipe(['d', 'w', 'm'].map(p0 => ['GET', 'rksalt:' + p0 + ':' + rkKey(L[p0])]).concat(['w', 'm'].map(p0 => ['GET', 'rksalt:' + p0 + ':f:' + rkKey(L[p0])]), ['w', 'm'].map(p0 => ['GET', 'rksalt:' + p0 + ':i:' + rkKey(L[p0])]))); return { d: v[0] || '', w: v[1] || '', m: v[2] || '', fw: v[3] || '', fm: v[4] || '', iw: v[5] || '', im: v[6] || '' } } catch { return {} } })() });
+      return res.json({ top: fix(T), prev: fix(Pv), ctop: fix(CT), cprev: fix(CP), cm: CHF[cmK], chov, arena, daily: 1, p: per, rks: await (async () => { try { const L = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }, v = await pipe(['d', 'w', 'm'].map(p0 => ['GET', 'rksalt:' + p0 + ':' + rkKey(L[p0])]).concat(...RK_OWN.map(c0 => ['w', 'm'].map(p0 => ['GET', 'rksalt:' + p0 + ':' + c0 + ':' + rkKey(L[p0])])))); const o = { d: v[0] || '', w: v[1] || '', m: v[2] || '' }; RK_OWN.forEach((c0, i) => { o[c0 + 'w'] = v[3 + i * 2] || ''; o[c0 + 'm'] = v[4 + i * 2] || '' }); return o } catch { return {} } })() });
     }
     if (a === 'bdrw') {
       if (!okId(id)) return res.json({ l: [] });
@@ -2337,7 +2352,7 @@ try{var sy=+sessionStorage.getItem('adsy')||0;if(sy)window.scrollTo(0,sy);window
       const q = qOf(req); if (!isAdmKey(q.key)) return res.status(403).json({ err: 'admin' });
       const nx = { d: new Date(now + 7 * 3600e3).toISOString().slice(0, 10), w: week(new Date(now)), m: bdMon(now) }; // รอบที่กำลังแข่งอยู่ = ชุดที่จะแจกตอนจบรอบ
       if (/^[dwm]$/.test(q.roll || '')) { const sk = 'rksalt:' + q.roll + ':' + (RK_OWN.includes(q.c) ? q.c + ':' : '') + rkKey(nx[q.roll]), old = await cmd('GET', sk); let v; do { v = Math.random().toString(36).slice(2, 5).replace(/[^a-z0-9]/g, '') } while (!v || v === old); await cmd('SET', sk, v, 'EX', 86400 * 40); if (!RK_OWN.includes(q.c)) for (const c0 of RK_OWN) await cmd('DEL', 'rksalt:' + q.roll + ':' + c0 + ':' + rkKey(nx[q.roll])) }
-      const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ', l: '⭕ จิตวิญญาณยุทธ์', k: '🌠 ทะลุฟ้าดารา', n: '🌀 ฮันเตอร์', u: '🌃 ใต้ดิน', o: '👻 ผีไทย', p: '🔁 วนลูป', z: '🧟 ซอมบี้', t: '🗼 หอคอย', e: '🎮 ระบบเกม', q: '💀 เกตชนะ', y: '☄️ วันสิ้นโลก', f: '🌉 นครม่านหมอก', i: '🔮 แฟนตาซี' };
+      const CN = { m: '⚔️ ยุทธภพ', x: '☁️ เซียน', g: '🌟 เทพ', b: '🐾 อสูร', r: '🔁 ย้อนกาล', h: '🔥 นรก', s: '⏳ ชีวิตสั้น', j: '🦴 รากขยะ', l: '⭕ จิตวิญญาณยุทธ์', k: '🌠 ทะลุฟ้าดารา', n: '🌀 ฮันเตอร์', u: '🌃 ใต้ดิน', o: '👻 ผีไทย', p: '🔁 วนลูป', z: '🧟 ซอมบี้', t: '🗼 หอคอย', e: '🎮 ระบบเกม', q: '💀 เกตชนะ', y: '☄️ วันสิ้นโลก', f: '🌉 นครม่านหมอก', i: '⚔️ ต่างโลก', w: '🔮 โลกเวทมนตร์', d: '🏰 อะคาเดมี่' };
       if (q.fmt === 'json') { const keys = {}, own = {}; for (const p of ['d', 'w', 'm']) { keys[p] = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p]))); for (const c0 of RK_OWN) { const sv0 = await cmd('GET', 'rksalt:' + p + ':' + c0 + ':' + rkKey(nx[p])); (own[c0] = own[c0] || {})[p] = sv0 ? rkKey(nx[p], sv0) : keys[p] } } return res.json({ nx, keys, own }) }
       let html = '<meta name="viewport" content="width=device-width"><style>body{font-family:sans-serif;background:#1a1420;color:#eee;padding:10px}td{padding:3px 6px;border-bottom:1px solid #333}a{color:#ffd040}</style><h3>🏆 ฉายาที่จะแจกรอบนี้</h3>';
       for (const p of ['d', 'w', 'm']) { const k = rkKey(nx[p], await cmd('GET', 'rksalt:' + p + ':' + rkKey(nx[p])));

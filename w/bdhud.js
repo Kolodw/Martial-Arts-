@@ -17,14 +17,14 @@ const CAT=[
  {k:'chal',n:'ท้าทาย',ic:'🔥',a:'#ff6a3a',L:[['h','นรก','hell'],['s','ชีวิตสั้น','short'],['j','รากขยะ','junk'],['rg','ผู้ย้อนกาล','regress ย้อนเวลา']]},
  {k:'mod',n:'ยุคปัจจุบัน',ic:'🏙️',a:'#3ab0ff',L:[['n','ฮันเตอร์','hunter เกต'],['u','ใต้ดิน','under มาเฟีย'],['o','ผีไทย','ghost ผี'],['p','วนลูป','loop'],['z','ซอมบี้','zombie'],['t','หอคอย','tower'],['e','ระบบเกม','game'],['q','เกตชนะ','gate'],['y','วันสิ้นโลก','doom']]},
  {k:'fut',n:'อนาคตและลึกลับ',ic:'🌠',a:'#b07aff',L:[['k','ทะลุฟ้าดารา','sky ดาว อวกาศ'],['f','นครม่านหมอก','fog หมอก ไอน้ำ'],['v','ผู้ข้ามโลก','trav ข้ามโลก']]},
- {k:'fan',n:'แฟนตาซี',ic:'🔮',a:'#ff7ac8',L:[['i','แฟนตาซี · ต่างโลก เวทมนตร์ อะคาเดมี่','fantasy isekai magic academy ต่างโลก โลกเวทมนตร์ เวท อะคาเดมี่ โรงเรียน']]}];
+ {k:'fan',n:'แฟนตาซี',ic:'🔮',a:'#ff7ac8',L:[['i','ต่างโลก','isekai fantasy ผู้กล้า'],['w','โลกเวทมนตร์','magic เวท fantasy'],['d','โลกแห่งอะคาเดมี่','academy โรงเรียน fantasy']]}];
 const ALL=[];CAT.forEach(c=>c.L.forEach(x=>ALL.push({id:x[0],n:x[1],q:x[2],c})));
 const catOf=id=>(ALL.find(x=>x.id===id)||{}).c||CAT[0];
 const myPu=()=>T_(()=>String(pid).replace(/[^a-z0-9]/g,'').slice(0,12))||'';
 const wf=bw=>e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);
 const curId=()=>T_(()=>{const O=OO(),bw=O._bw!=null?O._bw:(S?(S.ch&&S.ch!=='normal'?4:S.beastMode?2:S.xt?3:S.xian?1:0):0);if(bw===4)return typeof chmSel==='function'?chmSel():'h';return'w'+bw})||'w0';
 function info(id){const j=window._bdLast,me=myPu();if(!j)return{t3:[],c:-1,me:-1};
- if(id[0]==='w'){const L=(j.top||[]).filter(wf(+id.slice(1)));return{t3:L.slice(0,3).map(e=>({n:e.n,s:e.s})),c:L.length,me:L.findIndex(e=>e.pu&&e.pu===me)}}
+ if(/^w[0-9]$/.test(id)){const L=(j.top||[]).filter(wf(+id.slice(1)));return{t3:L.slice(0,3).map(e=>({n:e.n,s:e.s})),c:L.length,me:L.findIndex(e=>e.pu&&e.pu===me)}}
  const o=(j.chov||{})[id];if(!o)return{t3:[],c:-1,me:-1};return{t3:o.t3&&o.t3.length?o.t3:(o.n?[{n:o.n,s:o.s}]:[]),c:o.c==null?-1:o.c,me:o.me==null?-1:o.me}}
 const thumb=id=>`<span class="bhT bhW">${T_(()=>window.wimTh&&wimTh(id))||''}</span>`;
 const per=()=>{const p=OO()._bp||'w';return p==='m'?'m':p==='d'?'d':'w'};

@@ -5387,7 +5387,7 @@ try{(()=>{
 const BL=[['g','⚔️ เส้นทางหลัก'],{id:'w0',ic:'⚔️',n:'ยุทธภพ',bw:0},{id:'w1',ic:'☁️',n:'โลกเทพเซียน',bw:1},{id:'w3',ic:'🌟',n:'โลกเทพ',bw:3},{id:'w2',ic:'🐾',n:'สัตว์อสูร',bw:2},
  ['g','🔥 โหมดท้าทาย'],{id:'h',ic:'🔥',n:'นรก'},{id:'s',ic:'⏳',n:'ชีวิตสั้น'},{id:'j',ic:'🗑️',n:'รากขยะ'},{id:'rg',ic:'🔁',n:'ผู้ย้อนกาล'},
  ['g','🌏 โลกใหม่'],{id:'l',ic:'⭕',n:'ทวีปจิตวิญญาณยุทธ์'},{id:'k',ic:'🌠',n:'ทะลุฟ้าดารา'},
- ['g','🏙️ ยุคปัจจุบัน'],{id:'n',ic:'🌀',n:'ฮันเตอร์'},{id:'u',ic:'🌃',n:'ใต้ดิน'},{id:'o',ic:'👻',n:'ผีไทย'},{id:'p',ic:'🔁',n:'วนลูป'},{id:'z',ic:'🧟',n:'ซอมบี้'},{id:'t',ic:'🗼',n:'หอคอย'},{id:'e',ic:'🎮',n:'ระบบเกม'},{id:'q',ic:'💀',n:'เกตชนะ'},{id:'y',ic:'☄️',n:'วันสิ้นโลก'},['g','🚪 เส้นทางพิเศษ'],{id:'v',ic:'🚪',n:'ผู้ข้ามโลก'},{id:'f',ic:'🌉',n:'นครม่านหมอก'},['g','🔮 แฟนตาซี'],{id:'i',ic:'🔮',n:'แฟนตาซี'}];
+ ['g','🏙️ ยุคปัจจุบัน'],{id:'n',ic:'🌀',n:'ฮันเตอร์'},{id:'u',ic:'🌃',n:'ใต้ดิน'},{id:'o',ic:'👻',n:'ผีไทย'},{id:'p',ic:'🔁',n:'วนลูป'},{id:'z',ic:'🧟',n:'ซอมบี้'},{id:'t',ic:'🗼',n:'หอคอย'},{id:'e',ic:'🎮',n:'ระบบเกม'},{id:'q',ic:'💀',n:'เกตชนะ'},{id:'y',ic:'☄️',n:'วันสิ้นโลก'},['g','🚪 เส้นทางพิเศษ'],{id:'v',ic:'🚪',n:'ผู้ข้ามโลก'},{id:'f',ic:'🌉',n:'นครม่านหมอก'},['g','🔮 แฟนตาซี'],{id:'i',ic:'⚔️',n:'ต่างโลก'},{id:'w',ic:'🔮',n:'โลกเวทมนตร์'},{id:'d',ic:'🏰',n:'โลกแห่งอะคาเดมี่'}];
 const BI=BL.filter(x=>!Array.isArray(x));
 const myPu=()=>{try{return String(pid).replace(/[^a-z0-9]/g,'').slice(0,12)}catch(e){return''}};
 const wf=bw=>e=>bw===2?!!e.bm:bw===3?(!e.bm&&!!e.g):(!e.bm&&!e.g&&(e.x?1:0)===bw);
@@ -5432,7 +5432,7 @@ const css=document.createElement('style');css.textContent=`
 .bdSk{height:64px;border-radius:12px;margin:6px 0;background:linear-gradient(90deg,rgba(127,127,127,.10),rgba(127,127,127,.22),rgba(127,127,127,.10));background-size:200% 100%;animation:bdSk 1.1s linear infinite}
 @keyframes bdSk{to{background-position:-200% 0}}`;document.head.appendChild(css);
 // ---------- ข้อมูลอันดับ 1 + อันดับของฉัน ----------
-function info(j,id){const me=myPu();if(!j)return{n:'',s:0,me:-1};if(id[0]==='w'){const L=(j.top||[]).filter(wf(+id.slice(1)));const f=L[0];return{n:f?f.n:'',s:f?f.s:0,me:L.findIndex(e=>e.pu&&e.pu===me),c:L.length}}
+function info(j,id){const me=myPu();if(!j)return{n:'',s:0,me:-1};if(/^w[0-9]$/.test(id)){const L=(j.top||[]).filter(wf(+id.slice(1)));const f=L[0];return{n:f?f.n:'',s:f?f.s:0,me:L.findIndex(e=>e.pu&&e.pu===me),c:L.length}}
  if(id==='rg')return{n:'',s:0,me:-1,c:-1};const o=(j.chov||{})[id];return o?{n:o.n,s:o.s,me:o.me,c:o.c}:{n:'',s:0,me:-1,c:-1}}
 // ---------- แผ่นเลือกทำเนียบ ----------
 window.bdSheet=function(){const j=window._bdLast,cur=curId(),bp=window.openOnline._bp||'d';document.querySelectorAll('.bdSheetBg').forEach(x=>x.remove());
@@ -5444,7 +5444,7 @@ window.bdSheet=function(){const j=window._bdLast,cur=curId(),bp=window.openOnlin
 window.bdGo=function(id){document.querySelectorAll('.bdSheetBg').forEach(x=>x.remove());try{LS.set('murim_bdlast',id)}catch(e){}
  if(id==='ov'){window.openOnline._bv='ov';return openOnline('board')}window.openOnline._bv='list';
  if(id==='rg'){try{return openRgBoard()}catch(e){return}}
- if(id[0]==='w'){window.openOnline._bw=+id.slice(1)}else{window.openOnline._bw=4;window.openOnline._cm=id}openOnline('board')};
+ if(/^w[0-9]$/.test(id)){window.openOnline._bw=+id.slice(1)}else{window.openOnline._bw=4;window.openOnline._cm=id}openOnline('board')};
 // ---------- จัดหน้าใหม่หลังวาด ----------
 let io=null;
 function restyle(){const m=$('modal');if(!m||m.dataset.k!=='online')return;const seg=m.querySelector('.onSeg');if(!seg||m.querySelector('.bdBar'))return;
