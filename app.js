@@ -41060,7 +41060,8 @@ if(typeof aiPick==='function'){const _ap=aiPick;aiPick=function(c){const i=_ap.a
 try{setTimeout(()=>{try{wLoad('legend').catch(()=>{})}catch(e){}},3600)}catch(e){} /* 🌌 ตำนานข้ามชาติ + 🎭 สไตล์ชีวิต + 🖼️ การ์ดตำนาน (/w/legend.js) */
 try{setTimeout(()=>{try{wLoad('bond').catch(()=>{})}catch(e){}},4000)}catch(e){} /* 👥 ผูกชะตาเพื่อน · 🔮 ทายชะตา · 🌍 ยุคประจำสัปดาห์ · 🎧 ฟังนิยาย · 📸 ภาพประกอบนิยาย (/w/bond.js) */
 try{setTimeout(()=>{try{wLoad('pet').catch(()=>{})}catch(e){}},4200)}catch(e){} /* 🐾 สัตว์คู่ใจข้ามชาติ (/w/pet.js) */
-try{setTimeout(()=>{try{wLoad('div').catch(()=>{})}catch(e){}},4400)}catch(e){} 
+try{setTimeout(()=>{try{wLoad('div').catch(()=>{})}catch(e){}},4400)}catch(e){}
+try{setTimeout(()=>{try{wLoad('mnu2').catch(()=>{})}catch(e){}},1500);{const _om=openMenu;openMenu=function(){const r=_om.apply(this,arguments);try{if(!window._mnu2)wLoad('mnu2').catch(()=>{})}catch(e){}return r}}}catch(e){} 
 try{setTimeout(()=>{try{wLoad('fogb').catch(()=>{})}catch(e){}},2600)}catch(e){}
 try{setTimeout(()=>{try{wLoad('bdhud').catch(()=>{})}catch(e){}},2800)}catch(e){} /* 🏆 แผ่นเลือกทำเนียบแบบ HUD (/w/bdhud.js) */ /* 🌉 ทำเนียบนครม่านหมอก: ธีม · กรอบ/ฉายารางวัล · แอดมินสุ่มเอง (/w/fogb.js) */ /* 💔 ขอหย่า/เลิกกัน ทุกโลก (/w/div.js) */
 // ============================================================
