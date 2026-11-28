@@ -74,7 +74,7 @@ function desk(html){const t=document.createElement('div');t.innerHTML=html;const
  sd+=nav('data-go="set"','<span class="m2i" style="--s:34px">⚙️</span>','ตั้งค่า',it.filter(x=>x.cat==='set').length+' อย่าง',ST.pg==='set');
  sd+='</div><div class="m2sf">'+it.filter(x=>x.cat==='foot').map(x=>`<button type="button" class="m2fb" data-k="${esc(x.key)}">${icon(x,20)}<span>${esc(/toTitle/.test(x.key)?'หน้าแรก':x.lab.replace(/\s*—.*$/,''))}</span></button>`).join('')+'</div>';
  return `<aside class="m2side">${sd}</aside><section class="m2main"><div class="m2mh"><b>${ST.pg==='hub'?'เมนู':ST.pg==='search'?'ผลการค้นหา':ttl}</b><button type="button" class="m2ib" data-x="1" aria-label="ปิด">✕</button></div>${t.innerHTML}</section>`}
-let _rz=0;addEventListener('resize',()=>{clearTimeout(_rz);_rz=setTimeout(()=>{const m=$('modal');if(m&&m.classList.contains('mnu2'))paint(m)},200)});
+let _rz=0;addEventListener('resize',()=>{clearTimeout(_rz);_rz=setTimeout(()=>{const a=document.activeElement;if(a&&a.id==='m2q')return;const m=$('modal');if(m&&m.classList.contains('mnu2'))paint(m)},200)});
 function find(k){return ITEMS.find(x=>x.key===k)}
 function onClick(e){const m=$('modal');if(!m||!m.classList.contains('mnu2'))return;const t=e.target;if(!t.closest||!t.closest('.m2r'))return;
  const pin=t.closest('[data-pin]');if(pin){e.preventDefault();e.stopPropagation();const k=pin.dataset.pin;let P=pins()||pinList().map(x=>x.key);P=P.includes(k)?P.filter(x=>x!==k):P.concat(k).slice(-7);LSs('murim_mnu2pin',P);ST._keep=1;paint(m);return}
@@ -84,7 +84,7 @@ function onClick(e){const m=$('modal');if(!m||!m.classList.contains('mnu2'))retu
 
  const k=t.closest('[data-k]');if(k){const it=find(k.dataset.k);if(!it)return;const U=use();U[it.key]=(U[it.key]||0)+1;LSs('murim_mnu2use',U);const S=seen();S[it.key]=1;LSs('murim_mnu2seen',S);
   ST._keep=1;try{it.b.click()}catch(x){console.error('mnu2',x)}}}
-function go(m,force){if(busy)return;
+function go(m,force){if(busy)return;{const a=document.activeElement;if(!force&&a&&a.id==='m2q'&&m.querySelector(':scope>.m2r'))return}
  const L=harvest(m);const sig=L.map(x=>x.key+'|'+x.lab+'|'+x.sub+'|'+(x.dot?1:0)).join('~');
  if(!force&&sig===SIG&&m.classList.contains('mnu2')&&m.querySelector(':scope>.m2r'))return;SIG=sig;ITEMS=L;
  if(!m.classList.contains('mnu2'))ST={pg:'hub',q:'',cat:null};m.classList.add('mnu2');paint(m)}
