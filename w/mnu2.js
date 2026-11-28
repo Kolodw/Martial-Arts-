@@ -1,7 +1,6 @@
 // ☰ เมนูแบบใหม่ (หน้าหลัก + 6 หมวด + ค้นหา + ตั้งค่า)
 // ไม่สร้างระบบใหม่: เปิดเมนูเดิมตามปกติ (ทุกส่วนเสริมยังเติมปุ่มลงไปเหมือนเดิม) แล้วเก็บปุ่มเดิมทั้งหมดซ่อนไว้
 // หน้าตาใหม่แค่ "ชี้" ไปที่ปุ่มเดิม แตะแล้วกด .click() ของปุ่มเดิม → ทุกระบบทำงานเหมือนเดิมทุกอย่าง
-// ปิดได้ที่ ตั้งค่า › เมนูแบบเดิม (LS murim_mnu2off)
 (function(){
 'use strict';
 if(window._mnu2)return;window._mnu2=1;
@@ -55,7 +54,7 @@ function view(){const it=ITEMS;let h='';
   const F=it.filter(x=>x.cat==='foot');h+=`<div class="m2f">${F.map(x=>`<button type="button" class="m2fb" data-k="${esc(x.key)}">${icon(x,22)}<span>${esc(/toTitle/.test(x.key)?'หน้าแรก':x.lab.replace(/\s*—.*$/,''))}</span></button>`).join('')}<button type="button" class="m2fb" data-go="set"><span class="m2i" style="--s:22px">⚙️</span><span>ตั้งค่า</span></button></div>`}
  else if(ST.pg==='cat'){const C=CATS.find(c=>c[0]===ST.cat)||CATS[0];h+=head(`${C[1]} ${C[2]}`,1)+`<div class="m2b"><div class="m2l" style="display:block">แตะดาวเพื่อปักหมุดไว้หน้าเมนู</div>${it.filter(x=>x.cat===C[0]).map(x=>row(x,1)).join('')}</div>`}
  else if(ST.pg==='set'){h+=head('ตั้งค่า',1)+'<div class="m2b">';const S=it.filter(x=>x.cat==='set'),used={};SETG.forEach(([k,n,r])=>{const L=S.filter(x=>!used[x.key+x.lab]&&r.test(x.hay));L.forEach(x=>used[x.key+x.lab]=1);if(L.length)h+=`<div class="m2l">${n}</div><div class="m2g">${L.map(x=>row(x)).join('')}</div>`});
-  h+=`<div class="m2l">เมนู</div><div class="m2g"><button type="button" class="m2row" data-old="1"><span class="m2i" style="--s:40px">☰</span><span class="m2t"><b>ใช้เมนูแบบเดิม</b><small>รายการยาวแบบก่อนหน้า · เปลี่ยนกลับได้ในเมนูเดิม</small></span><span class="m2ch">›</span></button></div></div>`}
+  h+='</div>'}
  else if(ST.pg==='pin'){const P=pins()||pinList().map(x=>x.key);h+=head('จัดเรียงปักหมุด',1)+`<div class="m2b"><div class="m2l" style="display:block">แตะดาวเพื่อเลือก (สูงสุด 7) · ตอนนี้ ${P.length} อย่าง</div>${it.filter(x=>!['set','foot'].includes(x.cat)).map(x=>row(x,1)).join('')}</div>`}
  return h}
 function paint(m){let r=m.querySelector(':scope>.m2r');if(!r){r=document.createElement('div');r.className='m2r';m.appendChild(r)}
@@ -82,11 +81,10 @@ function onClick(e){const m=$('modal');if(!m||!m.classList.contains('mnu2'))retu
  const go=t.closest('[data-go]');if(go){ST.pg=go.dataset.go;ST.q='';paint(m);return}
  const ca=t.closest('[data-cat]');if(ca){ST.pg='cat';ST.cat=ca.dataset.cat;paint(m);return}
  if(t.closest('[data-x]')){try{closeM()}catch(x){}return}
- if(t.closest('[data-old]')){LSs('murim_mnu2off',1);m.classList.remove('mnu2');const r=m.querySelector(':scope>.m2r');if(r)r.remove();try{toast('กลับไปใช้เมนูแบบเดิมแล้ว · เปิดเมนูใหม่ได้ที่ปุ่มด้านบนของเมนู')}catch(x){}addBack(m);return}
+
  const k=t.closest('[data-k]');if(k){const it=find(k.dataset.k);if(!it)return;const U=use();U[it.key]=(U[it.key]||0)+1;LSs('murim_mnu2use',U);const S=seen();S[it.key]=1;LSs('murim_mnu2seen',S);
   ST._keep=1;try{it.b.click()}catch(x){console.error('mnu2',x)}}}
-function addBack(m){if(m.querySelector('.m2back'))return;const h=m.querySelector('h3');const b=document.createElement('button');b.type='button';b.className='gbtn m2back';b.textContent='✨ ใช้เมนูแบบใหม่';b.onclick=ev=>{ev.stopPropagation();LSs('murim_mnu2off',0);ST.pg='hub';go(m,1)};(h||m.firstChild)&&(h?h.after(b):m.prepend(b))}
-function go(m,force){if(busy)return;const on=!LSg('murim_mnu2off',0);if(!on){addBack(m);return}
+function go(m,force){if(busy)return;
  const L=harvest(m);const sig=L.map(x=>x.key+'|'+x.lab+'|'+x.sub+'|'+(x.dot?1:0)).join('~');
  if(!force&&sig===SIG&&m.classList.contains('mnu2')&&m.querySelector(':scope>.m2r'))return;SIG=sig;ITEMS=L;
  if(!m.classList.contains('mnu2'))ST={pg:'hub',q:'',cat:null};m.classList.add('mnu2');paint(m)}
