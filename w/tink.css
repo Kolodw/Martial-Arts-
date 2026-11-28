@@ -27,15 +27,15 @@ html:root body.ink.ink.ink .modal h3{color:#EEE7D7!important;border-color:var(--
 html:root body.ink.ink.ink .modal h4{color:var(--kA)!important}
 html:root body.ink.ink.ink .modal p{line-height:1.65}
 html:root body.ink.ink.ink .modal .xbtn{background:transparent!important;border:0!important;color:#C9C0DA!important;border-radius:12px!important;clip-path:none!important;box-shadow:none!important}
-html:root body.ink.ink.ink #modal.modal[data-k] .opt,html:root body.ink.ink.ink .modal .opt,html:root body.ink.ink.ink #choiceBox .opt,html:root body.ink.ink.ink .chBox .opt{background:#211E31!important;background-image:none!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;box-shadow:none!important;color:#EEE7D7!important;font-family:'Sarabun',sans-serif!important;font-size:15.5px!important;line-height:1.5!important;padding:12px 16px!important}
-html:root body.ink.ink.ink #modal.modal[data-k] .opt:hover,html:root body.ink.ink.ink .modal .opt:hover{border-color:var(--kA)!important}
-html:root body.ink.ink.ink .modal .opt.on,html:root body.ink.ink.ink .modal .opt:active{border-color:var(--kA)!important;background:#2A2640!important}
+html:root body.ink.ink.ink #modal.modal[data-k=choice] .opt{background:#211E31;background-image:none!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;box-shadow:none;color:#EEE7D7!important;font-family:'Sarabun',sans-serif!important;font-size:15.5px!important;line-height:1.5!important;padding:12px 16px!important}
+html:root body.ink.ink.ink #modal.modal[data-k=choice] .opt:hover{border-color:var(--kA)!important}
+html:root body.ink.ink.ink #modal.modal[data-k=choice] .opt.on,html:root body.ink.ink.ink #modal.modal[data-k=choice] .opt:active{border-color:var(--kA)!important;background:color-mix(in srgb,var(--kA) 22%,#211E31)}
 html:root body.ink.ink.ink .modal .opt small{color:#A8A0BC!important}
-html:root body.ink.ink.ink .modal .item{background:#211E31!important;background-image:none!important;border:1px solid var(--kBd)!important;border-radius:14px!important;box-shadow:none!important}
+html:root body.ink.ink.ink #modal:not([data-k^=mg]) .item{background:#211E31!important;background-image:none!important;border:1px solid var(--kBd)!important;border-radius:14px!important;box-shadow:none!important}
 html:root body.ink.ink.ink .modal .tabs button,html:root body.ink.ink.ink .modal .seg button,html:root body.ink.ink.ink .tabb{border-radius:16px!important;background:#1C1929!important;background-image:none!important;border:1px solid var(--kBd)!important;color:#D9D1E6!important;box-shadow:none!important}
 html:root body.ink.ink.ink .modal .tabs button.on,html:root body.ink.ink.ink .modal .seg button.on,html:root body.ink.ink.ink .tabb.on{background:var(--kA)!important;color:#1B1309!important;border-color:var(--kA)!important}
 html:root body.ink.ink.ink .modal input:not([type=checkbox]):not([type=radio]):not([type=range]),html:root body.ink.ink.ink .modal textarea,html:root body.ink.ink.ink .modal select{background:#13111C!important;border:1px solid var(--kBd2)!important;border-radius:12px!important;color:#EEE7D7!important}
-html:root body.ink.ink.ink .modal .item button:not(.pbtn):not(.tabb){background:var(--kA)!important;background-image:none!important;border:0!important;color:#1B1309!important;border-radius:12px!important}
+html:root body.ink.ink.ink #modal:not([data-k^=mg]) .item button:not(.pbtn):not(.tabb){background:var(--kA)!important;background-image:none!important;border:0!important;color:#1B1309!important;border-radius:12px!important}
 html:root body.ink.ink.ink .toast{background:#211E31!important;border:1px solid var(--kBd2)!important;border-radius:14px!important;color:#EEE7D7!important;box-shadow:0 8px 24px rgba(0,0,0,.45)!important}
 html:root body.ink.ink.ink #modal.modal[data-k] .chtop,html:root body.ink.ink.ink #modal.modal[data-k] .chfoot{border-color:var(--kBd)!important}
 html:root body.ink.ink.ink #modal.modal[data-k] .minb{border-radius:12px!important;background:transparent!important;border:0!important;color:#A8A0BC!important}
@@ -86,7 +86,5 @@ html:root body.ink.ink.ink #feed .yr,html:root body.ink.ink.ink #feed .ageH,html
 html:root body.ink.ink.ink #game>#sceneBox,html:root body.ink.ink.ink #game.uxS>#sceneBox,html:root body.ink.ink.ink html body.ux2 #game.uxS>#sceneBox{height:84px!important;min-height:0!important;max-height:84px!important;opacity:.75!important;margin:0!important;border:0!important;border-radius:0!important;transition:none!important;-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent)}
 html:root body.ink.ink.ink #game>#sceneBox canvas{width:100%!important;height:100%!important;object-fit:cover}
 html:root body.ink.ink.ink #game>.box.top{border-radius:0 0 18px 18px!important;border-top:0!important;margin:0!important}
-html:root body.ink.ink.ink .mask.on{align-items:flex-end!important;padding:0!important}
-html:root body.ink.ink.ink .mask.on>#modal.modal{width:100%!important;max-width:100%!important;margin:0!important;border-radius:22px 22px 0 0!important;border-bottom:0!important;max-height:88vh!important;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))!important}
 }
 @media (prefers-reduced-motion:reduce){html:root body.ink.ink.ink #feed .bub{animation:none!important}}
